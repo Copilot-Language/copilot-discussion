@@ -17,12 +17,12 @@
     We could implement a mechanism for observing streams, e.g. for debugging
     purposes:
 
-        spec :: Spec ()
-        spec =
-          do
-            trigger "f" booleans [ triggerArg fib, triggerArg (fib + fib) ]
-            trigger "g" booleans [ triggerArg nats ]
-            observe "x" (fib + fib + 4)
+          spec :: Spec ()
+          spec =
+            do
+              trigger "f" booleans [ triggerArg fib, triggerArg (fib + fib) ]
+              trigger "g" booleans [ triggerArg nats ]
+              observe "x" (fib + fib + 4)
 
     In the generated C99-code the `observe` function binds the value of
     `fib + fib + 4` to the C99 variable `x`.
@@ -34,25 +34,25 @@
 
     Using GADTs we can write
 
-        fib :: Stream Word64
-        fib = [1, 1] ++ fib + drop 1 fib
+          fib :: Stream Word64
+          fib = [1, 1] ++ fib + drop 1 fib
 
-        counter :: (Num a, Typed a) => Stream Bool -> Stream a
-        counter reset = y
-          where
-            zy = [0] ++ y
-            y  = if reset then 0 else zy + 1
+          counter :: (Num a, Typed a) => Stream Bool -> Stream a
+          counter reset = y
+            where
+              zy = [0] ++ y
+              y  = if reset then 0 else zy + 1
 
     ...instead of
 
-        fib :: Stream s => s Word64
-        fib = [1, 1] ++ fib + drop 1 fib
+          fib :: Stream s => s Word64
+          fib = [1, 1] ++ fib + drop 1 fib
 
-        counter :: (Stream s, Num a, Typed a) => s Bool -> s a
-        counter reset = y
-          where
-            zy = [0] ++ y
-            y  = if reset then 0 else zy + 1
+          counter :: (Stream s, Num a, Typed a) => s Bool -> s a
+          counter reset = y
+            where
+              zy = [0] ++ y
+              y  = if reset then 0 else zy + 1
 
     This is a minor detail, and if you prefer we can use type-classes in copilot-language instead of GADTs,
     in the same way as we do in copilot-core.
