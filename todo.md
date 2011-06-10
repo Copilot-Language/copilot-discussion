@@ -15,3 +15,5 @@ TODOs
 
     +   Should be done. However, if you find any remaining non-roman letters,
         please tell me.
+
+*   Port the voting and clock libraries to the new Copilot version
