@@ -1,6 +1,5 @@
-===============
-== Questions ==
-===============
+Questions
+=========
 
 *   Q: So the type of spec in Examples.hs is [Trigger].  Is the idea that *any*
     Copilot program should include a trigger, since triggers are how you cause
@@ -56,8 +55,9 @@
                 zy = [0] ++ y
                 y  = if reset then 0 else zy + 1
 
-    This is a minor detail, and if you prefer we can use type-classes in
-    copilot-language instead of GADTs, in the same way as we do in copilot-core.
+        This is a minor detail, and if you prefer we can use type-classes in
+        copilot-language instead of GADTs, in the same way as we do in
+        copilot-core.
 
 *   Q: Why are data types replicated between
     copilot-language/src/Copilot/Language/Stream.hs and
