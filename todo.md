@@ -14,4 +14,4 @@ TODOs
 *   Use Roman rather than Greek characters.
 
     +   Should be done. However, if you find any remaining non-roman letters,
-        pleaese tell me.
+        please tell me.
