@@ -15,12 +15,3 @@ TODOs
 
     +   Should be done. However, if you find any remaining non-roman letters,
         pleaese tell me.
-
-*   Derive Num so that we can have, for example `x mod 2` where x is a stream
-    and 2 is interpreted as a stream of constants.
-
-    +   copilot-language/src/Copilot/Language/Stream.Stream already derives
-        `Num`. I have just now added support for Integral operators (`div` and
-        `mod`).
-
-*   Derive `Floating` (minor update).

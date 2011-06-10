@@ -1,9 +1,9 @@
 Questions
 =========
 
-*   Q: So the type of spec in Examples.hs is [Trigger].  Is the idea that *any*
-    Copilot program should include a trigger, since triggers are how you cause
-    some change to the outside world?
+*   Q: So the type of spec in Examples.hs is `[Trigger]`.  Is the idea that
+    *any* Copilot program should include a trigger, since triggers are how
+    you cause some change to the outside world?
     
     In other words, does your framework allow compiling something like:
 
