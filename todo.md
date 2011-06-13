@@ -17,3 +17,14 @@ TODOs
         please tell me.
 
 *   Port the voting and clock libraries to the new Copilot version
+
+*   (Maybe) allow let expressions and streams to be both named and anonymous.
+    For example, allow something like either
+
+    let_ "var" exp
+
+    and 
+    
+    var <- let_ () exp 
+
+    The former assists with debugging.
