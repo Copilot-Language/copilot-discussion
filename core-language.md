@@ -58,18 +58,18 @@ Program execution is devided into a well ordered sequence of atomic instants
 _i_0, _i_1, _i_2, ..., where _i_0, _i_1, _i_2 is isomorphic to the set of
 natural numbers.
 
-The value of an expression _e_ at the instant _i_ is denoted *E*[_e_] and is
+The value of an expression _e_ at the instant _i_ is denoted *E*{_e_} and is
 defined by:
 
-  + *E*[_i_](__const__(_x_)) = *V*(_x_)
+  + *E*{_i_}(__const__(_x_)) = *V*(_x_)
 
-  + *E*[_i_](_s_[_k_]) = E[_i_-_k_](_s_)
+  + *E*{_i_}(_s_{_k_}) = E{_i_-_k_}(_s_)
 
-  + *E*[_i_](_op_(_e_.1, ..., _e_.n)) =
-    (*V*(_op_))(*E*[_i_](_e_.0), ...,*E*[_i_](_e_.n))
+  + *E*{_i_}(_op_(_e_.1, ..., _e_.n)) =
+    (*V*(_op_))(*E*{_i_}(_e_.0), ...,*E*{_i_}(_e_.n))
 
-The value of a stream _s_ at the instant _i_ is denoted *E*[_s_] and is defined
+The value of a stream _s_ at the instant _i_ is denoted *E*{_s_} and is defined
 by:
 
-  + *E*[_i_](_s_) = if _i_ < 0 then *buffer*(_s_).(_i_ + *size*(_s_))
-     else *E*[_i_](*exp(_s_)).
+  + *E*{_i_}(_s_) = if _i_ < 0 then *buffer*(_s_).(_i_ + *size*(_s_))
+     else *E*{_i_}(*exp(_s_)).
