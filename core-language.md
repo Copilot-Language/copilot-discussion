@@ -55,7 +55,7 @@ Semantics
 ---------
 
 Program execution is devided into a well ordered sequence of atomic instants,
-where each instant, _i_, corrosponds to a natural number.
+where each instant, _i_, corresponds to a natural number.
 
 The value of an expression _e_ at the instant _i_ is denoted *E*|_i_|(_e_) and is
 defined by:
