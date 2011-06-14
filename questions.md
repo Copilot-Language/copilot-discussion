@@ -71,3 +71,5 @@ Questions
         copilot-language a stream is a possible *recursive* expression, whereas
         in copilot-core a stream consists of a buffer and a *non-recursive*
         expression.
+
+*   Q: What are the "Observers" defined in copilot-core/src/Copilot/Core/Spec.hs?
