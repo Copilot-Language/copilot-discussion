@@ -28,3 +28,6 @@ TODOs
     var <- let_ () exp 
 
     The former assists with debugging.
+
+
+*   Make Copilot operator precedence match Haskell operator precedence.
