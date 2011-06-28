@@ -128,9 +128,11 @@ Questions
        *local* takes and expression and a one-place function and binds the value
        of the expression to the function's argument.
 
-       Our hope is that the use of *local* is not commonly needed.  We use it in
+       Our hope is that the use of locals is not commonly needed.  We use it in
        Copilot library functions.  By building on these libraries, we hope the
-       user can largely ignore efficiency issues.
+       user can largely ignore efficiency issues.  (As an aside, because we hope
+       to rarely use locals, we don't build a monadic wrapper for streams, which
+       is somewhat heavy-weight.)
 
        Currently, Copilot does not implement common-subexpression elimination
        (CSE).  Implementing CSE for the core-language (package copilot-core) is
@@ -163,4 +165,6 @@ Questions
        <http://hackage.haskell.org/package/atom>.  Atom implements CSE itself,
        and it has a number of optimizations to reduce the complexity of
        expressions when values are statically known.  In practice, we have not
-       experienced overly-large C programs being generated.
+       experienced overly-large C programs being generated; our issues have just
+       been with compilation time (and more trivially, size of expressions when
+       pretty-printing them).
