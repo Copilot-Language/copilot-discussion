@@ -77,94 +77,93 @@ Questions
 *   Q: What model of sharing is used in Copilot?
 
     + A: Efficiency is important for an eDSL, but there's a tradeoff against
-       complexity in the compiler design.  There are two "levels" in the Copilot
-       language: (1) *Stream* (Copilot/Language/Stream.hs in the
-       copilot-language package), which define the basic datatype for bulding
-       computational elements, (2) and *Spec* (Copilot/Language/Spec.hs in
-       copilot-language) that contains a list of triggers and observers (for
-       debugging).
+      complexity in the compiler design.  There are two "levels" in the Copilot
+      language: (1) *Stream* (Copilot/Language/Stream.hs in the copilot-language
+      package), which define the basic datatype for bulding computational
+      elements, (2) and *Spec* (Copilot/Language/Spec.hs in copilot-language)
+      that contains a list of triggers and observers (for debugging).
 
-       Second, there are (at least) two reasons to identify sharing in a
-       language: (1) to identify "back-edges", which is necessary for doing things
-       like compilation for deeply-embedded languages and (2) improving
-       efficiency, so that common sub-expressions aren't re-evaluated.  Let us
-       call (1) "pointer sharing" and (2) "efficiency sharing".  The same
-       techniques can be used to address both kinds of concerns.
+      Second, there are (at least) two reasons to identify sharing in a
+      language: (1) to identify "back-edges", which is necessary for doing
+      things like compilation for deeply-embedded languages and (2) improving
+      efficiency, so that common sub-expressions aren't re-evaluated.  Let us
+      call (1) "pointer sharing" and (2) "efficiency sharing".  The same
+      techniques can be used to address both kinds of concerns.
 
-       In Copilot, we implement pointer sharing at the Stream level.  We use the
-       techniques described in Andy Gill's "Type-Safe Observable Sharing in
-       Haskell" <http://www.ittc.ku.edu/csdl/fpg/Tools/IOReification>, but we do
-       not use his data-reify package itself
-       <http://hackage.haskell.org/package/data-reify>.
+      In Copilot, we implement pointer sharing at the Stream level.  We use the
+      techniques described in Andy Gill's "Type-Safe Observable Sharing in
+      Haskell" <http://www.ittc.ku.edu/csdl/fpg/Tools/IOReification>, but we do
+      not use his data-reify package itself
+      <http://hackage.haskell.org/package/data-reify>.
 
-       For simplicity sake, we do not implement efficiency sharing at the Spec
-       level of Copilot.  For example, in
+      For simplicity sake, we do not implement efficiency sharing at the Spec
+      level of Copilot.  For example, in
 
-         spec :: Spec
-         spec = do
-           trigger  "f" strA [ arg strB, arg strC ]
-           trigger  "g" strA [ arg strB ]
-           observer "strA" strB
+        spec :: Spec
+        spec = do
+          trigger  "f" strA [ arg strB, arg strC ]
+          trigger  "g" strA [ arg strB ]
+          observer "strA" strB
 
-       the expressions strA and strB are not shared between any of the triggers
-       or observers.
+      the expressions strA and strB are not shared between any of the triggers
+      or observers.
 
-       As for the Stream level, we implement efficiency sharing explicitly using
-       a local variable bindings, inside the Copilot language.  For example,
+      As for the Stream level, we implement efficiency sharing explicitly using
+      a local variable bindings, inside the Copilot language.  For example,
 
-         majority :: (Num a, Typed a) => [Stream a] -> Stream a
-         majority [] = error "Error in majority: list must be nonempty."
-         majority ls = majority' 0 ls 0 0
+        majority :: (Num a, Typed a) => [Stream a] -> Stream a
+        majority [] = error "Error in majority: list must be nonempty."
+        majority ls = majority' 0 ls 0 0
 
-           where
-           majority' :: (Num a, Typed a)
-             => Int -> [Stream a] -> Stream a -> Stream Word32 -> Stream a
-           majority' _ []     candidate _   = candidate
-           majority' k (x:xs) candidate cnt = 
-             local (if cnt == 0 then x else candidate) $ \ candidate' ->
-               local (if cnt == 0 || x == candidate then cnt+1 else cnt-1) $ \ cnt' ->
-                 majority' (k+1) xs candidate' cnt'
+          where
+          majority' :: (Num a, Typed a)
+            => Int -> [Stream a] -> Stream a -> Stream Word32 -> Stream a
+          majority' _ []     candidate _   = candidate
+          majority' k (x:xs) candidate cnt = 
+            local (if cnt == 0 then x else candidate) $ \ candidate' ->
+              local (if cnt == 0 || x == candidate then cnt+1 else cnt-1) $ \ cnt' ->
+                majority' (k+1) xs candidate' cnt'
 
-       *local* takes and expression and a one-place function and binds the value
-       of the expression to the function's argument.
+      *local* takes and expression and a one-place function and binds the value
+      of the expression to the function's argument.
 
-       Our hope is that the use of locals is not commonly needed.  We use it in
-       Copilot library functions.  By building on these libraries, we hope the
-       user can largely ignore efficiency issues.  (As an aside, because we hope
-       to rarely use locals, we don't build a monadic wrapper for streams, which
-       is somewhat heavy-weight.)
+      Our hope is that the use of locals is not commonly needed.  We use it in
+      Copilot library functions.  By building on these libraries, we hope the
+      user can largely ignore efficiency issues.  (As an aside, because we hope
+      to rarely use locals, we don't build a monadic wrapper for streams, which
+      is somewhat heavy-weight.)
 
-       Currently, Copilot does not implement common-subexpression elimination
-       (CSE).  Implementing CSE for the core-language (package copilot-core) is
-       a bit more involved as we don't use a graph-representation.  One approach
-       might be convert copilot-core specifications into a graph-representation,
-       then do the CSE, and then convert the reduced graph back again into the
-       core-representation (and use local variables for representing shared
-       expressions).
+      Currently, Copilot does not implement common-subexpression elimination
+      (CSE).  Implementing CSE for the core-language (package copilot-core) is a
+      bit more involved as we don't use a graph-representation.  One approach
+      might be convert copilot-core specifications into a graph-representation,
+      then do the CSE, and then convert the reduced graph back again into the
+      core-representation (and use local variables for representing shared
+      expressions).
 
-       In practice, the only library function we have encountered so far that
-       requires better efficiency sharing is the majority-vote function (shown
-       above).  One reason is that Copilot already provides some modularity at
-       the stream level, by allowing users to compose streams, which can be
-       evaluated modularly.  For example, 
+      In practice, the only library function we have encountered so far that
+      requires better efficiency sharing is the majority-vote function (shown
+      above).  One reason is that Copilot already provides some modularity at
+      the stream level, by allowing users to compose streams, which can be
+      evaluated modularly.  For example,
 
-         even :: (P.Integral a, Typed a) => Stream a -> Stream Bool      
-         even x = x `mod` 2 == 0
+        even :: (P.Integral a, Typed a) => Stream a -> Stream Bool      
+        even x = x `mod` 2 == 0
 
-         odd :: (P.Integral a, Typed a) => Stream a -> Stream Bool       
-         odd = not . even      
+        odd :: (P.Integral a, Typed a) => Stream a -> Stream Bool       
+        odd = not . even      
 
-       Using local variables is only really necessary when generating Copilot
-       expressions.  If more substantial Copilot expressions are required in
-       library functions, implementing CSE may be necessary.
+      Using local variables is only really necessary when generating Copilot
+      expressions.  If more substantial Copilot expressions are required in
+      library functions, implementing CSE may be necessary.
 
-       As a side note, sharing can be used to control both (1) the time required
-       to evaluate an eDSL and (2) the size of the code generated (when
-       compiling).  While we anticipate Copilot having a variety of back-ends,
-       our current main back-end is Atom
-       <http://hackage.haskell.org/package/atom>.  Atom implements CSE itself,
-       and it has a number of optimizations to reduce the complexity of
-       expressions when values are statically known.  In practice, we have not
-       experienced overly-large C programs being generated; our issues have just
-       been with compilation time (and more trivially, size of expressions when
-       pretty-printing them).
+      As a side note, sharing can be used to control both (1) the time required
+      to evaluate an eDSL and (2) the size of the code generated (when
+      compiling).  While we anticipate Copilot having a variety of back-ends,
+      our current main back-end is Atom
+      <http://hackage.haskell.org/package/atom>.  Atom implements CSE itself,
+      and it has a number of optimizations to reduce the complexity of
+      expressions when values are statically known.  In practice, we have not
+      experienced overly-large C programs being generated; our issues have just
+      been with compilation time (and more trivially, size of expressions when
+      pretty-printing them).
