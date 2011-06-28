@@ -3,13 +3,19 @@ TODOs
 
 *   Replicate Interface.hs from the "old Copilot".
 
-*   Replicate Random.hs (and the testing infrastructure) from the "old Copilot".
-
 *   Start on the SBV backend for the interpreter.
 
-*   Integrate a (port of) Analysis.hs from the "old Copilot".
-
 *   Comments, especially at the beginning of modules and on module exports.
+
+*   Make Copilot operator precedence match Haskell operator precedence.
+
+
+DONE
+====
+
+*   Replicate Random.hs (and the testing infrastructure) from the "old Copilot".
+
+*   Integrate a (port of) Analysis.hs from the "old Copilot".
 
 *   Use Roman rather than Greek characters.
 
@@ -28,6 +34,3 @@ TODOs
     var <- let_ () exp 
 
     The former assists with debugging.
-
-
-*   Make Copilot operator precedence match Haskell operator precedence.
