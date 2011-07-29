@@ -15,6 +15,7 @@
 \usepackage{amsthm}
 \usepackage{setspace}
 \usepackage{framed}
+\usepackage{url}
 \onehalfspacing
 %\usepackage{datetime}
 %\newdateformat{mydate}{\THEDAY~\monthname[\THEMONTH]~\THEYEAR}
@@ -36,6 +37,9 @@
 \usepackage{listings}
 \usepackage{natbib}
 \usepackage{fancyvrb}
+
+
+\newcommand{\todo}[1]{\textcolor{blue}{\fbox{TODO: #1}}}
 
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\footnotesize}
 
@@ -158,7 +162,7 @@ Program Office.
 \small
 This document contains a tutorial on Copilot and its accompanying tools.
 We do attempt to give an complete, formal description of Copilot
-(references are provided in the bibliography), rather we aim at
+(references are provided in the bibliography); rather we aim at
 demonstrating the fundamental concepts of the language by using ideomatic
 expositions and examples.
 }
@@ -189,7 +193,7 @@ After having installed the Haskell Platform, Copilot is installed by executing
 the following command:
 
 \begin{code}
-$ cabal install copilot
+> cabal install copilot
 \end{code}
 
 \noindent This should, if everything goes well, install Copilot on your system.
@@ -197,7 +201,7 @@ $ cabal install copilot
 The examples provided in this tutorial can all be downloaded from here:
 
 \begin{center}
-http://github...
+\todo{http://github...}
 \end{center}
 
 \section{Domain}
@@ -225,14 +229,15 @@ a shared global clock.
 
 \section{Language}
 
-A Copilot program is a declarative specification consisting...
+A Copilot program is a declarative specification consisting \todo{...}
 
-Copilot program has a cyclic behaviour.
+A Copilot program has a cyclic behaviour.
 
 \subsection{Streams}
 
 All data in Copilot is propagated as streams. A stream is an infinite, ordered
-sequence of values which must conform to the same type. E.g. we have the stream
+sequence of values which must conform to the same type.\todo{point to place in
+  document where all possible types are enumerated} E.g. we have the stream
 of fibonacci numbers:
 
 \begin{center}
@@ -246,6 +251,8 @@ $s_{fib}(1) = 1$, $s_{fib}(2) = 2$, and so forth.
 Constants as well as arithmetic, boolean, and relational operators are
 lifted to work pointwise on streams:
 \\
+
+\todo{explain the type of Int32?}
 
 \noindent
 \begin{minipage}{0.3\textwidth}
@@ -294,7 +301,7 @@ For example the stream {\tt w} defined as
 w = [5,6,7] ++ x
 \end{code}
 %
-evaluates to the sequence
+where {\tt x} is the stream defined above, evaluates to the sequence
 $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt s}.
 For example we can skip the first two values of {\tt w}:
@@ -309,15 +316,16 @@ $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 \subsection{Streams as Lazy-lists}
 
 A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
-In Haskell the lazy-list of natural numbers can be programmed like this:
+In Haskell, the lazy-list of natural numbers can be programmed like this:
 %
 \begin{code}
 nats_ll :: [Int32]
-nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
+nats_ll = [0] ++ map (+ 1) nats_ll
 \end{code}
 %
 As both constants and arithmetic operators are lifted to work pointwise on
-streams in Copilot there is no need for {\tt zipWith} and {\tt repeat} when
+streams in Copilot, there is no need for operators that lift from values to
+lists (e.g., {\tt map}, {\tt zipWith}, or {\tt repeat}) when
 programming the stream of natural numbers:
 %
 \begin{code}
@@ -383,7 +391,7 @@ Copilot also facilitates \emph{stateful} functions. A \emph{stateful} function
 is function which has an internal state, e.g. as a latch (as in electronic
 circuits) or a low/high-pass filter (as in a DSP).
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{minipage}{0.3\linewidth}
 \begin{tabular}{c|c|c}
 $\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
@@ -420,7 +428,7 @@ The operational behavior and the implementation of the latch is shown in Figure
 \ref{fig:jk_latch}.
 \end{example}
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{minipage}{0.3\linewidth}
 \begin{tabular}{c|c|c}
 $\mathtt{inc}_i$: & $\mathtt{reset}_i$: & $\mathtt{cnt}_i$: \\
@@ -454,14 +462,17 @@ implementation is provided at the right.
 \end{figure}
 
 \begin{example}
-We consider a resetable counter with two inputs, {\tt inc} and {\tt reset}.
-The input {\tt inc} increments the counter and the input {\tt reset} resets the
-counter. The internal state of the counter, {\tt cnt}, represents the value of the
-counter and is initially set to zero. At each cycle, $i$, the value of
-$\mathtt{cnt}_i$ is determined as shown in the left table in Figure \ref{fig:counter}.
-\footnote{In order
-to use guards in Copilot specifications, as in Figure \ref{fig:jk_latch}, the GHC
-language extension {\tt RebindableSyntax} must be set on.}.
+We consider a resetable counter with two inputs, {\tt inc} and {\tt reset}.  The
+input {\tt inc} increments the counter and the input {\tt reset} resets the
+counter. The internal state of the counter, {\tt cnt}, represents the value of
+the counter and is initially set to zero. At each cycle, $i$, the value of
+$\mathtt{cnt}_i$ is determined as shown in the left table in Figure
+\ref{fig:counter}.\footnote{In order to use guards in Copilot specifications, as
+  in Figure \ref{fig:jk_latch}, the GHC language extension {\tt
+    RebindableSyntax} must be set.  This can be done by adding {\tt \{-\#
+    LANGUAGE RebindableSyntax \#-\}} to the top of the module declaration.  See
+  \url{http://www.haskell.org/ghc/docs/7.0.3/html/users_guide/ghc-language-features.html#options-language}
+  for more information.}.
 \end{example}
 
 %\begin{figure}
@@ -495,7 +506,7 @@ extern :: Typed a => String -> Stream a
 \end{code}
 %
 It takes the name of an external variable and generates a stream by sampling
-the variable at each clock cycle.
+the variable at each clock cycle. 
 
 Triggers are defined by using the {\tt trigger construct}:
 %
@@ -548,12 +559,12 @@ off.
 
 \subsection{Clocks}
 
-T.B.D. when clocks work!
+\todo{T.B.D. when clocks work!}
 
 \subsection{Explicit Sharing}
 \label{sec:explicit_sharing}
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{minipage}{0.5\textwidth}
 \begin{code}
 s1 = let x = nats + nats
@@ -581,19 +592,16 @@ local
 \end{code}
 %
 The local construct works similar to \emph{let}-bindings in ordinary Haskell.
-From a semantic point of view the streams {\tt s1} and {\tt s2} from Figure
+For example, from a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
 \ref{fig:explicit_sharing} are identical.
 As we will see in Section \ref{subsec:boyer_moore}, however, certain advanced
-Copilot programs may force the compiler to build syntax trees that blow up exponentially.
-In such cases, using explicit sharing may help to avoid this.
-We strongly discourage using explicit sharing for optimization Copilot programs.
-In fact, the current C-backend for Copilot does common-subexpression-elimination.
-%which renders the use of explicit sharing for program optimization superfluous.
-In future versions of Copilot explicit sharing might be depricated.
+Copilot programs may force the compiler to build syntax trees that blow up
+exponentially.  In general, such programs are Copilot library functions;
+user-defined functions should rarely require explicit sharing.
 
 \section{Tools}
 
-Copilot comes with various of tools and 
+Copilot comes with various of tools and \todo{finish}
 
 
 
@@ -603,7 +611,7 @@ Copilot comes with various of tools and
 
 \section{Advanced Examples}
 
-In this section we will cover three examples that touch advanced aspects
+In this section, we will cover three examples that touch advanced aspects
 of Copilot: In the first example we show how to implement a stopwatch by
 using the clock system; in the second and third example we demonstrate how to make
 use of Haskell as an advanced macro langauge on top of Copilot by showing how to
@@ -614,7 +622,7 @@ in Copilot.
 
 \subsection{Stopwatch}
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{code}
 controller
   :: Stream Bool
@@ -640,13 +648,13 @@ stopwatch = trigger "stopwatch" frozen [arg time]
 \label{fig:stopwatch}
 \end{figure}
 
-T.B.D. when clocks work!
+\todo{T.B.D. when clocks work!}
 
 \subsection{An $n$-pole IIR Filter}
 
 
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{code}
 iir :: Double -> [(Double, Double)] -> Sig Double -> Sig Double
 iir b0 ks x0 = y0
@@ -669,7 +677,7 @@ iir b0 ks x0 = y0
 \subsection{The Boyer-Moore Majority-Vote Algorithm}
 \label{subsec:boyer_moore}
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{code}
 majorityPure :: Eq a => [a] -> a
 majorityPure []     = error "majorityPure: empty list!"
@@ -689,7 +697,7 @@ majorityPure' (x:xs) can cnt =
 
 
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{code}
 aMajorityPure :: Eq a => [a] -> a -> Bool
 aMajorityPure xs can = aMajorityPure' 0 xs can > length xs `div` 2
@@ -735,7 +743,7 @@ Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
 with the Copilot implementation, we see that the code is almost identical,
 except for the type signatures and the explicit sharing annotations.
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{code}
 majority :: (Eq a, Typed a) => [Stream a] -> Stream a
 majority []     = error "majority: empty list!"
@@ -754,7 +762,7 @@ majority' (x:xs) can cnt =
 \label{fig:majority}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht!]
 \begin{code}
 aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
 aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
@@ -769,6 +777,11 @@ aMajority' cnt (x:xs) can =
 \caption{The second pass of the majority vote algorithm in Copilot.}
 \label{fig:amajority}
 \end{figure}
+
+\todo{Maybe give some practical examples of (1) compiling through the C99
+  backend, (2) using the interpreter, (3) using the random program generator.
+  What about explaining what are valid programs (i.e., the analyzer)?}
+
 
 \addcontentsline{toc}{section}{Acknowledgement}
 \section*{Acknowledgement}
