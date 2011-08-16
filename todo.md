@@ -3,12 +3,11 @@ TODOs
 
 *   Replicate Interface.hs from the "old Copilot".
 
-*   Start on the SBV backend for the interpreter.
-
 *   Comments, especially at the beginning of modules and on module exports.
 
 *   Make Copilot operator precedence match Haskell operator precedence.
 
+*   Add casts to the language.
 
 DONE
 ====
@@ -34,3 +33,5 @@ DONE
     var <- let_ () exp 
 
     The former assists with debugging.
+
+*   SBV backend.
