@@ -7,21 +7,16 @@
 %\setlength{\columnsep}{1cm}
 
 \usepackage[british]{babel}
-%\usepackage{euler}
 \usepackage[utf8]{inputenc}
+\usepackage{url}
 \usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{setspace}
-\usepackage{framed}
-\usepackage{url}
 \onehalfspacing
-%\usepackage{datetime}
-%\newdateformat{mydate}{\THEDAY~\monthname[\THEMONTH]~\THEYEAR}
-%\mydate
+\usepackage{framed}
 \usepackage[usenames,dvipsnames]{color}
-%\usepackage{tocloft}
 \usepackage[titles]{tocloft}
 \setlength{\cftbeforesecskip}{0.1ex}
 \renewcommand{\cftsecfont}{\rm}
@@ -37,9 +32,6 @@
 \usepackage{listings}
 \usepackage{natbib}
 \usepackage{fancyvrb}
-
-
-\newcommand{\todo}[1]{\textcolor{blue}{\fbox{TODO: #1}}}
 
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\footnotesize}
 
@@ -63,15 +55,15 @@
     	{'d}{{$\delta$}}1 {'e}{{$\eta$}}1
     }
 
-\newtheoremstyle{example}{\topsep}{\topsep}%
-     {\normalsize\sl}%         Body font
-     {}%         Indent amount (empty = no indent, \parindent = para indent)
-     {\small\it}% Thm head font
-     {:}%        Punctuation after thm head
-     {\newline} %     Space after thm head (\newline = linebreak)
-     {\thmname{#1} \thmnumber{#2}\thmnote{#3}}%         Thm head spec
+\newtheoremstyle{example}{\topsep}{\topsep}
+     {\normalsize\sl} % Body font.
+     {}               % Indent amount (empty = no indent, \parindent = para indent).
+     {\small\it}      % Thm head font.
+     {:}              % Punctuation after thm head.
+     {\newline}       % Space after thm head (\newline = linebreak).
+     {\thmname{#1} \thmnumber{#2}\thmnote{#3}} % Thm head spec.
 \theoremstyle{example}
-\newtheorem{example}{Example}%[subsection]
+\newtheorem{example}{Example}
 
 \newcommand{\hlinepage}{\rule{\textwidth}{0.25pt}}
 \newcommand{\HRule}{\rule{\linewidth}{0.25pt}}
@@ -92,7 +84,7 @@ The National Institute of Aerospace / Galois Inc. / NASA LaRC
 \vspace{0.6cm}
 
 {\Huge \bfseries
-A Tutorial on Copilot
+An Introduction to Copilot
 }
 \HRule
 
@@ -126,15 +118,11 @@ sebastian.niller@nianet.org\\
 \end{center}
 \end{minipage}
 
-%\vfill
-
 \vspace{1cm}
 
 {\large
 Hampton, Virginia, United States, \today
 }
-
-%\vfill
 
 %\begin{tabular}{cc}
 %\hspace{0.5cm}\includegraphics[width=0.18\textwidth]{figures/nia}\hspace{0.5cm}  &
@@ -152,18 +140,16 @@ Program Office.
 
 \end{center}
 
-%\vspace{0.25cm}
+\vspace{0.25cm}
 
-%\section*{Abstract}
-
-%\begin{center}\emph{Abstract}\end{center}
+\section*{Abstract}
 
 {
 \small
 This document contains a tutorial on Copilot and its accompanying tools.
-We do attempt to give an complete, formal description of Copilot
-(references are provided in the bibliography); rather we aim at
-demonstrating the fundamental concepts of the language by using ideomatic
+We do not attempt to give a complete, formal description of Copilot
+(references are provided in the bibliography), rather we aim at
+demonstrating the fundamental concepts of the language by using idiomatic
 expositions and examples.
 }
 
@@ -179,17 +165,17 @@ expositions and examples.
 
 Copilot is embedded into the functional programming language Haskell
 \citep{PeytonJones02}. In particular, Copilot uses Haskell language extensions
-specific to the Glasgow Haskell Compiler (GHC); hence in order to get started
-with using Copilot, you must first install an up-to-date version of GHC.
+specific to the Glasgow Haskell Compiler (GHC); hence in order to start
+using Copilot, you must first install an up-to-date version of GHC.
 (The minimal required version is 7.0.)
 The easiest way to do this is to download and install the Haskell Platform,
 which is freely distributed from here:
 
 \begin{center}
-http://hackage.haskell.org/platform/
+\url{http://hackage.haskell.org/platform}
 \end{center}
 
-After having installed the Haskell Platform, Copilot is installed by executing
+\noindent After having installed the Haskell Platform, Copilot is installed by executing
 the following command:
 
 \begin{code}
@@ -198,19 +184,24 @@ the following command:
 
 \noindent This should, if everything goes well, install Copilot on your system.
 
-The examples provided in this tutorial can all be downloaded from here:
+Copilot is distributed throughout a series of packages at Hackage:
 
-\begin{center}
-\todo{http://github...}
-\end{center}
+\begin{itemize}
+\item copilot-language: Contains the language front-end.
+\item copilot-core: Contains an intermediate representation for Copilot programs (shared by all back-ends).
+\item copilot-c99: A backend for Copilot targeting C99 (based on Atom, \url{https://github.com/tomahawkins/atom}).
+\item copilot-sbv: A backend for Copilot targeting C99 (based on SBV, \url{https://github.com/LeventErkok/sbv}).
+\item copilot-libraries: A set of utility functions for Copilot, including a clock-library, a linear temporal logic framework,
+a voting library, and a regular expression framework.
+\end{itemize}
 
 \section{Domain}
 
-Copilot is a domain specific langauge tailored to programming \emph{runtime
+Copilot is a domain specific language tailored to programming \emph{runtime
 monitors} for \emph{hard real-time}, \emph{distributed}, \emph{reactive systems}.
-Briefly, a runtime monitor is program which runs concurrently with a target program
-with the purpose of assuring that the target program behaves in accordance with a
-preestablished specification. Copilot is a language for writing such specifications.
+Briefly, a runtime monitor is program that runs concurrently with a target program
+with the sole purpose of assuring that the target program behaves in accordance with a
+pre-established specification. Copilot is a language for writing such specifications.
 
 A reactive system is a system that responds continuously to its environment.
 All data to and from a reactive system is communicated progressively during
@@ -218,27 +209,33 @@ execution. Reactive systems differ from transformational systems which transform
 data in a single pass and then terminate, as for example compilers and numerical
 computation software.
 
-A hard real-time system is a system that has a bounded execution time.
+A hard real-time system is a system that has a statically bounded execution time and memmory usage.
 Typically, hard real-time systems are used in mission critical software, i.e.
 in avionics, medical equipment, nuclear power plants; hence, occasional dropouts
-in response time are not tolerated.
+in the response time or crashes are not tolerated.
 
 A distributed system is a system which is layered out on multiple pieces of hardware.
-The distributed systems we consider are synchronized, i.e. each component agree on
+The distributed systems we consider are all synchronized, i.e. each component agree on
 a shared global clock.
 
 \section{Language}
 
-A Copilot program is a declarative specification consisting \todo{...}
+Copilot is a pure declarative language, i.e. expressions are free of side-effects
+and satisfies referential transparency.
+A program written in Copilot, which from now on will be referred to as a \emph{specification},
+has a cyclic behavior, where each cycle consists of a fixed series of steps:
 
-A Copilot program has a cyclic behaviour.
+\begin{itemize}
+\item Sample external variables, arrays, and functions.
+\item Update internal variables.
+\item Fire external triggers. (In case the specification is violated.)
+\end{itemize}
 
-\subsection{Streams}
+\noindent We refer to a single cycle as an \emph{iteration}.
 
-All data in Copilot is propagated as streams. A stream is an infinite, ordered
-sequence of values which must conform to the same type.\todo{point to place in
-  document where all possible types are enumerated} E.g. we have the stream
-of fibonacci numbers:
+All transformation of data in Copilot is propagated through streams.
+A stream is an infinite, ordered sequence of values which must conform to the same type.
+E.g. we have the stream of fibonacci numbers:
 
 \begin{center}
 $s_{fib} = \{1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
@@ -251,8 +248,6 @@ $s_{fib}(1) = 1$, $s_{fib}(2) = 2$, and so forth.
 Constants as well as arithmetic, boolean, and relational operators are
 lifted to work pointwise on streams:
 \\
-
-\todo{explain the type of Int32?}
 
 \noindent
 \begin{minipage}{0.3\textwidth}
@@ -284,9 +279,7 @@ $\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
 $\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
 \end{center}
 
-\subsection{Temporal operators}
-
-Two \emph{temporal} operators are provided, one for delaying streams and one for
+Two types of \emph{temporal} operators are provided, one for delaying streams and one for
 looking into the future of streams:
 %
 \begin{code}
@@ -301,7 +294,7 @@ For example the stream {\tt w} defined as
 w = [5,6,7] ++ x
 \end{code}
 %
-where {\tt x} is the stream defined above, evaluates to the sequence
+evaluates to the sequence
 $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt s}.
 For example we can skip the first two values of {\tt w}:
@@ -316,24 +309,23 @@ $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 \subsection{Streams as Lazy-lists}
 
 A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
-In Haskell, the lazy-list of natural numbers can be programmed like this:
+In Haskell the lazy-list of natural numbers can be programmed like this:
 %
 \begin{code}
 nats_ll :: [Int32]
-nats_ll = [0] ++ map (+ 1) nats_ll
+nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
 \end{code}
 %
 As both constants and arithmetic operators are lifted to work pointwise on
-streams in Copilot, there is no need for operators that lift from values to
-lists (e.g., {\tt map}, {\tt zipWith}, or {\tt repeat}) when
-programming the stream of natural numbers:
+streams in Copilot there is no need for {\tt zipWith} and {\tt repeat} when
+specifying the stream of natural numbers:
 %
 \begin{code}
 nats :: Stream Int32
 nats = [0] ++ (1 + nats)
 \end{code}
 %
-In the same manner, the lazy-list of Fibonacci Numbers can be programmed by:
+In the same manner, the lazy-list of Fibonacci Numbers can be specified as follows:
 %
 \begin{code}
 fib_ll :: [Int32]
@@ -346,10 +338,22 @@ fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{code}
 
+In order to ensure that programs are causal, i.e. to prevent that some stream depends on
+the evaluation of future values of itself, we require that drop-operators can only be
+applied directly on an append operator, and that the index in the a drop operator is less than
+the size of the right argument (the appended list) of the respective append operator upon which it is applied.
+We may soften this requirement in future versions of Copilot, e.g. to allow streams such as this one:
+%
+\begin{code}
+x = drop 1 (([1,2] ++ y) * ([3,5,6] ++ z)
+\end{code}
+%
+For compiler implementation reasons, such streams, however, are prohibited in the current version of Copilot.
+
 \subsection{Functions on Streams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
-as a macro-langauge for defining functions on streams.
+as a macro-language for defining functions on streams.
 
 \begin{example}
 We define the function, {\tt even}, which given a stream of
@@ -391,9 +395,9 @@ Copilot also facilitates \emph{stateful} functions. A \emph{stateful} function
 is function which has an internal state, e.g. as a latch (as in electronic
 circuits) or a low/high-pass filter (as in a DSP).
 
-\begin{figure}[ht!]
+\begin{figure}
 \begin{minipage}{0.3\linewidth}
-\begin{tabular}{c|c|c}
+\begin{tabular}{c|c||c}
 $\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
 \hline
 $F$ & $F$ & $F$ \\
@@ -425,12 +429,17 @@ implementation is provided at the right.}
 We consider a simple latch, as described in \cite{Farhat2004}, with a single
 input and a boolean state. Whenever the input is true the internal state is reversed.
 The operational behavior and the implementation of the latch is shown in Figure
-\ref{fig:jk_latch}.
+\ref{fig:jk_latch}.\footnote
+{In order
+to use conditionals (if-then-else's) in Copilot specifications,
+as in Figure \ref{fig:jk_latch},
+or guards, as in Figure \ref{fig:counter}, the GHC
+language extension {\tt RebindableSyntax} must be set on.}
 \end{example}
 
-\begin{figure}[ht!]
+\begin{figure}
 \begin{minipage}{0.3\linewidth}
-\begin{tabular}{c|c|c}
+\begin{tabular}{c|c||c}
 $\mathtt{inc}_i$: & $\mathtt{reset}_i$: & $\mathtt{cnt}_i$: \\
 \hline
 $F$ & $F$ & $\mathtt{cnt}_{i-1}$ \\
@@ -454,25 +463,19 @@ counter inc reset = cnt
     z = [0] ++ cnt
 \end{code}
 \end{minipage}
-\caption{A resetable counter. The specification is provided at the left and the
+\caption{A resettable counter. The specification is provided at the left and the
 implementation is provided at the right.
-%The inputs {\tt inc} and {\tt reset} increments and resets the counter respectively.
 }
 \label{fig:counter}
 \end{figure}
 
 \begin{example}
-We consider a resetable counter with two inputs, {\tt inc} and {\tt reset}.  The
-input {\tt inc} increments the counter and the input {\tt reset} resets the
-counter. The internal state of the counter, {\tt cnt}, represents the value of
-the counter and is initially set to zero. At each cycle, $i$, the value of
+We consider a resettable counter with two inputs, {\tt inc} and {\tt reset}.
+The input {\tt inc} increments the counter and the input {\tt reset} resets the
+counter. The internal state of the counter, {\tt cnt}, represents the value of the
+counter and is initially set to zero. At each cycle, $i$, the value of
 $\mathtt{cnt}_i$ is determined as shown in the left table in Figure
-\ref{fig:counter}.\footnote{In order to use guards in Copilot specifications, as
-  in Figure \ref{fig:jk_latch}, the GHC language extension {\tt
-    RebindableSyntax} must be set.  This can be done by adding {\tt \{-\#
-    LANGUAGE RebindableSyntax \#-\}} to the top of the module declaration.  See
-  \url{http://www.haskell.org/ghc/docs/7.0.3/html/users_guide/ghc-language-features.html#options-language}
-  for more information.}.
+\ref{fig:counter}.
 \end{example}
 
 %\begin{figure}
@@ -490,14 +493,15 @@ $\mathtt{cnt}_i$ is determined as shown in the left table in Figure
 %\label{fig:2_pole_iir_filter}
 %\end{figure}
 
-\subsection{Interacting with the target program}
+\subsection{Interacting With the Target Program}
 
-All interaction with the outside world is exchanged by sampling \emph{external
+All interaction with the outside world is done by sampling \emph{external
 variables} and by evoking \emph{triggers}.
 External variables are variables that are defined outside Copilot and which
 reflect the visible state of the target program that we are monitoring.
-In the same manner triggers are functions that are defined outside Copilot and which
-are evoked when Copilot needs to report that an error has occured in the target program.
+Analogously, triggers are functions that are defined outside Copilot and which
+are evoked when Copilot needs to report that the target program has violated a
+specification constraint.
 
 External variables are defined by using the {\tt extern} construct:
 %
@@ -506,7 +510,7 @@ extern :: Typed a => String -> Stream a
 \end{code}
 %
 It takes the name of an external variable and generates a stream by sampling
-the variable at each clock cycle. 
+the variable at each clock cycle.
 
 Triggers are defined by using the {\tt trigger construct}:
 %
@@ -515,9 +519,9 @@ trigger :: String -> Stream Bool -> [TriggerArg] -> Spec
 \end{code}
 %
 The first parameter is the name of the external function, the second parameter is the
-guard which determins when the trigger should be evoked, and the third parameter
+guard which determines when the trigger should be evoked, and the third parameter
 is a list of arguments which is passed to the trigger when evoked.
-Triggers can be combined by using the \emph{do}-notation as follows:
+Triggers can be combined into a specification by using the \emph{do}-notation:
 %
 \begin{code}
 spec :: Spec
@@ -530,10 +534,9 @@ spec =
 \end{code}
 %
 The order in which the triggers are defined is irrelevant.
-We use the term \emph{specification} for a set of triggers defined in a do
-block as above.
 
 \begin{example}
+\label{exm:engine}
 We consider an engine controller with the following property:
 If the temperature rises more than 2.3 degrees within 0.2 seconds, then
 the engine should be shut off immediately.
@@ -542,7 +545,7 @@ surveys the above property:
 %
 \begin{code}
 propTempRiseShutOff :: Spec
-propTempRiseShutOff = trigger (overTempRise ==> not running) "over_temp_rise" []
+propTempRiseShutOff = trigger "over_temp_rise" (overTempRise ==> not running) []
   where
     temps        = [0, 0, 0] ++ (extern "temp" :: Stream Float)
     overTempRise = drop 2 temps > const 2.3 + temps
@@ -557,14 +560,46 @@ temperature rises more than 2.3 degrees within 0.2 seconds and the engine is not
 off.
 \end{example}
 
-\subsection{Clocks}
+In addition to external variables, we can also sample external arrays and functions:
+%
+\begin{code}
+externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
+externFun :: Typed a => String -> [FunArg] -> Stream a
+funArg :: Typed a => Stream a -> FunArg
+\end{code}
+%
+The constructor \texttt{externArray} takes two arguments: the name of array and an index into the array.
+The index is given by a Copilot stream (of integral type) that is used as an index into the table.
+The constructor \texttt{externFun} also takes two arguments: the name of the external function and a list of
+arguments that are provided to the function. Similarly to the index for external arrays, each argument to
+an external function is given by a Copilot stream.
+Both external arrays and functions must, like external variables, be defined in the target
+program that is monitored. Additionally external functions must be without side effects.
 
-\todo{T.B.D. when clocks work!}
+\begin{example}
+%\label{exm:e}
+Say we have defined a lookup-table (in C99) of a discretized continuos function that we want to use
+within Copilot:
+%
+\begin{code}
+double someTable[] = { 3.5, 3.7, 4.5, ... };
+\end{code}
+%
+We can use the table in a Copilot specification as follows:
+%
+\begin{code}
+lookupSomeTable :: Stream Int -> Stream Stream Double
+lookupSomeTable k = externArray "someTable" k 
+\end{code}
+%
+Given the following values for \texttt{k}, $\{2, 1, 3, 3, 2, \dots \}$, the output of 
+\texttt{lookupSomeTable k} would be $\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$.
+\end{example}
 
 \subsection{Explicit Sharing}
 \label{sec:explicit_sharing}
 
-\begin{figure}[ht!]
+\begin{figure}
 \begin{minipage}{0.5\textwidth}
 \begin{code}
 s1 = let x = nats + nats
@@ -574,14 +609,13 @@ s1 = let x = nats + nats
 \begin{minipage}{0.5\textwidth}
 \begin{code}
 s2 = local (nats * nats) $
-       \ x -> x + x
+    \ x -> x + x
 \end{code}
 \end{minipage}
-\caption{Implicit (to the left) and explicit (to the right) sharing.}
+\caption{Implicit sharing (to the left) versus explicit sharing (to the right).}
 \label{fig:explicit_sharing}
 \end{figure}
-
-Copilot facilitates sharing in expressions by the \emph{local}-construct:
+\noindent Copilot facilitates sharing in expressions by the \emph{local}-construct:
 %
 \begin{code}
 local
@@ -592,92 +626,145 @@ local
 \end{code}
 %
 The local construct works similar to \emph{let}-bindings in ordinary Haskell.
-For example, from a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
+From a semantic point of view the streams {\tt s1} and {\tt s2} from Figure
 \ref{fig:explicit_sharing} are identical.
 As we will see in Section \ref{subsec:boyer_moore}, however, certain advanced
-Copilot programs may force the compiler to build syntax trees that blow up
-exponentially.  In general, such programs are Copilot library functions;
-user-defined functions should rarely require explicit sharing.
+Copilot programs may force the compiler to build syntax trees that blow up exponentially.
+In such cases, using explicit sharing may help to avoid this.
+We strongly discourage using explicit sharing for optimizing Copilot programs.
+In fact, the current C-backend for Copilot does common-subexpression-elimination.
+%which renders the use of explicit sharing for program optimization superfluous.
+In future versions of Copilot explicit sharing might be deprecated.
 
 \section{Tools}
 
-Copilot comes with various of tools and \todo{finish}
+Copilot comes with a variety of tools, including an interpreter,
+a C-targetting compiler, and a pretty-printer. In the following section we will
+demonstrate some of these tools and their usage.
 
+\subsection{Interpreting Copilot}
 
-
-\subsection{Interpreting a Specification}
-
-\subsection{Compiling a Specification}
-
-\section{Advanced Examples}
-
-In this section, we will cover three examples that touch advanced aspects
-of Copilot: In the first example we show how to implement a stopwatch by
-using the clock system; in the second and third example we demonstrate how to make
-use of Haskell as an advanced macro langauge on top of Copilot by showing how to
-implement a $n$-pole IRR filter and an algorithm for solving the voting problem
-in Copilot.
-
-% Vanitas Vanitatum Omnia Vanitas
-
-\subsection{Stopwatch}
-
-\begin{figure}[ht!]
+Suppose we want to interpret the engine controller from Example \ref{exm:engine}.
+Before we can do so, we must define the external variables {\tt temp}
+and {\tt running} as infinite Haskell lists:
+%
 \begin{code}
-controller
-  :: Stream Bool
-  -> Stream Bool
-  -> Stream Bool
-  -> (Stream Int32, Stream Bool)
-controller tick ss lr = (time, frozen)
-  where
-    running    = latch ss
-    frozen     = latch lap
-    zfrozen    = [False] ++ frozen
-    lap        = lr && (running || zfrozen)
-    reset      = lr && (not running && not frozen)
-    time       = counter (tick && running) reset
+temp :: [Float]
+temp = map exp [0.2, 0.4 ..]
 
-stopwatch :: Spec
-stopwatch = trigger "stopwatch" frozen [arg time]
-  where
-    (time, frozen) = controller
-      (extern "tick") (extern "ss") (extern "lr")
+running :: [Bool]
+running = repeat True
 \end{code}
-\caption{A stopwatch.}
-\label{fig:stopwatch}
-\end{figure}
-
-\todo{T.B.D. when clocks work!}
-
-\subsection{An $n$-pole IIR Filter}
-
-
-
-\begin{figure}[ht!]
+%
+We now evoke the interpreter as follows (e.g. in GHCI):
+%
 \begin{code}
-iir :: Double -> [(Double, Double)] -> Sig Double -> Sig Double
-iir b0 ks x0 = y0
-  where
-    y0 = constant b0 * x0 + bk + ak
-    (bk, ak, _, _) = foldl step (0, 0, y0, x0) ks
-      where
-        step (xAcc, yAcc, xz, yz) (b, a) = (xAcc', yAcc', xz', yz')
-          where
-            xAcc' = xAcc + xz * constant b
-            yAcc' = yAcc + yz * constant a
-            xz'   = [0] ++ xz
-            yz'   = [0] ++ yz
+interpret
+  10
+  [input "temp" temp, input "running" running]
+  propTempRiseShutOff
 \end{code}
-\caption{An $n$-pole IIR filter.}
-\label{fig:n_pole_irr_filter}
-\end{figure}
+%
+The first argument to the function \emph{interpret} is the number of iterations that we want to evaluate.
+The second argument is a list of inputs. Each input takes a name and an infinite list of
+values (which must conform to the type of the input). The third argument is the specification
+that we wish to interpret.
 
-\newpage
-\subsection{The Boyer-Moore Majority-Vote Algorithm}
+\subsection{Compiling Copilot}
+
+Compiling the engine controller from Example \ref{exm:engine} is straightforward:
+%
+\begin{code}
+compile propTempRiseShutOff
+\end{code}
+%
+The compiler now generates two files:
+
+\begin{itemize}
+\item ``copilot.c'' --- 
+\item ``copilot.h'' --- 
+\end{itemize}
+
+The file named ``copilot.h'' contains prototypes for all external variables, functions, and arrays,
+and contains a prototype for the ``step''-functions wich evaluates a single iteration.
+
+\begin{code}
+/* Generated by Copilot Core v. 0.1 */
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/* Triggers (must be defined by user): */
+
+void over_temp_rise();
+
+/* External variables (must be defined by user): */
+
+extern float temp;
+extern bool running;
+
+/* Step function: */
+
+void step();
+\end{code}
+
+Using the prototypes in ``copilot.h'' we can build a driver as follows:
+
+\begin{code}
+/* driver.c */
+#include <stdio.h>
+#include "copilot.h"
+
+bool running = true;
+float temp = 1.1;
+
+void over_temp_rise()
+{
+  printf("The trigger has been evoked!\n");
+}
+
+int main (int argc, char const *argv[])
+{
+  int i;
+
+  for (i = 0; i < 10; i++)
+  {
+    printf("iteration: %d\n", i);
+    temp = temp * 1.3;
+    step();
+  }
+
+  return 0;
+}
+\end{code}
+
+Running ``gcc copilot.c driver.c -o prop'' gives a program ``prop'', which when executed
+yields the following output:
+
+\begin{code}
+iteration: 0
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+The trigger has been evoked!
+iteration: 8
+The trigger has been evoked!
+iteration: 9
+The trigger has been evoked!
+\end{code}
+
+\section{Advanced Example: The Boyer-Moore Majority-Vote Algorithm}
 \label{subsec:boyer_moore}
 
-\begin{figure}[ht!]
+In this section we demonstrate how to use Haskell as an advanced macro language
+on top of Copilot by implementing an algorithm for solving the voting problem
+in Copilot.
+
+\begin{figure}
 \begin{code}
 majorityPure :: Eq a => [a] -> a
 majorityPure []     = error "majorityPure: empty list!"
@@ -695,9 +782,7 @@ majorityPure' (x:xs) can cnt =
 \label{fig:majority_pure}
 \end{figure}
 
-
-
-\begin{figure}[ht!]
+\begin{figure}
 \begin{code}
 aMajorityPure :: Eq a => [a] -> a -> Bool
 aMajorityPure xs can = aMajorityPure' 0 xs can > length xs `div` 2
@@ -714,7 +799,7 @@ aMajorityPure' cnt (x:xs) can =
 \end{figure}
 
 Reliability in mission critical software is often improved by replicating
-the same computations on seperate hardware and by doing a vote in the end
+the same computations on separate hardware and by doing a vote in the end
 based on the output of each system. The majority vote problem consists of
 determining if there in a given list of votes is a candidate that has more
 than half of the votes, and if so, of finding this candidate.
@@ -734,7 +819,7 @@ E.g. applying {\tt majorityPure} on the string {\tt AAACCBBCCCBCC} yields
 
 When implementing the majority vote algorithm for Copilot, we can use reuse
 almost all of the code from the Haskell implementation. However, as functions
-in Copilot in reality are macroes that are expanded at compile time, care must
+in Copilot in reality are macros that are expanded at compile time, care must
 be taken in order to avoid an explosion in the code size. Hence, instead of
 using Haskell's build-in \emph{let}-blocks, we use explicit sharing, as
 described in Section \ref{sec:explicit_sharing}. The Copilot implementations
@@ -743,7 +828,7 @@ Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
 with the Copilot implementation, we see that the code is almost identical,
 except for the type signatures and the explicit sharing annotations.
 
-\begin{figure}[ht!]
+\begin{figure}
 \begin{code}
 majority :: (Eq a, Typed a) => [Stream a] -> Stream a
 majority []     = error "majority: empty list!"
@@ -762,7 +847,7 @@ majority' (x:xs) can cnt =
 \label{fig:majority}
 \end{figure}
 
-\begin{figure}[ht!]
+\begin{figure}
 \begin{code}
 aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
 aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
@@ -778,10 +863,10 @@ aMajority' cnt (x:xs) can =
 \label{fig:amajority}
 \end{figure}
 
-\todo{Maybe give some practical examples of (1) compiling through the C99
-  backend, (2) using the interpreter, (3) using the random program generator.
-  What about explaining what are valid programs (i.e., the analyzer)?}
+\addcontentsline{toc}{section}{Further Reading}
+\section*{Further Reading}
 
+For detailed background information on Copilot we refer to \cite{PikeGoodloe2010} and \cite{PikeGoodloe2011}.
 
 \addcontentsline{toc}{section}{Acknowledgement}
 \section*{Acknowledgement}
