@@ -9,6 +9,11 @@ TODOs
 
 *   Add casts to the language.
 
+*   Ad a backend to Feldspar.
+
+*   Remove "error" from copilot-core, copilot-c99 (unimplemented array sampling,
+    I think).
+
 DONE
 ====
 
