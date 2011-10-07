@@ -1,12 +1,13 @@
 %\documentclass[draft, twocolumn, landscape, a4paper, fleqn, 10pt]{article}
-\documentclass[a4paper, 10pt]{article}
+\documentclass[]{article}
 
 %\usepackage[top=4cm, bottom=4cm, left=4cm, right=4cm]{geometry}
 %\usepackage{2in1}
 %\usepackage{a4wide}
 %\setlength{\columnsep}{1cm}
 
-\usepackage[british]{babel}
+\newcommand{\todo}[1]{{\bf \Huge !!!!! #1 !!!!!}}
+%\usepackage[british]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{url}
 \usepackage{graphicx}
@@ -195,6 +196,7 @@ Copilot is distributed throughout a series of packages at Hackage:
 a voting library, and a regular expression framework.
 \end{itemize}
 
+Many of the examples in this paper can be found at \url{https://github.com/leepike/Copilot/tree/copilot2.0/Examples}.
 \section{Domain}
 
 Copilot is a domain specific language tailored to programming \emph{runtime
@@ -210,7 +212,7 @@ data in a single pass and then terminate, as for example compilers and numerical
 computation software.
 
 A hard real-time system is a system that has a statically bounded execution time and memmory usage.
-Typically, hard real-time systems are used in mission critical software, i.e.
+Typically, hard real-time systems are used in mission-critical software, i.e.
 in avionics, medical equipment, nuclear power plants; hence, occasional dropouts
 in the response time or crashes are not tolerated.
 
@@ -220,7 +222,7 @@ a shared global clock.
 
 \section{Language}
 
-Copilot is a pure declarative language, i.e. expressions are free of side-effects
+Copilot is a pure declarative language; i.e., expressions are free of side-effects
 and satisfies referential transparency.
 A program written in Copilot, which from now on will be referred to as a \emph{specification},
 has a cyclic behavior, where each cycle consists of a fixed series of steps:
@@ -235,10 +237,10 @@ has a cyclic behavior, where each cycle consists of a fixed series of steps:
 
 All transformation of data in Copilot is propagated through streams.
 A stream is an infinite, ordered sequence of values which must conform to the same type.
-E.g. we have the stream of fibonacci numbers:
+E.g. we have the stream of Fibonacci numbers:
 
 \begin{center}
-$s_{fib} = \{1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
+$s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
 \end{center}
 
 \noindent We denote the $n$th value of the stream $s$ as $s(n)$, and the first
@@ -288,7 +290,8 @@ drop :: Int -> Stream a -> Stream a
 \end{code}
 %
 Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
-For example the stream {\tt w} defined as
+For example the stream {\tt w} defined as follows, given our previous definition
+of {\tt x}:
 %
 \begin{code}
 w = [5,6,7] ++ x
@@ -309,7 +312,7 @@ $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 \subsection{Streams as Lazy-lists}
 
 A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
-In Haskell the lazy-list of natural numbers can be programmed like this:
+In Haskell, the lazy-list of natural numbers can be programmed like this:
 %
 \begin{code}
 nats_ll :: [Int32]
@@ -317,7 +320,7 @@ nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
 \end{code}
 %
 As both constants and arithmetic operators are lifted to work pointwise on
-streams in Copilot there is no need for {\tt zipWith} and {\tt repeat} when
+streams in Copilot, there is no need for {\tt zipWith} and {\tt repeat} when
 specifying the stream of natural numbers:
 %
 \begin{code}
@@ -325,7 +328,7 @@ nats :: Stream Int32
 nats = [0] ++ (1 + nats)
 \end{code}
 %
-In the same manner, the lazy-list of Fibonacci Numbers can be specified as follows:
+In the same manner, the lazy-list of Fibonacci numbers can be specified as follows:
 %
 \begin{code}
 fib_ll :: [Int32]
@@ -338,17 +341,24 @@ fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{code}
 
-In order to ensure that programs are causal, i.e. to prevent that some stream depends on
-the evaluation of future values of itself, we require that drop-operators can only be
-applied directly on an append operator, and that the index in the a drop operator is less than
-the size of the right argument (the appended list) of the respective append operator upon which it is applied.
-We may soften this requirement in future versions of Copilot, e.g. to allow streams such as this one:
+In order to ensure that programs are \emph{causal}, informally meaning that
+stream values cannot depend on future values.  For example, the following stream
+definition is allowed:
 %
 \begin{code}
-x = drop 1 (([1,2] ++ y) * ([3,5,6] ++ z)
+h :: Stream Word64
+h = drop 2 g
+  where g = f
+        f = [0,1,2] ++ f
 \end{code}
 %
-For compiler implementation reasons, such streams, however, are prohibited in the current version of Copilot.
+
+But if instead {\tt h} is defined as {\tt h = drop 4 g}, then the definition is
+disallowed.  While an analogous stream is definable in a lazy language, we bar
+it in Copilot, since it requires future values of {\tt g} and {\tt f} to be
+generated before producing values for {\tt h}.  This is not possible since
+Copilot programs may take inputs in real-time from the environment (see
+Section~\ref{sec:interacting}).
 
 \subsection{Functions on Streams}
 
@@ -365,7 +375,7 @@ even :: Stream Int32 -> Stream Bool
 even x = x `mod` 2 == 0
 \end{code}
 %
-Applying {\tt even} on {\tt nats} yields the sequence
+Applying {\tt even} on {\tt nats} (defined above) yields the sequence
 $\{F, T, F, T, F, \dots\}$.
 \end{example}
 
@@ -396,7 +406,7 @@ is function which has an internal state, e.g. as a latch (as in electronic
 circuits) or a low/high-pass filter (as in a DSP).
 
 \begin{figure}
-\begin{minipage}{0.3\linewidth}
+\begin{minipage}{0.4\linewidth}
 \begin{tabular}{c|c||c}
 $\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
 \hline
@@ -438,7 +448,7 @@ language extension {\tt RebindableSyntax} must be set on.}
 \end{example}
 
 \begin{figure}
-\begin{minipage}{0.3\linewidth}
+\begin{minipage}{0.4\linewidth}
 \begin{tabular}{c|c||c}
 $\mathtt{inc}_i$: & $\mathtt{reset}_i$: & $\mathtt{cnt}_i$: \\
 \hline
@@ -452,9 +462,10 @@ $T$ & $T$ & $0$
 \end{tabular}
 \end{minipage}
 \hspace{1cm}
-\begin{minipage}{0.60\linewidth}
+\begin{minipage}{0.6\linewidth}
 \begin{code}
-counter :: Stream Bool -> Stream Bool -> Stream Int
+counter :: Stream Bool -> Stream Bool 
+        -> Stream Int
 counter inc reset = cnt
   where
     cnt | reset     = 0
@@ -494,7 +505,7 @@ $\mathtt{cnt}_i$ is determined as shown in the left table in Figure
 %\end{figure}
 
 \subsection{Interacting With the Target Program}
-
+\label{sec:interacting}
 All interaction with the outside world is done by sampling \emph{external
 variables} and by evoking \emph{triggers}.
 External variables are variables that are defined outside Copilot and which
@@ -599,7 +610,7 @@ Given the following values for \texttt{k}, $\{2, 1, 3, 3, 2, \dots \}$, the outp
 \subsection{Explicit Sharing}
 \label{sec:explicit_sharing}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{minipage}{0.5\textwidth}
 \begin{code}
 s1 = let x = nats + nats
@@ -631,12 +642,10 @@ From a semantic point of view the streams {\tt s1} and {\tt s2} from Figure
 As we will see in Section \ref{subsec:boyer_moore}, however, certain advanced
 Copilot programs may force the compiler to build syntax trees that blow up exponentially.
 In such cases, using explicit sharing may help to avoid this.
-We strongly discourage using explicit sharing for optimizing Copilot programs.
-In fact, the current C-backend for Copilot does common-subexpression-elimination.
-%which renders the use of explicit sharing for program optimization superfluous.
-In future versions of Copilot explicit sharing might be deprecated.
 
 \section{Tools}
+
+\todo{verifier,}
 
 Copilot comes with a variety of tools, including an interpreter,
 a C-targetting compiler, and a pretty-printer. In the following section we will
@@ -672,7 +681,10 @@ that we wish to interpret.
 
 \subsection{Compiling Copilot}
 
-Compiling the engine controller from Example \ref{exm:engine} is straightforward:
+Compiling the engine controller from Example \ref{exm:engine} is
+straightforward:
+
+\todo{reify}
 %
 \begin{code}
 compile propTempRiseShutOff
