@@ -168,6 +168,10 @@ expositions and examples.
 
 \newpage
 
+% -----------------------------------------------------------------
+% for final report
+% -----------------------------------------------------------------
+
 \section{Preliminaries}
 \label{sec:preliminaries}
 
@@ -632,7 +636,8 @@ s1 = let x = nats + nats
 \begin{code}
 s2 = local (nats * nats) $
     \ x -> x + x
-\end{code}
+\end{code} 
+% $
 \end{minipage}
 \caption{Implicit sharing (to the left) versus explicit sharing (to the right).}
 \label{fig:explicit_sharing}
@@ -803,8 +808,37 @@ The trigger has been evoked!
 \end{code}
 %
 
+\subsection{QuickCheck}
+QuickCheck~\cite{qc} is a library originally developed for Haskell such that
+given a property, it generates random inputs to test the property.  We provide a
+similar tool for checking Copilot specifications.  Currently, the tool is
+implemented to check the copilot-c99 backend against the interpreter.  The tool
+generates a random Copilot specification, and for some user-defined number of
+iterations, the output of the interpreter is compared against the output of the
+compiled C program.  The user can specify weights to influence the probability
+at which expressions are generated.
+
+If you have installed Copilot, you can execute the quickCheck tests by executing
+the program {\tt CopilotC99Test}.  The default installation for the executable
+is in {\tt \$HOME/.cabal/bin}. Assuming the executable is in your path, simply
+execute it.  It will direct the user to enter the number of specifications to
+test.  The program will then generate that many random specifications, testing
+the output of the interpreter against the executed C program.  By default, it
+tests the outputs for ten iterations.
+
+
 \subsection{Verification}
-Finally, Copilot includes a tool to generate a driver to prove the equivalence between the
+``Who watches the watchmen?''  Nobody.  For this reason, monitors in
+ultra-critical systems are the last line of defense and cannot fail.  Here, we
+outline our approach to generate high-assurance monitors.  First, as mentioned,
+the compiler is statically and strongly typed, and by implementing an eDSL, much
+of the infrastructure of a well-tested Haskell implementation is reused.
+Copilot contains a custom QuickCheck~\cite{qc}-like test harness that generates
+random Copilot programs and tests the interpreted output against the compiler to
+ensure correspondence between the two.  We have tested millions of randomly-generated programs
+between the compiler and interpreter.
+
+Copilot includes a tool to generate a driver to prove the equivalence between the
 copilot-c99 and copilot-sbv backends that each generate C~code (similar drivers
 are planned for future backends).  To use the driver, first import the following
 module:
@@ -988,6 +1022,12 @@ aMajority' cnt (x:xs) can =
 \caption{The second pass of the majority vote algorithm in Copilot.}
 \label{fig:amajority}
 \end{figure}
+
+% -----------------------------------------------------------------
+% for final report
+% -----------------------------------------------------------------
+
+
 
 \addcontentsline{toc}{section}{Further Reading}
 \section*{Further Reading}

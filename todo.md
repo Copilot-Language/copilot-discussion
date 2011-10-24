@@ -14,6 +14,16 @@ TODOs
 *   Remove "error" from copilot-core, copilot-c99 (unimplemented array sampling,
     I think).
 
+BUGS
+====
+
+*   Interpreting observers doesn't work.
+
+*   QuickCheck doesn't generate <, >, <=, etc. operators.  Also not currently
+    testing mod and div.
+
+*   Interpreting returns "head of empty" error when the args to a trigger is non-empty.
+
 DONE
 ====
 
