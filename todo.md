@@ -6,10 +6,16 @@ TODOs
 *   Comments, especially at the beginning of modules and on module exports.
 
 *   Make Copilot operator precedence match Haskell operator precedence.
+    (make binary operators associative, for now we have to write 'a && ( b && c )'
+     with parens).
 
 *   Add casts to the language.
 
-*   Ad a backend to Feldspar.
+*   Add casts that are able to construct a floating point stream out of
+    4 Word8, 2 Word16, 1 Word32 and so on (architecture specific), to
+    help protocol monitoring
+
+*   Add a backend to Feldspar.
 
 *   Remove "error" from copilot-core, copilot-c99 (unimplemented array sampling,
     I think).
@@ -23,6 +29,8 @@ BUGS
     testing mod and div.
 
 *   Interpreting returns "head of empty" error when the args to a trigger is non-empty.
+
+*   RegExpExamples.hs (and possibly other monitors) use up all memory with the interpreter.
 
 DONE
 ====
