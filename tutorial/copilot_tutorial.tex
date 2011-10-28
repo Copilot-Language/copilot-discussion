@@ -214,7 +214,7 @@ a voting library, and a regular expression framework.
 Many of the examples in this paper can be found at \url{https://github.com/leepike/Copilot/tree/copilot2.0/Examples}.
 \section{Domain}
 
-Copilot is a domain specific language tailored to programming \emph{runtime
+Copilot is a domain-specific language tailored to programming \emph{runtime
 monitors} for \emph{hard real-time}, \emph{distributed}, \emph{reactive systems}.
 Briefly, a runtime monitor is program that runs concurrently with a target program
 with the sole purpose of assuring that the target program behaves in accordance with a
@@ -356,7 +356,7 @@ fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{code}
 
-In order to ensure that programs are \emph{causal}, informally meaning that
+Copilot specifications must be \emph{causal}, informally meaning that
 stream values cannot depend on future values.  For example, the following stream
 definition is allowed:
 %
@@ -378,7 +378,9 @@ Section~\ref{sec:interacting}).
 \subsection{Functions on Streams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
-as a macro-language for defining functions on streams.
+as a macro-language for defining functions on streams.  The idea of using
+Haskell as a macro language is powerful, since Haskell is a
+general-purpose higher-order functional language.
 
 \begin{example}
 We define the function, {\tt even}, which given a stream of
@@ -440,9 +442,9 @@ $T$ & $T$ & $F$
 latch :: Stream Bool -> Stream Bool
 latch x = y
   where
-    y = if x then not z else z
-      where
-        z = [False] ++ y
+  y = if x then not z else z
+    where
+    z = [False] ++ y
 \end{code}
 \end{minipage}
 \caption{A latch. The specification is provided at the left and the
@@ -551,12 +553,11 @@ Triggers can be combined into a specification by using the \emph{do}-notation:
 %
 \begin{code}
 spec :: Spec
-spec =
-  do
-    trigger "f" (even nats) [arg fib, arg (nats * nats)]
-    trigger "g" (fib > 10) []
-    let x = extern "x" :: Stream Int32
-    trigger "h" (x < 10) [arg x]
+spec = do
+  trigger "f" (even nats) [arg fib, arg (nats * nats)]
+  trigger "g" (fib > 10) []
+  let x = extern "x" :: Stream Int32
+  trigger "h" (x < 10) [arg x]
 \end{code}
 %
 The order in which the triggers are defined is irrelevant.
@@ -573,9 +574,9 @@ surveys the above property:
 propTempRiseShutOff :: Spec
 propTempRiseShutOff = trigger "over_temp_rise" (overTempRise ==> not running) []
   where
-    temps        = [0, 0, 0] ++ (extern "temp" :: Stream Float)
-    overTempRise = drop 2 temps > const 2.3 + temps
-    running      = extern "running"
+  temps        = [0, 0, 0] ++ (extern "temp" :: Stream Float)
+  overTempRise = drop 2 temps > const 2.3 + temps
+  running      = extern "running"
 
 \end{code}
 %
@@ -655,14 +656,14 @@ local
 The local construct works similar to \emph{let}-bindings in ordinary Haskell.
 From a semantic point of view the streams {\tt s1} and {\tt s2} from Figure
 \ref{fig:explicit_sharing} are identical.
-As we will see in Section \ref{subsec:boyer_moore}, however, certain advanced
+As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
 Copilot programs may force the compiler to build syntax trees that blow up exponentially.
 In such cases, using explicit sharing may help to avoid this.
 
 \section{Tools}
 
 Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
-a C-targeting compiler, and a verifier front-end. In the following section, we will
+a two compilers targeting C, and a verifier front-end. In the following section, we will
 demonstrate some of these tools and their usage.
 
 \subsection{Pretty-Printing}
@@ -832,16 +833,14 @@ tests the outputs for ten iterations.
 ultra-critical systems are the last line of defense and cannot fail.  Here, we
 outline our approach to generate high-assurance monitors.  First, as mentioned,
 the compiler is statically and strongly typed, and by implementing an eDSL, much
-of the infrastructure of a well-tested Haskell implementation is reused.
-Copilot contains a custom QuickCheck~\cite{qc}-like test harness that generates
-random Copilot programs and tests the interpreted output against the compiler to
-ensure correspondence between the two.  We have tested millions of randomly-generated programs
-between the compiler and interpreter.
+of the infrastructure of a well-tested Haskell implementation is reused.  We
+have described our custom QuickCheck engine.  We have tested millions of
+randomly-generated programs between the compiler and interpreter with this approach.
 
-Copilot includes a tool to generate a driver to prove the equivalence between the
-copilot-c99 and copilot-sbv backends that each generate C~code (similar drivers
-are planned for future backends).  To use the driver, first import the following
-module:
+Additionally, Copilot includes a tool to generate a driver to prove the
+equivalence between the copilot-c99 and copilot-sbv backends that each generate
+C~code (similar drivers are planned for future backends).  To use the driver,
+first import the following module:
 %
 \begin{code}
 import qualified Copilot.Tools.CBMC as C
@@ -889,7 +888,6 @@ reify spec >>=
 \noindent
 The above executes the generated programs for 20 executions.
 
-\paragraph{CBMC}
 The verification depends on an open-source model-checker for C source-code
 originally developed at Carnegie Mellon University~\cite{cbmc}.  A license for
 the tool is available.~\footnote{\url{http://www.cprover.org/cbmc/LICENSE}.  It
@@ -982,7 +980,7 @@ almost all of the code from the Haskell implementation. However, as functions
 in Copilot in reality are macros that are expanded at compile time, care must
 be taken in order to avoid an explosion in the code size. Hence, instead of
 using Haskell's build-in \emph{let}-blocks, we use explicit sharing, as
-described in Section \ref{sec:explicit_sharing}. The Copilot implementations
+described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
 of the first and the second pass are given in Figure \ref{fig:majority} and
 Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
 with the Copilot implementation, we see that the code is almost identical,
@@ -1022,7 +1020,7 @@ aMajority' cnt (x:xs) can =
 \caption{The second pass of the majority vote algorithm in Copilot.}
 \label{fig:amajority}
 \end{figure}
-
+% $
 % -----------------------------------------------------------------
 % for final report
 % -----------------------------------------------------------------
