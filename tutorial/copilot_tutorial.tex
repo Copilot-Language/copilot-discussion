@@ -203,8 +203,8 @@ Copilot is distributed throughout a series of packages at Hackage:
 \begin{itemize}
 \item copilot-language: Contains the language front-end.
 \item copilot-core: Contains an intermediate representation for Copilot programs (shared by all back-ends).
-\item copilot-c99: A backend for Copilot targeting C99 (based on Atom, \url{https://github.com/tomahawkins/atom}).
-\item copilot-sbv: A backend for Copilot targeting C99 (based on SBV, \url{https://github.com/LeventErkok/sbv}).
+\item copilot-c99: A backend for Copilot targeting C99 (based on Atom, \url{http://hackage.haskell.org/package/atom}).
+\item copilot-sbv: A backend for Copilot targeting C99 (based on SBV, \url{http://hackage.haskell.org/package/sbv}).
 \item copilot-libraries: A set of utility functions for Copilot, including a clock-library, a linear temporal logic framework,
 a voting library, and a regular expression framework.
 \item copilot-cbmc: A driver for proving the correspondence between code
@@ -226,13 +226,14 @@ execution. Reactive systems differ from transformational systems which transform
 data in a single pass and then terminate, as for example compilers and numerical
 computation software.
 
-A hard real-time system is a system that has a statically bounded execution time and memmory usage.
-Typically, hard real-time systems are used in mission-critical software, i.e.
-in avionics, medical equipment, nuclear power plants; hence, occasional dropouts
-in the response time or crashes are not tolerated.
+A hard real-time system is a system that has a statically bounded execution time
+and memmory usage.  Typically, hard real-time systems are used in
+mission-critical software, such as avionics, medical equipment, and nuclear power
+plants; hence, occasional dropouts in the response time or crashes are not
+tolerated.
 
 A distributed system is a system which is layered out on multiple pieces of hardware.
-The distributed systems we consider are all synchronized, i.e. each component agree on
+The distributed systems we consider are all synchronized, i.e., each component agree on
 a shared global clock.
 
 \section{Language}
@@ -259,7 +260,7 @@ $s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
 \end{center}
 
 \noindent We denote the $n$th value of the stream $s$ as $s(n)$, and the first
-value in a sequence $s$ as $s(0)$. I.e. For $s_{fib}$ we have that $s_{fib}(0) = 1$,
+value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{fib}(0) = 1$,
 $s_{fib}(1) = 1$, $s_{fib}(2) = 2$, and so forth.
 
 Constants as well as arithmetic, boolean, and relational operators are
@@ -393,7 +394,7 @@ even x = x `mod` 2 == 0
 \end{code}
 %
 Applying {\tt even} on {\tt nats} (defined above) yields the sequence
-$\{F, T, F, T, F, \dots\}$.
+$\{T, F, T, F, T, F, \dots\}$.
 \end{example}
 
 If a function is required to return multiple results, we simply use plain
@@ -856,8 +857,8 @@ reify spec >>= C.genCBMC C.defaultParams
 %
 \noindent
 This generates to sets of C sources, one compiled through the copilot-c99
-backend and one through the copilot-sbv backend.  In addition, a driver (i.e., a
-{\tt main} function is generated that executes the code from each backend.  The
+backend and one through the copilot-sbv backend.  In addition, a driver (that is, a
+{\tt main} function) is generated that executes the code from each backend.  The
 driver has the following form:
 %
 \begin{code}
@@ -975,18 +976,7 @@ in Figure \ref{fig:amajority_pure}.
 E.g. applying {\tt majorityPure} on the string {\tt AAACCBBCCCBCC} yields
 {\tt C}, which {\tt aMajorityPure} can confirm is in fact a majority.
 
-When implementing the majority vote algorithm for Copilot, we can use reuse
-almost all of the code from the Haskell implementation. However, as functions
-in Copilot in reality are macros that are expanded at compile time, care must
-be taken in order to avoid an explosion in the code size. Hence, instead of
-using Haskell's build-in \emph{let}-blocks, we use explicit sharing, as
-described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
-of the first and the second pass are given in Figure \ref{fig:majority} and
-Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
-with the Copilot implementation, we see that the code is almost identical,
-except for the type signatures and the explicit sharing annotations.
-
-\begin{figure}
+\begin{figure}[ht]
 \begin{code}
 majority :: (Eq a, Typed a) => [Stream a] -> Stream a
 majority []     = error "majority: empty list!"
@@ -1005,7 +995,7 @@ majority' (x:xs) can cnt =
 \label{fig:majority}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{code}
 aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
 aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
@@ -1021,6 +1011,18 @@ aMajority' cnt (x:xs) can =
 \label{fig:amajority}
 \end{figure}
 % $
+
+When implementing the majority vote algorithm for Copilot, we can use reuse
+almost all of the code from the Haskell implementation. However, as functions
+in Copilot in reality are macros that are expanded at compile time, care must
+be taken in order to avoid an explosion in the code size. Hence, instead of
+using Haskell's build-in \emph{let}-blocks, we use explicit sharing, as
+described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
+of the first and the second pass are given in Figure \ref{fig:majority} and
+Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
+with the Copilot implementation, we see that the code is almost identical,
+except for the type signatures and the explicit sharing annotations.
+
 % -----------------------------------------------------------------
 % for final report
 % -----------------------------------------------------------------
