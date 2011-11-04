@@ -1,7 +1,13 @@
 TODOs
 =====
 
+*   Why Maybe Tag in ExternArray and ExternFun?
+
+*   Need Graph.hs in copilot-language?
+
 *   Replicate Interface.hs from the "old Copilot".
+
+*   Add regression test over Examples and/or QC backend.
 
 *   Comments, especially at the beginning of modules and on module exports.
 
@@ -20,15 +26,15 @@ TODOs
 *   Remove "error" from copilot-core, copilot-c99 (unimplemented array sampling,
     I think).
 
+*   QuickCheck doesn't generate <, >, <=, etc. operators.  Also not currently
+    testing mod and div.  Generating external variable checks?
+
+*   Change error "..." to something like impossible "...", saving errors for
+    really errors, like it's not implemented yet. :/
+
+
 BUGS
 ====
-
-*   Interpreting observers doesn't work.
-
-*   QuickCheck doesn't generate <, >, <=, etc. operators.  Also not currently
-    testing mod and div.
-
-*   Interpreting returns "head of empty" error when the args to a trigger is non-empty.
 
 *   RegExpExamples.hs (and possibly other monitors) use up all memory with the interpreter.
 
