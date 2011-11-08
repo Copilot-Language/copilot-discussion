@@ -524,13 +524,13 @@ $\mathtt{cnt}_i$ is determined as shown in the left table in Figure
 
 \subsection{Interacting With the Target Program}
 \label{sec:interacting}
+
 All interaction with the outside world is done by sampling \emph{external
-variables} and by evoking \emph{triggers}.
-External variables are variables that are defined outside Copilot and which
-reflect the visible state of the target program that we are monitoring.
-Analogously, triggers are functions that are defined outside Copilot and which
-are evoked when Copilot needs to report that the target program has violated a
-specification constraint.
+  variables} and by evoking \emph{triggers}.  External variables are variables
+that are defined outside Copilot and which reflect the visible state of the
+target program that we are monitoring.  Analogously, triggers are functions that
+are defined outside Copilot and which are evoked when Copilot needs to report
+that the target program has violated a specification constraint.
 
 External variables are defined by using the {\tt extern} construct:
 %
@@ -538,8 +538,35 @@ External variables are defined by using the {\tt extern} construct:
 extern :: Typed a => String -> Stream a
 \end{code}
 %
+\noindent
 It takes the name of an external variable and generates a stream by sampling
-the variable at each clock cycle.
+the variable at each clock cycle.  For example, 
+%
+\begin{code}
+sumExterns :: Stream Word64
+sumExterns =
+  let ex1 = extern "e1"
+      ex2 = extern "e2"
+  in  ex1 + ex2
+\end{code}
+%
+is a stream that takes two external variables {\tt e1} and {\tt e2} and adds
+them.  Variables from the types Booleans, unsigned 8-, 16-, 32-, 64-, and signed 8-, 16-, 32-,
+64-bits can be defined, and depending on the back-end, so can floats and
+doubles (in other words, instances are defined for these types for the class
+{\tt Typed}).
+
+Sometimes, type inference cannot infer the type of an external variable.  For
+example, in the stream definition
+%
+\begin{code}
+extEven :: Stream Bool
+extEven = extern "x" `mod` 2 == 0
+\end{code}
+%
+the type of {\tt extern "x"} is ambiguous.  For convenience, typed {\tt extern}
+functions are provided, e.g., {\tt externW8} or {\tt externI64} denoting an
+external unsigned 8-bit word or signed 64-bit word, respectively.
 
 Triggers are defined by using the {\tt trigger construct}:
 %
@@ -588,25 +615,42 @@ temperature rises more than 2.3 degrees within 0.2 seconds and the engine is not
 off.
 \end{example}
 
-In addition to external variables, we can also sample external arrays and functions:
+Besides variables, external arrays and arbitrary functions can be sampled.  The
+external array construct has the type
 %
 \begin{code}
-externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
-externFun :: Typed a => String -> [FunArg] -> Stream a
-funArg :: Typed a => Stream a -> FunArg
+externArray :: (Typed a, Typed b, Integral a) 
+            => String -> Stream a -> Stream b  
 \end{code}
 %
-The constructor \texttt{externArray} takes two arguments: the name of array and an index into the array.
-The index is given by a Copilot stream (of integral type) that is used as an index into the table.
-The constructor \texttt{externFun} also takes two arguments: the name of the external function and a list of
-arguments that are provided to the function. Similarly to the index for external arrays, each argument to
-an external function is given by a Copilot stream.
-Both external arrays and functions must, like external variables, be defined in the target
-program that is monitored. Additionally external functions must be without side effects.
+The construct takes the name of an array and a stream that generates indexes for
+the array (of integral type).  For example,
+%
+\begin{code}
+extArr :: Stream Word32
+extArr = externArray "arr1" arrIdx
+  where 
+  arrIdx :: Stream Word8
+  arrIdx = [0] ++ (arrIdx + 1) `mod` 4
+\end{code}
+{\tt extArr} is a stream of values drawn from an external array containing
+32-bit unsigned words.  The array is indexed by an 8-bit variable.  The index
+is ensured to be less than four.
+%% %
+%% \begin{code}
+%% externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
+%% externFun :: Typed a => String -> [FunArg] -> Stream a
+%% funArg :: Typed a => Stream a -> FunArg
+%% \end{code}
+%% % 
+%% The constructor \texttt{externArray} takes two arguments: the name of array and
+%% an index into the array.  The index is given by a Copilot stream (of integral
+%% type) that is used as an index into the table.
 
+%
 \begin{example}
 %\label{exm:e}
-Say we have defined a lookup-table (in C99) of a discretized continuos function that we want to use
+Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
 within Copilot:
 %
 \begin{code}
@@ -623,6 +667,37 @@ lookupSomeTable k = externArray "someTable" k
 Given the following values for \texttt{k}, $\{2, 1, 3, 3, 2, \dots \}$, the output of 
 \texttt{lookupSomeTable k} would be $\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$.
 \end{example}
+
+The constructor \texttt{externFun} also takes two arguments: the name of the
+external function and a list of arguments that are provided to the
+function. 
+%
+\begin{code}
+externFun :: Typed a => String -> [FunArg] -> Stream a
+\end{code}
+%
+Each argument to an external function is given by a Copilot stream.  For
+example,
+%
+\begin{code}
+func :: Stream Word16
+func = externFun "f" [funArg $ externW8 "x", funArg nats]
+  where
+  nats :: Stream Word16
+  nats = [0] ++ nats + 1
+\end{code} 
+% $
+samples a function that in C has the prototype
+%
+\begin{code}
+uint16_t f(uint8_t x, uint16_t nats);
+\end{code}
+%
+Both external arrays and functions must, like external variables, be defined in
+the target program that is monitored. Additionally external functions must be
+without side effects, as the monitor can cause undesired side-effects when
+calling the function.
+
 
 \subsection{Explicit Sharing}
 \label{sec:explicit_sharing}

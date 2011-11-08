@@ -1,13 +1,17 @@
 TODOs
 =====
 
+*   Remove stream guards(?).
+
+*   Implement casting for SBV backend.
+
+*   Remove Tests/... and have the regression execute everything in Examples
+
 *   Why Maybe Tag in ExternArray and ExternFun?
 
 *   Need Graph.hs in copilot-language?
 
 *   Replicate Interface.hs from the "old Copilot".
-
-*   Add regression test over Examples and/or QC backend.
 
 *   Comments, especially at the beginning of modules and on module exports.
 
@@ -15,52 +19,17 @@ TODOs
     (make binary operators associative, for now we have to write 'a && ( b && c )'
      with parens).
 
-*   Add casts to the language.
-
-*   Add casts that are able to construct a floating point stream out of
-    4 Word8, 2 Word16, 1 Word32 and so on (architecture specific), to
-    help protocol monitoring
+*   Add casts to the language.  Add casts that are able to construct a floating
+    point stream out of 4 Word8, 2 Word16, 1 Word32 and so on (architecture
+    specific), to help protocol monitoring
 
 *   Add a backend to Feldspar.
 
-*   Remove "error" from copilot-core, copilot-c99 (unimplemented array sampling,
-    I think).
-
 *   QuickCheck doesn't generate <, >, <=, etc. operators.  Also not currently
     testing mod and div.  Generating external variable checks?
-
-*   Change error "..." to something like impossible "...", saving errors for
-    really errors, like it's not implemented yet. :/
 
 
 BUGS
 ====
 
 *   RegExpExamples.hs (and possibly other monitors) use up all memory with the interpreter.
-
-DONE
-====
-
-*   Replicate Random.hs (and the testing infrastructure) from the "old Copilot".
-
-*   Integrate a (port of) Analysis.hs from the "old Copilot".
-
-*   Use Roman rather than Greek characters.
-
-    +   Should be done. However, if you find any remaining non-roman letters,
-        please tell me.
-
-*   Port the voting and clock libraries to the new Copilot version
-
-*   (Maybe) allow let expressions and streams to be both named and anonymous.
-    For example, allow something like either
-
-    let_ "var" exp
-
-    and 
-    
-    var <- let_ () exp 
-
-    The former assists with debugging.
-
-*   SBV backend.
