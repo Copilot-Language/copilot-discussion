@@ -32,4 +32,6 @@ TODOs
 BUGS
 ====
 
+*   Observers interpret for one extra iteration (over triggers).
+
 *   RegExpExamples.hs (and possibly other monitors) use up all memory with the interpreter.
