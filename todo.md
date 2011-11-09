@@ -29,9 +29,7 @@ TODOs
     testing mod and div.  Generating external variable checks?
 
 
-BUGS
+KNOWN BUGS
 ====
-
-*   Observers interpret for one extra iteration (over triggers).
 
 *   RegExpExamples.hs (and possibly other monitors) use up all memory with the interpreter.
