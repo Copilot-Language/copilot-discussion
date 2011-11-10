@@ -337,7 +337,8 @@ w = [5,6,7] ++ x
 %
 evaluates to the sequence
 $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
-The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt s}.
+The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
+  s}, returning the remainder of the stream.  
 For example we can skip the first two values of {\tt w}:
 %
 \begin{code}
@@ -634,7 +635,7 @@ The order in which the triggers are defined is irrelevant.
 We consider an engine controller with the following property:
 If the temperature rises more than 2.3 degrees within 0.2 seconds, then
 the engine should be shut off immediately.
-Assuming that the global samplerate is 0.2 seconds, we can define a monitor that
+Assuming that the global sample rate is 0.2 seconds, we can define a monitor that
 surveys the above property:
 %
 \begin{code}
@@ -703,7 +704,7 @@ lookupSomeTable :: Stream Int -> Stream Stream Double
 lookupSomeTable k = externArray "someTable" k 
 \end{code}
 %
-Given the following values for \texttt{k}, $\{2, 1, 3, 3, 2, \dots \}$, the output of 
+Given the following values for \texttt{k}, $\{1, 0, 2, 2, 1, \dots \}$, the output of 
 \texttt{lookupSomeTable k} would be $\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$.
 \end{example}
 
@@ -1207,7 +1208,7 @@ aMajorityPure' cnt (x:xs) can =
 Reliability in mission critical software is often improved by replicating
 the same computations on separate hardware and by doing a vote in the end
 based on the output of each system. The majority vote problem consists of
-determining if there in a given list of votes is a candidate that has more
+determining if in a given list of votes there is a candidate that has more
 than half of the votes, and if so, of finding this candidate.
 
 The Boyer-Moore Majority Vote Algorithm \cite{MooreBoyer82, Hesselink2005}
@@ -1263,7 +1264,7 @@ When implementing the majority vote algorithm for Copilot, we can use reuse
 almost all of the code from the Haskell implementation. However, as functions
 in Copilot in reality are macros that are expanded at compile time, care must
 be taken in order to avoid an explosion in the code size. Hence, instead of
-using Haskell's build-in \emph{let}-blocks, we use explicit sharing, as
+using Haskell's built-in \emph{let}-blocks, we use explicit sharing, as
 described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
 of the first and the second pass are given in Figure \ref{fig:majority} and
 Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
