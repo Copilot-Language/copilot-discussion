@@ -727,7 +727,7 @@ func = externFun "f" [funArg $ externW8 "x", funArg nats]
   nats = [0] ++ nats + 1
 \end{code} 
 % $
-samples a function that in C that has the prototype
+samples a function in C that has the prototype
 %
 \begin{code}
 uint16_t f(uint8_t x, uint16_t nats);
@@ -886,7 +886,7 @@ We can then use {\tt arrInterp} as an input to simulate the program containing
 it.  
 %
 \begin{code}
-interpret 10 [ array "arr" arrInterp) spec
+interpret 10 [ array "arr" arrInterp ] spec
 \end{code}
 %
 Note that the index into the array must not be greater than three!
