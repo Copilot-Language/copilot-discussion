@@ -1,6 +1,14 @@
 TODOs
 =====
 
+*   Fix SBV's makefile generation.
+
+*   Generate SBV checks, particularly for array out of bounds.
+
+*   QuickCheck:
+
+  *   External arrays, functions.
+ 
 *   Remove stream guards(?).
 
 *   Implement casting for SBV backend.
@@ -25,11 +33,24 @@ TODOs
 
 *   Add a backend to Feldspar.
 
-*   QuickCheck doesn't generate <, >, <=, etc. operators.  Also not currently
-    testing mod and div.  Generating external variable checks?
-
 
 KNOWN BUGS
 ====
 
-*   RegExpExamples.hs (and possibly other monitors) use up all memory with the interpreter.
+*   RegExpExamples.hs (and possibly other monitors) use up all memory with the
+    interpreter (not sure if still the case).
+
+*   'even' is not hidden Language.Copilot (from the Test suite, I think).
+
+*   This specification sends the interpreter into non-termination:
+
+*   We use stable names
+    (http://www.haskell.org/ghc/docs/latest/html/libraries/base-4.4.1.0/System-Mem-StableName.html)
+    for sharing, which can't determine that a name is stable for polymorphic
+    functions that have type constraints.  This is because the type gets turned
+    into a dictionary, and so each application is a new thunk.  For example,
+    consider the small example at https://gist.github.com/1385118
+
+    Thus, we require the restriction that all Copilot stream definitions have
+    top-level definitions that are monomorphic (the monomorphic functions can
+    all polymorphic functions though).  
