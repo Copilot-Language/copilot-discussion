@@ -1,21 +1,26 @@
 TODOs
 =====
 
+*   Testing: record and compare against "golden value" outputs, at least for
+    interpreter.
+
+*   Use tags for external functions in SBV backend.
+
+*   In interpretation, external functions need to take Stream arguments.
+
 *   Fix SBV's makefile generation.
 
 *   Generate SBV checks, particularly for array out of bounds.
 
 *   QuickCheck:
 
-  *   External arrays, functions.
+    *   Generate external arrays and functions.
  
 *   Remove stream guards(?).
 
 *   Implement casting for SBV backend.
 
 *   Remove Tests/... and have the regression execute everything in Examples
-
-*   Why Maybe Tag in ExternArray and ExternFun?
 
 *   Need Graph.hs in copilot-language?
 
@@ -37,12 +42,22 @@ TODOs
 KNOWN BUGS
 ====
 
+*   SBV: external array indicies can depend on external variables.  Need to do a
+    causality analysis to ensure we're not using an updated value during
+    sampling.  E.g.:
+
+    void sampleExts(void) {
+      ext_idx2 = idx2;
+      ext_arr1 = arr1[mk_ext_arr_arr1(queue_0, ptr_0)];
+      ext_arr2 = arr2[mk_ext_arr_arr2(ext_idx2)];
+    }
+
+    (Check what's done in the copilot-c99 backend.)
+
 *   RegExpExamples.hs (and possibly other monitors) use up all memory with the
     interpreter (not sure if still the case).
 
 *   'even' is not hidden Language.Copilot (from the Test suite, I think).
-
-*   This specification sends the interpreter into non-termination:
 
 *   We use stable names
     (http://www.haskell.org/ghc/docs/latest/html/libraries/base-4.4.1.0/System-Mem-StableName.html)
