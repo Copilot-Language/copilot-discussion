@@ -42,6 +42,10 @@ TODOs
 KNOWN BUGS
 ====
 
+*   SBV will generate an internal.h header that equates SBool to uint8 rather than
+    bool.  This can mess up CBMC.  Just at #include stdbool.h and redefine
+    SBool.
+
 *   SBV: external array indicies can depend on external variables.  Need to do a
     causality analysis to ensure we're not using an updated value during
     sampling.  E.g.:
