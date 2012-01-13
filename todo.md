@@ -1,6 +1,8 @@
 TODOs
 =====
 
+*   Add instances for IntegPow to the two backends and to the QC.
+
 *   Testing: record and compare against "golden value" outputs, at least for
     interpreter.
 
@@ -41,6 +43,10 @@ TODOs
 
 KNOWN BUGS
 ====
+
+*   In the interpreter, the same symbol '--' is used for the trigger guard being
+    false and even if its true, if there are no arguments.  Use a different
+    symbol for no arguments.
 
 *   SBV will generate an internal.h header that equates SBool to uint8 rather than
     bool.  This can mess up CBMC.  Just at #include stdbool.h and redefine
