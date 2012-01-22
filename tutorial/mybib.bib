@@ -1,23 +1,27 @@
 @InProceedings{PikeGoodloe2011,
   title = {Runtime Verification for Ultra-Reliable Systems},
-  author = {Pike, Lee and Niller, Sebastian and Goodloe, Alwyn and Wegmann, Nis},
-  publisher = {To appear at the 2nd International Conference on Runtime Verification},
+  author = {Pike, Lee and Niller, Sebastian and Wegmann, Nis},
+  booktitle = {Proceedings of the 2nd Intl. Conference on Runtime Verification},
   year = {2011}
+}
+
+@inproceedings{cbmc,
+  AUTHOR    = { Clarke, Edmund
+                and Kroening, Daniel
+                and Lerda, Flavio },
+  TITLE     = { A Tool for Checking {ANSI-C} Programs },
+  BOOKTITLE = { Tools and Algorithms for the Construction and Analysis of Systems (TACAS) },
+  YEAR      = { 2004 },
+  PUBLISHER = { Springer },
+  PAGES     = { 168--176 },
+  SERIES    = { LNCS }
 }
 
 @InProceedings{PikeGoodloe2010,
   title = {Copilot: A Hard Real-Time Runtime Monitor},
   author = {Pike, Lee and Niller, Sebastian and Goodloe, Alwyn and Wegmann, Nis},
-  publisher = {To appear in the proceedings of the 1st Intl. Conference on Runtime Verification (RV’2010), 2010. Springer},
+  booktitle = {Proceedings of the 1st Intl. Conference on Runtime Verification},
   year = {2010}
-}
-
-@inproceedings{DSLExtract,
-  author = {Andy Gill},
-  title = {Type-Safe Observable Sharing in {H}askell},
-  booktitle = {Proceedings of the 2009 {ACM} {SIGPLAN} {H}askell Symposium},
-  year = {2009},
-  month = {September}
 }
 
 @book{PeytonJones02,
@@ -30,14 +34,45 @@
   year = {2002}
 }
 
+@inproceedings{qc,
+  author    = {Koen Claessen and
+               John Hughes},
+  title     = {{QuickCheck}: a lightweight tool for random testing of Haskell
+               programs},
+  booktitle = {International Conference of Functional Programming},
+  year      = {2000},
+  pages     = {268--279}
+}
+
+@inbook{smt,
+  author    = "Clark Barrett and Roberto Sebastiani and Sanjit Seshia and Cesare Tinelli",
+  title     = "Satisfiability Modulo Theories",
+  chapter   = 26,
+  pages     = "825--885",
+    Title = {Handbook of Satisfiability},
+    Publisher = {IOS Press},
+    Year = {2009},
+    Series = {Frontiers in Artificial Intelligence and Applications}
+}
+
+
+
+
+@inproceedings{DSLExtract,
+  author = {Andy Gill},
+  title = {Type-Safe Observable Sharing in {H}askell},
+  booktitle = {Proceedings of the 2009 {ACM} {SIGPLAN} {H}askell Symposium},
+  year = {2009},
+  month = {Sep},
+  abstract = {Haskell is a great language for writing and supporting embedded Domain Specific Languages (DSLs). Some form of observable sharing is often a critical capability for allowing so-called deep DSLs to be compiled and processed. In this paper, we describe and explore uses of an IO function for reification which allows direct observation of sharing.}
+}
+
+
 @book{Farhat2004,
   title = {Digital design and computer organization},
   author = {Farhat, H.A.},
   number = {v. 1},
-  isbn = {9780849311918},
-  lccn = {30558050},
   series = {Digital Design and Computer Organization},
-  url = {http://books.google.com/books?id=QypINJ4oRI8C},
   year = {2004},
   publisher = {CRC Press}
 }
@@ -66,22 +101,7 @@
 %
 %
 
-@InProceedings{sampling,
-  author =       {S. Fischmeister and Y. Ba},
-  title =        {Sampling-based Program Execution Monitoring},
-  booktitle = {ACM International conference on Languages, compilers, and tools for embedded
-systems ({LCTES})},
-  pages =     {133-142},
-  year =      {2010},
-}
 
-@InProceedings{borzoo,
-  author =       {Borzoo Bonakdarpour and Samaneh Navabpour and Sebastian Fischmeister},
-  title =        {Sampling-based Runtime Verification},
-  booktitle = {17th Intl. Symposium on Formal Methods (FM)},
-  OPTpages =     {},
-  year =      {2011},
-}
 
 @article{ariane,
   author    = {Bashar Nuseibeh},
@@ -179,18 +199,6 @@ note = {Available at \url{http://www-verimag.imag.fr/index.php?page=techrep-list
  publisher = {ACM}
  }
 
-@inproceedings{copilot,
-  author    = {Lee Pike and
-               Alwyn Goodloe and
-               Robin Morisset and
-               Sebastian Niller},
-  title     = {Copilot: A Hard Real-Time Runtime Monitor},
-  booktitle     = {Runtime Verification (RV)},
-  year      = {2010},
-  pages     = {345-359},
-  publisher = {Springer},
-  volume    = {6418}
-}
 
 @article{javamop,
  author = {Chen, Feng and d'Amorim, Marcelo and Ro\c{s}u, Grigore},
@@ -263,13 +271,6 @@ note = {Available at \url{http://www-verimag.imag.fr/index.php?page=techrep-list
   OPTannote =    {}
 }
 
-@Misc{DO178B,
-  author =       {RTCA},
-  howpublished =       {RTCA, Inc.},
-  title =        {Software Considerations in Airborne Systems and Equipment Certification},
- note = {RCTA/DO-178B},
-  year =         {1992}
-  }
 
 @Misc{DO254,
   key =       {RTCA},
@@ -412,14 +413,6 @@ series =       {LNCS},
 %-------------------------
 
 
-@InProceedings{KimVBKLS99,
-  author = 	 {M. Kim and M. Viswanathan and H. Ben-Abdallah and S. Kannan and I. Lee
-    and O. Sokolsky},
-  title = 	 {Formally specified monitoring of temporal properties},
-    booktitle = {11th Euromicro Conference on Real-Time Systems},
-  pages = 	 {114--122},
-  year = 	 {1999},
-  }
 
 @InProceedings{LeeKSV99,
   author = 	 {M. Kim and O. Sokolsky and M. Viswanathan},
@@ -508,16 +501,6 @@ series =       {LNCS},
 
 
 
-@inproceedings{ChenR05,
-author={F. Chen and G. Ro\c{s}u},
-title={{Java-MOP:} A Monitoring Oriented Programming Environment for {Java}},
-booktitle={Proceedings of the Eleventh International Conference on Tools and Algorithms for the construction and analysis of systems ({TACAS'05})},
-publisher={Springer},
-series={LNCS},
-volume={3440},
-pages= {546-550},
-year={2005}
-}
 
 
 @Misc{framac,
@@ -618,17 +601,6 @@ publisher = {IEEE Computer Society},
 %
 %---------------------
 
-@INPROCEEDINGS{Rushby09:SEFM,
-	AUTHOR = {John Rushby},
-	TITLE = {Software Verification and System Assurance},
-	BOOKTITLE = {Intl. Conf. on Software Engineering and Formal Methods ({SEFM})},
-	OPTEDITOR = {Dang Van Hung and Padmanabhan Krishnan},
-	OPTADDRESS = {Hanoi, Vietnam},
-	ORGANIZATION = {IEEE},
-	PAGES = {3--10},
-	MONTH = nov,
-	YEAR = 2009
-}
 
 
 
@@ -822,17 +794,6 @@ publisher = {IEEE Computer Society},
 
 
 
-@Misc{pitot,
-  key =       {Aviation},
-  author =    {{Aviation Today}},
-  title =     {More Pitot Tube Incidents Revealed},
-  howpublished = {Aviation Today},
-  month =     {February},
-  year =      {2011},
-  note =      {Available at \url{http://www.aviationtoday.com/regions/usa/More-Pitot-Tube-Incidents-Revealed_72414.html}},
-  OPTannote =    {}
-}
-
 @Misc{RTJava,
   OPTkey = 	 {},
   author = 	 {TimeSys Corporation},
@@ -848,34 +809,7 @@ publisher = {IEEE Computer Society},
 %
 % ----------------------------------
 
-@InProceedings{SammapunLS05,
-  author = 	 {U. Sammapun and I. Lee and O. Sokolsky},
-  title = 	 {{RT-MaC:} Runtime Monitoring and Checking of Quantitative and Probabilistic Properties},
-  booktitle = {Proceedings of the 11th IEEE International Conference on Embedded and Real-Time Computing Systems and Applications},
-  pages = 	 {147--153},
-  year = 	 {2005}
-}
 
-
-@Misc{ATSB07,
-  key = {ATSB},
-  author = 	 {{Australian Transport Safety Bureau}},
-  title = 	 {In-Flight Upset Event 240{Km} {N}orth-{W}est of {P}erth, {WA} {B}oeing {C}ompany 777-200, 9{M-MRG} 1 {A}ugust 2005},
-  publisher = {Australian Transport Safety Bureau},
-  howpublished = {ATSB Transport Safety Investigation Report},
-  year = 	 {2007},
-  OPTnote = 	 {Aviation Occurrace Report - 200503722}
-}
-
-@Misc{ATSB08,
-  author = {Kerryn Macaulay},
-  title = 	 {{ATSB} Preliminary Factual Report, In-Flight Upset, {Q}antas {A}irbus {A330}, 
- 154 {K}m {W}est of {L}earmonth, {WA}, 7 {O}ctober 2008},
-  howpublished = {Australian Transport Safety Bureau Media Release },
-  month = 	 {{November 14}},
-  year = 	 {2008},
-  note = 	 {Available at \url{http://www.atsb.gov.au/newsroom/2008/release/2008_45.aspx}}
-  }
 
 @Misc{ATSB08A,
    key = {ATSB},
@@ -897,14 +831,6 @@ publisher = {IEEE Computer Society},
   pages = 	 {209--219}
 }
 
-@INPROCEEDINGS{qc,
-    author = {Koen Claessen and John Hughes},
-    title = {QuickCheck: A Lightweight Tool for Random Testing of Haskell Programs},
-    booktitle = {ACM SIGPLAN Notices},
-    year = {2000},
-    pages = {268--279},
-    publisher = {ACM}
-}
 
 @inproceedings{lustre,
 author = {N. Halbwachs and P. Raymond},
@@ -925,14 +851,6 @@ month = {December}
   pages = 	 {1--20}
 }
 
-@Misc{mdm08,
-  author = {Chris Bergin},
-  title =        "Faulty {MDM} Removed",
-  note     =  {Available at \url{http://www.nasaspaceflight.com/2008/05/sts-124-frr-debate-outstanding-issues-faulty-mdm-removed/}.},
-  howpublished = {{NASA Spaceflight.com}},
-  month =        {{M}ay 18},
-  year =         {2008}
- }
 
 
 @Misc{mdm08A,
@@ -1005,18 +923,6 @@ month = {December}
   OPTnote =      {Available at \url{http://ntrs.nasa.gov/search.jsp?R=278742&id=3&as=false&or=false&qs=Ns%3DArchiveName%257c0%26N%3D4294643047}}
 }
 
-@inproceedings{cbmc,
-  AUTHOR    = { Clarke, Edmund
-                and Kroening, Daniel
-                and Lerda, Flavio },
-  TITLE     = { A Tool for Checking {ANSI-C} Programs },
-  BOOKTITLE = { Tools and Algorithms for the Construction and Analysis of Systems (TACAS) },
-  YEAR      = { 2004 },
-  PUBLISHER = { Springer },
-  PAGES     = { 168--176 },
-  SERIES    = { LNCS },
-  OPTVOLUME    = { 2988 }
-}
 
 @InProceedings{rvRushby,
   author =       {John Rushby},
@@ -1043,20 +949,6 @@ month = {December}
   year =         {1996}
 }
 
-@Article{lamport95byzantine,
-  author =       {L. Lamport and R. Shostak and M. Pease},
-  title =        {The {Byzantine} Generals Problem},
-  journal =      {ACM Transactions on Programming Languages and Systems},
-  year =         {1982},
-  OPTkey =       {},
-  volume =    {4},
-  Tnumber =    {3},
-  pages =     {382--401},
-  month =     {July},
-  OPTnote =      {},
-  OPTannote =    {},
-  Optnote = {Available at \url{http://citeseer.nj.nec.com/lamport82byzantine.html}}
-}
 
 @InProceedings{laprie,
   author =       {Jean-Claude Laprie},
@@ -1079,17 +971,6 @@ month = {December}
 }
 
 
-@article{butler,
- author = {Butler, R. W. and Finelli, G. B.},
- title = {The Infeasibility of Quantifying the Reliability of Life-Critical Real-Time Software},
- journal = {IEEE Transactions on Software Engineering},
- volume = {19},
- issue = {1},
- month = {January},
- year = {1993},
- pages = {3--12},
- publisher = {IEEE Press}
-} 
 
 @inproceedings{msc,
  author = {Kr\"{u}ger, Ingolf H. and Meisinger, Michael and Menarini, Massimiliano},
@@ -1100,29 +981,6 @@ month = {December}
  publisher = {Springer}
 } 
 
-@article{l4,
-  author =  {Gerwin Klein 
-  and June Andronick
-  and Kevin Elphinstone 
-  and Gernot Heiser	 
-  and David Cock
-  and Philip Derrin
-  and Dhammika Elkaduwe
-  and Kai Engelhardt
-  and Rafal Kolanski
-  and Michael Norrish
-  and Thomas Sewell
-  and Harvey Tuch
-  and Simon Winwood},
-  title =        {{seL4}: Formal Verification of an {OS} Kernel},
-  journal =      {Communications of the ACM (CACM)},
-  publisher =    {ACM},
-  year =         {2010},  
-  month =        jun,
-  pages =        {107--115},
-  volume =       53, 
-  number =       6
-}
 
 
 
