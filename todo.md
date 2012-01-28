@@ -1,8 +1,6 @@
 TODOs
 =====
 
-* Add instances for IntegPow to the two backends and to the QC.
-
 * Testing: record and compare against "golden value" outputs, at least for
   interpreter.
 
