@@ -1,5 +1,15 @@
 TODOs
 =====
+  * cbmc extfunc --- seems that we're getting behind-by-one vlaues.
+  * finish the CRC example, blog
+  * test ext arrays, too -- for both c99 and sbv
+  * add cbmc tests to all the examples---suggest installation of cbmc.
+
+* Change funArgs to just args?
+
+* Remove trigger guards.
+
+* Rewrite copilot-sbv, Driver.hs.  Separate Doc stuff from code generation stuff.
 
 * Testing: record and compare against "golden value" outputs, at least for
   interpreter.

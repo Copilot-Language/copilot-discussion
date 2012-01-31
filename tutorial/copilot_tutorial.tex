@@ -666,7 +666,7 @@ provided produces an infinite list of all the permutations of the list {\tt
 %% \begin{code}
 %% externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
 %% externFun :: Typed a => String -> [FunArg] -> Stream a
-%% funArg :: Typed a => Stream a -> FunArg
+%% arg :: Typed a => Stream a -> FunArg
 %% \end{code}
 %% % 
 %% The constructor \texttt{externArray} takes two arguments: the name of array and
@@ -708,7 +708,7 @@ example,
 %
 \begin{code}
 func :: Stream Word16
-func = externFun "f" [funArg e0, funArg nats] Nothing
+func = externFun "f" [arg e0, arg nats] Nothing
   where
   e0 = externW8 "x" Nothing
   nats :: Stream Word8
