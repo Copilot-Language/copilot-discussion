@@ -261,19 +261,21 @@ latch x = out
 \end{code}
 % 
 The base types of Copilot over which streams are built include Booleans, signed
-and unsigned words of 8, 16, 32, and 64 bits, floats, and doubles.  Type-safe
+and unsigned words of 8, 16, 32, and 64 bits, floats, and doubles. Type-safe
 casts in which overflow cannot occur are permitted.
 
+\todo{Lee:  you may want to reword my interp explanation!}
 \paragraph{Sampling.}
 Copilot programs are meant to monitor arbitrary C programs.  They do so by
-\emph{sampling} values.  Concretely, the values are from in-scope symbols in a
+periodically \emph{sampling} state values.  Concretely, the values are from in-scope symbols in a
 linked C~program.  Copilot samples variables, arrays, and side-effect free
 functions (sampling arbitrary structures is future work).  The operator {\tt
-  extern} takes a C~symbol and a possible list of values for use by the
-interpreter.  For example, the following stream samples the C variable {\tt e0}
+  extern} takes a C~symbol and a possible list of values used in lieu
+of sampling executing C programs when the Copilot
+interpreter is used.  For example, the following stream samples the C variable {\tt e0}
 of type {\tt uint8\_t} to create each new stream index.  For example, if {\tt
   e0} takes the values {\tt 2, 4, 6, ...}  the stream {\tt ext} has the values
-{\tt 1, 3, 7, 13, ...}.
+{\tt 1, 3, 7, 13, ...}. 
 %
 \begin{code}
 ext :: Stream Word8
@@ -535,7 +537,7 @@ Lustre~\cite{CaspiPHP87}, are not polymorphic (polymorphism is limited to a
 small set of pre-defined operators, like {\tt if-then-else}).
 
 %--------------------------------------------------------------------------------
-\paragraph{Lesson: decomposed type-checking.}
+\paragraph{Lesson: multi-level type-checking.}
 
 Type-checking is the first defense against incorrect programs.  We used a
 two-layer approach: let the host language enforce types where possible, and
@@ -551,6 +553,9 @@ Haskell's type system, which may lead to incorrect type-casts.
 The first case is when a back-end pretty-prints C~code.  The correctness of such
 code can be determined by inspecting a small number of functions and class
 instances.
+
+\todo{ Lee: please reread the next two paragraphs. They make sense to
+  me, but reviewer one said he was confused.}
 
 The second case arises during the translation from the core abstract syntax into
 the back-ends.  Both the core language and the back-ends make use of polymorphic
@@ -608,6 +613,8 @@ but type-incorrect translation is not possible.
 %% One challenge with using a polymorphic datatype, such as a GADT, to represent
 %% the core language, is in translating the core language into the abstract syntax
 %% of the back-ends.  In particular, the back-ends we use 
+
+\todo{Lee: reviewer one had  a point so if we can get space try to  expand on  ``stream dependencies are strict''} 
 
 In addition to type-checking provided by Haskell, we perform a small amount of
 custom type-checking ($\sim$250~LOCs).  The two classes of custom type-checking
@@ -683,14 +690,18 @@ generator is implemented correctly, every generated program is type-correct and
 will be tested.  The danger, however, is that the generator may be too strict,
 omitting some type-correct programs from being generated and tested.
 
+\todo{Lee: As discussed last week I'm removing the reference to the ordering of the state
+  machine (and the incorrect ordering of
+the state-machine with respect to the interpreter, such as outputting stream
+values \emph{before} reading in external variable values)  since we really don't have room to explain that and more
+  than one reviewer seemed confused over it}
+
 With the standard options, we generate, compile, test and pretty-print to
 standard output about 1,000 programs per minute.  It is easy to let the
 QuickCheck test generator run continuously on a server, generating some million
 and a half vectors per day (in practice, bugs, if present, tend to appear after
 just 10s or 100s of generated vectors).  The kinds of bugs we have caught
-include forgotten witness for the Atom back-end and the incorrect ordering of
-the state-machine with respect to the interpreter, such as outputting stream
-values \emph{before} reading in external variable values.  A ``non-bug'' we
+include forgotten witness for the Atom back-end.  A ``non-bug'' we
 ``discovered'' was disagreement on floating-point values between GHC's runtime
 system (executing the interpreter) and \emph{libc}.  We solved this problem by
 just checking that floating point values are within some small constant range,
