@@ -1,4 +1,4 @@
-\documentclass[preprint]{sigplanconf}
+\documentclass[9pt]{sigplanconf}
 \usepackage{url}
 \usepackage{tikz}
 \usepackage{graphicx}
@@ -26,8 +26,8 @@
 
 \usepackage{ifthen}
 \newboolean{submission}  %set to true for the submission version
-\setboolean{submission}{false}
-%\setboolean{submission}{true}
+%\setboolean{submission}{false}
+\setboolean{submission}{true}
 \ifthenelse
 {\boolean{submission}}
 { \newcommand{\todo}[1]{ } } %hide todo
@@ -38,9 +38,9 @@
 
 \begin{document}
 
-%\conferenceinfo{WXYZ '05}{date, City.} 
-\copyrightyear{2012} 
-\copyrightdata{[to be supplied]} 
+\conferenceinfo{ICFP'12,} {September 9--15, 2012, Copenhagen, Denmark.}
+\CopyrightYear{2012}
+\copyrightdata{978-1-4503-1054-3/12/09}
 
 %\titlebanner{banner above paper title}        % These are ignored unless
 %\preprintfooter{}   % 'preprint' option specified.
@@ -73,13 +73,13 @@ model-checking ``off-the-shelf'' to quickly increase confidence in our EDSL
 tool-chain.
 \end{abstract}
 
-\category{CR-number}{subcategory}{third-level}
+\category{D.2.4}{Software/Program Verification}{Reliability}
 
 \terms
-term1, term2
+Languages, Verification
 
-\keywords
-keyword1, keyword2
+%% \keywords
+%% keyword1, keyword2
 
 
 %\todo{emails for sebastian, nis?}
@@ -93,9 +93,9 @@ keyword1, keyword2
 
 \section{Introduction}\label{sec:intro}
 
-\todo{cite Filet-o-Fish: practical and dependable domain-specific languages https://personal.cis.strath.ac.uk/pierreevariste.dagand/}
+%% cite Filet-o-Fish: practical and dependable domain-specific languages https://personal.cis.strath.ac.uk/pierreevariste.dagand/}
 
-The ``do-it-yourself'' (DIY) culture promotes individuals to design and craft
+The ``do-it-yourself'' (DIY) culture encourages individuals to design and craft
 objects on their own, without relying on outside experts.  DIY construction
 should be inexpensive with easy-to-access materials.  Ranging from hobbyist
 electronics\footnote{This even includes full-featured unpiloted air vehicles!
@@ -123,10 +123,7 @@ theorem-proving and multiple engineer-years of verification effort.
 In this experience report, we argue that by leveraging functional languages and
 off-the-shelf verification tools, we can accumulate significant evidence of
 correctness at a fraction of the cost and without the specialized know-how
-required by interactive verification approaches.\footnote{Our work perhaps
-  is an instance of the \emph{Pareto Principle} with respect to compiler assurance.  The
-  principle states that 80\% of effects arise from 20\% of the causes in a wide
-  variety of empirical observations~\cite{pareto}.}  
+required by interactive verification approaches.  
 
 The case-study of our approach is the Copilot language and toolset, developed by
 Galois, Inc. and the National Institute of Aerospace under contract to NASA.
@@ -184,7 +181,6 @@ as the last line of defense for the correctness for the system.  The need for
 aerospace RV is motivated by recent failures in commercial avionics and the
 space shuttle~\cite{monitors}.
 
-
 Our answer to the contract goals was Copilot, an EDSL to generate embedded
 monitors.\footnote{Copilot source code is available at
   \url{http://leepike.github.com/Copilot/} and is licensed under the BSD3
@@ -195,10 +191,10 @@ correctness.
 
 One research challenge of the project was phrased as, ``Who watches the
 watchmen?'' meaning that if the RV monitor is the last line of defense, then it
-must not itself fail or worse, introduce unintended faults itself!  Nonetheless,
+must not fail or worse, introduce unintended faults itself!  Nonetheless,
 because the primary goal of the project was to implement an RV system and to
 field-test it, few resources were available for assuring the correctness of the
-Copilot compiler itself.  Our approach was born out of necessity.
+Copilot compiler.  Our approach was born out of necessity.
 
 
 
@@ -232,8 +228,6 @@ Library.  Here is a Haskell and equivalent Copilot function that implements a
 latch (flip-flop) over streams---the output is the XOR of the input stream and
 the latch's previous output.  For example, for the input stream
 %
-\todo{start with false}
-
 \begin{code}
 T, F, F, T, F, F, T, F, F, ...
 \end{code}
@@ -264,18 +258,20 @@ The base types of Copilot over which streams are built include Booleans, signed
 and unsigned words of 8, 16, 32, and 64 bits, floats, and doubles. Type-safe
 casts in which overflow cannot occur are permitted.
 
-\todo{Lee:  you may want to reword my interp explanation!}
 \paragraph{Sampling.}
-Copilot programs are meant to monitor arbitrary C programs.  They do so by
-periodically \emph{sampling} state values.  Concretely, the values are from in-scope symbols in a
-linked C~program.  Copilot samples variables, arrays, and side-effect free
-functions (sampling arbitrary structures is future work).  The operator {\tt
-  extern} takes a C~symbol and a possible list of values used in lieu
-of sampling executing C programs when the Copilot
-interpreter is used.  For example, the following stream samples the C variable {\tt e0}
-of type {\tt uint8\_t} to create each new stream index.  For example, if {\tt
-  e0} takes the values {\tt 2, 4, 6, ...}  the stream {\tt ext} has the values
-{\tt 1, 3, 7, 13, ...}. 
+Copilot programs are meant to monitor arbitrary C~programs.  They do so by
+periodically \emph{sampling} symbol values. (Copilot samples variables, arrays,
+and the return values of side-effect free functions---sampling arbitrary
+structures is future work.)  For a Copilot program compiled to~C, symbols become
+in-scope when arbitrary C~code is linked with the code generated by the Copilot
+compiler.  Copilot provides the operator {\tt extern} to introduce an external
+symbol to sample.  The operator types a string denoting the C~symbol.
+
+Copilot can be interpreted as well as compiled.  When interpreted,
+representative values are expected to be supplied by the programmer.  For
+example, the following stream samples the C variable {\tt e0} of type {\tt
+  uint8\_t} to create each new stream index.  If {\tt e0} takes the values {\tt
+  2, 4, 6, 8, ...}  the stream {\tt ext} has the values {\tt 1, 3, 7, 13, ...}.
 %
 \begin{code}
 ext :: Stream Word8
@@ -287,8 +283,9 @@ We make the design decision to build interpreter values for external values
 into the language.  (If the user wishes not to provide interpreter values,
 the constructor {\tt Nothing} can be used.)  
 
-Sampling arrays and functions are similar.  For example, the following stream samples
-an array with the prototype {\tt uint32\_t arr[3]}:
+Sampling arrays and functions is similar (for space constraints, we omit an
+example of function sampling).  For example, the following stream samples an
+array with the prototype {\tt uint32\_t arr[3]}:
 %
 \begin{code}
 arr :: Stream Word32
@@ -333,7 +330,8 @@ when its guard (stating that the current value from the {\tt fib} stream is
 even in this case) is true.  A trigger's implementation is a C~function with a
 {\tt void} return type that takes the current values of the trigger arguments as
 arguments.  For example, given the definition of {\tt fib} and {\tt latch}
-above, the prototype of the C-function implementing the trigger is 
+above, the prototype of the C-function implementing the trigger {\tt trig}
+defined above is 
 %
 \begin{code}
 void trig(uint32_t, bool);  
@@ -391,41 +389,52 @@ the programmer to implement.
 
 \todo{confusing}
 
-Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}.  The Copilot
-language package reifies a Copilot program (i.e., turns a recursive structure
-into explicit graphs via observable sharing~\cite{gill}---Copilot is deeply
-embedded in Haskell) and does domain-specific type-checking ($\sim$1200 lines of
-code or LOCs).  Copilot programs are then translated into a core language
-($\sim$900~LOCs).  The core package contains an interpreter ($\sim$300~LOCs) as
-well as a custom QuickCheck engine and test harness for testing interpreter
-output against one of the back-ends ($\sim$400~LOCs).  Copilot's language
-package is explicitly \emph{Trustworthy Haskell}, as there is a single instance
-of {\tt unsafeCoerce} to implement observable sharing.  Copilot's core language
-is written in \emph{Safe Haskell}~\cite{ghc}.
+Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}, which we
+highlight here; assurance-relevant aspects of the toolchain are covered in more
+detail later.  Copilot is deeply embedded in Haskell.  A Copilot program is
+reified (i.e., transformed from a recursive structure into explicit graphs via
+observable sharing~\cite{gill}) and then some domain-specific type-checking is
+done.  At this point, we have transformed the program into the ``core''
+language, an intermediate representation.  The core package contains an
+interpreter ($\sim$300~LOCs) as well as a custom QuickCheck engine and test
+harness for testing interpreter output against one of the back-ends
 
-The back-ends (each of which is $\sim$1100~LOCs) translate a Copilot core
-program into the language of another Haskell DSL for code generation.  We use
-the Atom
-($\sim$2500LOCs)\footnote{\url{http://hackage.haskell.org/package/atom}, BSD3
-  license.}~\cite{atom} and SBV
-($\sim$4500LOCs)\footnote{\url{http://hackage.haskell.org/package/sbv}, BSD3
-  license.} packages for code generation, both of which generate a strict subset
-of C99 embedded code that is constant-memory and nearly constant-time.
 
-Atom is an EDSL originally designed by Tom Hawkins at Eaton Corp. for
-synthesizing real-time embedded control systems from high-level specifications.
-The language provides scheduling constructs, obviating the need for a real-time
-operating system when cooperative scheduling is sufficient.  
+%%  and does
+%% domain-specific type-checking ($\sim$1200 lines of code or LOCs).
 
-Symbolic Bit Vectors (SBV) is an EDSL developed by Levent Erk\"{o}k.  The
-primary focus of SBV is to express and reason about bit-level Haskell programs.
-In particular, the language provides tight integration with satisfiability
-modulo theories (SMT) solvers (e.g., Yices~\cite{dutertre}) for automatic proofs and to
-check for satisfiability.  The EDSL also contains a C-code generator which we
-use.  Other features of the language include test-case generation and automated
-synthesis.
 
-A separate package ($\sim$100~LOCs) generates a driver for the CBMC
+%% The Copilot language package ---  Copilot
+%% programs are then translated into a core language ($\sim$900~LOCs).  The core
+%% package contains an interpreter ($\sim$300~LOCs) as well as a custom QuickCheck
+%% engine and test harness for testing interpreter output against one of the
+%% back-ends ($\sim$400~LOCs).  
+
+The back-ends translate a Copilot core program into the language of another
+Haskell-hosted EDSL for code generation.  We use the
+Atom\footnote{\url{http://hackage.haskell.org/package/atom}, BSD3
+  license.}~\cite{atom} and
+SBV\footnote{\url{http://hackage.haskell.org/package/sbv}, BSD3 license.}
+packages for code generation, both of which generate a subset of C99 embedded
+code that is constant-memory and nearly constant-time.  Atom is an EDSL
+originally designed by Tom Hawkins at Eaton Corp. for synthesizing real-time
+embedded control systems from high-level specifications.  The language provides
+scheduling constructs, obviating the need for a real-time operating system when
+cooperative scheduling is sufficient.  Symbolic Bit Vectors (SBV) is an EDSL
+developed by Levent Erk\"{o}k.  The primary focus of SBV is to express and
+reason about bit-level Haskell programs.  In particular, the language provides
+tight integration with satisfiability modulo theories (SMT) solvers (e.g.,
+Yices~\cite{dutertre}) for automatic proofs and to check for satisfiability.
+The EDSL also contains a C-code generator which we use.  Other features of the
+language include test-case generation and automated synthesis.
+
+We use the recent Safe Haskell compiler extensions to implement
+Copilot~\cite{safe}.  Copilot's language package is explicitly \emph{Trustworthy
+  Haskell}, as there is a single instance of {\tt unsafeCoerce} to implement
+observable sharing.  Copilot's core language is written in \emph{Safe Haskell}.
+
+
+A separate package generates a driver for the CBMC
 model-checker~\cite{cbmc}, which we use to check the equivalence between the C~code
 generated by each back-end.
 
@@ -554,22 +563,21 @@ The first case is when a back-end pretty-prints C~code.  The correctness of such
 code can be determined by inspecting a small number of functions and class
 instances.
 
-\todo{ Lee: please reread the next two paragraphs. They make sense to
-  me, but reviewer one said he was confused.}
-
 The second case arises during the translation from the core abstract syntax into
-the back-ends.  Both the core language and the back-ends make use of polymorphic
-functions and class constraints.  As a matter of software engineering, we do not
-want Copilot's core functions to be dependent on the classes introduced in the
-back-ends---doing so would require modifying the core each time a new back-end
-is added.
+the back-ends, which are themselves EDSLs embedded in Haskell.  Both the core
+language and the back-ends make use of polymorphic functions and class
+constraints.  As a matter of software engineering, we do not want Copilot's core
+functions to be dependent on the classes introduced in the back-ends---doing so
+would require modifying functions and datatypes defined in the core with new
+class constraints for each time a new back-end is added!
 
 Therefore, we use the ideas of type-safe dynamic typing to translate from the
 core language to the back-end languages without relying on compiler extensions
-or unsafe functions~\cite{typing}.  The basic idea is to
-create witness functions that we pattern-match against.  For example, for the
-class {\tt SymWord} (``Symbolic Word'') in the SBV back-end, we create the following
-instance datatype and an instance function mapping Copilot types to {\tt SymWord}s:
+or unsafe functions~\cite{typing}.  The basic idea is to create witness
+functions that we pattern-match against.  For example, for the class {\tt
+  SymWord} (``Symbolic Word'') in the SBV back-end, we create the following
+instance datatype and an instance function mapping Copilot types to {\tt
+  SymWord}s:
 %
 \begin{code}
 data SymWordInst a = SymWord a => SymWordInst
@@ -593,7 +601,8 @@ data Type :: * -> * where
 \end{code}
 %
 Then during the translation, we pattern-match.  For example, in translating the
-addition operator, we have the case:
+addition operator, we translate from Copilot's {\tt Add} constructor in the core
+language to SBV's addition operator {\tt +}:
 %
 \begin{code}
 transBinaryOps op = case op of
@@ -614,15 +623,15 @@ but type-incorrect translation is not possible.
 %% the core language, is in translating the core language into the abstract syntax
 %% of the back-ends.  In particular, the back-ends we use 
 
-\todo{Lee: reviewer one had  a point so if we can get space try to  expand on  ``stream dependencies are strict''} 
 
 In addition to type-checking provided by Haskell, we perform a small amount of
 custom type-checking ($\sim$250~LOCs).  The two classes of custom type-checking
 are (1) causality analysis and (2) type-checking external variables (arrays and
-functions).  Causality analysis ensures that stream dependencies are strict.
-Strict dependencies are necessary when we are sampling variable values in
-real-time from the external world.  For example, the following Copilot stream
-equations fail type-checking:
+functions).  Causality analysis ensures that stream dependencies are evaluated
+strictly.  Strict dependencies are necessary when we are sampling variable
+values in real-time from the external world.  For example, the following Copilot
+stream equations fail type-checking since {\tt y} initially depends on values
+from the variable {\tt x} before any values have been generated:
 %
 \begin{code}
 x :: Stream Word8
@@ -648,8 +657,6 @@ y = extern "ext" Nothing
 \end{code}
 
 
-%% \todo{language extensions: existential quantification, GADTs, flexiblecontexts,
-%%   multiparametertypeclasses, rank2types, scoped type variables, kind signatures}
 
 %--------------------------------------------------------------------------------
 \paragraph{Lesson: cheap front-end/back-end testing.}
@@ -690,23 +697,18 @@ generator is implemented correctly, every generated program is type-correct and
 will be tested.  The danger, however, is that the generator may be too strict,
 omitting some type-correct programs from being generated and tested.
 
-\todo{Lee: As discussed last week I'm removing the reference to the ordering of the state
-  machine (and the incorrect ordering of
-the state-machine with respect to the interpreter, such as outputting stream
-values \emph{before} reading in external variable values)  since we really don't have room to explain that and more
-  than one reviewer seemed confused over it}
-
 With the standard options, we generate, compile, test and pretty-print to
 standard output about 1,000 programs per minute.  It is easy to let the
 QuickCheck test generator run continuously on a server, generating some million
-and a half vectors per day (in practice, bugs, if present, tend to appear after
-just 10s or 100s of generated vectors).  The kinds of bugs we have caught
-include forgotten witness for the Atom back-end.  A ``non-bug'' we
-``discovered'' was disagreement on floating-point values between GHC's runtime
-system (executing the interpreter) and \emph{libc}.  We solved this problem by
-just checking that floating point values are within some small constant range,
-noting that pathological cases may cause differences outside of a constant range
-without violating the IEEE floating-point standard.
+and a half programs per day (in practice, bugs, if present, tend to appear after
+just 10s or 100s of generated programs).  The kinds of bugs we have caught
+include forgotten witness for the Atom back-end and the ``out-of-order'' bugs in
+which the interpreter output stream values \emph{before} sampling variables.  A
+``non-bug'' we discovered was disagreement on floating-point values between
+GHC's runtime system (executing the interpreter) and \emph{libc}.  We solved
+this problem by just checking that floating point values are within some small
+constant range, noting that pathological cases may cause differences outside of
+a constant range without violating the IEEE floating-point standard.
 
 %--------------------------------------------------------------------------------
 \paragraph{Lesson: cheap back-end proofs.}
@@ -718,13 +720,12 @@ the TCB?  Doing so can reduce the difficulty of providing assurance evidence.
 
 This is our motivation for a proof approach of the back-ends.  Recalling
 Figure~\ref{fig:toolchain}, Copilot has two back-ends that generate C.  We
-leverage a model-checker to prove the equivalence of the code generated by each
-back-end.  Open-source model-checkers like CBMC~\cite{cbmc} and
-Blast~\cite{blast} use C as their specification language.  In our work, we use
-CBMC.  CBMC can prove memory-safety properties, such as division
-by zero, not-a-number floating-point errors, and array out of bound indexes.  It
-can also prove arbitrary propositional formulas given in the body of {\tt assert()}
-functions.
+leverage the open-source model-checker CBMC to prove the equivalence of the code generated by each
+back-end~\cite{cbmc}.  CBMC uses C as its
+specification language.  In our work, we use CBMC.  CBMC can prove memory-safety
+properties, such as no division by zero, no not-a-number floating-point errors,
+and no array out-of-bound indexes.  It can also prove arbitrary propositional
+formulas given in the body of {\tt assert()} functions.
 
 To prove equivalence between the two back-end outputs, we automatically generate
 a driver program that executes both back-ends for one step, compares their
@@ -767,13 +768,14 @@ the behavior of embedded software.  CBMC symbolically unrolls programs either
 completely if possible or to a user-specified depth; it does not perform an
 inductive proof, so currently, we only show equivalence up to a user-set bound
 ({\tt RNDS} in the code-snippet above).  Using a model-checker with induction
-(e.g., $k$-induction via SAT~\cite{sheeran,tinelli}) would strengthen the
+(e.g., $k$-induction via SAT~\cite{tinelli}) would strengthen the
 assurance case.  Finally, note that this use of model-checking takes the
 verifying rather than verified-compiler approach: model-checking is done for
 \emph{each} program compiled.
 
 The kinds of bugs we have caught mostly include incorrect ordering of
-state-machine functions in the generated C.  Because we do not yet have a
+functions in the generated C (e.g., sampling external values after computing
+next-state values for streams).  Because we do not yet have a
 QuickCheck testing infrastructure between the interpreter and the SBV back-end,
 we get a transitive argument that the SBV back-end is equivalent to the Atom
 back-end, which has evidence of matching the interpreter through the use of
@@ -832,28 +834,26 @@ well-defined C.
 
 FeldSpar is an EDSL in Haskell designed for digital signal processing designed
 by Ericsson and Chalmers University~\cite{feldspar1}.  FeldSpar's architecture
-and implementation is similar to Copilot's and could likely integrate the kind
-of assurance evidence for Copilot easily.
-
-Researchers at the University of Minnesota have also built a family of DSLs
-tailored for safety-critical embedded system modeling~\cite{mats}.  The host
-language was designed so that new DSLs can be specified using attribute grammars.
-It appears the purpose of the language is primarily for modeling, so the work
-does not address compilation, and consequently does not address compiler
-correctness issues.
+and implementation is similar to Copilot's and could integrate the assurance
+approaches we have described.  Researchers at the University of Minnesota have
+also built a family of DSLs tailored for safety-critical embedded system
+modeling~\cite{mats}.  The host language was designed so that new DSLs can be
+specified using attribute grammars.  It appears the purpose of the language is
+primarily for modeling, so the work does not address compilation, and
+consequently does not address compiler correctness issues.  Finally,
+Filet-o-Fish is a related DSLs framework for operating system
+development~\cite{fof}.  The authors emphasize compiler assurance as we do, also
+using an interpreter to provide an operational semantics and using QuickCheck
+for testing.
 
 An alternative to the EDSL approach is to take a functional language and augment
-it with sufficient evidence to be used in safety-critical contexts directly.  A
-consortium did just that with OCaml, rewriting the SCADE code
-generator~\cite{ocaml}.  SCADE is a modeling and development environment for
-critical embedded systems, such as avionics.  The code generator was rewritten
-in OCaml, and it is qualifiable under DO-178B, level~A, the most stringent level
-of tool qualification for avionics~\cite{DO178B}.
-Qualifying the software required substantially reducing OCaml's runtime system
-and garbage collector, extensive testing, and providing ``traceability'' of
-requirements.  From a formal verification perspective, the requirements are
-lightweight (the main direct evidence for correctness is testing), but in
-practice DO-178B qualification is rigorous.  
+it with sufficient evidence to be used directly in safety-critical contexts,
+such as avionics development.  A consortium did just that with OCaml, rewriting
+the SCADE code generator~\cite{ocaml}.  Qualifying the software required
+substantially reducing OCaml's runtime system and garbage collector, extensive
+testing, and providing ``traceability'' of requirements.  From a formal
+verification perspective, the requirements are lightweight (the main direct
+evidence for correctness is testing).
 
 
 %%  \thispagestyle{fancy}
@@ -879,9 +879,7 @@ properties about (its interpretation of) the C source semantics.  CompCert would
 obviously be a good choice to compile C, then.  Finally, as noted in the
 introduction, we have focused here on evidence of correct compilation, but our
 implementation does not necessarily help ensure a specific program meets its
-specification.
-
-These shortcomings point to future research efforts.
+specification.  These shortcomings point to future research efforts.
 
 In summary we hoped to make two points in this report: first, that EDSLs are a
 viable approach for building high-assurance compilers, and second, that strong
