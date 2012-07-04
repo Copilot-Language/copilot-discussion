@@ -1,14 +1,15 @@
 DIR=pdflatex
 DOC=paper
 BIB=$(DOC).bib
+LATEX=pdflatex
 
 FIGS=./Figs
 
 all: $(DIR) $(DOC).tex $(BIB)
-	pdflatex -output-directory $(DIR) $(DOC)
+	$(LATEX) -output-directory $(DIR) $(DOC)
 	bibtex $(DIR)/$(DOC).aux
-	pdflatex -output-directory $(DIR) $(DOC)
-	pdflatex -output-directory $(DIR) $(DOC)
+	$(LATEX) -output-directory $(DIR) $(DOC)
+	$(LATEX) -output-directory $(DIR) $(DOC)
 	cp $(DIR)/$(DOC).pdf .
 
 #	twopi -Tps $(FIGS)/architecture_sensors.dot > $(FIGS)/architecture_sensors.ps
