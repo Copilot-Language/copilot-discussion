@@ -1,0 +1,59 @@
+\subsection{Timed-Triggered Monitoring} \label{sec:sampling}
+
+Monitoring based on sampling state-variables has historically been disregarded as a
+runtime monitoring approach, for good reason: without the assumption of
+synchrony between the monitor and observed software, monitoring via
+sampling may lead to false positives and false negatives~\cite{DwyerDE08}.  For
+example, consider the property $(0;1;1)^*$, written as a regular expression,
+denoting the sequence of values a monitored variable may take.  If the monitor
+samples the variable at the inappropriate time, then both false negatives
+(the monitor erroneously rejects the sequence of values) and false positives
+(the monitor erroneously accepts the sequence) are possible.  For example, if
+the actual sequence of values is $0,1,1,0,1,1$, then an observation of $0,1,1,1,1$ is a
+false negative by skipping a value, and if the actual sequence is
+$0,1,0,1,1$, then an observation of $0,1,1,0,1,1$ is a false positive by
+sampling a value twice.
+
+
+%Suppose the values $0$ and $1$ are the values a monitored variable $v$ may take.
+%values or by sampling the same value twice.  For example, if $v$ contains the
+%sequence of values $0,1,1,0,1,1$, then skipping the second `$0$' yields the
+%observation $0,1,1,1,1$, a false negative.  If $v$ contains $0,1,1,1,0,1,1$,
+%then skipping the third `$1$' yields the observation $0,1,1,0,1,1$, a false
+%positive.
+
+However, in a hard real-time context, sampling is a suitable strategy.  Under
+the assumption that the monitor and the observed program share a global clock
+and a static periodic schedule, while false positives are possible, false
+negatives are not.  A false positive is possible, for example, if the program
+does not execute according to its schedule but just happens to have the expected
+values when sampled.  If a monitor samples an unacceptable sequence of values,
+then either the program is in error, the monitor is in error, or they are not
+synchronized, all of which are faults to be reported.
+
+Most of the popular runtime monitoring frameworks inline monitors in
+the observed program to avoid the aforementioned problems with
+sampling.  However, inlining monitors changes the real-time behavior
+of the observed program, perhaps in unpredicable ways. Recalling our
+four criteria from Section~\ref{sec:constraints}, monitors that
+introduce such unpredictability are not a viable solution for
+ultra-critical hard real-time systems.  In a sampling-based approach,
+the monitor can be integrated as a separate scheduled process during
+available time slices (this is made possible by generating efficient
+constant-time monitors).  Indeed, sampling-based monitors may even be
+scheduled on a separate processor (albeit doing so requires additional
+synchronization mechanisms), ensuring time and space partitioning from
+the observed programs.  Such an architecture may even be necessary if
+the monitored program is physically distributed. 
+
+Recent work in RV investigates the use of time-triggered sampling for arbitrary
+programs~\cite{sampling,borzoo,rv11stoller}, which is a harder problem than in our hard
+real-time context.
+
+% Another shortcoming of inlining monitors is
+%that certified code (e.g., DO-178B for avionics~\cite{DO178B}) is common in this
+%domain.  Inlining monitors could necessitate re-certifying the observed program.
+%We cannot claim our approach would obviate the need for re-certification, but it
+%is a more modular approach than one based on instrumenting the source code of
+%the observed program, which may result in a less onerous re-certification
+%process.

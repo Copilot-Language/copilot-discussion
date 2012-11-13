@@ -1,0 +1,299 @@
+\section{Case Studies: Monitoring Avionics}
+\label{sec:case-study}
+
+We describe two case studies in which we have used Copilot monitors.
+
+\subsection{Pitot Tube Fault-Tolerance}
+
+
+\begin{myfig}[ht!]
+\includegraphics[scale=0.4]{Figs/experiment}
+\caption{Stack configuration in the Edge 540 aircraft.\label{fig:setup}}
+\end{myfig}
+
+\begin{myfig}
+\begin{minipage}{0.5\linewidth}
+\includegraphics[scale=0.5]{Figs/architecture}
+\end{minipage}
+\begin{minipage}{0.5\linewidth}
+\includegraphics[scale=0.4]{Figs/architecture_sensors}
+\end{minipage}
+\caption{Hardware stack and pitot tube configuration.} \label{fig:case-study}\label{fig:stack-schema}
+\end{myfig}
+
+% \todo{
+
+% Assumpitons
+
+% clock-synch assumptions/hardware synch
+
+% note that we assume that the $x_i$ code has no systematic fault that disturbs/locks the periphals that are used by the monitors
+
+% FT voting implementation in Copilot
+
+% SW fault-injection
+
+% HW fault-injection
+
+% timings
+
+% logging to the sd card
+
+% }
+
+In commercial aircraft, airspeed is commonly determined using pitot tubes that
+measure air pressure. The difference between total and static air pressure is
+used to calculate airspeed. Pitot tube subsystems have been
+implicated in numerous commercial aircraft incidents and accidents, including
+the 2009 Air France crash of an A330~\cite{pitot}, motivating our case study.
+
+We have developed a platform resembling a real-time air speed measuring system with
+replicated processing nodes, pitot tubes, and pressure sensors to test distributed Copilot
+monitors with the objective of detecting and tolerating software and hardware
+faults, both of which are purposefully injected.  The platform and its inclusion
+in an Edge 540 test aircraft, is depicted in Figure~\ref{fig:setup}.
+
+The high-level procedure of our experiment is as follows: (1) we sense and
+sample air pressure from the aircraft's pitot tubes; (2) apply a conversion and
+calibration function to accommodate different sensor and analog-to-digital
+converter (ADC) characteristics; (3) sample the C variables that contain the
+pressure values on a hard real-time basis by Copilot-generated
+monitors; and (4) execute Byzantine fault-tolerant voting and fault-tolerant
+averaging on the sensor values to detect arbitrary hardware component failures
+and keep consistent values among good nodes.
+
+We sample five pitot tubes, attached to the wings of an Edge 540 subscale aircraft.
+The pitot tubes provide total and static pressure that feed into
+one MPXV5004DP and four MPXV7002DP differential pressure sensors (Figure \ref{fig:case-study}).
+The processing nodes are four STM~32 microcontrollers featuring ARM Cortex~M3 cores which are clocked at
+72~Mhz (the number of processors was selected with the intention of creating
+applications that can tolerate one Byzantine processing node fault~\cite{lamport95byzantine}).
+The MPXV5004DP serves as a shared sensor that is read by each of the four processing nodes;
+each of the four MPXV7002DP pressure sensors is a local sensor that is only read by one processing
+node.
+
+% Five pitot tubes were attached to the wing of an Edge 540
+% subscale aircraft that was  placed into a laminar airflow of about 40 to 50 miles per hour.
+% Turbulences that are caused by the different pitot tube length and the close
+% spacing of the pitot tubes can affect the sampled pressures.
+
+%% In the variant of distributed monitor architectures (Section~\ref{sec:archs})
+%% that we implement, each monitor $M_i$ runs on the same processing node as the
+%% process $x_i$ it is monitoring. \todo{Keep?}
+
+Monitors communicate over dedicated point-to-point bidirectional serial
+connections.  With one bidirectional serial connection between each pair of
+nodes, the monitor bus and the processing nodes form a complete graph.  All
+monitors on the nodes run in synchronous steps; the clock distribution is
+ensured by a master hardware clock.  (The clock is a single point of
+failure in our prototype hardware implementation; a fully fault-tolerant
+system would execute a clock-synchronization algorithm.)
+
+% Each node samples its two sensors (the shared and a local one) at a rate of 128Hz.
+Each node samples its two sensors (the shared and a local one) at a rate of 16Hz.
+The microcontroller's timer interrupt that updates the global time also periodically calls
+a Copilot-generated monitor which samples the ADC C-variables of the monitored program,
+conducts Byzantine agreements, and performs fault-tolerant votes on the values. After 
+a complete round of sampling, agreements, and averaging, an arbitrary node collects and
+logs intermediate values of the process to an SD-card.
+
+% We conducted four experiments.  In each of the four runs
+% of the experiments we describe below, we vary faults injected into the system.
+% In each run, the distributed Copilot monitors repeatedly execute a series of fault-tolerant
+% voting algorithms in real-time over the sensor data, as follows:
+
+We tested the monitors in five flights. In each flight we simulated one node
+having a permanent Byzantine fault by having one monitor send out pseudo-random
+differing values to the other monitors instead of the real sampled pressure.  We
+varied the number of injected benign faults by physically blocking the dynamic
+pressure ports on the pitot tubes. In addition, there were two ``control
+flights'', leaving all tubes unmodified.
+
+% In each of the four runs of the experiments we describe below, we vary faults injected into the system.
+% In each run, the distributed Copilot monitors repeatedly execute a series of fault-tolerant
+% voting algorithms in real-time over the sensor data, as follows:
+
+The executed sampling, agreement, and averaging is described as follows:
+
+%% The distributed Copilot monitors distribute their values to the other nodes.
+%% Each monitor $M_i$ receives values sampled by the other monitors and keeps this
+%% state locally in variables $X_j$, where $X_1$ always refers to the value sampled at the
+%% monitor $M_1$ and $X_{2\dots 4}$ refer to the values received from the other
+%% three monitors. Each monitor $M_i$ maintains  variables $X_{j\rightarrow k}$ containing  the values
+%% that were sent from the monitor indexed by $j$ to the node monitor indexed by $k$.
+%% The algorithm executed by monitor $M_i$ follows:
+
+\begin{enumerate}
+\item Each node samples sensor data from both the shared and local sensors.
+\item Each monitor samples the C~variables that contain the pressure values and
+  broadcasts the values to every other monitor, then relays
+  each received value to monitors the value did not originate from.
+\item Each monitor performs a majority vote (as described in Section~\ref{subsec:boyer_moore})
+  over the three values it has for every other monitor of the shared sensor
+  (call this $maj_i(S)$ for node $i$) and the local sensor
+  (call this $maj_i(L)$ for node $i$).
+
+
+%% \item Broadcast the sampled shared sensor value $S_{1}$.
+%% \item Receive the sampled values
+%%   $S_{2\rightarrow 1}, S_{3\rightarrow 1}, S_{4\rightarrow 1}$
+%%   from the other nodes in turn.
+%% \item Send each received sensor value $S_{j\rightarrow k}$ to all nodes it
+%%   did not originate from.
+%% \item Receive the relayed values $S_{2\rightarrow 3}$, $S_{2\rightarrow 4}$,
+%%   $S_{3\rightarrow 2}$, $S_{3\rightarrow 4}$, $S_{4\rightarrow 2}$,
+%%   $S_{4\rightarrow 3}$ from the other nodes.
+
+%% \item Repeat the steps (1) to (4) with the value of the local sensor $L_i$,
+%%   gaining $L_1,L_{2\rightarrow 1}, L_{3\rightarrow 1}, L_{4\rightarrow 1},
+%%   L_{2\rightarrow 3}, L_{2\rightarrow 4}, L_{3\rightarrow 2}, L_{3\rightarrow 4},
+%%   L_{4\rightarrow 2}, L_{4\rightarrow 3}$.
+
+%% \item Compute the majority on the sensor values for each of the three
+%%   other nodes
+%%   $majS_{j} = majority (S_{j\rightarrow k}), majL_{j} = majority (L_{j\rightarrow k}), k\neq j$
+%%   using the Copilot majority function described in Section~\ref{sec:ft} and
+%%   test for its existence.
+
+% \begin{myfig}[]
+% \begin{framed}
+% \begin{tabular}[t]{l|@{$\;\;\;$}r}
+% \begin{minipage}{0.5\textwidth}
+% \begin{code}
+% let sharedSensor2Values =
+%       [ sharedSensorValue2
+%       , sharedSensorValue23
+%       , sharedSensorValue24 ]
+% \end{code}
+% \end{minipage}&
+% \begin{minipage}{0.5\textwidth}
+% \medskip
+% \begin{code}
+% sharedSensorMaj2       .=
+%   majority  sharedSensor2Values
+
+% sharedSensorMaj2Exists .=
+%   aMajority sharedSensor2Values
+%   sharedSensorMaj2
+% \end{code}
+% \end{minipage}
+% \end{tabular}
+% \end{framed}
+% \caption{Sensor majority values in Copilot.}
+% \label{fig:majority2syntax}
+% \end{myfig}
+
+% Figure~\ref{fig:majority2syntax} shows an excerpt of the Copilot monitor used to execute the
+% agreement on the microcontrollers. The {\tt sharedSensorMaj4Exists} variables are Boolean Copilot
+% streams that are computed just for logging and analysis purposes.
+
+\item Copilot-generated monitors then compute a \emph{fault-tolerant average}.
+  In our implementation, we remove the least and greatest elements from a set,
+  and average the remaining elements.  For each node $i$ and nodes $j \neq i$, fault-tolerant
+  averages are taken over four-element sets:
+  (1) $ftAvg(S) = \{S_i \} \cup \{maj_j(S)\}$ where $S_i$ is $i$'s value for the shared
+  sensor.
+
+\item Another fault-tolerant average is taken over a five-element set, where the
+  two least and two greatest elements are removed (thus returning the median
+  value).  The set contains the fault-tolerant average over the shared sensor
+  described in the previous step ( $ftAvg(S)$ ), the node's local sensor value $L_i$, and
+  $\{maj_j(L)\}$, for $j \neq i$.  Call this final fault-tolerant average $ftAvg$.
+
+%% $\{S_i \} \cup \{maj_j(S)\}$
+
+%% Compute a fault-tolerant average out of $ftAvgS, L_{i,1}, majL_{i,2}, \dots, majL_{i,4}$ using
+%%   the fault tolerant averaging function described in Section~\ref{sec:ft}, with parameter two, which
+%%   selects the median:
+%%   $$ftAvg = ftAvg_2 ( ftAvgS, L_{1}, majL_{2}, majL_{3}, majL_{4})$$
+
+\item Finally, time-stamps, sensor values, majorities and their existences are
+  collected by one node and recorded to an SD card for off-line analysis.
+
+\end{enumerate}
+
+\begin{myfig}[ht!]
+  \centering
+  \subfigure[]{
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight1_7_22_2011}
+    \label{fig:nofaults}
+  }
+  \subfigure[]{
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_7_22_2011.png}
+    \label{fig:onestuckprobe}
+  }
+  \subfigure[]{
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_8_5_2011.png}
+    \label{fig:twostuckprobes}
+  }
+  \subfigure[]{
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight3_8_5_2011.png}
+    \label{fig:threestuckprobes}
+  }
+  \caption{Logged pressure sensor, voted and averaged data.}
+  \label{fig:pressuregraphs}
+\end{myfig}
+
+
+% The tests did not include a setup
+% with different angles of attack of the airflow, which can cause a more
+% wide spread sampling of values because of shading of close tubes
+% and may influence results on cases with benign faults.
+
+% \begin{myfig}[ht]
+%   \centering
+%   \subfigure[]{
+%     \includegraphics[width=0.46\textwidth, trim=50 55 35 60,clip=true]{Figs/test2_1/node3.png}
+%     \label{fig:nofaults}
+%   }
+%   \subfigure[]{
+%     \includegraphics[width=0.46\textwidth, trim=50 55 35 60,clip=true]{Figs/test2_2/node3.png}
+%     \label{fig:twostuckprobes}
+%   }
+%   \subfigure[]{
+%     \includegraphics[width=0.46\textwidth, trim=50 55 35 60,clip=true]{Figs/test2_3/node3.png}
+%     \label{fig:byzantine}
+%   }
+%   \subfigure[]{
+%     \includegraphics[width=0.46\textwidth, trim=50 55 35 60,clip=true]{Figs/test2_4/node3.png}
+%     \label{fig:benignbyzantine}
+%   }
+%   \caption{Logged pressure sensor and voting data.}
+%   \label{fig:pressuregraphs}
+% \end{myfig}
+
+
+
+
+The graphs in Figure~\ref{fig:pressuregraphs} depict four scenarios in which
+different faults are injected.  In each scenario, there is a software-injected
+Byzantine faulty node present.  What varies between the scenarios are the number
+of physical faults.  In Figure~\ref{fig:nofaults}, no physical faults are
+introduced; in Figure~\ref{fig:onestuckprobe}, one benign fault has been injected by
+  putting a cap over the total pressure probe of one local tube.\footnote{Tape
+    left on the static pitot tube of Aeroper\'{u} Flight 603 in 1996 resulted in
+    the death of 70 passengers and crew~\cite{aeroperu}.}  In
+  Figure~\ref{fig:twostuckprobes}, in addition to the capped tube, sticky tape is placed over another
+  tube, and in Figure~\ref{fig:threestuckprobes}, sticky tape is placed over two
+  tubes in addition to the capped tube. 
+
+The graphs depict the air pressure difference data logged at each node and the
+voted and averaged outcome of the 3 non-faulty processing nodes.  The gray
+traces show the recorded sensor data $S_1, \dots, S_4,$ and the calibrated data
+of the local sensors $L_1, \dots, L_4$. The black traces show the final agreed
+and voted values $ftAvg$ of the three good nodes.
+
+In every figure except for Figure~\ref{fig:threestuckprobes}, the black graphs
+approximate each other, since the fault-tolerant voting allows the nodes to mask
+the faults.  This is despite wild faults; for example, in
+Figure~\ref{fig:onestuckprobe}, the cap on the capped tube creates a positive
+offset on the dynamic pressure as well as turbulences and low pressure on the
+static probes. At 1.2E7 clock ticks, the conversion and calibration function of
+the stuck tube results in an underflowing value.  In
+Figure~\ref{fig:threestuckprobes}, with only two non-faulty tubes out of five
+left, $ftAvg$ is not able to choose a non-faulty value reliably anymore.
+All nodes still agree on a consistent---but wrong---value.
+
+
+
+\input mavlink

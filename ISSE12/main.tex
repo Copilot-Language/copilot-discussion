@@ -1,0 +1,203 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Springer Journal format for special issue of ISSE on SHM
+
+\documentclass[twocolumn]            % options: twocolumn, smallcondinsed, smallextended 
+{report-templates/svjour3}                       %   plus final, draft, referee
+
+\usepackage[utf8]{inputenc}
+\usepackage[hyphens]{url}
+%% \usepackage{breakurl}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{amsmath}
+%%%\usepackage{amsthm}
+\usepackage{setspace}
+\usepackage{framed}
+
+\usepackage{listings}
+%\usepackage{natbib}
+\usepackage{fancyvrb}
+%\usepackage{microtype}
+\usepackage{alltt}
+% \usepackage{tabularx}
+\usepackage[center]{caption}
+\usepackage{subfigure}
+\usepackage{fancyhdr}
+
+% table of contents depth
+\setcounter{tocdepth}{2}
+
+
+% boxes around figs
+\usepackage{float}
+\floatstyle{boxed} 
+\restylefloat{figure}
+
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\footnotesize}
+
+\lstset{basicstyle=\tt\footnotesize}
+
+\lstdefinelanguage{Haskell}
+	{
+		morekeywords={as, case, of, class, data, data, family, data, instance,
+		default, deriving, do, forall, foreign, hiding, if, then, else, import,
+		infix, infixl, infixr, let, in, mdo, module, newtype, proc, qualified,
+		rec, type, where},
+    	morecomment=[l]{--},
+    	morecomment=[s]{{\{-}{-\}}},
+    	morestring=[b]",
+    	keywordstyle=\color{blue}\bf,
+    	commentstyle=\it\color{ForestGreen},
+    	stringstyle=\color{red},
+    	literate= {<-}{{$\leftarrow$}}1 {->}{{$\rightarrow$}}1 {-<}{{$\prec$}}1
+    	{=>}{{$\Rightarrow$}}1 {>>>}{{$\ggg$}}2 {<<<}{{$\lll$}}2 {***}{{$\times$}}1
+    	{&&&}{{$\otimes$}}1  {'a}{{$\alpha$}}1 {'b}{{$\beta$}}1 {'c}{{$\gamma$}}1
+    	{'d}{{$\delta$}}1 {'e}{{$\eta$}}1
+    }
+
+%\newtheoremstyle{example}{\topsep}{\topsep}
+%    {\normalsize\sl} % Body font.
+%     {}               % Indent amount (empty = no indent, \parindent = para indent).
+%     {\small\it}      % Thm head font.
+%     {:}              % Punctuation after thm head.
+%     {\newline}       % Space after thm head (\newline = linebreak).
+%     {\thmname{#1} \thmnumber{#2}\thmnote{#3}} % Thm head spec.
+%\theoremstyle{example}
+%\newtheorem{example}{Example}
+
+%% \newcommand{\hlinepage}{\rule{\textwidth}{0.25pt}}
+%% \newcommand{\HRule}{\rule{\linewidth}{0.25pt}}
+\newcommand{\fixme}[1]{\emph{\color{Red}\{!~#1~!\}}}
+% - FROM TUTORIAL --------------------------------------------------------------------
+
+%\usepackage[colorlinks=true,linkcolor=blue,citecolor=red,pagebackref=true]{hyperref}
+
+
+\newenvironment{myfig}{\begin{figure*}}{\end{figure*}}
+
+\usepackage{subfigure}
+
+
+
+\usepackage{fancyhdr}
+
+\title{Copilot: Monitoring Embedded Systems}
+
+\author{Lee Pike and Nis Wegmann and Sebastian Niller and Alwyn Goodloe}
+
+%% \\Galois, Inc.\\\url{leepike@galois.com}
+%%   \and \\University of Copenhagen\\ \url{wegmann@diku.dk} 
+%%   \\ National Institute of
+%%   Aerospace\\ \url{sebastian.niller@gmail.com} \and Alwyn Goodloe\\National
+%%   Institute of Aerospace\\\url{a.goodloe@nasa.gov}\footnote{The research contributed by
+%%   Alwyn Goodloe was performed during his tenure as a staff scientist at the
+%%   National Institute of Aerospace; his current affiliation is with the NASA
+%%   Langley Research Center.}
+%% }
+
+
+%% \author{Lee Pike\\Galois, Inc.\\\url{leepike@galois.com}
+%%   \and Nis Wegmann\\University of Copenhagen\\ \url{wegmann@diku.dk} 
+%%   \and Sebastian Niller\\ National Institute of
+%%   Aerospace\\ \url{sebastian.niller@gmail.com} \and Alwyn Goodloe\\National
+%%   Institute of Aerospace\\\url{a.goodloe@nasa.gov}\footnote{The research contributed by
+%%   Alwyn Goodloe was performed during his tenure as a staff scientist at the
+%%   National Institute of Aerospace; his current affiliation is with the NASA
+%%   Langley Research Center.}
+%% }
+
+
+ \journalname{Innovations in Systems and Software Engineering}
+
+\institute{Lee Pike \at 
+Galois, Inc., Portland, Oregon\\
+\email{leepike@galois.com} 
+\and
+Nis Wegmann \at 
+University of Copenhagen, Copenhagen, Denmark\\
+\email{wegmann@diku.dk}
+\and 
+Sebastian Niller \at 
+Unaffiliated\\
+\email{sebastian.niller@gmail.com}
+\and
+Alwyn Goodloe \at 
+NASA Langley Research Center, Hampton, Virginia  \\
+\email{a.goodloe@nasa.gov}
+}
+
+
+
+
+\begin{document}
+
+\maketitle
+\abstract{ Abstract Runtime verification (RV) is a natural fit for
+  ultra-critical systems that require correct software behavior.  Due
+  to the low reliability of commodity hardware and the adversity of
+  operational environments, it is common in ultra-ultra-critical
+  systems to replicate processing units (and their hosted software)
+  and incorporate fault-tolerant algorithms to compare the outputs,
+  even if the software is considered to be fault-free.  In this paper
+  we investigate the use of software monitoring in distributed
+  fault-tolerant systems and the implementation of fault-tolerance
+  mechanisms using RV techniques, we describe the Copilot language and
+  compiler that generates monitors for distributed real-time systems,
+  and we discuss two case-studies in which Copilot-generated monitors
+  were used to detect onboard software and hardware faults and monitor
+  air-ground data link messaging protocols.}
+ 
+
+%% Runtime verification (RV) is a natural fit for ultra-critical systems, where
+%%  correctness is imperative.  In ultra-critical systems, even if the software is
+%%  fault-free, because of the inherent unreliability of commodity hardware and
+%%  the adversity of operational environments, processing units (and their hosted
+%%  software) are replicated, and fault-tolerant algorithms are used to compare
+%%  the outputs.  We investigate both software monitoring in distributed
+%%  fault-tolerant systems as well as implementing fault-tolerance mechanisms
+%%  using RV techniques.  We describe the Copilot language and compiler,
+%%  specifically designed for generating monitors for distributed, hard real-time
+%%  systems.  We also describe two case-studies in which we generated Copilot
+%%   monitors in avionics systems.}
+
+\input intro
+
+\input overview
+
+\input sampling
+
+\input copilot_tutorial
+
+
+%\input watchmen
+
+\input flight-tests
+
+%\input target
+%\input speclang
+%       \input creating
+%       \newpage
+%\input integration
+%\input future
+
+\input conclusion
+
+\begin{acknowledgements}
+This work is supported by NASA Contract NNL08AD13T.  Portions
+  of this work have been published as conference papers in \emph{Runtime
+    Verification}, 2010 and  \emph{Runtime
+    Verification}, 2011.  We wish to especially thank the following individuals:
+  Ben Di~Vito at the NASA Langley Research Center (NASA LaRC) monitored this
+  contract, and Paul Miner and Eric Cooper, also at NASA LaRC, provided valuable
+  input.  Robin Morisset developed an earlier version of Copilot.
+\end{acknowledgements}
+
+
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{report-templates/spmpsci}  %%%  options spbasic or  spmpsci  
+                          
+\bibliography{biblio,mybib}
+
+\end{document}

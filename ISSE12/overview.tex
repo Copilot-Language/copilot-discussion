@@ -1,0 +1,616 @@
+\section{Runtime Monitoring for Embedded Systems: Constraints and Approaches}
+\label{sec:constraintsApproaches}
+In this section, we  present constraints to runtime monitoring for
+real-time embedded systems. 
+
+\subsection{RV Constraints}\label{sec:constraints}
+%\section{RV Constraints in Ultra-Critical Systems}\label{sec:constraints}
+%\subsection{Constraints}
+
+Ideally, the RV approaches that have been developed in the literature could be
+applied straightforwardly to ultra-critical systems.  Unfortunately,
+typical RV approaches violate constraints imposed on ultra-critical
+systems. We summarize these
+constraints using the acronym ``FaCTS'':
+
+\begin{itemize}
+\item {\bf F}unctionality: the RV system cannot change the target's behavior (unless the
+  target has violated a specification).
+\item {\bf C}ertifiability: the RV system must not make re-certification (e.g.,
+  DO-178B~\cite{DO178B}) of the target onerous.
+\item {\bf T}iming: the RV system must not interfere with the target's timing.
+\item {\bf S}WaP: The RV system must not exhaust size, weight, and power (SWaP)
+  tolerances.
+\end{itemize}
+
+The functionality constraint is common to all RV systems, and we will not
+discuss it further.  The certifiability constraint is at odds with
+aspect-oriented programming techniques, in which source code instrumentation
+occurs across the code base---an approach classically taken in RV (e.g., the
+Monitor and Checking (MaC)~\cite{KimVBKLS99} and Monitor Oriented Programming
+(MOP)~\cite{ChenR05} frameworks).  For codes that are certified, instrumentation
+is not a feasible approach, since it requires costly reevaluation of the code.
+Source code instrumentation can modify both the control flow of the instrumented
+program as well as its timing properties.  Rather, an RV approach must isolate
+monitors in the sense of minimizing or eliminating the effects of monitoring on
+the observed program's control flow.
+
+Timing isolation is also necessary for real-time systems to ensure that timing
+constraints are not violated by the introduction of RV.  Assuming a fixed upper
+bound on the execution time of RV, a worst-case execution-time analysis is used
+to determine the exact timing effects of RV on the system---doing so is
+imperative for hard real-time systems.
+
+Code and timing isolation requirements cause the most significant deviations from
+traditional RV approaches.  Section~\ref{sec:sampling}  argues 
+that these requirements dictate a \emph{time-triggered} RV approach, in which a program's state is
+periodically sampled based on the passage of time rather than occurrence of
+events~\cite{copilot}.
+
+The final constraint, SWaP, applies both to memory (embedded processors may have
+just a kilobytes of available memory) as well as additional hardware (e.g.,
+processors or interconnects).
+
+
+
+
+%% \subsection{Architectures}\label{sec:archs}
+
+
+%% Ideally, a monitoring architecture requires as little
+%% additional hardware as possible; besides SWaP considerations, additional
+%% hardware increases the likelihood of some component suffering a random fault.
+%% On the other hand, a monitor should reduce common failures with the target
+%% system.  Finally, we include as a design goal making few changes to a target's
+%% architecture to enable RV.  We identify three broad architectures emphasizing
+%% various aspects of these considerations.
+
+%% Suppose the target is made up of a set of distributed processes $x_0$,\nobreak
+%% $x_1$,\nobreak $\dots$,\nobreak $x_n$ together with an interconnect.  The
+%% interconnect between processes could be a simple bus or form other network
+%% topologies~\cite{Rushby01:buscompare}.  As depicted in
+%% Figure~\ref{fig:singlebus}, we propose three architecture families: (1) A single
+%% monitor watching a shared bus, (2) a single monitor watching on a dedicated bus,
+%% and (3) distributed monitors.  We discuss each in turn.
+
+%% \begin{figure}[ht]
+%%   \centering
+%% \begin{framed}
+%%   \begin{tabular}[t]{c|c|c}
+%%   \includegraphics[width=3cm]{Figs/BusMonArch}  &
+%%   \includegraphics[width=3cm]{Figs/oneMonOnBus} &
+%%   \includegraphics[width=3cm]{Figs/NewdistMonArch}\\
+%% Shared bus. & Dedicated bus. & Distributed monitors.
+%%   \end{tabular}
+
+
+%% % \end{framed}
+%% % \caption{A Monitor Watching a Shared Bus}
+%% % \end{myfig}
+
+%% % \begin{figure}[ht]
+%% % \begin{framed}
+%% %   \centering
+
+%% % \end{framed}
+%% % \caption{Single Monitor on a Dedicated Bus}
+%% % \end{myfig}
+
+%% % \begin{figure}[ht]
+%% % \begin{framed}
+%% %   \centering
+
+%% \end{framed}
+%% \caption{Three monitoring architectures.\label{fig:dist}\label{fig:onemonbus}\label{fig:singlebus}}
+%% \end{myfig}
+
+%% %\todo{Edit the distributed monitors figure}
+
+
+%% \paragraph{A single monitor watching a shared bus.}
+%% In this architecture, the monitor receives messages over the bus just like any
+%% other process in the system.  In general, the monitor is a silent participant
+%% that does additional error checking on in-bound messages or verification that
+%% protocol communication patterns are followed.  Only if it detects a fault, it
+%% would send messages to the other processes through the bus alerting them of the
+%% fault.  This architecture requires only a single additional processing element,
+%% making RV cheap, simple, and less likely to be a source of faults itself.
+%% However, the monitor must be ensured not to become faulty, flooding the data-bus
+%% with wrong messages.  In this architecture, the monitor must be constrained to
+%% fail silently and prevented from being a ``babbling idiot'' on the bus~\cite{Rushby01:buscompare}.
+
+%% BusMoP adapts this architecture to verify bus protocols~\cite{PellizzoniCR08A}.
+%% In the case of BusMoP, the monitor is implemented in an FPGA that is interposed
+%% between the peripheral hardware and the bus allowing it to sniff all activities
+%% on the bus.
+
+
+%% %% The class of faults this monitoring architecture is able to capture, however, is
+%% %% limited: the monitor can only infer the health of a process from the messages
+%% %% processes passes over the bus since monitors have no access to a process's
+%% %% private state. Depending on the type of interconnect, the monitor may not
+%% %% be able to report faults to processes if processes are able to
+%% %% flood the data-bus.
+
+%% \paragraph{A single monitor watching on a dedicated bus.}
+%% An alternative architecture is one in which the monitor observes on a separate
+%% dedicated monitoring bus from the one used by the target.  In this architecture,
+%% each process is instrumented to send data to the monitor over the monitor bus,
+%% and the single monitor can compare the incoming data.  As necessary, the monitor
+%% may signal the processes if a fault is detected.
+
+%% %% The modification required of the target to implement this architecture is
+%% %% ostensibly minor; each process needs only to be instrumented to broadcast select
+%% %% messages that it receives or sends over another bus, helping to ensure that the
+
+%% In this architecture, all state information must be explicitly passed to the
+%% monitors via dedicated messages over the monitor's bus.  By using a separate
+%% bus, there is less chance the monitor causes disruptions on the target's data
+%% bus, including timing violations or other faults.  Moreover, faults in the
+%% target's bus are independent of the monitor's bus.  The primary disadvantage of
+%% this architecture, similar to the previous one, is that the monitor is a
+%% single point of failure.
+
+%% Architectures such as TTTech's TTEthernet~\cite{ttethernet} provide interesting
+%% possibilities to safely combine monitoring traffic with the target's bus
+%% traffic.  TTEthernet logically partitions time-triggered rate-constrained, and
+%% best-effort Ethernet traffic on the same bus.
+
+
+%% % In some cases, it might be possible to conceptually combine an architecture in
+%% % which a monitor has a dedicated bus with the previous architecture described, in
+%% % which a monitor watches a shared bus.  For example, if the interconnect is
+%% % , monitor messages might be sent between
+%% % distributed monitors over the network as conventional Ethernet traffic, which is
+%% % guaranteed by the TTEthernet not to interfere with safety-critical messages sent
+%% % over the same network.
+
+
+%% \paragraph{Distributed monitors.}
+%% The final architecture we consider is one in which monitors are distributed with
+%% the distributed processes of the target.  In Figure~\ref{fig:dist}, the monitors
+%% $M_0$, $M_1$, $\ldots$, $M_n$ corresponding to each process $x_0$, $x_1$,
+%% $\ldots$, $x_n$ in the target.
+
+%% %% Monitor $M_i$ may be implemented on the same
+%% %% hardware as process $x_i$ and sharing the same interconnect as is depicted in
+%% %% Figure~\ref{fig:dist}, or the monitor could be physically separated and possibly
+%% %% have a dedicated interconnect; the former is cheaper (in terms of hardware
+%% %% resources), but the latter provides less chance of a monitor sharing the
+%% %% fault-modes of its associated process.
+
+%% Distributed monitors provide a way to ``bolt on'' fault-tolerance to an existing
+%% distributed system; we give an example of monitors implementing fault-tolerance
+%% in Section~\ref{sec:case-study}.  This architecture is similar to the
+%% architecture implemented in~\cite{SenVAR04}, where the task of monitoring
+%% distributed systems is distributed among monitors at each node, but local
+%% monitors require information be transmitted from other nodes over the
+%% network. The architecture described in~\cite{bauer} has local monitors that
+%% verify safety properties of local state, but transmits information to a
+%% centralized diagnosis module that obtains a global view of the system. In both
+%% cases, the monitors appear to share a bus or network with the system under
+%% observation, which given the traffic between monitors may compromise hard
+%% real-time deadlines.
+
+%% %% As compared to the single process-monitor architecture in
+%% %% Figure~\ref{fig:onemonbus}, this architecture has the advantage that it supports
+%% %% a potentially more reliable monitor since the monitors are distributed.  So even
+%% %% if one or more $M_i$'s fail, the monitor may assist the system.  On the other
+%% %% hand, this architecture is one of the most expensive in terms of additional
+%% %% size, weight, and power.
+
+
+%% % A distributed monitor also has an additional benefit in that an individual
+%% % monitor $M_i$ can serve as a guardian to its corresponding process $x_i$.  In
+%% % the single process-monitor architecture, a ``babbling'' process could prevent
+%% % other processes from sending messages to the monitor or prevent the monitor from
+%% % signaling the processes in the case of a detected error.
+
+%% % On the other hand, a distributed monitor is more complicated, and that
+%% % complexity may lead to less reliability in the monitor.  Furthermore, the
+%% % distributed process-monitor architecture may be nearly as expensive in terms of
+%% % processes and interconnects as the SUO itself.  A distributed architecture may
+%% % not be feasible if the monitor has stringent cost, size, weight, or energy
+%% % consumption constraints.
+
+
+%% % redundancy and fault-tolerance, forming a ``virtual bus''; for example, in
+%% % NASA's Reliable Optical Bus (ROBUS), the interconnect is a bipartite graph used
+%% % to provide Byzantine fault-tolerance~\cite{spider_design}.
+
+
+%% %\subsection{Bus-Monitor Architecture}\label{arch:singlebus}
+
+
+
+%% \section{Copilot: a Language for Ultra-Critical RV}\label{sec:copilot}
+
+
+%% To answer the challenge of RV in the context of fault-tolerant systems, we have
+%% developed a stream language called \emph{Copilot}.\footnote{Copilot is released
+%%   under the BSD3 license and pointers to the compiler and libraries can be found
+%%   at \url{http://leepike.github.com/Copilot/}.}  Copilot is designed to achieve the
+%% ``FaCTS'' constraints described in Section~\ref{sec:constraints}.
+
+%% \begin{figure}[ht]
+%% %  \centering
+%% \begin{framed}
+%% \noindent
+
+%% %\todo{find ambiguous ``compiler'' reference}
+
+%% If the majority of the three engine temperature probes has exceeded 250 degrees, then
+%% the cooler is engaged and remains engaged until the temperature of the majority
+%% of the probes drop to 250 degrees or less.  Otherwise, trigger an immediate
+%% shutdown of the engine.
+%% \begin{code}
+%% engineMonitor = do
+%%   trigger "shutoff" (not overHeat) [arg maj]
+%%   where 
+%%   vals     = map externW8 ["tmp_probe_0", "tmp_probe_1", "tmp_probe_2"]
+%%   exceed   = map (< 250) vals
+%%   maj      = majority exceed
+%%   checkMaj = aMajority exceed maj
+%%   overHeat = (extern "cooler" || (maj && checkMaj)) `since' not maj
+%% \end{code}
+
+%% %% \begin{tabular}[t]{l|@{$\;\;\;$}r}
+%% %% \begin{minipage}{0.45\textwidth}
+%% %% \begin{code}
+%% %% -- external variables
+%% %% t0       = extW8 "temp_probe_0"
+%% %% t1       = extW8 "temp_probe_1"
+%% %% t2       = extW8 "temp_probe_2"
+%% %% cooler   = extB  "fan_status"
+%% %% -- Copilot variables
+%% %% maj      = varW8 "maj"
+%% %% check    = varB  "maj_check"
+%% %% overHeat = varB  "over_heat"
+%% %% monitor  = varB  "monitor"
+%% %% \end{code}
+%% %% %$<$\emph{continued on right}$>$
+%% %% \end{minipage} &
+
+%% %% \begin{minipage}{0.45\textwidth}
+%% %% $<$\emph{continued from left}$>$
+%% %% \begin{code}
+%% %% engineMonitor = do
+%% %%   let temps = map (< 250) [t0, t1, t2]
+%% %%   maj      .= majority temps
+%% %%   check    .= aMajority temps maj
+%% %%   overHeat `ptltl`
+%% %%     ((cooler || maj && check)
+%% %%        `since' not maj)
+%% %%   monitor .= not overHeat
+%% %%   trigger monitor "shutoff" void
+%% %% \end{code}
+%% %% \end{minipage}
+%% %% \end{tabular}
+%% \end{framed}
+%%  \caption{A safety property and its corresponding Copilot monitor specification.}
+%%   \label{fig:engine}
+%% \end{myfig}
+
+%% While a preliminary description of the language has been
+%% presented~\cite{copilot}, significant improvements to the language have been
+%% made and the compiler has been fully reimplemented.  In any event, the focus of
+%% this paper is the unique properties of Copilot for implementing hardware
+%% fault-tolerance and software monitoring in the context of an ultra-critical
+%% system.  Copilot is a language with stream semantics, similar to languages like
+%% Lustre~\cite{lustre-intro}; we mention advantages of Copilot over Lustre in
+%% Section~\ref{sec:related}.  
+
+%% To briefly introduce Copilot, we provide an example Copilot specification in
+%% Figure~\ref{fig:engine}.  A Copilot monitor program is a sequence of
+%% \emph{triggers}.  A trigger is comprised of a name ({\tt shutoff}), a Boolean
+%% guard ({\tt not overHeat}), and a list of arguments (in this case, one argument,
+%% {\tt maj}, is provided).  If and only if the condition holds is the function
+%% {\tt shutoff} called with the arguments.  What a trigger does is
+%% implementation-dependent; if Copilot's C code generator is used, then a raw C
+%% function with the prototype
+%% \begin{code}
+%% void shutoff(uint8_t maj);
+%% \end{code}
+%% should be defined.  Within a single Copilot program, triggers are scheduled to
+%% fire synchronously, if they fire at all.  Outside of triggers, a Copilot monitor
+%% is side-effect free with respect to non-Copilot state.  Thus, triggers are used
+%% for other events, such as communication between monitors, as described in
+%% Section~\ref{sec:distributed}.
+
+%% %% In addition to Copilot's ability to sample C variables (and functions and
+%% %% arrays), the language supports \emph{triggers}.  The purpose of triggers is to
+%% %% provide a mechanism for Copilot monitors to make stateful changes to its
+%% %% environment.  Outside of triggers, a Copilot monitor is side-effect free with
+%% %% respect to non-Copilot state.  A trigger calls a function if a Boolean Copilot
+%% %% variable is ever true.  For example, in the trigger in Figure~\ref{fig:engine},
+%% %% the C function {\tt shutoff} is called with no arguments (triggers can be
+%% %% defined to take an arbitrary number of arguments) if the Copilot variable {\tt
+%% %%   monitor} is true.  It is the responsibility of programmer to write a
+%% %% corresponding {\tt shutoff} C function.  Within a single monitor specification,
+%% %% triggers are scheduled to fire synchronously, if they fire at all, after each
+%% %% stream has generated a new value.  We can also use triggers for communication
+%% %% between monitors, as described in Section~\ref{sec:distributed}.
+
+
+%% A trigger's guard and arguments are \emph{stream}
+%% expressions.  Streams are infinite lists of values.  The syntax for defining
+%% streams is nearly identical to that of Haskell list expressions; for example,
+%% the following is a Copilot program defining the Fibonacci sequence.
+%% \begin{code}
+%% fib = [0, 1] ++ fib + drop 1 fib
+%% \end{code}
+%% In Copilot streams, operators are automatically applied point-wise; for example,
+%% negation in the expression {\tt not overHeat} is applied point-wise over the
+%% elements of the stream {\tt overHeat}.  In Figure~\ref{fig:engine}, the streams
+%% are defined using library functions.  The functions {\tt majority}, {\tt
+%%   aMajority}, and {\tt `since'} are all Copilot library functions.  The
+%% functions {\tt majority} (which determines the majority element from a list, if
+%% one exists---e.g., {\tt majority [1, 2, 1, 2, 1] == 1}) and {\tt aMajority}
+%% (which determines if any majority element exists) come from a majority-vote
+%% library, described in more detail in Section~\ref{sec:ft}.  The function {\tt
+%%   `since'} comes from a a past-time linear temporal logic library.  Libraries
+%% also exist for defining clocks, linear temporal logic expressions, regular
+%% expressions, and simple statistical characterizations of streams.
+
+%% %% In the operator or a specialized library operator (e.g., {\tt `ptltl'}, denoting
+%% %% a past-time linear temporal logic expression).  Copilot variables, like {\tt
+%% %%   maj}, are variables that hold values produced by stream expressions.  Copilot
+%% %% variables can be built over the same types as external variables.  
+
+%% Copilot is a typed language, where types are enforced by the Haskell type system
+%% to ensure generated C programs are well-typed.  Copilot is \emph{strongly typed}
+%% (i.e., type-incorrect function application is not possible) and \emph{statically
+%%   typed} (i.e., type-checking is done at compile-time).  We rely on the type
+%% system to ensure the Copilot compiler is type-correct.  The base types are
+%% Booleans, unsigned and signed words of width 8, 16, 32, and 64, floats, and
+%% doubles.  All elements of a stream must belong to the same base type.
+
+%% To sample values from the ``external world'', Copilot has a notion of
+%% \emph{external variables}.  External variables include any value that can be
+%% referenced by a C variable (as well as C functions with a non-void return type
+%% and arrays of values).  In the example, three external variables are sampled:
+%% {\tt tmp\_probe\_0}, {\tt tmp\_probe\_1}, {\tt tmp\_probe\_2}.  External
+%% variables are lifted into Copilot streams by applying a typed ``extern''
+%% function.  For example, An expression {\tt externW8 "var"} is a stream of values
+%% sampled from the variable {\tt var}, which is assumed to be an unsigned 8-bit
+%% word.
+
+%% Copilot is implemented as an \emph{embedded domain-specific language} (eDSL).
+%% An eDSL is a domain-specific language in which the language is defined as a
+%% sub-language of a more expressive host language.  Because the eDSL is embedded,
+%% there is no need to build custom compiler infrastructure for Copilot---the host
+%% language's parser, lexer, type system, etc. can all be reused.  Indeed, Copilot
+%% is \emph{deeply embedded}, i.e., implemented as data in the host language that
+%% can be manipulated by ``observer programs'' (in the host language) over the
+%% data, implementing interpreters, analyzers, pretty-printers, compilers, etc.
+%% Copilot's host language is the pure functional language
+%% Haskell~\cite{Haskell98}.  In one sense, Copilot is an experiment to answer the
+%% question, ``To what extent can functional languages be used for ultra-critical
+%% system monitoring?''
+
+%% One advantage of the eDSL approach is that Haskell acts as a powerful macro
+%% language for Copilot.  For example, in Figure~\ref{fig:engine}, the expression
+%% \begin{code}
+%% map externW8 ["tmp_probe_0", "tmp_probe_1", "tmp_probe_2"]
+%% \end{code}
+%% is a \emph{Haskell} expression that maps the external stream operator {\tt externW8} over a
+%% list of strings (variable names).  We discuss macros in more detail in Section~\ref{sec:ft}.  
+
+%% Additionally, by reusing Haskell's compiler infrastructure and type system, not
+%% only do we have stronger guarantees of correctness than we would by writing a
+%% new compiler from scratch, but we can keep the size of the compiler
+%% infrastructure that is unique to Copilot small and easily analyzable; the
+%% combined front-end and core of the Copilot compiler is just over two thousand
+%% lines of code.  Our primary back-end generating C code is around three thousand
+%% lines of code.
+
+%% %% We have executed Copilot-generated specifications on an ATmega328 microprocessor
+%% %% as well as on an ARM~Cortex~M3.
+%% %% The Copilot compiler, using Atom~\cite{} as a
+%% %% backend, generates C99 code, so any processor for which a C compiler exists is a
+%% %% potential target.  The code generated is a strict subset of C99, without
+%% %% non-array pointers or dynamic memory allocation.  Function bodies are generated
+%% %% in static single assignment form~\cite{}, simplifying worst-case execution time
+%% %% analysis.  However, the program's hard real-time guarantees depend on various
+%% %% hardware environmental assumptions; e.g., a cache will change timing properties.
+
+%% Copilot is designed to integrate easily with multiple back-ends.  Currently, two
+%% back-ends generate C code.  The primary back-end uses the Atom eDSL~\cite{atom}
+%% for code generation and scheduling.  Using this back-end, Copilot compiles into
+%% constant-time and constant-space programs that are a small subset of C99.  By
+%% \emph{constant-time}, we mean C programs such that the number of statements
+%% executed is not dependent on control-flow\footnote{We do not presume that a
+%%   constant-time C program implies constant execution time (e.g., due to
+%%   hardware-level effects like cache misses), but it simplifies execution-time
+%%   analysis.} and by \emph{constant-space}, we mean C programs with no dynamic
+%% memory allocation.
+
+%% %% Function bodies are generated in approximate
+%% %% static single assignment form~\cite{ssa}, simplifying worst-case execution time
+%% %% analysis; control-flow does not affect the execution time of Copilot-generated
+%% %% code.
+
+%% The generated C is suitable for compiling to embedded microprocessors: we have
+%% tested Copilot-generated specifications on the AVR (ATmega328 processor) and
+%% STM32 (ARM~Cortex~M3 processor) micro-controllers.  Additionally, the compiler
+%% generates its own static periodic schedule, allowing it to run on bare hardware
+%% (e.g., no operating system is needed).  The language follows a sampling-based
+%% monitoring strategy in which variables or the return values of functions of an
+%% observed program are periodically sampled according to its schedule, and
+%% properties about the observations are computed.
+
+
+%% %% Copilot monitors are functions that do not affect the state of
+%% %% the programs they are composed with, unless some monitored condition is
+%% %% violated.  Generated monitors are C functions with their own hard real-time
+%% %% schedules that can be scheduled as a task in the overall system design.
+
+
+%% % \todo{delete or move
+%% % %\paragraph{Haskell Syntax.}
+
+%% % To understand Copilot's syntax, it helps to understand a little Haskell syntax.
+%% % In Haskell,, and the
+%% % empty list is denoted {\tt []}.
+
+%% % \begin{itemize}
+%% %   \item {\tt drop 2 [6, 7, 8]} evaluates to {\tt [8]}.
+%% %   \item {\tt [2, 3] ++ [6, 7]} evaluates to {\tt [2, 3, 6, 7]}.
+%% % \end{itemize}
+
+%% % \noindent
+
+%% % \begin{quote}
+%% % \begin{verbatim}
+%% % let x = [0] ++ map (+ 2) y
+%% %     y = x
+%% % \end{verbatim}
+%% % {\tt x} evaluates to {\tt [0, 2, 4, ...]}, and
+%% % {\tt y} evaluates to {\tt [0, 2, 4, ...]}.
+%% % \end{quote}
+
+%% % \noindent
+%% % The lists generated are infinite lists, or \emph{streams}.
+%% % }
+
+
+%% % \paragraph{Copilot Syntax.}
+
+%% \subsection{Easy Fault-Tolerance} \label{sec:ft}
+%% Fault-tolerance is hard to get right.  The examples given in
+%% Section~\ref{sec:motivation} can be viewed as fault-tolerance algorithms that
+%% failed; indeed, as noted by Rushby, fault-tolerance algorithms, ostensibly
+%% designed to prevent faults, are often the source of systematic faults
+%% themselves~\cite{rushbyss10}!  One goal of Copilot is to make fault-tolerance
+%% easy---easy for experts to specify algorithms without having to worry about
+%% low-level programming errors and easy for users of the functions to integrate
+%% the algorithms into their overall system.  While Copilot cannot protect against
+%% a designer using a fault-tolerant algorithm with a weak fault-model, it
+%% increases the chances of getting fault-tolerance right as well as decoupling the
+%% design of fault-tolerance from the primary control system.  Finally, it
+%% separates the concerns of implementing a fault-tolerance algorithm from
+%% implementing the algorithm as a functionally correct, memory-safe, real-time C
+%% program.
+
+%% As noted, because Copilot is deeply embedded in Haskell, Haskell acts as a meta-language
+%% for manipulating Copilot programs.  For example, the streams {\tt maj}, {\tt check}, and
+%% {\tt overHeat} in Figure~\ref{fig:engine} are implemented by Haskell functions
+%% that generate Copilot programs.
+
+%% %% (Stream {\tt overHeat} is defined using a
+%% %% past-time linear temporal logic (ptLTL) library).  The {\tt majority} function
+%% %% takes a list of streams and computes the point-wise majority element of the
+%% %% streams.}
+
+%% %% For example, consider the following stream values and the majority
+%% %% values for them:
+%% %% \begin{code}
+%% %% s0       => 0, 1, 2, 4, ...
+%% %% s1       => 0, 1, 3, 2, ...
+%% %% s2       => 1, 2, 3, 4, ...
+%% %% majority => 0, 1, 3, 4, ...
+%% %% \end{code}
+%% %% \noindent
+
+%% To see this in more detail, consider the Boyer-Moore Majority-Vote Algorithm,
+%% the most efficient algorithm for computing a majority element from a
+%% set\footnote{Due to space limitations, we will not describe the algorithm here,
+%%   but an illustration of the algorithm can be found at
+%%   \url{http://www.cs.utexas.edu/~moore/best-ideas/mjrty/example.html}.}~\cite{mjrty}.
+%% The {\tt majority} library function implements this algorithm as a Copilot macro
+%% as follows: 
+%% \begin{code}
+%% majority (x:xs) = majority' xs x (1 :: Stream Word32)
+%%   where 
+%%   majority' []     candidate _   = candidate
+%%   majority' (x:xs) candidate cnt = 
+%%     majority' xs (if cnt == 0 then x else candidate)
+%%                  (if cnt == 0 || x == candidate then cnt+1 else cnt-1)
+%% \end{code}
+
+%% %% \begin{code}
+%% %% majority ls = majority' ls (const unit) 0
+%% %%   where
+%% %%   majority' [] candidate _       = candidate
+%% %%   majority' (x:xs) candidate cnt =
+%% %%     majority' xs (mux (cnt == 0) x candidate)
+%% %%                  (mux (cnt == 0 || x == candidate) (cnt + 1) (cnt - 1))
+%% %% \end{code}
+%% \noindent
+%% %% The function recursively generates a tree of {\tt if-then-else} Copilot
+%% %% expressions.
+%% \noindent
+%% The macro specializes the algorithm for a fixed-size set of streams at compile-time to
+%% ensure a constant-time implementation, even though the algorithm's
+%% time-complexity is data-dependent.  (Our library function ensures sharing is
+%% preserved to reduce the size of the generated expression.)
+
+
+%% %% \footnote{For readability, we omit local variable bindings that
+%%   %% reduce the size of the expression.  See
+%%   %% \url{https://github.com/seni/copilot-libraries/blob/master/src/Copilot/Library/Voting.hs}
+%%   %% for the actual implementation.}
+
+%% As an informal performance benchmark, for the {\tt majority} algorithm voting
+%% over five streams of unsigned 64-bit words, we compare C code generated from
+%% Copilot and constant-time handwritten C.  Each program is compiled using {\tt
+%%   gcc -O3}, with a {\tt printf} statement piped to {\tt /dev/null} (to ensure
+%% the function is not optimized away).  The hand-written C code is approximately
+%% nine percent faster.
+
+%% While the Boyer-Moore algorithm is not complicated, the advantages of the
+%% Copilot approach over C are (1) {\tt majority} is a polymorphic library function
+%% that can be applied to arbitrary (Copilot-supported) data-types and sizes of voting sets; with
+%% (2) constant-time code, which is tedious to write, is generate
+%% automatically; (3) the Copilot verification and validation tools (described in
+%% Section~\ref{sec:assurance}) can be used. 
+
+%% %% We provide a fault-tolerance library; moreover, other Copilot libraries implement other
+%% %% common monitor specification languages such as bounded linear temporal logic
+%% %% (LTL), ptLTL, and bounded regular expressions.
+
+%% %% \subsection{Triggers}
+
+%% %% A trigger is a function of the form
+%% %% \begin{code}
+%% %% trigger b "fn" (a0 <> a1 <> ... <> an)
+%% %% \end{code}
+%% %% \noindent
+%% %% where {\tt b} is a Copilot variable or a constant, {\tt fn} is string containing
+%% %% the name of a C function, and {\tt a0 ... an} are Copilot variables or
+%% %% constants, or it is of the form
+%% %% \begin{code}
+%% %% trigger b "fn" void
+%% %% \end{code}
+%% %% \noindent
+%% %% if it takes no arguments.  A trigger is fired only if the Boolean {\tt b} is
+%% %% true.  When it is true, the function {\tt fn} is called with the appropriate
+%% %% arguments; {\tt fn} is expected to have a {\tt void} return type.
+
+
+
+
+%% \subsection{Distributed Monitoring}\label{sec:distributed}
+%% Our
+%% case study presented in Section~\ref{sec:case-study} implements distributed monitors.  In a
+%% distributed monitor architecture, monitors are replicated, with specific
+%% parameters per process (e.g., process identifiers).  The meta-programming
+%% techniques described in Section~\ref{sec:ft} can be used to generate distributed
+%% monitors by parameterizing programs over node-specific data, reducing a tedious
+%% task that is traditionally solved with makefiles and C macros to a few lines of Haskell.
+
+%% %% This is because
+%% %% the Copilot compiler, along with other tools, is just a Haskell function.
+
+%% Copilot remains agnostic as to how the communication between distinct processes
+%% occurs; the communication can be operating system supported (e.g., IPC) if the
+%% monitors are processes hosted by the same operating system, or they can be raw
+%% hardware communication mechanisms (e.g., a custom serial protocol and processor
+%% interrupts).  If the monitors are on separate processors, the programmer needs
+%% to ensure either that the hardware is synchronized (e.g., by using a shared clock
+%% or by executing a clock synchronization protocol).  Regardless of the method,
+%% triggers, described above, are also used to call C functions that implement the
+%% platform-specific protocol.  Incoming values are obtained by sampling external
+%% variables (or functions or arrays).
+
+

@@ -1,0 +1,369 @@
+\subsection{MAVLink Monitoring}
+
+The MAVLink (Micro Air Vehicle
+Link\footnote{\url{http://qgroundcontrol.org/mavlink/start}}) protocol consists
+of a set of messages to be sent between small air vehicles and ground
+stations. Althought it can be used to send messages on parameters like wind
+speed or attitude, the usual applications of MAVLink are in avionic systems with
+an autopilot. MAVLink is used by ground-station software packages, like
+QGroundControl, Happy Killmore Ground Control Station, the Ardupilot Mega
+Planner and autopilot systems like PIXHAWK or the Ardupilot Mega. MAVLink
+commands and messages of version~2 of the protocol are specified in XML files
+that contain common and groundstation/autopilot specific packet definitions.
+
+\begin{myfig}[ht!]
+\includegraphics[scale=0.5]{Figs/inside_R3}
+\caption{Beagle Board executing the MAVLink monitor.} \label{fig:mavlink}
+\end{myfig}
+
+We have implemented portions of the common set MAVLink protocol as Copilot
+monitors and have executed them on binary MAVLink log files.  Additionally, we
+have executed the monitor in real-time on three flights of an Edge~R540T
+subscale aircraft to analyze MAVLink packets from an Ardupilot Mega.  The
+configuration in the Edge is depicted in Figure~\ref{fig:mavlink}.  In the
+center is a Beagleboard~xM that executes the monitors described below.  On the
+right-hand side, inside the silver box, is an Arduino Mega board that runs the
+Ardupilot autopilot.  The red board below the silver box is a Seeeduino, that is
+used as a serial hub that connects the XBee radio to the groundstation, the
+Beagleboard and the Ardupilot.
+
+% For springer journals, table caption is above the table
+\begin{table*}
+
+  \caption{MAVLink packet fields.}
+  \label{MAVLinkPacketTable}
+\begin{center}
+  \begin{tabular}{ | c | c | c | c | }
+    \hline
+    Byte Index & Content & Value & Example \\
+    \hline
+    $0$ & Packet start sign & $0x55$, ASCII: U & 0x55 \\
+    $1$ & Payload length $n$ & $0 - 255$ & 0x03 \\
+    $2$ & Packet sequence & $0 - 255$ & 0x13 \\
+    $3$ & System ID & $1 - 255$ & 0x01 \\
+    $4$ & Component ID & $0 - 255$ & 0x01 \\
+    $5$ & Message ID & $0 - 255$ & 0x00 \\
+    $6$ to $n+6$ & Payload data & $0 - 255$ per byte & 0x01, 0x03, 0x02 \\
+    $n+7$ to $n+8$ & Checksum over  & $0-65535$ & 0x32, 0xb7 \\
+                   & bytes 1..(n+6) &           &            \\
+    \hline
+  \end{tabular}
+\end{center}
+\end{table*}
+
+The layout of a packet frame in MAVLink version is listed in
+Table~\ref{MAVLinkPacketTable}.  
+The example column lists a packet of the MAVLink heartbeat type (message {\tt id 0x00}
+and payload length three) as it was captured from a ZigBee link between an ArduPilot
+Mega and an ArduPilot Mega Planner groundstation. Heartbeat messages are sent
+in regular intervals and are used to keep track of different vehicles as
+they appear and leave the visibility of receiving nodes. The three payload bytes
+stand for the type of aircraft ({\tt 0x01} - fixed wing), the type of the autopilot
+({\tt 0x03} - Ardupilot) and the MAVLink version ({\tt 0x02}).
+
+According to Table~\ref{MAVLinkPacketTable}, we define some protocol specific
+sizes and limits, next to their constant Copilot stream versions:
+
+\begin{code}
+startSequenceSize  = 1
+startSequenceSize' = constant startSequenceSize
+
+headerSize         = 6
+headerSize'        = constant headerSize
+
+crcSize            = 2
+crcSize'           = constant crcSize
+
+maxPayloadLength   = 255
+maxPayloadLength'  = constant maxPayloadLength
+
+maxPacketLength    = headerSize  + maxPayloadLength
+                                   + crcSize
+maxPacketLength'   = headerSize' + maxPayloadLength' 
+                                   + crcSize'
+\end{code}
+
+To analyze incoming packets, we define an input stream that has a long enough
+initial array to keep one MAVLink packet of maximum length.\footnote{At the time
+  of this writing, Copilot did not handle streams of arrays.  Modeling the
+  protocol as a stream of {\tt Word32}s, as we explain herein, is inefficient,
+  resulting in a large specification.} In each tick, the next MAVLink byte is
+sampled from the C varible {\tt extern\_input} and shifted into the array from
+the right:
+
+\begin{code}
+-- The input stream, allows dropping up to
+--  the maximum packet length
+inputStream :: Stream Word32
+inputStream = replicate maxPacketLength 0 ++ externInput
+
+-- The actual MAVLink input
+externInput :: Stream Word32
+externInput = extern "extern_input" Nothing
+\end{code}
+
+
+Further, we define where in a packet to access header fields and payload,
+according to Table~\ref{MAVLinkPacketTable}:
+
+\begin{code}
+payloadLength         = drop 1 inputStream
+packetLength          = headerSize' + payloadLength 
+                                    + crcSize'
+packetSequenceNumber  = drop 2 inputStream
+systemID              = drop 3 inputStream
+componentID       = drop 4 inputStream
+messageID           = drop 5 inputStream
+payload                 = drop 6 inputStream
+\end{code}
+
+
+The MAVLink checksum is a modification of the checksum used in the X.25
+protocol; it uses the same calculation as the X.25 cyclic redundancy check, but
+does not invert the final remainder. A Copilot function that takes an initial
+remainder {\tt r} and 8 bits of the input stream {\tt d}, then calculates a new
+remainder by dividing {\tt d} by the X.25 polynomial $x^{16} + x^{12} + x^5 +
+1$, is listed below:
+
+\begin{code}
+mavlinkCrcUpdate :: Stream Word32 -> Stream Word32 
+                                 -> Stream Word32
+mavlinkCrcUpdate r d =
+let d'   = d   .&. 0xff
+    tmp  = d'  .^. ( r .&. 0xff )
+    tmp' = tmp .^. ( shiftL 4 tmp .&. 0xff )
+in foldl1 (.^.) [ shiftR 8 r,    shiftL 8 tmp'
+                , shiftL 3 tmp', shiftR 4 tmp' ]
+\end{code}
+
+
+Left-folding the {\tt mavlinkCrcUpdate} function with an initial value
+{\tt crcInit = 0xffff} into the initial array, starting from the second
+packet byte up to the maximum packet length (and keeping the intermediate
+CRC results), is achieved by the Copilot {\tt nscanl} library
+function.\footnote{Copilot's {\tt nscanl} is a fixed-length (of {\tt n}) analogue
+  of the Haskell {\tt scanl} function in Haskell, such that 
+{\tt scanl f z [x1, x2, ...] == [z, z `f` x1, (z `f` x1) `f` x2,
+    ...]}.}
+
+
+\begin{code}
+crcStreams :: [ Stream Word32 ]
+crcStreams = nscanl
+             ( maxPacketLength - startSequenceSize )
+             mavlinkCrcUpdate crcInit
+             ( drop 1 inputStream )
+\end{code}
+
+
+The {\tt crcStreams} list contains the CRC values of all prefixes of a possible
+packet. The CRC over all values of a valid packet, excluding the start sign and
+including a valid CRC at the end of the packet, will be zero:
+
+
+\begin{code}
+crcIndex :: Stream Word32
+crcIndex = headerSize' + payloadLength
+      - startSequenceSize' + crcSize'
+
+crc :: Stream Word32
+crc = crcStreams !! crcIndex
+
+crcValid :: Stream Bool
+crcValid = crc == 0
+\end{code}
+
+
+Given the definitions to check the CRC values of a packet, we can now
+check for valid packets:
+
+
+\begin{code}
+startMatch  = inputStream == 0x55
+validPacket = startMatch && crcValid
+\end{code}
+
+
+The communication between an autopilot and a ground-station runs over
+a ZigBee link. In case of dropped radio packets, there is no guarantee
+a receiver will not (on reconnection of the radio link) interpret a
+wrong packet, i.e., the start sign {\tt 0x55} may appear anywhere
+in a packet and a following length/CRC pair can form a valid ``ghost
+packet'' (i.e., a packet that is contained within an actually sent packet or that spans
+multiple actually sent packets).
+
+We define a stream called {\tt analyzingPacket}, that signals a running
+analysis of a valid packet as:
+
+\begin{code}
+-- The analyzingPacket function signals if we recognized
+-- a valid packet and have not reached the end yet
+analyzingPacket = analyzingPacket' > 1
+  where analyzingPacket' = [ 0 ] ++ mux
+               ( validPacket && not analyzingPacket )
+                -- set the counter
+               ( ( drop 1 inputStream
+                   + headerSize'
+                   + crcSize' )
+                 -- count down the packet length
+                 ( mux ( analyzingPacket' == 0 )
+                     0
+                     ( analyzingPacket' - 1 ) )
+\end{code}
+
+We then can recognize ghost packets by checking for valid packets that appear
+while we are in the process of analyzing a packet, provided that {\tt
+  analyzingPacket} starts out on an actually sent packet and not on a ghost
+packet:
+
+\begin{code}
+ghostPacket = analyzingPacket && validPacket
+\end{code}
+
+%% \todo{check this  3 bytes right?}
+%% The probability of such a ghost packet is the chance of a start sign in the
+%% incoming stream and the following packet length field pointing to a valid CRC,
+%% i.e. having 3 bytes (1 start byte and 2 CRC bytes).  Assuming all values have
+%% the same chance of appearing in the input stream, the probability of a valid
+%% packet by just checking the start sign and the CRC can be given as:
+%% $1/2^{3*8}$. 
+
+We ran the {\tt ghostPacket} monitor on about 660 megabytes of
+binary MAVLink logs recorded during months of hardware-in-the-loop
+testing of an Ardupilot Mega in an Edge~540T subscale model. %% The expected number
+%% of ghost packets can be estimated as $660,000,000/2^{3*8} \approx 40$ In fact 
+The ghostPacket monitor fired a trigger 32 times.  
+
+On a lost radio connection that sets in after the dropout, the receiver has a
+chance to misinterpret such a ghost packet.  For a receiver not to accept a
+ghost packet, it can relate the sequence numbers of packets to its actual system
+time. If such measures are not implemented, an autopilot may receive commands
+over MAVLink that might lead to unexpected behaviors.
+
+MAVLink carries a number of sensor values. We wrote a simple monitor that
+analyses the payload of {\tt GLOBAL\_POSITION\_INT} messages to retrieve a
+trajectory of flight:
+
+\begin{code}
+packet mId = validPacket && messageID == mId
+
+packetWithLength mId pLen = packet mId
+                          && payloadLength == pLen
+
+-- the global position in integer values has 
+-- message id 73  and payload length 18
+globalPositionINT = packetWithLength 73 18
+\end{code}
+
+The first 12 bytes of the payload of a {\small \tt GLOBAL\_POSITION\_INT}
+messages are interpreted as three {\tt Word32} values of latitude, longitude and
+altitude
+\footnote{Latitude and longitude in degrees, altitude in meters.}.
+Reconstruction of the position is done by 3 streams, globalPositionIntLat,
+globalPositionIntLon and globalPositionIntAlt:
+
+\begin{code}
+s3 = ( .<<. ( constant 24 :: Stream Word32 ) )
+s2 = ( .<<. ( constant 16 :: Stream Word32 ) )
+s1 = ( .<<. ( constant 8  :: Stream Word32 ) )
+
+globalPositionIntLat :: Stream Word32
+globalPositionIntLat = let l1 = drop 0 payload
+                           l2 = drop 1 payload
+                           l3 = drop 2 payload
+                           l4 = drop 3 payload
+                       in s3 l1 + s2 l2 + s1 l3 + l4
+
+globalPositionIntLon :: Stream Word32
+globalPositionIntLon = let l1 = drop 4 payload
+                           l2 = drop 5 payload
+                           l3 = drop 6 payload
+                           l4 = drop 7 payload
+                       in s3 l1 + s2 l2 + s1 l3 + l4
+
+globalPositionIntAlt :: Stream Word32
+globalPositionIntAlt = let l1 = drop 8  payload
+                           l2 = drop 9  payload
+                           l3 = drop 10 payload
+                           l4 = drop 11 payload
+                       in s3 l1 + s2 l2 + s1 l3 + l4
+\end{code}
+
+
+The streams become parameters of a globalPositionInt trigger:
+
+\begin{code}
+trigger "globalPositionINT" globalPositionIN
+                  [ arg globalPositionIntLat
+                  , arg globalPositionIntLon
+                  , arg globalPositionIntAlt ]
+\end{code}
+
+The globalPositionINT trigger C function logs each set of three values. We ran
+the monitors on three flights and plotted the trajectories.
+
+\begin{myfig}[ht!]
+  \centering
+%  \subfigure[]{
+    \includegraphics[width=1\textwidth]{Figs/flight1}
+    \caption{Flight 1.\label{fig:flight1}}
+\end{myfig}%
+%% \begin{myfig}[ht!]
+%%  \centering
+%% %  \subfigure[]{
+%%   \includegraphics[width=0.6\textwidth]{Figs/flight2}
+%%     \caption{Flight 2.\label{fig:flight2}}
+%% \end{myfig}%
+\begin{myfig}[ht!]
+ \centering
+%  \subfigure[]{
+    \includegraphics[width=1\textwidth]{Figs/flight3}
+    \caption{Flight 2.\label{fig:flight2}}
+\end{myfig}
+
+\noindent
+Consider the two graphs shown in Figure~\ref{fig:flight1}
+and~\ref{fig:flight2}, respectively, which graph the latitude, longitude, and
+altitude of the aircraft during two flights.  Comparing the graphs, in
+Figure~\ref{fig:flight2}, the graph has small discrete ``steps'' resulting from
+the quantization error that is caused by the GPS receiver losing tracking,
+updating positions at a lower rate.  (The disturbance was caused by an unknown
+condition, but we were nonetheless able to monitor its effect.)  The MAVLink
+{\small \tt GLOBAL\_POSITION\_INT} packet type we analyzed contains latitude and
+longitude as given by the GPS and altitude as a combination of barometric
+altitude and GPS altitude.  Because the latitude and longitude are not updated
+at the usual rate, the most recently-seen values together with the changed
+altitude (the altitude changes because--while GPS altitude is not
+updated--barometric altitude is) and causes the stair effect.
+
+
+\subsection{Discussion}
+The purpose of the case studies is to test the feasibility of using
+Copilot-generated monitors in a realistic setting to ``bolt on'' fault-tolerance
+to a system that otherwise lacks that capability.  
+
+To give a sense of code-sizes, in the pitot tube monitoring case-study, the
+Copilot agreement monitor is around 200 lines, and the generated real-time C
+code is nearly 4,000 lines.  In the MAVLink case-study, the Copilot monitor is
+around 300 lines, with an additional 350 lines of support C code, implementing
+triggers and the CRC.\footnote{When streams of arrays are implemented in
+  Copilot, the CRC can be derived from a Copilot specification.}  The Copilot
+monitor generates about 2500 lines of real-time C code.
+
+%% 302 for the Copilot haskell file
+%% 370 for support C code and triggers
+%% 2494 for the Copilot generated C monitor
+
+
+%The full binary image generated by GCC is 35 kilobytes (Copilot
+%generates a scheduler, so no operating system is required, the binary
+%in).
+
+%% Copilot reduced the effort to implement a non-trivial real-time distributed
+%% fault-tolerant voting scheme as compared to implementing it directly in C.
+%% While a sampling-based RV approach works for real-time systems, one major
+%% challenge encountered is ensuring the monitor's schedule corresponds with that
+%% of the rest of the system.  Higher-level constructs facilitating timing analysis
+%% would be beneficial.  Furthermore, it may be possible to reduce the size of the
+%% monitor's C code using more aggressive optimizations in the Copilot compiler.
+

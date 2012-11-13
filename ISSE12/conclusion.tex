@@ -1,0 +1,87 @@
+\section{Conclusions and Remaining Challenges}
+\label{sec:conclusions}
+Ultra-critical systems need RV.  Our primary goals in this paper are to (1)
+motivate this need, (2) describe one approach for RV in the ultra-critical
+domain, (3) and present evidence for its feasibility.
+
+The approach we have described in this report is not without shortcomings, which
+present opportunities for future research.
+
+\paragraph{eDSL efficiency.}
+First, we have demonstrated that the embedded DSL approach is powerful,
+turning regular programming on its head: while Copilot is simple, its
+macro language is a higher-order functional language!  One disadvantage of this
+approach is that with a powerful macro language, it is easy to
+build up large expressions---much larger than would be built in a
+conventional programming language.  For example, the Boyer-Moore
+voting algorithm described in Section~\ref{subsec:boyer_moore} is compiled into
+a single Copilot expression.  The use of explicit sharing
+(Section~\ref{sec:explicit_sharing}) reduces the cost of computation by ensuring
+sub-expressions are not needlessly recomputed, but if the sub-expressions
+themselves are expensive to compute, the entire expression becomes expensive.
+
+Techniques to improve the efficiency of evaluating eDSLs are needed.
+Fortunately, monitoring code is terse, in general.  
+
+\paragraph{Scheduling monitors.}
+In the experiments described in Section~\ref{sec:case-study}, we use hardware
+interrupts to ensure monitors run at fixed intervals.  This technique works in
+practice and obviates the need for an underlying operating system to handle
+scheduling.  However, we must ensure that monitors execute quickly (so that the
+monitored system does not miss other interrupts), and we need to ensure that the
+monitor has been given sufficient time to execute.  With the current set of code
+generators, worst-case execution time is easy to compute, as there is just one
+control-path through the code (that is, worst-case execution time is equal to
+nominal execution time).  
+
+The only model of time in Copilot monitors, like other synchronous languages, is
+the tick.  The tick is an abstract model of time that gets mapped to a real-time
+duration by the underlying hardware.  The duration of a tick matters when
+specifying monitors: the property
+%
+\begin{quote}
+The value of {\tt x} must satisfy {\tt -0.5
+  <= x - x' <= 0.5}, where {\tt x'} is the value of {\tt x} exactly one second ago.
+\end{quote}
+%
+\noindent
+requires building a stream of values.  If a tick is one second long, then the
+specification
+%
+\begin{code}
+prop = (x - x') <= 5 && (x - x') <= (-5)
+  where
+  x  = [0] ++ e0 
+  x' = drop 1 x
+  e0 = externI32 "x" Nothing
+\end{code}
+%
+\noindent
+If a tick is a half-second, we must use {\tt drop 2 ...}, and so on.  Thus,
+monitors may be hardware/scheduler dependent.  It would help the specifier to
+lift the abstraction level, so she can write properties in terms of real-time.
+
+\paragraph{Other language features.}
+In analyzing protocol streams, reconstructing values out of the payload of
+a packet from incoming bytes is necessary. Copilot currently lacks casting
+operations to do this. Adding a general set of casting functions that includes
+different byte orders, bit orders and number representations would help on
+monitoring protocols.
+
+\paragraph{Steering.}
+We have not addressed the \emph{steering} problem of how to address faults once
+they are detected.  Steering is critical at the application level; for example,
+if an RV monitor detects that a control system has violated its permissible
+operational envelop.
+
+\paragraph{Faults.}
+We have built a system to detect both hardware and software (logical) faults.
+Stochastic methods might be used to distinguish random hardware faults from
+systematic faults, as the steering strategy for responding to each
+differs~\cite{SammapunLS05}.
+
+\paragraph{Conclusions.}
+Research developments in RV have potential to improve the reliability of
+ultra-critical systems.  Research into runtime monitoring for hard real-time
+distributed systems has been under-represented in the community, but we hope a
+growing number of RV researchers address this application domain.

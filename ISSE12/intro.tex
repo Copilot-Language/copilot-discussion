@@ -1,0 +1,106 @@
+\section{Introduction}
+
+One in a billion, or $10^{-9}$, is the prescribed safety margin of a
+catastrophic fault occurring in the avionics of a civil
+aircraft~\cite{Rushby09:SEFM}.  The justification for the requirement
+is to show that failures resulting in a catastrophic effect are ``so
+unlikely that it is not anticipated to occur during the operational
+life of an entire system or fleet''\cite{FAA2000}. Let us call systems
+with reliability requirements on this order \emph{ultra-critical} and
+those that meet the requirements \emph{ultra-reliable}.  Similar
+reliability metrics might be claimed for other safety-critical
+systems, like nuclear reactor shutdown systems or railway switching
+systems.
+
+Neither formal verification nor testing can ensure system reliability.
+Contemporary ultra-critical systems may contain millions of lines of code; the
+full functional correctness of approximately ten thousand lines of code
+represents the state-of-the-art, taking 20 engineer-years to achieve~\cite{l4}.
+Nearly 20 years ago, Butler and Finelli showed that testing alone cannot verify
+the reliability of ultra-critical software~\cite{butler}.
+
+Runtime verification (RV), where monitors detect and respond to property
+violations at runtime, holds particular potential for ensuring that
+ultra-critical systems are in fact ultra-reliable, but there are challenges.  In
+ultra-critical systems, RV must account for both software and hardware faults.
+Whereas software faults are design errors, hardware faults can be the result of
+random failure.  
+
+For the purposes of this paper, assume that characterizing a system as
+being \emph{ultra-critical} implies it is a distributed system with replicated
+hardware (so that the failure of an individual component does not cause system-wide
+failure); also assume ultra-critical systems are embedded systems
+responsible for 
+sensing and/or controlling some physical plant and that they are \emph{hard
+  real-time}, meaning that deadlines are fixed and time-critical.  %% Another
+%% challenge then is RV for distributed real-time systems.
+
+
+%% The mean time to failure of a hardware component contributes to the
+%% mean time to failure of the whole system, it depends on the margins that
+%% a hardware component has been designed with, related to the inhospitality
+%% of the environment within which ultra-critical systems are often deployed,
+%% as well as the duration of their deployment.
+%% Random hardware faults are inherent to every hardware component, have to
+%% be anticipated and responded to.
+
+\paragraph{Outline.}  In Section~\ref{sec:motivation}, we motivate the need for
+runtime verification for ultra-critical systems.  In
+Section~\ref{sec:constraintsApproaches}, we describe constraints and approaches to RV for
+embedded systems.  In
+Section~\ref{sec:language}, we present the language of Copilot, our approach for
+ultra-critical RV.  We describe the tools (e.g., the interpreter and compiler
+back-ends) associated with Copilot in Section~\ref{sec:tools}.  We present two
+case-studies applying Copilot to avionic systems in
+Section~\ref{sec:case-study}.  Final remarks are given in Section~\ref{sec:conclusions}.
+
+\section{When Ultra-Critical Is \emph{Not} Ultra-Reliable}\label{sec:motivation}
+
+Well-known, albeit dated, examples of the failure of critical systems include the
+Therac-25 medical radiation therapy machine~\cite{therac} and the Ariane~5
+Flight 501 disaster~\cite{ariane}.  However, more recent events show that
+critical-system software safety, despite certification and extensive testing, is still an
+unmet goal.  Below, we briefly overview three examples drawn from
+faults in the Space Shuttle, a Boeing 777, and an Airbus A330, all occurring
+between 2005 and 2008.
+
+\paragraph{Space Shuttle.}
+During the launch of shuttle flight Space Transportation System 124 (STS-124) on
+May 31, 2008, there was a pre-launch failure of the fault diagnosis software due
+to a ``non-universal I/O error'' in the Flight Aft (FA) multiplexer
+de-multiplexer (MDM) located in the orbiter's aft avionics bay~\cite{mdm08}.
+The Space Shuttle's data processing system has four general purpose computers
+(GPC) that operate in a redundant set.  There are also twenty-three MDM units
+aboard the orbiter, sixteen of which are directly connected to the GPCs via
+shared buses.  The GPCs execute redundancy management algorithms that include a
+fault detection, isolation, and recovery function.  In short, a diode failed on
+the serial multiplexer interface adapter of the FA MDM.  This failure was
+manifested as a \emph{Byzantine fault} (i.e., a fault in which different nodes
+interpret a single broadcast message differently~\cite{lamport95byzantine}), which was not
+tolerated and forced an emergency launch abortion.
+
+
+
+\paragraph{Boeing~777.}
+On August 1, 2005, a Boeing 777-120 operated as Malaysia Airlines Flight 124
+departed Perth, Australia for Kuala Lumpur, Malaysia.  Shortly after takeoff,
+the aircraft experienced an in-flight upset, causing the autopilot to
+dramatically manipulate the aircraft's pitch and airspeed.  A subsequent
+analysis reported that the problem stemmed from a bug in the Air Data Inertial
+Reference Unit (ADIRU) software~\cite{ATSB07}.  Previously, an accelerometer
+(call it \emph{A}) had failed, causing the fault-tolerance computer to take data
+from a backup accelerometer (call it \emph{B}).  However, when the backup
+accelerometer failed, the system reverted to taking data from \emph{A}.  The
+problem was that the fault-tolerance software assumed there would not be a
+simultaneous failure of both accelerometers. Moreover, the software
+was not designed to report accelerometer \emph{A}'s failure so
+maintenance was not performed. 
+
+\paragraph{Airbus~A330.}
+On October 7, 2008, an Airbus~A330 operated as Qantas Flight~QF72 from Singapore
+to Perth, Australia was cruising when the autopilot caused a pitch-down followed by a
+loss of altitude of about 200 meters in 20 seconds (a subsequent less severe pitch was also
+made)~\cite{ATSB08}.  The accident required the hospitalization of
+fourteen people.  Like in the Boeing~777 upset, the source of this accident was
+an ADIRU.  The ADIRU appears to have suffered a transient fault that was not
+detected by the fault-management software of the autopilot system.
