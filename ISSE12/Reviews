@@ -61,8 +61,17 @@ for function signatures (pg. 4, col. 1, line 9 ), zipWith (+) (repeat 1)
 (pg. 4, col. 1, line 33), the double-arrow (pg. 5, col. 1, line 45), and
 list concatenation [].
 
+
+AEG I think I got most of these will give another pass
+later
+
+
 On pg. 9, why does the observer have double single-quotes (col. 1, line
 34) and then double-quotes on line 44?  What's the difference?
+
+
+AEG I think the difference is the first is the spec of the signature and the `` '' quotes are telling us it's a string not sure what else to say here???????
+
 
 Comments help clarify the code, as in the code snippet at the end of pg. 15.
 
@@ -122,7 +131,7 @@ much of the  infrastructure of a well-tested Haskell implementation is
 reused."
 
 5. Typos (e.g. Line 51 Column 2: varible -> variable) should be corrected.
-
+AEG: Done
 
 
 Reviewer #3: The authors start by motivating the need for runtime
@@ -183,7 +192,13 @@ Some detailed remarks/typos:
 
 - pg 3: "3.2 Timed-Triggered" -> "3.2 Time Triggered"
 
+AEG: I think we are right about this one????
+
 - pg 7, in Example 6: "engine is not shut off" -> "engine is shut off"
+
+
+AEG: Once again I think this is correct???? 
+
 
 - pg 18, WCET equal to nominal execution time, because there is just on
     control path: WCET could also depend on how well the monitor is isolated
@@ -193,9 +208,11 @@ WCET
 these all
     have to be assumed cold, the estimate will likely be too conservative. I
     guess I'm saying, only one control path is very nice for WCET
-computation,
-    but it's more complicated than just that.
+    computation,  but it's more complicated than just that.
 
+AEG:  It's hard to see what the reviewer wants here. Yes his points are correct, but right now I'm leaning toward not adding anything. At one point I was leaning to adding a comment pointing out for our case studies the monitors were running on simple microcontrollers lacking many of the features that the reviewer seems concerned over ????
+
+ 
 
 
 Reviewer #4: Runtime verification (RV) is a natural fit for

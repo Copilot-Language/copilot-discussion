@@ -88,7 +88,7 @@ initial array to keep one MAVLink packet of maximum length.\footnote{At the time
   of this writing, Copilot did not handle streams of arrays.  Modeling the
   protocol as a stream of {\tt Word32}s, as we explain herein, is inefficient,
   resulting in a large specification.} In each tick, the next MAVLink byte is
-sampled from the C varible {\tt extern\_input} and shifted into the array from
+sampled from the C variable {\tt extern\_input} and shifted into the array from
 the right:
 
 \begin{code}
@@ -135,7 +135,8 @@ let d'   = d   .&. 0xff
 in foldl1 (.^.) [ shiftR 8 r,    shiftL 8 tmp'
                 , shiftL 3 tmp', shiftR 4 tmp' ]
 \end{code}
-
+where \texttt{.\&.} and \texttt{.\^} denote the bitwise and a exclusive or
+operators respectively. 
 
 Left-folding the {\tt mavlinkCrcUpdate} function with an initial value
 {\tt crcInit = 0xffff} into the initial array, starting from the second
@@ -288,7 +289,7 @@ globalPositionIntAlt = let l1 = drop 8  payload
                            l4 = drop 11 payload
                        in s3 l1 + s2 l2 + s1 l3 + l4
 \end{code}
-
+where $\texttt{.<<.}$ denotes the left shift operator. 
 
 The streams become parameters of a globalPositionInt trigger:
 

@@ -64,9 +64,10 @@ looking into the future of streams:
 drop :: Int -> Stream a -> Stream a
 \end{code}
 %
-Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
-For example the stream {\tt w} defined as follows, given our previous definition
-of {\tt x}:
+where the type signature for the function is given in curried
+form after the double colon.  Here {\tt xs ++ s} prepends the list
+{\tt xs} at the front of the stream {\tt s}.  For example the stream
+{\tt w} defined as follows, given our previous definition of {\tt x}:
 %
 \begin{code}
 w = [5,6,7] ++ x
@@ -95,9 +96,13 @@ nats_ll :: [Int32]
 nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
 \end{code}
 %
-As both constants and arithmetic operators are lifted to work pointwise on
-streams in Copilot, there is no need for {\tt zipWith} and {\tt repeat} when
-specifying the stream of natural numbers:
+where $\texttt{zipWith}$ is a higher-order function that takes a
+function and two lists as parameters and produces a new list formed by
+applying the given function to the elements of the two input lists at
+the same position in each list.  As both constants and arithmetic
+operators are lifted to work pointwise on streams in Copilot, there is
+no need for {\tt zipWith} and {\tt repeat} when specifying the stream
+of natural numbers:
 %
 \begin{code}
 nats :: Stream Int32
@@ -282,14 +287,16 @@ $\mathtt{cnt}_i$ is determined as shown in the left table in Figure
 
 \subsection{Types} \label{sec:types}
 
-Copilot is a typed language, where types are enforced by the Haskell type system
-to ensure generated C programs are well-typed.  Copilot is \emph{strongly typed}
-(i.e., type-incorrect function application is not possible) and \emph{statically
-  typed} (i.e., type-checking is done at compile-time).  The base types are
-Booleans, unsigned and signed words of width 8, 16, 32, and 64, floats, and
-doubles.  All elements of a stream must belong to the same base
-type.  These types have instances for the class {\tt Typed a}, used to constrain
-Copilot programs.
+Copilot is a typed language, where types are enforced by the Haskell
+type system to ensure generated C programs are well-typed.  Copilot is
+\emph{strongly typed} (i.e., type-incorrect function application is
+not possible) and \emph{statically typed} (i.e., type-checking is done
+at compile-time).  The base types are Booleans, unsigned and signed
+words of width 8, 16, 32, and 64, floats, and doubles.  All elements
+of a stream must belong to the same base type.  These types have
+instances for the class {\tt Typed a}, used to constrain Copilot
+programs. The constraining type classes are listed to the left of the
+$\texttt{=>}$ in a function definition.
 
 We provide a {\tt cast} operator
 %
@@ -297,27 +304,31 @@ We provide a {\tt cast} operator
 cast :: (Typed a, Typed b) => Stream a -> Stream b  
 \end{code}
 %
-that casts from one type to another.  The cast operator is only defined for
-casts that do not lose information, so an unsigned word type {\tt a} can only be cast to another unsigned  type at least as large as {\tt a} or to a signed word type
-strictly larger than {\tt a}.  Signed types cannot be cast to unsigned types but
-can be cast to signed types at least as large.
+that casts from one type to another.  The cast operator is only
+defined for casts that do not lose information, so an unsigned word
+type {\tt a} can only be cast to another unsigned type at least as
+large as {\tt a} or to a signed word type strictly larger than {\tt
+  a}.  Signed types cannot be cast to unsigned types but can be cast
+to signed types at least as large.
 
 \subsection{Interacting With the Target Program}
 \label{sec:interacting}
 
-All interaction with the outside world is done by sampling \emph{external
-  symbols} and by evoking \emph{triggers}.  External symbols are symbols that
-are defined outside Copilot and which reflect the visible state of the target
-program that we are monitoring.  They include variables, arrays, and functions
-(with a non-void return type).  Analogously, triggers are functions that are
-defined outside Copilot and which are evoked when Copilot needs to report that
-the target program has violated a specification constraint.
+All interaction with the outside world is done by sampling
+\emph{external symbols} and by evoking \emph{triggers}.  External
+symbols are symbols that are defined outside Copilot and which reflect
+the visible state of the target program that we are monitoring.  They
+include variables, arrays, and functions (with a non-void return
+type).  Analogously, triggers are functions that are defined outside
+Copilot and which are evoked when Copilot needs to report that the
+target program has violated a specification constraint.
 
 \paragraph{Sampling.}
-A Copilot specification is \emph{open} if defined with external symbols in the
-sense that values must be provided externally at runtime.  To simplify writing
-Copilot specifications that can be interpreted and tested, constructs for
-external symbols take an optional environment for interpretation.
+A Copilot specification is \emph{open} if defined with external
+symbols in the sense that values must be provided externally at
+runtime.  To simplify writing Copilot specifications that can be
+interpreted and tested, constructs for external symbols take an
+optional environment for interpretation.
 
 External variables are defined by using the {\tt extern} construct:
 %
@@ -326,9 +337,14 @@ extern :: Typed a => String -> Maybe [a] -> Stream a
 \end{code}
 %
 \noindent
-It takes the name of an external variable, a possible Haskell list to serve as
-the environment for the interpreter, and generates a stream by sampling the
-variable at each clock cycle.  For example,
+where  a value of type $\texttt{Maybe a}$ is either empty
+($\texttt{Nothing}$ or a value of type $\texttt{a}$ ($\texttt{Just
+  a}$). 
+It takes the name of an external variable, a possible Haskell list to
+serve as the environment for the interpreter from which the monitor
+will draw the values that would otherwise be sampled from the external
+program, and generates a stream by sampling the variable at each clock
+cycle.  For example,
 %
 \begin{code}
 sumExterns :: Stream Word64
@@ -560,12 +576,17 @@ local
   -> Stream b
 \end{code}
 %
-The local construct works similar to \emph{let}-bindings in ordinary Haskell.
-From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
-\ref{fig:explicit_sharing} are identical.
-As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
-Copilot programs may force the compiler to build syntax trees that blow up exponentially.
-In such cases, using explicit sharing helps to avoid this problem.
+The local construct works similar to \emph{let}-bindings in ordinary
+Haskell. A stream defined using a local construct typically has the
+structure $\texttt{s} = \texttt{s'} \$ \\ \texttt{x -> e},$ where
+$\texttt{s'}$ is a stream, \$ is Haskell's application operator that
+forces function application to associate to the right, and the
+\texttt{e} is a lambda expression.  From a semantic point of view, the
+streams {\tt s1} and {\tt s2} from Figure \ref{fig:explicit_sharing}
+are identical.  As we will see in Section~\ref{subsec:boyer_moore},
+however, certain advanced Copilot programs may force the compiler to
+build syntax trees that blow up exponentially.  In such cases, using
+explicit sharing helps to avoid this problem.
 
 
 \subsection{Extended Example: The Boyer-Moore Majority-Vote Algorithm}
