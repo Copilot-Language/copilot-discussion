@@ -1,0 +1,237 @@
+
+
+
+Reviewer #1: This is an excellent overview of the Copilot runtime
+monitoring tool.  The authors motivate their work describing relevant
+case studies in fault management, present the specification language for
+the tool, and give two useful examples which illustrate the use of
+Copilot in credible lab tests.  The test procedures and results were a
+highlight of the paper.  The work seems technically sound. Overall I
+recommend the acceptance of this article with a few clarifications and
+corrections as follows:
+
+* Clarity concerns:
+
+Conceptual clarity:
+
+pg. 5 discusses the notation for specifying external variables to be
+sampled.  The Sampling description says "constructs for external symbols
+take an optional environment for interpretation" (column 2, line 37).
+   The concept of environment is not clear. Line 45 adds that it can be
+modeled as a Haskell list, but its use is not clear.  Is this the list
+of acceptable values, or will the observed variable follow this sequence
+exactly?
+
+AEG:  I've added additional text to clarify this.
+
+p. 7 covers variable sharing.  The text needs more detail regarding the
+concept -- "the local construct works similar to let-bindings in
+ordinary Haskell".  While that's a valid statement, it's not clear what
+advantage of let-bindings is being claimed.  The syntax in Fig. 3 should
+also be explained, as it introduces operators that we haven't seen
+before now in the article (see 'Syntactic Clarity' below).   Section 4.7
+also lacks sufficient detail to fully explain how the sharing concept
+benefited the Boyer-Moore algorithm.  Be more specific with the details
+from the examples, so the reader can follow the changes rather than
+assuming that the differences were obvious.
+
+p. 17 eDSL efficiency - It's not clear whether the complexity of the
+generated monitoring code is due to the expressiveness of your
+particular specification language or whether that is a general problem
+for all eDSL languages.  The first paragraph sounds like it's leaning
+towards the former, but the second paragraph leans towards the latter.
+   Could complexity be reduced simply by having a less expressive
+specification language?  If this is a common problem for all eDSLs? Are
+the solutions simply to come up with better generation and optimization
+techniques?  It's not clear.
+
+Syntactic clarity:
+
+It's reasonable to assume that readers unfamiliar with Haskell will be
+interested in the technique.  Some of them may take interest in Haskell
+as well, but in general the article should stand alone.  There are a
+number of syntactic constructs that were not described or introduced in
+the narrative.  I would suggest creating a table to give brief (English)
+meanings of Haskell operators that appear in the text --
+
+Just, $, ->, =>, \, _, .^., .<<., !!
+
+For the non-Haskell folks it would be good to explain the arrow notation
+for function signatures (pg. 4, col. 1, line 9 ), zipWith (+) (repeat 1)
+(pg. 4, col. 1, line 33), the double-arrow (pg. 5, col. 1, line 45), and
+list concatenation [].
+
+On pg. 9, why does the observer have double single-quotes (col. 1, line
+34) and then double-quotes on line 44?  What's the difference?
+
+Comments help clarify the code, as in the code snippet at the end of pg. 15.
+
+
+* Text/formatting concerns:
+
+Several paragraphs have lines that extend well into the margins:
+
+page 2 column 1 line 58, pg2 cl2 ln32, pg2 cl2 ln34, pg2 cl2 ln54, etc...
+
+Please re-phrase or instruct LaTeX to break particular words (e.g. the
+word 'approaches' is too long on both p. 2 and p. 3).
+
+A few typos which could be handled by a spell checker:
+
+pg13 cl2 ln53 - variable
+AEG Done 
+pg18 cl2 ln59 - envelope
+AEG Done
+Reference #15 - Boyer-Moore should be capitalized.
+AEG: Done
+
+
+Reviewer #2: The paper discusses an eDSL environment and the related
+toolchain called Copilot to provide monitors for embedded systems,
+especially in avionics. The environment is programmed in Haskell, it
+generates monitors in C. The environment is fully implemented, and
+applied in relevant systems.
+The paper is easy to read, written in an understandable language. It
+illustrates the approach with case studies.
+
+I have the following comments.
+
+1. The structure of the paper could be improved. The whole use case
+describing the usage of the framework is scattered across the paper. The
+authors should provide a concise section, possibly containing a
+flowchart or a figure of that nature, that describes the main usage
+scenario, the multiple paths of code generation. What are the advantages
+of Haskell, compared to other DSLs?  My understanding is that copilot is
+a Haskell library. What are the main services of this library?  Also,
+the simple Haskell examples could be omitted.
+
+2. The assume/guarantees of the method should be highlighted. What can
+be claimed about the generated code? What are the capabilities of the
+used verification tools? What is the expected coverage of the millions
+of randomly generated tests?  In summary: what can be the expectations
+of the reader when using the authors' tools?
+
+3. The authors start with a set of very ambitious goals. Reflecting to
+that, I believe the authors should address the scheduling problem more
+thoroughly: at least a few possible solutions should be outlined.
+
+4. Related work by other efforts should be mentioned and compared to the
+approach.  eDSL could bear more explanation: "First, as mentioned, the
+compiler is statically and strongly typed, and by implementing an eDSL,
+much of the  infrastructure of a well-tested Haskell implementation is
+reused."
+
+5. Typos (e.g. Line 51 Column 2: varible -> variable) should be corrected.
+
+
+
+Reviewer #3: The authors start by motivating the need for runtime
+verification in
+ultra-critical systems such as civil avionics even for extremely well
+verified
+systems, and pointing out that existing approaches for runtime verification
+such as aspect oriented programming are not applicable to the ultra-critical
+domain. The core of the paper then presents their solution approach, the
+domain-specific language Copilot embedded in Haskell, introducing the
+language
+by example. Copilot allows the user to combine and compute with infinite
+streams, to write predicates over them, to generate streams by sampling
+external variables, and to trigger external monitor actions. The language is
+implemented in Haskell, and while keeping the core very simple, derives its
+expressiveness from using Haskell as a macro language. Two case studies on
+actual avionics systems show the feasibility of the approach.
+
+The work is well motivated, explained, and executed. While there remain a
+number of issues to address that the authors list in the conclusion to make
+the approach more practicable, the implementation is fairly mature for a
+research prototype as demonstrated in the two case studies.
+
+The main problem with the approach is providing assurance on the correctness
+of the generated monitor. The authors argue that Haskell is well tested, the
+compiler statically and strongly typed, they have tested the setup on
+millions
+of programs, and they can automatically model check the equivalence of the
+code generated by two different backends for Copilot for a fixed, low number
+of iterations (i.e. roughly stream length) with CBMC. While all of this is
+very good, and certainly makes this code generator a lot more robust than
+typical languages or generators, it does not qualify as satisfying
+requirements for ultra-reliable systems. Since, as the authors argue
+themselves, the runtime monitors are a critical component of such
+system, they
+will need at least the same level of assurance as the rest of the system,
+which for DO178-C would for instance include giving assurance on the tool
+chain used to generate or verify the generated code.
+
+The authors should argue how this problem could be addressed in future work,
+or why it is not a problem in this case. One approach could for instance
+be to
+give a formal semantics to Copilot, generate proofs or certificates of some
+kind that the generated code satisfies this semantics, and finally to give a
+connection to higher-level reasoning for instance in temporal logic that can
+argue that the Copilot specification satisfies actual monitor and systems
+requirements.
+
+Apart from this, I'm very happy with this paper and recommend acceptance
+after
+minor modifications.
+
+
+Some detailed remarks/typos:
+
+- throughout the paper there are a number of typesetting problems that LaTex
+    would call overfull hboxes, overflowing the right column marks.
+
+- pg 3: "3.2 Timed-Triggered" -> "3.2 Time Triggered"
+
+- pg 7, in Example 6: "engine is not shut off" -> "engine is shut off"
+
+- pg 18, WCET equal to nominal execution time, because there is just on
+    control path: WCET could also depend on how well the monitor is isolated
+    from other system components if it runs on the same processor. Also, 
+WCET
+    will depend on machine state such as caches, TLB, pipeline etc. If
+these all
+    have to be assumed cold, the estimate will likely be too conservative. I
+    guess I'm saying, only one control path is very nice for WCET
+computation,
+    but it's more complicated than just that.
+
+
+
+Reviewer #4: Runtime verification (RV) is a natural fit for
+ultra-critical systems, where correctness is imperative. In
+ultra-critical systems, even if the software is fault-free, because of
+the inherent unreliability of commodity hardware and the adversity of
+operational environments, processing units (and their hosted software)
+are replicated, and fault-tolerant algorithms are used to compare the
+outputs. The author(s) investigate both software monitoring in
+distributed fault-tolerant systems as well as implementing
+fault-tolerance mechanisms using RV techniques. The author(s) describe
+the Copilot language and compiler, specifically designed for generating
+monitors for distributed, hard real-time systems. They also describe two
+case-studies in which Copilot generated monitors in avionics systems.
+
+The author(s) contributions are the Copilot language for runtime
+monitoring and verification and case studies using the language to
+generate monitors for avionics subsystems.  The author(s) identify the
+current challenges with their approach.
+
+Suggestions:  I would have liked to see performance (timing, size)
+comparisons for the case studies with and without the monitors.  There
+are a few typos to be fixed prior to publication, including page and
+column margin errors throughout, kilobytes to kilobyte in last paragraph
+of 3.1, and Figure 13 - is it flight 2 (as in fig title) or flight 3 (as
+on plot).
+
+
+Reviewer #5: Overall well written paper. I would like to see more about
+system integration and how "bolt-on" this method is. The monitors seem
+like an important part of the pitot tube case study since they perform
+the voting/communication (rather than the nodes performing byzantine
+agreement and the monitors double checking the computation).
+
+
+
+
+
+
