@@ -114,11 +114,16 @@ of Haskell, compared to other DSLs?  My understanding is that copilot is
 a Haskell library. What are the main services of this library?  Also,
 the simple Haskell examples could be omitted.
 
+
+AEG Added a figure and rewrote intro to section on Tools.
+
 2. The assume/guarantees of the method should be highlighted. What can
 be claimed about the generated code? What are the capabilities of the
 used verification tools? What is the expected coverage of the millions
 of randomly generated tests?  In summary: what can be the expectations
 of the reader when using the authors' tools?
+
+AEG: Added a section on assurance to Section 7. May want to revise????
 
 3. The authors start with a set of very ambitious goals. Reflecting to
 that, I believe the authors should address the scheduling problem more
@@ -129,6 +134,8 @@ approach.  eDSL could bear more explanation: "First, as mentioned, the
 compiler is statically and strongly typed, and by implementing an eDSL,
 much of the  infrastructure of a well-tested Haskell implementation is
 reused."
+
+LP:TBD  
 
 5. Typos (e.g. Line 51 Column 2: varible -> variable) should be corrected.
 AEG: Done
