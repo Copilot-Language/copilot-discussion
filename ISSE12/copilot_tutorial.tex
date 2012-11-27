@@ -338,9 +338,9 @@ extern :: Typed a => String -> Maybe [a] -> Stream a
 %
 \noindent
 where  a value of type $\texttt{Maybe a}$ is either empty
-($\texttt{Nothing}$ or a value of type $\texttt{a}$ ($\texttt{Just
+($\texttt{Nothing}$) or a value of type $\texttt{a}$ ($\texttt{Just
   a}$). 
-It takes the name of an external variable, a possible Haskell list to
+The function \texttt{extern} takes the name of an external variable, a possible Haskell list to
 serve as the environment for the interpreter from which the monitor
 will draw the values that would otherwise be sampled from the external
 program, and generates a stream by sampling the variable at each clock
@@ -578,7 +578,7 @@ local
 %
 The local construct works similar to \emph{let}-bindings in ordinary
 Haskell. A stream defined using a local construct typically has the
-structure $\texttt{s} = \texttt{s'} \$ \\ \texttt{x -> e},$ where
+structure $$\texttt{s} = \texttt{s'}  \  \$ \ \backslash \texttt{x -> e}$$ where
 $\texttt{s'}$ is a stream, \$ is Haskell's application operator that
 forces function application to associate to the right, and the
 \texttt{e} is a lambda expression.  From a semantic point of view, the
@@ -699,9 +699,73 @@ except for the type signatures and the explicit sharing annotations.
 
 \section{Tools} \label{sec:tools}
 
-Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
-two compilers targeting C, and a verifier front-end. In the following section, we will
-demonstrate some of these tools and their usage.
+
+
+\begin{figure*}
+  \begin{tikzpicture}[->, node distance=4cm, auto, shorten >=1pt, bend angle=45,
+      thick]
+    \tikzstyle{every state}=[rectangle, rounded corners]
+
+    \node[state]         (Int)            {Interpreter};
+    \node[state]         (Lang) [above right of=Int]
+         {
+           \begin{tabular}[b]{l}
+           Copilot Libraries\\ \hline Copilot Language
+           \end{tabular}};
+    \node[state]         (Core) [below right of=Lang]          {Copilot Core};
+    \node[state]         (PP) [right of=Core]          {Pretty Printer};
+
+    \node[state]         (Atom) [below left of=Core]     {Atom Back-End};
+    \node[state]         (SBV) [below right of=Core]     {SBV Back-End};
+    \node[state]         (C99A) [below of=Atom]     {C99};
+    \node[state]         (C99S) [below of=SBV]     {C99};
+
+    \tikzstyle{every node}=[]
+
+    \path %% (Libs) edge              node {0,1,L} (Lang);
+    %% edge                 node {1,1,R} (C)
+    (Lang) edge   [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+    %% edge                 node {0,1,L} (C)
+    (Core) edge              node {Translation} (Atom)
+    edge              node {} (SBV)
+    edge              node {} (PP)
+    edge              node [swap] {Evaluation} (Int)
+    (Int) edge              [<->, bend right] node {QuickCheck} (Atom)
+    (Atom) edge             node {Compilation} (C99A)
+    (SBV) edge             node {Compilation} (C99S)
+    (C99A) edge              [<->] node  {Model checking} (C99S);
+
+    %% edge [bend left]     node {Translation} (SBV)
+    %% (Atom) edge [loop below] node {1,1,R} (D)
+    %%     edge                 node {0,1,R} (Libs)
+    %% (SBV) edge [bend left]   node {1,0,R} ();
+  \end{tikzpicture}
+  \caption{The Copilot toolchain.}
+  \label{fig:toolchain}
+\end{figure*}
+
+
+As a framework for runtime verification, Copilot comes with a variety
+of tools to support the generation of runtime monitor code as well as
+to the assist in their assurance. The Copilot toolchain is depicted in
+Figure!~\ref{fig:toolchain}.  A Copilot program is transformed into
+the Copliot Core language via  process called reification. An
+interpreter providing an executable semantics for the Core Language is
+provided as an integral part of the toolchain. The interpreter can be
+used to prototyping Copilot programs as well as for verification and
+validation purposes. Reified programs can be printed using the custom
+pretty-printing tool.  Currently, two backends, Atom and SBV,  are
+included in the toolchain. Both tools translate Copilot Core language
+programs into a  Haskell-hosted EDSL for C code generation.  In
+addition, a custom Quickcheck engine and test harness as well as
+support of model checkers are sure provided to  aide in verifying the
+generated C monitors.  We will demonstrate these tools and their usage
+in the remainder of this section.  A more through discussion about the
+verification approach can be found in~\cite{PikeWNG2012}.
+
+%%Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
+%%two compilers targeting C, and a verifier front-end. In the following section, we will
+%%demonstrate some of these tools and their usage.
 
 \subsection{Pretty-Printing} \label{sec:pretty-printing}
 Pretty-printing is straightforward.  For some specification {\tt spec},
@@ -939,7 +1003,7 @@ implemented to check the copilot-c99 back-end against the interpreter.  The tool
 generates a random Copilot specification, and for some user-defined number of
 iterations, the output of the interpreter is compared against the output of the
 compiled C program.  The user can specify weights to influence the probability
-at which expressions are generated.
+at which expressions are generated.  
 
 The copilot QuickCheck tool is installed with Copilot and assuming the binary is
 in the path, it is executed as 

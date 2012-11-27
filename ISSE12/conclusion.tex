@@ -23,6 +23,23 @@ themselves are expensive to compute, the entire expression becomes expensive.
 Techniques to improve the efficiency of evaluating eDSLs are needed.
 Fortunately, monitoring code is terse, in general.  
 
+\paragraph{Assurance}
+The lightweight approach to monitor assurance discussed  in
+Section~\ref{sec:tools}  is described in more detail
+in~\cite{PikeWNG2012}.  The current framework for front-end/back-end
+testing is built on Quickcheck, which does not provide coverage
+testing capability.  Given the  criticality  of the
+monitors, DO-178~\cite{DO178B} would require that MC/DC testing be
+performed. Adding this capability to the toolchain is a challenge for
+future work.  
+
+  A more heavyweight approach to verification is exemplified by the
+  CompCert~\cite{leroy} C compiler, which we could use for the
+  generated C programs.  A similar approach could be applied to
+  generate proofs or certificates that the C monitors created by the
+  back-end meet the specification given by the operational
+  semantics. 
+
 \paragraph{Scheduling monitors.}
 In the experiments described in Section~\ref{sec:case-study}, we use hardware
 interrupts to ensure monitors run at fixed intervals.  This technique works in
