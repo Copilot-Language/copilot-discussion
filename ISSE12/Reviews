@@ -35,6 +35,7 @@ benefited the Boyer-Moore algorithm.  Be more specific with the details
 from the examples, so the reader can follow the changes rather than
 assuming that the differences were obvious.
 
+LP: TBD
 p. 17 eDSL efficiency - It's not clear whether the complexity of the
 generated monitoring code is due to the expressiveness of your
 particular specification language or whether that is a general problem
@@ -44,6 +45,8 @@ towards the former, but the second paragraph leans towards the latter.
 specification language?  If this is a common problem for all eDSLs? Are
 the solutions simply to come up with better generation and optimization
 techniques?  It's not clear.
+LP: TBD
+
 
 Syntactic clarity:
 
@@ -61,16 +64,14 @@ for function signatures (pg. 4, col. 1, line 9 ), zipWith (+) (repeat 1)
 (pg. 4, col. 1, line 33), the double-arrow (pg. 5, col. 1, line 45), and
 list concatenation [].
 
-
 AEG I think I got most of these will give another pass
-later
+later. Anyone feel free to add or modify my descriptions????
 
 
 On pg. 9, why does the observer have double single-quotes (col. 1, line
 34) and then double-quotes on line 44?  What's the difference?
 
-
-AEG I think the difference is the first is the spec of the signature and the `` '' quotes are telling us it's a string not sure what else to say here???????
+AEG I think the difference is the first is the spec of the signature and the `` '' quotes are telling us it's a string not sure what else to say here????
 
 
 Comments help clarify the code, as in the code snippet at the end of pg. 15.
@@ -129,6 +130,10 @@ AEG: Added a section on assurance to Section 7. May want to revise????
 that, I believe the authors should address the scheduling problem more
 thoroughly: at least a few possible solutions should be outlined.
 
+AEG: I'm not sure what he wants here, but I added  a blurb in future work section saying that Copilot has been ported to an RTOS and future experiments are planned. 
+
+
+
 4. Related work by other efforts should be mentioned and compared to the
 approach.  eDSL could bear more explanation: "First, as mentioned, the
 compiler is statically and strongly typed, and by implementing an eDSL,
@@ -178,6 +183,9 @@ will need at least the same level of assurance as the rest of the system,
 which for DO178-C would for instance include giving assurance on the tool
 chain used to generate or verify the generated code.
 
+AEG: I've added something on this to the future work section. 
+
+
 The authors should argue how this problem could be addressed in future work,
 or why it is not a problem in this case. One approach could for instance
 be to
@@ -186,6 +194,9 @@ kind that the generated code satisfies this semantics, and finally to give a
 connection to higher-level reasoning for instance in temporal logic that can
 argue that the Copilot specification satisfies actual monitor and systems
 requirements.
+AEG: I've added this suggestion to the future work section. 
+
+
 
 Apart from this, I'm very happy with this paper and recommend acceptance
 after
@@ -247,6 +258,7 @@ column margin errors throughout, kilobytes to kilobyte in last paragraph
 of 3.1, and Figure 13 - is it flight 2 (as in fig title) or flight 3 (as
 on plot).
 
+AEG: I think the consensus  was to ignore this. We really don't have the HW stack or anything to redo the experiments or what not????
 
 Reviewer #5: Overall well written paper. I would like to see more about
 system integration and how "bolt-on" this method is. The monitors seem

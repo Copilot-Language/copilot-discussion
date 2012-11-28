@@ -49,7 +49,14 @@ monitored system does not miss other interrupts), and we need to ensure that the
 monitor has been given sufficient time to execute.  With the current set of code
 generators, worst-case execution time is easy to compute, as there is just one
 control-path through the code (that is, worst-case execution time is equal to
-nominal execution time).  
+nominal execution time). 
+
+    Safety-Critical hard real-time systems typically  employ real-time operating
+  systems (RTOS) to manage the schedule.  Copilot has been ported to an
+  ARINC 653 compliant RTOS and experiments are being planned to test
+  applications being  monitored by
+  Copilot programs, where they are both  scheduled by the OS
+  using algorithms such as rate-monotonic scheduling.  
 
 The only model of time in Copilot monitors, like other synchronous languages, is
 the tick.  The tick is an abstract model of time that gets mapped to a real-time
