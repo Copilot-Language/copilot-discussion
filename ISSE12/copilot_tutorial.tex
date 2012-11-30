@@ -750,19 +750,19 @@ except for the type signatures and the explicit sharing annotations.
 As a framework for runtime verification, Copilot comes with a variety
 of tools to support the generation of runtime monitor code as well as
 to the assist in their assurance. The Copilot toolchain is depicted in
-Figure!~\ref{fig:toolchain}.  A Copilot program is transformed into
+Figure~\ref{fig:toolchain}.  A Copilot program is transformed into
 the Copliot Core language via  process called reification. An
-interpreter providing an executable semantics for the Core Language is
+interpreter providing an executable semantics for the Core language is
 provided as an integral part of the toolchain. The interpreter can be
-used to prototyping Copilot programs as well as for verification and
+used to prototype Copilot programs as well as for verification and
 validation purposes. Reified programs can be printed using the custom
 pretty-printing tool.  Currently, two backends, Atom and SBV,  are
-included in the toolchain. Both tools translate Copilot Core language
+included in the toolchain. Both tools translate Copilot core language
 programs into a  Haskell-hosted EDSL for C code generation.  In
-addition, a custom Quickcheck engine and test harness as well as
-support of model checkers are sure provided to  aide in verifying the
+addition, a custom Quickcheck engine and a  test harness are provided
+along with support of model checkers to  aide in verifying the
 generated C monitors.  We will demonstrate these tools and their usage
-in the remainder of this section.  A more through discussion about the
+in the remainder of this section.  A more thorough discussion about the
 verification approach can be found in~\cite{PikeWNG2012}.
 
 %%Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
