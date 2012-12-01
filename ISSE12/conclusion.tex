@@ -29,17 +29,17 @@ Section~\ref{sec:tools} is described in more detail
 in~\cite{PikeWNG2012}.  The current framework for front-end/back-end
 testing is built on Quickcheck, which does not provide coverage
 testing capability.  Given the criticality of the monitors,
-DO-178~\cite{DO178B} would require that MC/DC testing be performed if
-they were to be employed in industrial avionics. Adding this
+DO-178~\cite{DO178B} would require that MC/DC testing be performed on
+them if they were to be employed in industrial avionics. Adding this
 capability to the toolchain is a challenge for future work.
 
 A more heavyweight approach to verification is exemplified by the
 CompCert~\cite{leroy} C compiler.   Adapting a
-similar approach, we could generate proofs or certificates that the C
+similar philosophy, we could generate proofs or certificates that the C
 monitors created by the back-end meet the specification given by the
-Copilot operational semantics and then use the CompCert compiler to
+Copilot operational semantics and then use the CompCert C compiler to
 provide a certificate that the executable created during compilation
-is correct.
+is correct. 
 
 \paragraph{Scheduling monitors.}
 In the experiments described in Section~\ref{sec:case-study}, we use hardware
@@ -54,9 +54,8 @@ nominal execution time).
 
     Safety-Critical hard real-time systems typically  employ real-time operating
   systems (RTOS) to manage the schedule.  Copilot has been ported to an
-  ARINC 653 compliant RTOS and experiments are being planned to test
-  applications being  monitored by
-  Copilot programs, where they are both  scheduled by the OS
+  ARINC 653~\cite{ARINC653-10,ARINC653-12} compliant RTOS and experiments are being planned to test
+  applications being  monitored by Copilot programs, where they are both  scheduled by the OS
   using algorithms such as rate-monotonic scheduling.  
 
 The only model of time in Copilot monitors, like other synchronous languages, is
