@@ -1,4 +1,10 @@
 
+AEG NOTE on overfill: We have to fix these. It shouldn't have been submitted with all those overfills. Right now I'm include \sloppy directive to keep the overfills from occurring this makes for a lot of word breaks so it appears whole paragraphs have every line ending in hyphenation. There are some hints on alternatives at
+
+http://tex.stackexchange.com/questions/32062/automatic-line-breaking-for-two-column-text
+
+Anyone else is free to try to come up with better fixes. 
+
 
 
 Reviewer #1: This is an excellent overview of the Copilot runtime
@@ -65,24 +71,24 @@ for function signatures (pg. 4, col. 1, line 9 ), zipWith (+) (repeat 1)
 list concatenation [].
 
 AEG I think I got most of these will give another pass
-later. Anyone feel free to add or modify my descriptions????
+later. I added the explanation in the text. I know Lee had some syntax explanations in footnotes, but I felt adding too many footnotes explaining Haskell syntax would get in the way. Anyone feel free to add some I may have overlooked or modify my descriptions???? 
 
 
 On pg. 9, why does the observer have double single-quotes (col. 1, line
 34) and then double-quotes on line 44?  What's the difference?
 
-AEG I think the difference is the first is the spec of the signature and the `` '' quotes are telling us it's a string not sure what else to say here????
+AEG I made these both " " is this correct?????? I think it was an emacs TeX  mode thing. 
 
 
 Comments help clarify the code, as in the code snippet at the end of pg. 15.
 
+SN. TBD
 
 * Text/formatting concerns:
 
 Several paragraphs have lines that extend well into the margins:
 
 page 2 column 1 line 58, pg2 cl2 ln32, pg2 cl2 ln34, pg2 cl2 ln54, etc...
-
 Please re-phrase or instruct LaTeX to break particular words (e.g. the
 word 'approaches' is too long on both p. 2 and p. 3).
 
