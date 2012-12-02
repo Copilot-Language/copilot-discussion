@@ -57,7 +57,7 @@ The example column lists a packet of the MAVLink heartbeat type (message {\tt id
 and payload length three) as it was captured from a ZigBee link between an ArduPilot
 Mega and an ArduPilot Mega Planner groundstation. Heartbeat messages are sent
 in regular intervals and are used to keep track of different vehicles as
-they appear and leave the visibility of receiving nodes. The three payload bytes
+they appear and go out of reception of receiving nodes. The three payload bytes
 stand for the type of aircraft ({\tt 0x01} - fixed wing), the type of the autopilot
 ({\tt 0x03} - Ardupilot) and the MAVLink version ({\tt 0x02}).
 
@@ -78,9 +78,9 @@ maxPayloadLength   = 255
 maxPayloadLength'  = constant maxPayloadLength
 
 maxPacketLength    = headerSize  + maxPayloadLength
-                                   + crcSize
+                                 + crcSize
 maxPacketLength'   = headerSize' + maxPayloadLength' 
-                                   + crcSize'
+                                 + crcSize'
 \end{code}
 
 To analyze incoming packets, we define an input stream that has a long enough

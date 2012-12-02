@@ -86,13 +86,13 @@ connections.  With one bidirectional serial connection between each pair of
 nodes, the monitor bus and the processing nodes form a complete graph.  All
 monitors on the nodes run in synchronous steps; the clock distribution is
 ensured by a master hardware clock.  (The clock is a single point of
-failure in our prototype hardware implementation; a fully fault-tolerant
+failure in our test hardware implementation; a fully fault-tolerant
 system would execute a clock-synchronization algorithm.)
 
 % Each node samples its two sensors (the shared and a local one) at a rate of 128Hz.
 Each node samples its two sensors (the shared and a local one) at a rate of 16Hz.
 The microcontroller's timer interrupt that updates the global time also periodically calls
-a Copilot-generated monitor which samples the ADC C-variables of the monitored program,
+a Copilot-generated monitor which samples the ADC C-variables out of the monitored program,
 conducts Byzantine agreements, and performs fault-tolerant votes on the values. After 
 a complete round of sampling, agreements, and averaging, an arbitrary node collects and
 logs intermediate values of the process to an SD-card.
@@ -124,7 +124,7 @@ The executed sampling, agreement, and averaging is described as follows:
 %% The algorithm executed by monitor $M_i$ follows:
 
 \begin{enumerate}
-\item Each node samples sensor data from both the shared and local sensors.
+\item Each node samples sensor data from both the shared and local sensor.
 \item Each monitor samples the C~variables that contain the pressure values and
   broadcasts the values to every other monitor, then relays
   each received value to monitors the value did not originate from.
@@ -219,21 +219,21 @@ The executed sampling, agreement, and averaging is described as follows:
     \label{fig:nofaults}
   }
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_7_22_2011.png}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_7_22_2011}
     \label{fig:onestuckprobe}
   }
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_8_5_2011.png}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_8_5_2011}
     \label{fig:twostuckprobes}
   }
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight3_8_5_2011.png}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight3_8_5_2011}
     \label{fig:threestuckprobes}
   }
   \caption{Logged pressure sensor, voted and averaged data.}
   \label{fig:pressuregraphs}
 \end{myfig}
-
+\todo{change text to match the colors}
 
 % The tests did not include a setup
 % with different angles of attack of the airflow, which can cause a more
@@ -273,15 +273,16 @@ introduced; in Figure~\ref{fig:onestuckprobe}, one benign fault has been injecte
   putting a cap over the total pressure probe of one local tube.\footnote{Tape
     left on the static pitot tube of Aeroper\'{u} Flight 603 in 1996 resulted in
     the death of 70 passengers and crew~\cite{aeroperu}.}  In
-  Figure~\ref{fig:twostuckprobes}, in addition to the capped tube, sticky tape is placed over another
-  tube, and in Figure~\ref{fig:threestuckprobes}, sticky tape is placed over two
-  tubes in addition to the capped tube. 
+  Figure~\ref{fig:twostuckprobes}, in addition to the capped tube, adhesive tape is placed over another
+  tube, and in Figure~\ref{fig:threestuckprobes}, the tape is placed over two
+  tubes in addition to the capped tube.
 
-The graphs depict the air pressure difference data logged at each node and the
-voted and averaged outcome of the 3 non-faulty processing nodes.  The gray
-traces show the recorded sensor data $S_1, \dots, S_4,$ and the calibrated data
-of the local sensors $L_1, \dots, L_4$. The black traces show the final agreed
-and voted values $ftAvg$ of the three good nodes.
+The plots depict the pressure difference samples logged at each node and the
+voted and averaged outcome of the 3 non-faulty processing nodes.  The
+gray traces show the recorded sensor data $S_1, \dots, S_4,$ and the
+calibrated data of the local sensors $L_1, \dots, L_4$. The black
+traces show the final agreed and voted values $ftAvg$ of the three
+good nodes.
 
 In every figure except for Figure~\ref{fig:threestuckprobes}, the black graphs
 approximate each other, since the fault-tolerant voting allows the nodes to mask
@@ -293,7 +294,3 @@ the stuck tube results in an underflowing value.  In
 Figure~\ref{fig:threestuckprobes}, with only two non-faulty tubes out of five
 left, $ftAvg$ is not able to choose a non-faulty value reliably anymore.
 All nodes still agree on a consistent---but wrong---value.
-
-
-
-\input mavlink
