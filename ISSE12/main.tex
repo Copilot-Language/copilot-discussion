@@ -78,6 +78,17 @@
 %\usepackage[colorlinks=true,linkcolor=blue,citecolor=red,pagebackref=true]{hyperref}
 
 
+% took todo command over from the ICFP paper
+\usepackage{ifthen}
+\newboolean{submission}  %set to true for the submission version
+\setboolean{submission}{false}
+%\setboolean{submission}{true}
+\ifthenelse
+{\boolean{submission}}
+{ \newcommand{\todo}[1]{ } } %hide todo
+{ \newcommand{\todo}[1]{ {\color{red}$<<$#1$>>$}
+}}
+
 \newenvironment{myfig}{\begin{figure*}}{\end{figure*}}
 
 \usepackage{subfigure}

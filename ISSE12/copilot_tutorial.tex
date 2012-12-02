@@ -365,7 +365,7 @@ example, in the stream definition
 \begin{code}
 extEven :: Stream Bool
 extEven = e0 `mod` 2 == 0
-  where e0 = externW8 "x" Nothing 
+  where e0 = extern "x" Nothing 
 \end{code}
 %
 \noindent
@@ -378,7 +378,7 @@ top-level definitions, e.g.,
 %
 \begin{code}
 e0 :: Stream Word8
-e0 = extern  "e0" (Just [2,4..])
+e0 = extern "e0" (Just [2,4..])
 \end{code}
 
 \noindent
@@ -550,18 +550,17 @@ seconds and the engine is not shut off.  Notice there is a latency of one tick b
 \label{sec:explicit_sharing}
 
 \begin{figure}[ht]
-\begin{minipage}{0.5\textwidth}
+\begin{minipage}{0.25\textwidth}
 \begin{code}
 s1 = let x = nats + nats
      in x * x
 \end{code}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
+\end{minipage}%
+\begin{minipage}{0.25\textwidth}
 \begin{code}
 s2 = local (nats + nats) $
     \ x -> x * x
-\end{code} 
-% $
+\end{code}
 \end{minipage}
 \caption{Implicit sharing (s1) versus explicit sharing (s2).}
 \label{fig:explicit_sharing}
@@ -836,7 +835,7 @@ a trigger.  We can do so declaring an \emph{observer}.  For example:
 %
 \begin{code}
 spec :: Spec
-spec = observer ``obs'' nats  
+spec = observer "obs" nats  
 \end{code}
 %
 can be interpreted using
