@@ -66,21 +66,13 @@ sizes and limits, next to their constant Copilot stream versions:
 
 \begin{code}
 startSequenceSize  = 1
-startSequenceSize' = constant startSequenceSize
+startSequenceSize' = startSequenceSize :: Stream Word32
 
-headerSize         = 6
-headerSize'        = constant headerSize
+headerSize  = 6
+headerSize' = headerSize :: Stream Word32
 
-crcSize            = 2
-crcSize'           = constant crcSize
-
-maxPayloadLength   = 255
-maxPayloadLength'  = constant maxPayloadLength
-
-maxPacketLength    = headerSize  + maxPayloadLength
-                                 + crcSize
-maxPacketLength'   = headerSize' + maxPayloadLength' 
-                                 + crcSize'
+crcSize  = 2
+crcSize' = crcSize :: Stream Word32
 \end{code}
 
 To analyze incoming packets, we define an input stream that has a long enough
@@ -93,7 +85,7 @@ the right:
 
 \begin{code}
 -- The input stream, allows dropping up to
---  the maximum packet length
+-- the maximum packet length
 inputStream :: Stream Word32
 inputStream = replicate maxPacketLength 0 ++ externInput
 
@@ -103,18 +95,19 @@ externInput = extern "extern_input" Nothing
 \end{code}
 
 
-Further, we define where in a packet to access header fields and payload,
-according to Table~\ref{MAVLinkPacketTable}:
+Further, we define where in a packet to access header fields and payload by
+defining a stream for each value drops values from the {\tt inputStream}
+according to Table~\ref{MAVLinkPacketTable}.
 
 \begin{code}
 payloadLength         = drop 1 inputStream
-packetLength          = headerSize' + payloadLength 
+packetLength          = headerSize' + payloadLength
                                     + crcSize'
 packetSequenceNumber  = drop 2 inputStream
 systemID              = drop 3 inputStream
-componentID       = drop 4 inputStream
-messageID           = drop 5 inputStream
-payload                 = drop 6 inputStream
+componentID           = drop 4 inputStream
+messageID             = drop 5 inputStream
+payload               = drop 6 inputStream
 \end{code}
 
 
@@ -126,8 +119,8 @@ remainder by dividing {\tt d} by the X.25 polynomial $x^{16} + x^{12} + x^5 +
 1$, is listed below:
 
 \begin{code}
-mavlinkCrcUpdate :: Stream Word32 -> Stream Word32 
-                                 -> Stream Word32
+mavlinkCrcUpdate :: Stream Word32 -> Stream Word32
+                                  -> Stream Word32
 mavlinkCrcUpdate r d =
 let d'   = d   .&. 0xff
     tmp  = d'  .^. ( r .&. 0xff )
@@ -135,15 +128,15 @@ let d'   = d   .&. 0xff
 in foldl1 (.^.) [ shiftR 8 r,    shiftL 8 tmp'
                 , shiftL 3 tmp', shiftR 4 tmp' ]
 \end{code}
-where \texttt{.\&.} and \texttt{.\^} denote the bitwise and a exclusive or
-operators respectively. 
+where \texttt{.\&.} and \texttt{.\^.} denote the bitwise and a exclusive or
+operators respectively.
 
 Left-folding the {\tt mavlinkCrcUpdate} function with an initial value
 {\tt crcInit = 0xffff} into the initial array, starting from the second
 packet byte up to the maximum packet length (and keeping the intermediate
 CRC results), is achieved by the Copilot {\tt nscanl} library
 function.\footnote{Copilot's {\tt nscanl} is a fixed-length (of {\tt n}) analogue
-  of the Haskell {\tt scanl} function in Haskell, such that 
+  of the Haskell {\tt scanl} function in Haskell, such that
 {\tt scanl f z [x1, x2, ...] == [z, z `f` x1, (z `f` x1) `f` x2,
     ...]}.}
 

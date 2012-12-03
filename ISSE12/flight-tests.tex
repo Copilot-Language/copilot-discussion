@@ -7,18 +7,21 @@ We describe two case studies in which we have used Copilot monitors.
 
 
 \begin{myfig}[ht!]
-\includegraphics[scale=0.4]{Figs/experiment}
-\caption{Stack configuration in the Edge 540 aircraft.\label{fig:setup}}
+  \centering
+  \includegraphics[scale=0.4]{Figs/experiment}
+  \caption{Stack configuration in the Edge 540 aircraft.\label{fig:setup}}
 \end{myfig}
 
 \begin{myfig}
-\begin{minipage}{0.5\linewidth}
-\includegraphics[scale=0.5]{Figs/architecture}
-\end{minipage}
-\begin{minipage}{0.5\linewidth}
-\includegraphics[scale=0.4]{Figs/architecture_sensors}
-\end{minipage}
-\caption{Hardware stack and pitot tube configuration.} \label{fig:case-study}\label{fig:stack-schema}
+  \begin{minipage}{0.5\linewidth}
+    \centering
+    \includegraphics[scale=0.5]{Figs/architecture}
+  \end{minipage}
+  \begin{minipage}{0.5\linewidth}
+    \centering
+    \includegraphics[scale=0.4]{Figs/architecture_sensors}
+  \end{minipage}
+  \caption{Hardware stack and pitot tube configuration.} \label{fig:case-study}\label{fig:stack-schema}
 \end{myfig}
 
 % \todo{
@@ -215,25 +218,24 @@ The executed sampling, agreement, and averaging is described as follows:
 \begin{myfig}[ht!]
   \centering
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight1_7_22_2011}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight1_7_22_2011.png}
     \label{fig:nofaults}
   }
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_7_22_2011}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_7_22_2011.png}
     \label{fig:onestuckprobe}
   }
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_8_5_2011}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight2_8_5_2011.png}
     \label{fig:twostuckprobes}
   }
   \subfigure[]{
-    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight3_8_5_2011}
+    \includegraphics[width=0.46\textwidth, trim=100 120 20 120,clip=true]{Figs/flight3_8_5_2011.png}
     \label{fig:threestuckprobes}
   }
   \caption{Logged pressure sensor, voted and averaged data.}
   \label{fig:pressuregraphs}
 \end{myfig}
-\todo{change text to match the colors}
 
 % The tests did not include a setup
 % with different angles of attack of the airflow, which can cause a more
