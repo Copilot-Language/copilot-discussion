@@ -67,7 +67,7 @@ drop :: Int -> Stream a -> Stream a
 where the type signature for the function is given in curried
 form after the double colon.  Here {\tt xs ++ s} prepends the list
 {\tt xs} at the front of the stream {\tt s}.  For example the stream
-{\tt w} defined as follows, given our previous definition of {\tt x}:
+{\tt w} is defined as follows, given our previous definition of {\tt x}:
 %
 \begin{code}
 w = [5,6,7] ++ x
@@ -306,12 +306,11 @@ We provide a {\tt cast} operator
 cast :: (Typed a, Typed b) => Stream a -> Stream b  
 \end{code}
 %
-that casts from one type to another.  The cast operator is only
-defined for casts that do not lose information, so an unsigned word
-type {\tt a} can only be cast to another unsigned type at least as
-large as {\tt a} or to a signed word type strictly larger than {\tt
-  a}.  Signed types cannot be cast to unsigned types but can be cast
-to signed types at least as large.
+that casts from one type to another.  The cast operator is only defined for
+casts that do not lose information, so an unsigned word-type {\tt a} can only be
+cast to another unsigned type at least as large as {\tt a} or to a signed word
+type strictly larger than {\tt a}.  Signed types cannot be cast to unsigned
+types but can be cast to signed types at least as large.
 
 \subsection{Interacting With the Target Program}
 \label{sec:interacting}
@@ -339,14 +338,13 @@ extern :: Typed a => String -> Maybe [a] -> Stream a
 \end{code}
 %
 \noindent
-where  a value of type $\texttt{Maybe a }$ is either empty
-($\texttt{Nothing}$) or a value of type $\texttt{a}$ ($\texttt{Just
-  a}$). 
-The function \texttt{extern} takes the name of an external variable, a possible Haskell list to
-serve as the environment for the interpreter from which the monitor
-will draw the values that would otherwise be sampled from the external
-program, and generates a stream by sampling the variable at each clock
-cycle.  For example,
+where a value of type $\texttt{Maybe a }$ is either empty ($\texttt{Nothing}$)
+or a value of type $\texttt{a}$ ($\texttt{Just a}$).  The function
+\texttt{extern} takes the name of an external variable and a possible (Haskell)
+list of values to serve as the ``environment'' for the interpreter, since in a
+compiled monitor, these variable values come from the sampled program.  The
+interpreter generates a stream by sampling the variable at each clock cycle,
+modeled as the elements in the list.  For example,
 %
 \begin{code}
 sumExterns :: Stream Word64
@@ -358,8 +356,10 @@ sumExterns = let ex1 = extern "e1" (Just [0..])
 is a stream that takes two external variables {\tt e1} and {\tt e2} and adds
 them.  The first external variable contains the infinite list {\tt [0,1,2,...]}
 of values for use when interpreting a Copilot specification containing the
-stream.  The other variable contains no environment ({\tt sumExterns} must have
-an environment for both of its variables to be interpreted).
+stream.  The other variable contains no environment.  ({\tt sumExterns} must have
+an environment for both of its variables to be interpreted).  If {\tt ex1} and
+{\tt ex2} both were defined with the lists {\tt [0,1,2,...]}, then the output of
+interpreting {\tt sumExterns} would be {\tt [0,2,4,...]}.
 
 Sometimes, type inference cannot infer the type of an external variable.  For
 example, in the stream definition
@@ -545,7 +545,8 @@ Here, we assume that the external variable {\tt temp} denotes the temperature of
 the engine and the external variable {\tt running} indicates whether the fuel
 injector is running.  The external function {\tt over\_temp\_rise} is called
 without any arguments if the temperature rises more than 2.3 degrees within 0.2
-seconds and the engine is not shut off.  Notice there is a latency of one tick between when the property is violated and when the guard becomes true.
+seconds and the engine has not been shut off.  Notice there is a latency of one
+tick between when the property is violated and when the guard becomes true.
 \end{example}
 
 \subsection{Explicit Sharing}
@@ -560,13 +561,14 @@ s1 = let x = nats + nats
 \end{minipage}%
 \begin{minipage}{0.25\textwidth}
 \begin{code}
-s2 = local (nats + nats) $
-    \ x -> x * x
+s2 = local (nats + nats)
+      (\x -> x * x)
 \end{code}
 \end{minipage}
 \caption{Implicit sharing (s1) versus explicit sharing (s2).}
 \label{fig:explicit_sharing}
 \end{figure}
+
 \noindent Copilot facilitates sharing in expressions by the \emph{local}-construct:
 %
 \begin{code}
@@ -577,18 +579,22 @@ local
   -> Stream b
 \end{code}
 %
-The local construct works similar to \emph{let}-bindings in ordinary
-Haskell. A stream defined using a local construct typically has the
-structure $$\texttt{s} = \texttt{s'}  \  \$ \ \backslash \texttt{x -> e}$$ where
-$\texttt{s'}$ is a stream, \$ is Haskell's application operator that
-forces function application to associate to the right, and
-\texttt{e} is a lambda expression.  From a semantic point of view, the
-streams {\tt s1} and {\tt s2} from Figure \ref{fig:explicit_sharing}
-are identical.  As we will see in Section~\ref{subsec:boyer_moore},
-however, certain advanced Copilot programs may force the compiler to
-build syntax trees that blow up exponentially.  In such cases, using
-explicit sharing helps to avoid this problem.
-
+The local construct works similar to \emph{let}-bindings in Haskell.  For
+example, from a semantic point of view, the streams {\tt s1} and {\tt s2} in
+Figure~\ref{fig:explicit_sharing} are semantically identical.  However, by
+sharing expression definitions, the size of a Copilot expression can be
+dramatically reduced.  Printing the expressions results in something like the
+following:
+%
+\begin{code}
+s1 = (nats + nats) * (nats + nats)
+s2 = let x = nats + nats in
+     x * x
+\end{code}
+%
+\noindent
+Note that in {\tt s1}, because the sharing is at the Haskell level, the
+expressions are inlined.
 
 \subsection{Extended Example: The Boyer-Moore Majority-Vote Algorithm}
 \label{subsec:boyer_moore}
@@ -686,25 +692,22 @@ aMajority' cnt (x:xs) can =
 % $
 
 When implementing the majority vote algorithm for Copilot, we can use reuse
-almost all of the code from the Haskell implementation. However, as functions
-in Copilot are macros that are expanded at compile time, care must
-be taken in order to avoid an explosion in the code size. Hence, instead of
-using Haskell's built-in \emph{let}-blocks, we use explicit sharing, as
-described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
-of the first and the second pass are given in Figure \ref{fig:majority} and
-Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
-with the Copilot implementation, we see that the code is almost identical,
-except for the type signatures and the explicit sharing annotations.
-
+almost all of the code from the Haskell implementation. However, as functions in
+Copilot are macros that are expanded at compile time, care must be taken in
+order to avoid an explosion in the expression size; thus, note the use of the
+{\tt local} construct.  The Copilot implementations of the first and the second
+pass are given in Figure \ref{fig:majority} and Figure \ref{fig:amajority}
+respectively. Comparing the Haskell implementation with the Copilot
+implementation, we see that the code is almost identical, except for the type
+signatures and the explicit sharing annotations.
 
 
 \section{Tools} \label{sec:tools}
 
 
-
-\begin{figure*}
+\begin{figure*}[ht]
 \begin{center}
-  \begin{tikzpicture}[->, node distance=4cm, auto, shorten >=1pt, bend angle=45,
+  \begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
       thick]
     \tikzstyle{every state}=[rectangle, rounded corners]
 

@@ -1,5 +1,9 @@
 
-AEG NOTE on overfill: We have to fix these. It shouldn't have been submitted with all those overfills. Right now I'm include \sloppy directive to keep the overfills from occurring this makes for a lot of word breaks so it appears whole paragraphs have every line ending in hyphenation. There are some hints on alternatives at
+AEG NOTE on overfill: We have to fix these. It shouldn't have been submitted
+with all those overfills. Right now I'm include \sloppy directive to keep the
+overfills from occurring this makes for a lot of word breaks so it appears whole
+paragraphs have every line ending in hyphenation. There are some hints on
+alternatives at
 
 http://tex.stackexchange.com/questions/32062/automatic-line-breaking-for-two-column-text
 

@@ -1,3 +1,79 @@
+\section{Related Work}\label{sec:related}
+
+%% Using RV to implement fault-tolerance can be considered to be a
+%% ``one-out-of-two'' (1oo2) architecture~\cite{rushby-possibly}, similar in spirit
+%% to the idea of the Simplex architecture~\cite{simplex}.  In a 1oo2 architecture,
+%% one component may be an arbitrarily complex control system, and the other
+%% component is a monitor.
+
+%% One motivation for a 1oo2 architecture is that if the
+%% monitor is developed using formal techniques, then it may be \emph{possibly
+%%   perfect}~\cite{rushby-possibly}, meaning that the probability of failure on
+%% demand of each component is ``mostly'' independent of each other; more
+%% precisely, the dependency can be bounded.  %% The upshot of the work is that it
+%% %% provides a probabilistic basis for how much additional reliability one obtains
+%% %% by having a formally verified monitor.
+%% Our work can be viewed as an approach to
+%% generate possibly-perfect monitors.
+
+%% Given our focus on ultra-critical systems, our work presents a possible approach
+%% for \emph{runtime certification}, in which evidence of system assurance is given
+%% at runtime~\cite{rvRushby}.  Traditionally, evidence is provided at design-time
+%% and is process-oriented (e.g., the DO-178B standard for software development in
+%% commercial aviation~\cite{DO178B}).
+
+Copilot shares similarities with other RV systems that emphasize real-time or
+distributed systems.  Kr\"{u}ger, Meisinger, and Menarini describe their work in
+synthesizing monitors for a automobile door-locking system~\cite{msc}.  While
+the system is distributed, it is not ultra-reliable and is not hard real-time or
+fault-tolerant via hardware replication.  The implementation is in Java and
+focuses on the aspect-oriented monitor synthesis, similar in spirit to
+JavaMOP~\cite{javamop}.  \textsc{Syncraft} is a tool that takes a distributed
+program (specified in a high-level modeling language) that is fault-intolerant
+and given some invariant and fault model, transforms the program into one that
+is fault-tolerant (in the same modeling language).~\cite{syncraft}.  %% Although
+%% \textsc{Syncraft} does not handle real-time programming constraints, the problem
+%% being solved by that tool is at the algorithmic level, rather than generating
+%% code.
+
+There are few instances of RV focused on C code.  One exception is {\sc
+  Rmor}, which generates constant-memory C monitors~\cite{havelundc}.  {\sc
+  Rmor} does not address real-time behavior or distributed system RV, though.
+
+%% \textsc{Salt}~\cite{bauer} is a timed and
+%% untimed linear temporal logic specification language and compiler.  Unlike
+%% Copilot, Salt is not focused on generating hard real-time code, nor does it
+%% address scheduling or monitor communication.  Nevertheless, \textsc{Salt} goes
+%% beyond our work in the sense that it also address the diagnosis problem:
+%% inferring a fault from its symptoms.
+
+Research at the University of Waterloo also investigates the use of
+time-triggered RV (i.e., periodic sampling).  Unlike with Copilot, the authors
+do not make the assumptions that the target programs are hard real-time
+themselves, so a significant portion of the work is devoted to developing the
+theory of efficiently monitoring for state changes using time-triggered RV for
+arbitrary programs, particularly for testing~\cite{sampling,borzoo}.  On the
+other hand, the work does not address issues such as distributed systems,
+fault-tolerance, or monitor integration.
+
+With respect to work outside of RV, other research also addresses the use of
+eDSLs for generating embedded code.  Besides Atom~\cite{atom}, which we use as a
+back-end, Feldspar is an eDSL for digitial signal processing~\cite{feldspar}.
+Copilot is similar in spirit to other languages with stream-based semantics,
+notably represented by the Lustre family of languages~\cite{lustre-intro}.
+Copilot is a simpler language, particularly with respect to Lustre's clock
+calculus, focused on monitoring (as opposed to developing control systems).
+Copilot can be seen as an generalization of the idea of Lustre's ``synchronous
+observers''~\cite{lustre}, which are Boolean-valued streams used to track
+properties about Lustre programs.  Whereas Lustre uses synchronous observers to
+monitor Lustre programs, we apply the idea to monitoring arbitrary
+periodically-scheduled real-time systems.  The main advantages of Copilot over
+Lustre is that Copilot is implemented as an eDSL, with the associated benefits;
+namely Haskell compiler and library reuse the ability to define polymorphic
+functions, like the {\tt majority} macro in Section~\ref{subsec:boyer_moore}, that get
+monomorphised at compile-time.
+
+
 \section{Conclusions and Remaining Challenges}
 \label{sec:conclusions}
 Ultra-critical systems need RV.  Our primary goals in this paper are to (1)
@@ -19,27 +95,30 @@ a single Copilot expression.  The use of explicit sharing
 (Section~\ref{sec:explicit_sharing}) reduces the cost of computation by ensuring
 sub-expressions are not needlessly recomputed, but if the sub-expressions
 themselves are expensive to compute, the entire expression becomes expensive.
+This is analogous to a standard compiler inlining \emph{every} function, which
+would result in infeasible code-size.  
 
-Techniques to improve the efficiency of evaluating eDSLs are needed.
-Fortunately, monitoring code is terse, in general.  
+Techniques to improve the efficiency of evaluating eDSLs and borrowing sharing
+from the host language to the DSL language are needed.  Fortunately in our
+domain, monitoring code is terse, in general.
 
 \paragraph{Assurance}
 The lightweight approach to monitor assurance discussed in
 Section~\ref{sec:tools} is described in more detail
 in~\cite{PikeWNG2012}.  The current framework for front-end/back-end
-testing is built on Quickcheck, which does not provide coverage
+testing is built on Quickcheck and model-checking, which does not provide coverage
 testing capability.  Given the criticality of the monitors,
 DO-178~\cite{DO178B} would require that MC/DC testing be performed on
 them if they were to be employed in industrial avionics. Adding this
 capability to the toolchain is a challenge for future work.
 
-A more heavyweight approach to verification is exemplified by the
-CompCert~\cite{leroy} C compiler.   Adapting a
-similar philosophy, we could generate proofs or certificates that the C
-monitors created by the back-end meet the specification given by the
-Copilot operational semantics and then use the CompCert C compiler to
-provide a certificate that the executable created during compilation
-is correct. 
+%% A more heavyweight approach to verification is exemplified by the
+%% CompCert~\cite{leroy} C compiler.   Adapting a
+%% similar philosophy, we could generate proofs or certificates that the C
+%% monitors created by the back-end meet the specification given by the
+%% Copilot operational semantics and then use the CompCert C compiler to
+%% provide a certificate that the executable created during compilation
+%% is correct. 
 
 \paragraph{Scheduling monitors.}
 In the experiments described in Section~\ref{sec:case-study}, we use hardware
@@ -48,9 +127,9 @@ practice and obviates the need for an underlying operating system to handle
 scheduling.  However, we must ensure that monitors execute quickly (so that the
 monitored system does not miss other interrupts), and we need to ensure that the
 monitor has been given sufficient time to execute.  With the current set of code
-generators, worst-case execution time is easy to compute, as there is just one
+generators, worst-case execution time is easier to compute, as there is just one
 control-path through the code (that is, worst-case execution time is equal to
-nominal execution time). 
+nominal execution time).
 
     Safety-Critical hard real-time systems typically  employ real-time operating
   systems (RTOS) to manage the schedule.  Copilot has been ported to an

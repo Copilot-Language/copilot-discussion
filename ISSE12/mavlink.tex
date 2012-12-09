@@ -299,8 +299,8 @@ the monitors on three flights and plotted the trajectories.
 \begin{myfig}[ht!]
   \centering
 %  \subfigure[]{
-    \includegraphics[width=1\textwidth]{Figs/flight1}
-    \caption{Flight 1.\label{fig:flight1}}
+    \includegraphics[width=1\textwidth]{Figs/flight1.png}
+    \caption{Positional data for flight 1.\label{fig:flight1}}
 \end{myfig}%
 %% \begin{myfig}[ht!]
 %%  \centering
@@ -311,8 +311,8 @@ the monitors on three flights and plotted the trajectories.
 \begin{myfig}[ht!]
  \centering
 %  \subfigure[]{
-    \includegraphics[width=1\textwidth]{Figs/flight3}
-    \caption{Flight 2.\label{fig:flight2}}
+    \includegraphics[width=1\textwidth]{Figs/flight3.png}
+    \caption{Positional data for flight 2.\label{fig:flight2}}
 \end{myfig}
 
 \noindent
@@ -334,7 +334,10 @@ updated--barometric altitude is) and causes the stair effect.
 \subsection{Discussion}
 The purpose of the case studies is to test the feasibility of using
 Copilot-generated monitors in a realistic setting to ``bolt on'' fault-tolerance
-to a system that otherwise lacks that capability.  
+to a system that otherwise lacks that capability.  Not only does Copilot allow
+one to synthesize fault-tolerance from high-level specifications, but it
+enforces modularity in the interface between the application and
+fault-tolerance.  
 
 To give a sense of code-sizes, in the pitot tube monitoring case-study, the
 Copilot agreement monitor is around 200 lines, and the generated real-time C

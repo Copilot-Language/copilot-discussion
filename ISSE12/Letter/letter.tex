@@ -1,77 +1,80 @@
-\documentclass{letter}
-  \signature{Lee Pike}
-  \address{Lee Pike \\ 421 SW 6th Ave, Suite 300 \\ Portland OR. 97204} 
+\documentclass{letter} \signature{Lee Pike} \address{Lee Pike \\ 421 SW 6th Ave,
+  Suite 300 \\ Portland OR. 97204}
   \begin{document}
    \begin{letter}{Editors \\ Innovations in Systems and Software Engineering} 
    \opening{Dear Sirs:}
 
-    We would like to thank the reviewers for their comments and the
-    opportunity to improve both the presentation and content of our
-    paper.  In response, we have made a number of revisions.  Our response to each of the reviewers comment are given below.
+    We would like to thank the reviewers for their comments and the opportunity
+    to improve both the presentation and content of our paper.  In response, we
+    have made a number of revisions.  Our response to each of the reviewers
+    comment are given below.
 
 
 {\bf Responses to Requested Revisions}
 \begin{description}
-\item[Requested Revision] Discuss the notation for external variables in more detail. 
+\item[Requested Revision] Discuss the notation for external variables in more
+  detail.
 \item[Response] Several sentences were added providing more detail.
 \item[Requested Revision] Provide more detail on variable sharing.
-\item[Response] TBD
-\item[Requested Revision] Include further discussion on eDSL efficiency. 
-\item[Response] TBD
-\item[Requested Revision] Give explanation of Haskell syntax.  
-\item[Response] Text has been added throughout to explain Haskell syntax that may be unfamiliar to some programmers, but there is a general assumption that the reader understands the style of programming in modern typed functional programming languages such as ML, OCAML, Haskell, Clean, etc. as some exposure to this style of programming is now included in most graduate CS programs.
-\item[Requested Revision] For the definition of observer, why single quotes on one example and double quoted on another.
+\item[Response] Done.
+\item[Requested Revision] Include further discussion on eDSL efficiency.
+\item[Response] Discussion expanded.
+\item[Requested Revision] Give explanation of Haskell syntax.
+\item[Response] Text has been added throughout to explain Haskell syntax that
+  may be unfamiliar to some programmers, but there is a general assumption that
+  the reader understands the style of programming in modern typed functional
+  programming languages such as ML, OCAML, Haskell, Clean, etc. as some exposure
+  to this style of programming is now included in most graduate CS programs.
+\item[Requested Revision] For the definition of observer, why single quotes on
+  one example and double quoted on another.
 \item[Response] Corrected to be double quoted on both examples.
 \item[Requested Revision] Add comments to code in the section on examples.
-\item[Response] TBD
-\item[Requested Revision] Correct misspellings on pages 13 and 18 and capitalized Boyer-More for reference 15.
+\item[Response] Revised section.
+\item[Requested Revision] Correct misspellings on pages 13 and 18 and
+  capitalized Boyer-More for reference 15.
 \item[Response] Done.
-\item[Requested Revision] Add figure to the paper to show the flow of the toolchain and better illustrate structure of the paper.
-\item[Response] A new introduction to the toolchain section has been added including a figure. We believe this makes the section easier to read.
-\item[Requested Revision] Assume/Guarantees of the methods should be highlighted. What can claimed about the generated code?
-\item[Response] Text was added briefly discussing this, but this is the main topic of a recent ICFP paper and we included a reference.
-\item[Requested Revision] Discuss scheduling solutions more thoroughly. 
-\item[Response] A paragraph added to the future work section includes a discussion of future work planed in scheduling aimed at the 
-\item[Requested Revision] Add more related work on eDSL and compare our work to their approach.
-\item[Response] TBD
+\item[Requested Revision] Add figure to the paper to show the flow of the
+  toolchain and better illustrate structure of the paper.
+\item[Response] A new introduction to the toolchain section has been added
+  including a figure. We believe this makes the section easier to read.
+\item[Requested Revision] Assume/Guarantees of the methods should be
+  highlighted. What can claimed about the generated code?
+\item[Response] Text was added briefly discussing this, but this is the main
+  topic of a recent ICFP paper and we included a reference.
+\item[Requested Revision] Discuss scheduling solutions more thoroughly.
+\item[Response] A paragraph added to the future work section includes a
+  discussion of future work planed in scheduling aimed at the
+\item[Requested Revision] Add more related work on eDSL and compare our work to
+  their approach.
+\item[Response] Added related work section.
 \item[Requested Revision] Discuss the assurance on the generated monitors.
-\item[Response] Added a paragraph to future work section that discusses the issues related to 178 as well as other approaches to assurance as suggested by Reviewer 3.
-\item[Requested Revision] 3.2  Time-Triggered  should become Time Triggered
-\item[Response]  AEG to LP I think we were right there 
+\item[Response] Added a paragraph to future work section that discusses the
+  issues related to 178 as well as other approaches to assurance as suggested by
+  Reviewer 3.
+\item[Requested Revision] 3.2 Time-Triggered should become Time Triggered
+\item[Response] We disagree with the reviewer here.
 \item[Requested Revision] Engine is not shut off --> engine is shut off
-\item[Response]  AEG to LP I think were were right there
-\item[Requested Revision] WCET is more complicated than just nominal execution time.
-\item[Response] AEG to LP I not sure how we want to answer that
-\item[Requested Revision] Add performance and timing comparisons for the case studies. 
-\item[Response] TBD AEG I think we have decided not to do this?
+\item[Response] We disagree with the reviewer (changed wording to make intent
+  more clear).
+\item[Requested Revision] WCET is more complicated than just nominal execution
+  time.
+\item[Response] Revised claim.
+\item[Requested Revision] Add performance and timing comparisons for the case
+  studies.
+\item[Response] We don't think there's remaining room in the paper for these (irrelevant to the point at hand, I think) details.
 \item[Requested Revision] Fix captions on plots.
-\item[Response]  TBD
-\item[Requested  Revision] Discuss the system integration issues relating to "bolting on" fault tolerance using the monitors.
-\item[Response] TBD
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision]
-\item[Response]
-\item[Requested Revision] LeTex hbox overflows and generally overflowing column limits.
-\item[Response] TBD (Mostly fixed now but we need to get them all or the publisher gets mad)
-\end{description}
-\vspace{1in}
-Sincerely,
+\item[Response] Done.
+\item[Requested Revision] Discuss the system integration issues relating to
+  "bolting on" fault tolerance using the monitors.
+\item[Response] Added text.
+\item[Requested Revision] LeTex hbox overflows and generally overflowing column
+  limits.
+\item[Response] egregious overflows fixed.
 
-\vspace{.3in}
-Lee Pike
+\end{description}
+\vspace{1in} Sincerely,
+
+\vspace{.3in} Lee Pike
 \end{letter}
 \end{document}
 
