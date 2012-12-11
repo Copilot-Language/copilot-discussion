@@ -95,8 +95,8 @@ externInput = extern "extern_input" Nothing
 \end{code}
 
 
-Further, we define where in a packet to access header fields and payload by
-defining a stream for each value drops values from the {\tt inputStream}
+Further, we define where in a packet to access header values and payload by
+defining a stream for each field, dropping values from the {\tt inputStream}
 according to Table~\ref{MAVLinkPacketTable}.
 
 \begin{code}
@@ -124,12 +124,12 @@ mavlinkCrcUpdate :: Stream Word32 -> Stream Word32
 mavlinkCrcUpdate r d =
 let d'   = d   .&. 0xff
     tmp  = d'  .^. ( r .&. 0xff )
-    tmp' = tmp .^. ( shiftL 4 tmp .&. 0xff )
-in foldl1 (.^.) [ shiftR 8 r,    shiftL 8 tmp'
-                , shiftL 3 tmp', shiftR 4 tmp' ]
+    tmp' = tmp .^. ( shiftL tmp 4 .&. 0xff )
+in foldl1 (.^.) [ shiftR r    8, shiftL tmp' 8
+                , shiftL tmp' 3, shiftR tmp' 4 ]
 \end{code}
-where \texttt{.\&.} and \texttt{.\^.} denote the bitwise and a exclusive or
-operators respectively.
+where \texttt{.\&.} and \texttt{.\textasciicircum.} denote bitwise
+{\tt and}, and exclusive {\tt or} operators respectively.
 
 Left-folding the {\tt mavlinkCrcUpdate} function with an initial value
 {\tt crcInit = 0xffff} into the initial array, starting from the second
@@ -149,16 +149,21 @@ crcStreams = nscanl
              ( drop 1 inputStream )
 \end{code}
 
+The {\tt crcStreams} function returns a Haskell list of Copilot
+streams. A stream at position $i$ in the list calculates the CRC
+value over the prefix of length $i$ of the {\tt inputStream}, excluding
+the possible start sign.
 
-The {\tt crcStreams} list contains the CRC values of all prefixes of a possible
-packet. The CRC over all values of a valid packet, excluding the start sign and
-including a valid CRC at the end of the packet, will be zero:
-
+Since Copilot is a synchronous language, with each new input byte
+sampled from the C program in a tick, all stream values will be
+recalculated. In each tick we can check if we have a possible valid
+packet candidate. The CRC of a valid packet in the {\tt crcStreams}
+list at the position after a suspected packet CRC will be zero:
 
 \begin{code}
 crcIndex :: Stream Word32
 crcIndex = headerSize' + payloadLength
-      - startSequenceSize' + crcSize'
+             - startSequenceSize' + crcSize'
 
 crc :: Stream Word32
 crc = crcStreams !! crcIndex
@@ -168,23 +173,28 @@ crcValid = crc == 0
 \end{code}
 
 
-Given the definitions to check the CRC values of a packet, we can now
-check for valid packets:
-
+Given the definitions to check the CRC values of a packet, a boolean stream
+that signals valid packet candidates can be given by 2 more definitions
+\footnote{We could incorporate further analysis of the packets as
+  well, like checking for the correct length of certain MAVLink packet
+  types or inspection of the payload. Some of these tests could be
+  derived from the MAVLink XML protocol description automatically.}:
 
 \begin{code}
+startMatch :: Stream Bool
 startMatch  = inputStream == 0x55
+
+validPacket :: Stream Bool
 validPacket = startMatch && crcValid
 \end{code}
-
 
 The communication between an autopilot and a ground-station runs over
 a ZigBee link. In case of dropped radio packets, there is no guarantee
 a receiver will not (on reconnection of the radio link) interpret a
-wrong packet, i.e., the start sign {\tt 0x55} may appear anywhere
-in a packet and a following length/CRC pair can form a valid ``ghost
-packet'' (i.e., a packet that is contained within an actually sent packet or that spans
-multiple actually sent packets).
+wrong packet. The start sign {\tt 0x55} may appear anywhere in a
+packet and a following length/CRC pair can form a valid ``ghost
+packet'' (i.e., a packet that is contained within an actually sent
+packet or that spans multiple actually sent packets\todo{may quote http://www.usenix.org/events/woot11/tech/final\_files/Goodspeed.pdf ?}).
 
 We define a stream called {\tt analyzingPacket}, that signals a running
 analysis of a valid packet as:
