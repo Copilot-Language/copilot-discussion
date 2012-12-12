@@ -216,7 +216,7 @@ analyzingPacket = analyzingPacket' > 1
 \end{code}
 
 The {\tt analyzingPacket} stream uses a helper stream {\tt analyzingPacket'}
-as a counter, {analyzingPacket} stays true as long as the counter is greater
+as a counter, {\tt analyzingPacket} stays true as long as the counter is greater
 zero. If we are not yet analyzing a packet and the {\tt validPacket}
 signal becomes true, the counter is set to the value of the packet length
 field plus header and field CRC sizes. In any other case, the counter
