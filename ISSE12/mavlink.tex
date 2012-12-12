@@ -200,8 +200,8 @@ We define a stream called {\tt analyzingPacket}, that signals a running
 analysis of a valid packet as:
 
 \begin{code}
--- The analyzingPacket function signals if we recognized
--- a valid packet and have not reached the end yet
+-- The analyzingPacket signals True from start to the end
+-- of a valid packet
 analyzingPacket = analyzingPacket' > 1
   where analyzingPacket' = [ 0 ] ++ mux
                ( validPacket && not analyzingPacket )
@@ -215,10 +215,17 @@ analyzingPacket = analyzingPacket' > 1
                      ( analyzingPacket' - 1 ) )
 \end{code}
 
-We then can recognize ghost packets by checking for valid packets that appear
-while we are in the process of analyzing a packet, provided that {\tt
-  analyzingPacket} starts out on an actually sent packet and not on a ghost
-packet:
+The {\tt analyzingPacket} stream uses a helper stream {\tt analyzingPacket'}
+as a counter, {analyzingPacket} stays true as long as the counter is greater
+zero. If we are not yet analyzing a packet and the {\tt validPacket}
+signal becomes true, the counter is set to the value of the packet length
+field plus header and field CRC sizes. In any other case, the counter
+decrements until zero on each tick.
+
+We then can recognize ghost packets by checking for valid packets that
+appear while we are in the process of analyzing a packet, provided
+that {\tt analyzingPacket} starts out on an actually sent packet and
+not on a ghost packet:
 
 \begin{code}
 ghostPacket = analyzingPacket && validPacket
