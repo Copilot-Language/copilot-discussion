@@ -93,7 +93,7 @@ failure in our test hardware implementation; a fully fault-tolerant
 system would execute a clock-synchronization algorithm.)
 
 % Each node samples its two sensors (the shared and a local one) at a rate of 128Hz.
-Each node samples its two sensors (the shared and a local one) at a rate of 16Hz.
+Each node samples its two sensors (the shared sensor and a local one) at a rate of 16Hz.
 The microcontroller's timer interrupt that updates the global time also periodically calls
 a Copilot-generated monitor which samples the ADC C-variables out of the monitored program,
 conducts Byzantine agreements, and performs fault-tolerant votes on the values. After 

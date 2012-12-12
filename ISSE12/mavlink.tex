@@ -174,7 +174,7 @@ crcValid = crc == 0
 
 
 Given the definitions to check the CRC values of a packet, a boolean stream
-that signals valid packet candidates can be given by 2 more definitions
+that signals valid packet candidates can be given by two more definitions
 \footnote{We could incorporate further analysis of the packets as
   well, like checking for the correct length of certain MAVLink packet
   types or inspection of the payload. Some of these tests could be
@@ -194,7 +194,7 @@ a receiver will not (on reconnection of the radio link) interpret a
 wrong packet. The start sign {\tt 0x55} may appear anywhere in a
 packet and a following length/CRC pair can form a valid ``ghost
 packet'' (i.e., a packet that is contained within an actually sent
-packet or that spans multiple actually sent packets\todo{may quote http://www.usenix.org/events/woot11/tech/final\_files/Goodspeed.pdf ?}).
+packet or that spans multiple actually sent packets.
 
 We define a stream called {\tt analyzingPacket}, that signals a running
 analysis of a valid packet as:
@@ -342,12 +342,11 @@ updated--barometric altitude is) and causes the stair effect.
 
 
 \subsection{Discussion}
-The purpose of the case studies is to test the feasibility of using
-Copilot-generated monitors in a realistic setting to ``bolt on'' fault-tolerance
-to a system that otherwise lacks that capability.  Not only does Copilot allow
-one to synthesize fault-tolerance from high-level specifications, but it
-enforces modularity in the interface between the application and
-fault-tolerance.  
+The purpose of the case studies is to test the feasibility of using Copilot for
+avonics monitoring.  In the first case-study, Copilot-generated monitors in a
+that ``bolt on'' fault-tolerance to a system that otherwise lacks that
+capability.  In the second, Copilot allows us to synthesize protocol parsers and
+analyzers.
 
 To give a sense of code-sizes, in the pitot tube monitoring case-study, the
 Copilot agreement monitor is around 200 lines, and the generated real-time C
