@@ -240,7 +240,7 @@ ghostPacket = analyzingPacket && validPacket
 %% $1/2^{3*8}$. 
 
 We ran the {\tt ghostPacket} monitor on about 660 megabytes of
-binary MAVLink logs recorded during months of hardware-in-the-loop
+binary MAVLink logs recorded during several months of hardware-in-the-loop
 testing of an Ardupilot Mega in an Edge~540T subscale model. %% The expected number
 %% of ghost packets can be estimated as $660,000,000/2^{3*8} \approx 40$ In fact 
 The ghostPacket monitor fired a trigger 32 times.  
@@ -256,14 +256,14 @@ analyses the payload of {\tt GLOBAL\_POSITION\_INT} messages to retrieve a
 trajectory of flight:
 
 \begin{code}
-packet mId = validPacket && messageID == mId
+packetWithID mId = validPacket && messageID == mId
 
-packetWithLength mId pLen = packet mId
-                          && payloadLength == pLen
+packetWithIDLength mId pLen =
+    packetWithID mId && payloadLength == pLen
 
 -- the global position in integer values has 
 -- message id 73  and payload length 18
-globalPositionINT = packetWithLength 73 18
+globalPositionINT = packetWithIDLength 73 18
 \end{code}
 
 The first 12 bytes of the payload of a {\small \tt GLOBAL\_POSITION\_INT}
@@ -271,7 +271,7 @@ messages are interpreted as three {\tt Word32} values of latitude, longitude and
 altitude
 \footnote{Latitude and longitude in degrees, altitude in meters.}.
 Reconstruction of the position is done by 3 streams, globalPositionIntLat,
-globalPositionIntLon and globalPositionIntAlt:
+globalPositionIntLon and globalPositionIntAlt\footnote{Reconstructing signed 32-bit values of angles and altitudes out of the sampled unsigned 8-bit values is a feature that is not implemented in Copilot yet.}:
 
 \begin{code}
 s3 = ( .<<. ( constant 24 :: Stream Word32 ) )
