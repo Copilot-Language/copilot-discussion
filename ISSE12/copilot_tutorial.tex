@@ -29,7 +29,7 @@ $s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
 value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{fib}(0) = 0$,
 $s_{fib}(1) = 1$, $s_{fib}(2) = 1$, and so forth.
 
-Copilot declarations provide a type and a definition for an identifier.  For
+Copilot declarations provide an optional type and a definition for an identifier.  For
 example, 
 %
 \begin{code}
@@ -61,13 +61,13 @@ z = x == 10 && y < 200
 
 \noindent Here the streams {\tt x}, {\tt y}, and {\tt z} are simply
 \emph{constant streams} such that
-
-\begin{center}
-$\mathtt{x} \textnormal{ yields } \{10, 10, 10, \dots \}$,
-$\mathtt{y} \textnormal{ yields } \{100, 100, 100,  \dots \}$,
-$\mathtt{z} \textnormal{ yields } \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
-\end{center}
-
+$$
+\begin{array}{rcl}
+\mathtt{x} &\textnormal{ yields } &\{10, 10, 10, \dots \}\\
+\mathtt{y} &\textnormal{ yields } &\{100, 100, 100,  \dots \}\\
+\mathtt{z} &\textnormal{ yields } &\{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}
+\end{array}
+$$
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
 looking into the future of streams:
 %
@@ -593,7 +593,7 @@ local
 The local construct works similar to \emph{let}-bindings in Haskell.  For
 example, from a semantic point of view, the streams {\tt s1} and {\tt s2} in
 Figure~\ref{fig:explicit_sharing} are equivalent.  However, by sharing
-expression definitions, the size of a Copilot expression can be dramatically
+expression definitions, the size of the Copilot program can be dramatically
 reduced.  Printing the expressions results in something like the following:
 %
 \begin{code}
