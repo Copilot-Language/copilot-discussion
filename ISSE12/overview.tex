@@ -25,15 +25,18 @@ constraints using the acronym ``FaCTS'':
 
 The functionality constraint is common to all RV systems, and we will not
 discuss it further.  The certifiability constraint is at odds with
-aspect-oriented programming techniques, in which source code instrumentation
+aspect-oriented programming techniques, in which source-code instrumentation
 occurs across the code base---an approach classically taken in RV (e.g., the
 Monitor and Checking (MaC)~\cite{KimVBKLS99} and Monitor Oriented Programming
-(MOP)~\cite{ChenR05} frameworks).  For codes that are certified, instrumentation
-is not a feasible approach, since it requires costly reevaluation of the code.
-Source code instrumentation can modify both the control flow of the instrumented
-program as well as its timing properties.  Rather, an RV approach must isolate
-monitors in the sense of minimizing or eliminating the effects of monitoring on
-the observed program's control flow.
+(MOP)~\cite{ChenR05} frameworks).  While runtime verification is not currently
+considered in the context of certification, there are reasons for doing so,
+discussed by Rushby~\cite{rushbyrv}.  Not modifying the observed program could
+simplify the introduction of RV into certified systems, reducing the need to
+re-evaluate code that is being monitored.  Source code instrumentation can
+modify both the control flow of the instrumented program as well as its timing
+properties.  Rather, an RV approach must isolate monitors in the sense of
+minimizing or eliminating the effects of monitoring on the observed program's
+control flow.
 
 Timing isolation is also necessary for real-time systems to ensure that timing
 constraints are not violated by the introduction of RV.  Assuming a fixed upper

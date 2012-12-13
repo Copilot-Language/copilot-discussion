@@ -29,10 +29,23 @@ $s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
 value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{fib}(0) = 0$,
 $s_{fib}(1) = 1$, $s_{fib}(2) = 1$, and so forth.
 
+Copilot declarations provide a type and a definition for an identifier.  For
+example, 
+%
+\begin{code}
+x :: Stream Int32
+x = 5
+\end{code}
+%
+\noindent 
+gives the identifier {\tt x} the type {\tt Stream Int32} and defines {\tt x} to
+be 5.  All Copilot expressions have the type {\tt Stream t}, where {\tt t} is
+some base-type for the stream (we discuss Copilot types in
+Section~\ref{sec:types}).
+
 Constants as well as arithmetic, boolean, and relational operators are
 lifted to work pointwise on streams:
 
-\noindent
 %\begin{minipage}{0.3\textwidth}
 \begin{code}
 x :: Stream Int32
@@ -46,14 +59,13 @@ z = x == 10 && y < 200
 \end{code}
 %\end{minipage}
 
-
 \noindent Here the streams {\tt x}, {\tt y}, and {\tt z} are simply
-\emph{constant streams}:
+\emph{constant streams} such that
 
 \begin{center}
-$\mathtt{x} \leadsto \{10, 10, 10, \dots \}$,
-$\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
-$\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
+$\mathtt{x} \textnormal{ yields } \{10, 10, 10, \dots \}$,
+$\mathtt{y} \textnormal{ yields } \{100, 100, 100,  \dots \}$,
+$\mathtt{z} \textnormal{ yields } \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
 \end{center}
 
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
@@ -64,17 +76,16 @@ looking into the future of streams:
 drop :: Int -> Stream a -> Stream a
 \end{code}
 %
-where the type signature for the function is given in curried
-form after the double colon.  Here {\tt xs ++ s} prepends the list
-{\tt xs} at the front of the stream {\tt s}.  For example the stream
-{\tt w} is defined as follows, given our previous definition of {\tt x}:
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt
+  s}.  For example the stream {\tt w} is defined as follows, given our previous
+definition of {\tt x}:
 %
 \begin{code}
 w = [5,6,7] ++ x
 \end{code}
 %
 evaluates to the sequence
-$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
+$\{5, 6, 7, 10, 10, 10, \dots\}$.
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
   s}, returning the remainder of the stream.  
 For example we can skip the first two values of {\tt w}:
@@ -84,7 +95,7 @@ u = drop 2 w
 \end{code}
 %
 which yields the sequence
-$\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
+$\{7, 10, 10, 10, \dots\}$.
 
 \subsection{Streams as Lazy-Lists} \label{sec:stream}
 
@@ -581,10 +592,9 @@ local
 %
 The local construct works similar to \emph{let}-bindings in Haskell.  For
 example, from a semantic point of view, the streams {\tt s1} and {\tt s2} in
-Figure~\ref{fig:explicit_sharing} are semantically identical.  However, by
-sharing expression definitions, the size of a Copilot expression can be
-dramatically reduced.  Printing the expressions results in something like the
-following:
+Figure~\ref{fig:explicit_sharing} are equivalent.  However, by sharing
+expression definitions, the size of a Copilot expression can be dramatically
+reduced.  Printing the expressions results in something like the following:
 %
 \begin{code}
 s1 = (nats + nats) * (nats + nats)
@@ -593,8 +603,8 @@ s2 = let x = nats + nats in
 \end{code}
 %
 \noindent
-Note that in {\tt s1}, because the sharing is at the Haskell level, the
-expressions are inlined.
+Note that in {\tt s1}, because the sharing is at the \emph{Haskell} level, the
+expressions are inlined, resulting in replication in the resulting expression.
 
 \subsection{Extended Example: The Boyer-Moore Majority-Vote Algorithm}
 \label{subsec:boyer_moore}
@@ -751,23 +761,23 @@ signatures and the explicit sharing annotations.
 \end{figure*}
 
 
-As a framework for runtime verification, Copilot comes with a variety
-of tools to support the generation of runtime monitor code as well as
-to  assist in assurance of the monitors. The Copilot toolchain is depicted in
-Figure~\ref{fig:toolchain}.  A Copilot program is transformed into
-the Copliot Core language via  process called reification. An
-interpreter providing an executable semantics for the Core language is
-provided as an integral part of the toolchain. The interpreter can be
-used to prototype Copilot programs as well as for verification and
-validation purposes. Reified programs can be printed using the custom
-pretty-printing tool.  Currently, two backends supporting Atom and SBV  are
-included in the toolchain. Both tools translate Copilot Core language
-programs into a  Haskell-hosted EDSL for C code generation.  In
-addition, a custom Quickcheck engine and a  test harness are provided
-along with support for model checkers to  aide in verifying the
-generated C monitors.  We will demonstrate these tools and their usage
-in the remainder of this section.  A more thorough discussion about the
-verification approach can be found in~\cite{PikeWNG2012}.
+As a framework for runtime verification, Copilot comes with a variety of tools
+to support the generation of runtime monitor code as well as to assist in
+assurance of the monitors. The Copilot toolchain is depicted in
+Figure~\ref{fig:toolchain}.  A Copilot program is transformed into the Copliot
+Core language via process called reification. An interpreter providing an
+executable semantics for the Core language is provided as an integral part of
+the toolchain. The interpreter can be used to prototype Copilot programs as well
+as for verification and validation purposes. Reified programs can be printed
+using the custom pretty-printing tool.  Currently, two back-ends are included in
+the toolchain, which we describe in Section~\ref{sec:compiling}.Both back-ends
+translate Copilot Core-language programs into a Haskell-hosted embedded
+domain-specific language (eDSL) for C code
+generation.  In addition, a custom Quickcheck engine and a test harness are
+provided along with support for model checkers to aide in verifying the
+generated C monitors.  We will demonstrate these tools and their usage in the
+remainder of this section.  A more thorough discussion about the verification
+approach can be found in~\cite{PikeWNG2012}.
 
 %%Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
 %%two compilers targeting C, and a verifier front-end. In the following section, we will
@@ -806,7 +816,8 @@ Copilot program:
 %
 \begin{code}
 spec = do 
-  trigger "trigger1" (even nats) [arg nats, arg $ odd nats]
+  trigger "trigger1" (even nats) [ arg nats
+                                 , arg (odd nats)]
   trigger "trigger2" (odd nats) [arg nats]
 \end{code}
 % $
@@ -1090,7 +1101,7 @@ The above executes the generated programs for 20 executions.
 
 The verification depends on an open-source model-checker for C source-code
 originally developed at Carnegie Mellon University~\cite{cbmc}.  A license for
-the tool is available.~\footnote{\url{http://www.cprover.org/cbmc/LICENSE}.  It
+the tool is available.\footnote{\url{http://www.cprover.org/cbmc/LICENSE}.  It
   is the user's responsibility to ensure their use conforms to the license.}
 CBMC must be downloaded and installed separately; CBMC is actively maintained
 at the time of writing, and is available for Windows, Linux, and Mac OS.
