@@ -223,7 +223,7 @@ field plus header and field CRC sizes. In any other case, the counter
 decrements until zero on each tick.
 
 We then can recognize ghost packets by checking for valid packets that
-appear while we are in the process  of analyzing a packet, provided
+appear while we are in the process of analyzing a packet, provided
 that {\tt analyzingPacket} starts out on an actually sent packet and
 not on a ghost packet:
 
@@ -271,7 +271,7 @@ messages are interpreted as three {\tt Word32} values of latitude, longitude and
 altitude
 \footnote{Latitude and longitude in degrees, altitude in meters.}.
 Reconstruction of the position is done by 3 streams, globalPositionIntLat,
-globalPositionIntLon and globalPositionIntAlt\footnote{Reconstructing signed 32-bit values of angles and altitudes out of the sampled unsigned 8-bit values is a feature that is not implemented in Copilot yet.}:
+globalPositionIntLon and globalPositionIntAlt:
 
 \begin{code}
 s3 = ( .<<. ( constant 24 :: Stream Word32 ) )
