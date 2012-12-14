@@ -3,7 +3,7 @@
 The MAVLink (Micro Air Vehicle
 Link\footnote{\url{http://qgroundcontrol.org/mavlink/start}}) protocol consists
 of a set of messages to be sent between small air vehicles and ground
-stations. Althought it can be used to send messages on parameters like wind
+stations. Although it can be used to send messages on parameters like wind
 speed or attitude, the usual applications of MAVLink are in avionic systems with
 an autopilot. MAVLink is used by ground-station software packages, like
 QGroundControl, Happy Killmore Ground Control Station, the Ardupilot Mega
@@ -223,7 +223,7 @@ field plus header and field CRC sizes. In any other case, the counter
 decrements until zero on each tick.
 
 We then can recognize ghost packets by checking for valid packets that
-appear while we are in the process of analyzing a packet, provided
+appear while we are in the process  of analyzing a packet, provided
 that {\tt analyzingPacket} starts out on an actually sent packet and
 not on a ghost packet:
 
@@ -350,7 +350,7 @@ updated--barometric altitude is) and causes the stair effect.
 
 \subsection{Discussion}
 The purpose of the case studies is to test the feasibility of using Copilot for
-avonics monitoring.  In the first case-study, Copilot-generated monitors are
+avionics monitoring.  In the first case-study, Copilot-generated monitors are
 used to implement fault-tolerance mechanisms to decompose the problem of
 implementing a sensor system and implementing fault-tolerance.  In the second,
 Copilot allows us to synthesize protocol parsers and analyzers.
