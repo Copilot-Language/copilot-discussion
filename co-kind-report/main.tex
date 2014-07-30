@@ -1,0 +1,49 @@
+\documentclass{nia}
+
+\usepackage{cite,xcolor}
+\usepackage{epsfig}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{wrapfig}
+
+\usepackage{ccfonts} 
+\usepackage[T1]{fontenc}
+\newcommand{\jonathan}[1]{\textcolor{magenta}{[Jonathan  writes: #1]}}
+\newcommand{\alwyn}[1]{\textcolor{blue}{[Alwyn writes: #1]}}
+\newcommand{\draft}[1]{\textcolor{red}{\sf [Draft note: #1]}}
+
+\begin{document}
+
+\title[This work was supported by the National Aeronautics
+and Space Administration, Langley Research Center under the Research
+Cooperative Agreement No. NCC-1-02043.]
+{Verification of Copilot}
+\author{Jonathan Laurent\address{\'{E}cole Normale Sup\'{e}rieure Paris Email:~\email{jlaurent@clipper.ens.fr}}  and 
+        Alwyn Goodloe  \address{NASA Langley Research Center Email:~\email{agoodloe@nasa.gov}}} 
+
+
+\begin{abstract}
+
+Put abstract here
+\end{abstract}
+
+
+\input{introduction}
+
+\input{mc-kind}
+
+\input{overview}
+
+\input{IL}
+
+\input{sexpr}
+
+\input{transition}
+
+\input{interface}
+
+\input{conclusion} 
+
+\bibliography{biblio,mybib}
+
+\end{document}
