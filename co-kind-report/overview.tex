@@ -1,16 +1,287 @@
 \section{Implementation Overview}~\label{sec:overview}
 
-In this section provide an overview of the implementation
+\emph{copilot-kind} is aimed at checking \textbf{safety properties} on
+Copilot programs. Intuitively, a safety property is a property which
+express the idea that \emph{nothing bad can happen}. In particular, any
+invalid safety property can be disproved by a finite execution trace of
+the program called a \textbf{counterexample}. Safety properties are
+often opposed to \textbf{liveness} properties, which express the idea
+that \emph{something good will eventually happen}. The latters are out
+of the scope of \emph{copilot-kind}.
 
-A picture of how it realates to Copilot as a whole - maybe just make changes to the picture in the icfp paper to reflect the updated implementation
+Safety properties are simply expressed with standard boolean streams. In
+addition to triggers and observers declarations, it is possible to bind
+a boolean stream to a property name with the \texttt{prop} construct in
+the specification.
 
-Document the dataflow with text and picture
+For instance, here is a straightforward specification declaring one
+property :
+\begin{code}
+spec :: Spec
+spec = do
+  prop "gt0" (x > 0)
+  where
+    x = [1] ++ (1 + x)
+\end{code}
 
- 
-     -- IL-- SMTLib/S-expr --Yices
-    /
-Core 
-    \ 
-      -- Transition Systems -- Kind2
- 
+
+Let's say we want to check that \texttt{gt0} holds. For this, we use
+the function
+
+\begin{code}
+    prove :: Prover -> ProofScheme -> Spec -> IO ()
+\end{code}
+
+exported by \texttt{Copilot.Kind}. This function takes three
+arguments :
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  The prover we want to use. For now, two provers are available,
+  exported by the \texttt{Copilot.Kind.Light} and
+  \texttt{Copilot.Kind.Kind2} module.
+\item
+  A \emph{proof scheme}, which is a sequence of instructions like
+  \emph{check}, \emph{assume}, \emph{assert}\ldots{}
+\item
+  The Copilot specification
+\end{itemize}
+
+Here, we can just write
+\begin{code}
+prove (lightProver def) (check "gt0") spec
+\end{code}
+
+where \texttt{lightProver def} stands for the \emph{light prover} with
+default configuration.
+
+\subsubsection{The Prover interface}\label{the-prover-interface}
+
+The \texttt{Copilot.Kind.Prover} defines a general interface for
+provers. Therefore, it is really easy to add a new prover by creating a
+new object of type \texttt{Prover}. The latter is defined like this :
+
+\begin{code}
+data Cex = Cex
+
+type Infos = [String]
+
+data Output = Output Status Infos
+
+data Status
+  = Valid
+  | Invalid (Maybe Cex)
+  | Unknown
+  | Error
+  
+data Feature = GiveCex | HandleAssumptions
+  
+data Prover = forall r . Prover 
+  { proverName     :: String
+  , hasFeature     :: Feature -> Bool
+  , startProver    :: Core.Spec -> IO r
+  , askProver      :: r -> [PropId] -> PropId -> IO Output 
+  , closeProver    :: r -> IO () 
+  }
+
+\end{code}
+
+Each prover mostly has to provide a \texttt{askProver} function which
+takes as an argument * The prover descriptor * A list of assumptions * A
+conclusion
+
+and checks if the assumptions logically entail the conclusion.
+
+Two provers are provided by default : \texttt{Light} and \texttt{Kind2}.
+
+\paragraph{The light prover}\label{the-light-prover}
+
+The \emph{light prover} is a really simple prover which uses the Yices
+SMT solver with the \texttt{QF\_UFLIA} theory and is limited to prove
+\emph{k-inductive} properties, that is properties such that there exists
+some \emph{k} such that :
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  The property holds during the first \emph{k} steps of the algorithm.
+\item
+  From the hypothesis the property has held during \emph{k} consecutive
+  steps, we can prove it is still true one step further.
+\end{itemize}
+
+For instance, in this example
+
+\begin{code}
+spec :: Spec
+spec = do
+  prop "gt0"  (x > 0)
+  prop "neq0" (x /= 0)
+  where
+    x = [1] ++ (1 + x)
+\end{code}
+
+the property \texttt{"gt0"} is inductive (1-inductive) but the property
+\texttt{"neq0"} is not.
+
+The \emph{light prover} is defined in \texttt{Copilot.Kind.Light}. This
+module exports the 
+$$\texttt{lightProver :: Options -\textgreater{} Prover}$$ function which
+builds a prover from a record of type \texttt{Options} :
+
+\begin{code}
+data Options = Options 
+  { kTimeout  :: Integer
+  , onlyBmc   :: Bool
+  , debugMode :: Bool } 
+
+\end{code}
+Here,
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  \texttt{kTimeout} is the maximum number of steps of the k-induction
+  algorithm the prover executes before giving up.
+\item
+  If \texttt{onlyBmc} is set to \texttt{True}, the prover will only
+  search for counterexamples and won't try to prove the properties
+  discharged to it.
+\item
+  If \texttt{debugMode} is set to \texttt{True}, the SMTLib queries
+  produced by the prover are displayed in the standard output.
+\end{itemize}
+
+\texttt{Options} is an instance of the \texttt{Data.Default} typeclass :
+
+\begin{code}
+instance Default Options where
+  def = Options 
+    { kTimeout  = 100
+    , debugMode = False 
+    , onlyBmc   = False }
+
+\end{code}
+
+Therefore, \texttt{def} stands for the default configuration.
+
+\paragraph{The Kind2 prover}\label{the-kind2-prover}
+
+The \emph{Kind2} prover uses the model checker with the same name, from
+Iowa university. It translates the Copilot specification into a
+\emph{modular transition system} (the Kind2 native format) and then
+calls the \texttt{kind2} executable.
+
+It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
+a $$\texttt{kind2Prover :: Options -\textgreater{} Prover}$$ where the
+\texttt{Options} type is defined as
+
+\begin{code}
+data Options = Options { bmcMax :: Int }
+\end{code}
+
+and where \texttt{bmcMax} corresponds to the \texttt{-\/-bmc\_max}
+option of \emph{kind2} and is equivalent to the \texttt{kTimeout} option
+of the light prover. Its default value is 0, which stands for infinity.
+
+\paragraph{Combining provers}\label{combining-provers}
+
+The
+$$\texttt{combine :: Prover -\textgreater{} Prover -\textgreater{} Prover}$$
+function lets you merge two provers A and B into a prover C which
+launches both A and B and returns the \emph{most precise} output. It
+would be interesting to implement other merging behaviours in the
+future. For instance, a \emph{lazy} one such that C launches B only if A
+has returns \emph{unknown} or \emph{error}.
+
+As an example, the following prover is used in \texttt{Driver.hs} :
+
+\begin{code}
+prover =
+  lightProver def {onlyBmc = True, kTimeout = 5} 
+  `combine` kind2Prover def
+\end{code}
+
+We will discuss the internals and the experimental results of these
+provers later.
+
+\subsubsection{Proof schemes}\label{proof-schemes}
+
+Let's consider again this example :
+
+\begin{code}
+spec :: Spec
+spec = do
+  prop "gt0"  (x > 0)
+  prop "neq0" (x /= 0)
+  where
+    x = [1] ++ (1 + x)
+
+\end{code}
+and let's say we want to prove \texttt{"neq0"}. Currently, the two
+available solvers fail at showing this non-inductive property (we will
+discuss this limitation later). Therefore, we can prove the more general
+inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
+this, we use the proof scheme
+
+\begin{code}
+assert "gt0" >> check "neq0"
+\end{code}
+
+
+instead of just \texttt{check "neq0"}. A proof scheme is chain of
+primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
+operator. For now, the available primitives are :
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  \texttt{check "prop"} checks whether or not a given property is true
+  in the current context.
+\item
+  \texttt{assume "prop"} adds an assumption in the current context.
+\item
+  \texttt{assert "prop"} is a shortcut for
+  \texttt{check "prop" \textgreater{}\textgreater{} assume "prop"}.
+\item
+  \texttt{assuming :: {[}PropId{]} -\textgreater{} ProofScheme -\textgreater{} ProofScheme}
+  is such that \texttt{assuming props scheme} assumes the list of
+  properties \emph{props}, executes the proof scheme \emph{scheme} in
+  this context, and forgets the assumptions.
+\item
+  \texttt{msg "..."} displays a string in the standard output
+\end{itemize}
+
+We will discuss the limitations of this tool and a way to use it in
+practice later.
+
+\subsubsection{Some examples}\label{some-examples}
+
+Some examples are included in the \emph{examples} folder of the implementation. The \texttt{Driver.hs}
+contains the \texttt{main} function to run any example. Each other
+example file exports a specification \texttt{spec} and a proof scheme
+\texttt{scheme}. You can change the example being run just by changing
+one \emph{import} directive in \texttt{Driver.hs}.
+
+These examples include :
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  \texttt{Incr.hs} : a straightforward example in the style of the
+  previous one.
+\item
+  \texttt{Grey.hs} : an example where two different implementations of a
+  periodical counter are shown to be equivalent.
+\item
+  \texttt{BoyerMoore.hs} : a certified version of the majority vote
+  algorithm introduced in the Copilot tutorial.
+\item
+  \texttt{SerialBoyerMoore.hs} : a \emph{serial} version of the first
+  step of the \emph{Boyer Moore algorithm}, where a new element is added
+  to the list and the majority candidate is updated at each clock tick.
+  See the section \emph{Limitations related to the SMT solvers} for an
+  analysis of this example.
+\end{itemize}
 
