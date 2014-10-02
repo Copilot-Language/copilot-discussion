@@ -4,10 +4,46 @@
 \usepackage{epsfig}
 \usepackage{listings}
 \usepackage{amsmath}
+\usepackage{amsfonts}
 \usepackage{wrapfig}
+\usepackage{graphicx}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{url}
+\usepackage{alltt}
+\usepackage{tabularx}
+\usepackage{subfigure}
+\usepackage{fancyhdr}
+\usepackage{paralist}
 
 \usepackage{ccfonts} 
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+%BNF
+\newcommand{\bnf}{\ |\ }
+\newcommand{\indy}{\mathop{\parallel}}
+\newcommand{\mmid}{\mathrel{\mid}}
+
+\newcommand{\etal}{\textit{et.~al.}}
+\newcommand{\nnot}{\textsf{\ not \ }}
+\newcommand{\oor}{\textsf{\  or \ }}
+\newcommand {\aand}{ \textsf{\ and \ } }
+\newcommand {\tland}{{\ \wedge \ }}
+\newcommand {\tlor}{{\ \vee \ }}
+\newcommand {\tlnot}{{\neg}}
+\newcommand {\iimplies}{{\ \Rightarrow \ }}
+
+
+
 \usepackage[T1]{fontenc}
+\newenvironment{code}{\begin{alltt}\footnotesize}{\end{alltt}}
+\newenvironment{cols}{\begin{tabular}{m{3.6cm}|m{3.6cm}}{Haskell} &
+    {\scriptsize Copilot}\\\hline}{\end{tabular}}
+
+
 \newcommand{\jonathan}[1]{\textcolor{magenta}{[Jonathan  writes: #1]}}
 \newcommand{\alwyn}[1]{\textcolor{blue}{[Alwyn writes: #1]}}
 \newcommand{\draft}[1]{\textcolor{red}{\sf [Draft note: #1]}}
@@ -17,7 +53,7 @@
 \title[This work was supported by the National Aeronautics
 and Space Administration, Langley Research Center under the Research
 Cooperative Agreement No. NCC-1-02043.]
-{Verification of Copilot}
+{Verification of Copilot Monitors}
 \author{Jonathan Laurent\address{\'{E}cole Normale Sup\'{e}rieure Paris Email:~\email{jlaurent@clipper.ens.fr}}  and 
         Alwyn Goodloe  \address{NASA Langley Research Center Email:~\email{agoodloe@nasa.gov}}} 
 
@@ -29,21 +65,21 @@ Put abstract here
 
 
 \input{introduction}
-
+\input{copilot-intro}
 \input{mc-kind}
 
 \input{overview}
 
 \input{IL}
 
-\input{sexpr}
+%\input{sexpr}
 
-\input{transition}
+%\input{transition}
 
 \input{interface}
 
 \input{conclusion} 
 
-\bibliography{biblio,mybib}
+\bibliography{paper} 
 
 \end{document}

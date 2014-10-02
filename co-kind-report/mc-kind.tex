@@ -1,7 +1,132 @@
-\section{Model Checking and k-induction}~\label{sec:mck}
+\section{Bounded Model Checking,  k-induction, and IC3}~\label{sec:mck}
 
-In this section we shall have an short introduction to model-checking and k-induction
+Highly automated proof techniques are a necessary step for the
+widespread adoption of formal methods in the software industry.
+Probably the most widely used automated technique is {\em model
+  checking}, where a design is modeled as finite state machine, and
+specification of some property is formalized in a suitable logic.  The
+model checker traverses all of the 
+reachable states of the design in order to verify that the property
+holds.  If the property fails, then a sequence of states leading to
+the failure is produced as a {\em counterexample.} Our work applies
+the technique of {\em bounded model checking with satisfiability
+  solving}~\cite{ClarkeBounded01,ClarkeBounded03} to the problem of
+verifying Copilot monitors. Bounded model checking searchers for
+counterexamples of length bounded by some user provided integer $k.$
 
 
+\paragraph{Background and Definitions} Recall that a state transition system is a triple $(S,I,T),$
+where $S$ is a set of states, $I \subseteq S$ is the set of initial
+states and $T \subseteq S \times S $ is a transition relation over $S.$ A {\em kripke
+  structure} is a state transition system $(S,I,T,L)$  with a labeling function
+$L: S \rightarrow  \mathcal{P}(A)$.  A state $s 
+\in S$ is said to be {\em k-reachable} if there exists a path from an
+initial state $i\in I$ to $s$ of length at most $k.$ A state is said
+to be {\em reachable} if it is $k$-reachable for some $k\in \mathbb{N}.$
+Likewise, a set of states $Q \subset S$ is said to be reachable if
+there exists a reachable state in $S.$  Given a transition system, a
+set of states containing all the reachable states of the system is
+said to be {\em invariant.} In the classic procedure for model checking of Linear
+Temporal Logic (LTL) specifications, one computes the product of
+the kripke structure modeling the system and an transition system that
+represents the negation of the specification~\cite{ClarkeMC}. This product captures
+the counterexamples of executions violating the property. 
+
+\paragraph{Bounded Model Checking} Bounded model checking was developed to exploit the success of modern
+satisfiability (SAT) solvers and more recently satisfiability modulo
+theories (SMT) solvers. Bounded model checking only considers finite
+prefixes of length $k$  of a path that may be a witness acting as a
+counterexample. In practice, the value of $k$ is systematically
+increased to look for counterexamples in longer traces.  
+
+  
+Suppose we wish to apply bounded model checking to show that property
+$P$ holds in  the system modeled by the transition
+system $(S,I,T,L),$ where $P: S \rightarrow \mathbb{B}$ represents
+the predicate $P$ defined over the states of $S$ such that $P(s)$
+holds in states $s.$
+Formulating this as the following entailment:
+$$ I(s_0) \tland T(s_0,s_1) \tland \cdots \tland T(s_{k-1},s_k)
+\models P(s_k)$$
+for increasing values of $k.$ In the case of $\tlnot P$ is reachable,
+the SMT solver will provide an assignment for 
+$$I(s_0) \tland T(s_0,s_1) \tland T(s_{k-1},s_k) \tland \tlnot
+P(s_k)$$
+that can be used a counterexample. 
+
+\paragraph{$k$-induction}  In proving $P$ manually, a common technique
+is mathematical induction.  Sheeran~\etal~\cite{Sheeran00, EenS03} introduced 
+$k-$induction that generalizes the notion of induction to transition
+systems. $k$-induction has the advantage that it is well suited for SAT based bounded model checking.  To
+show $P$ holds in the transition system one must first show the base case holds, that
+is $P$ holds in all states
+reachable from an initial state in $k$ steps, and then show the
+induction step, that if $P$ holds in states $s_0,\ldots,s_{k-1}$ then
+it holds in state $s_k.$ The $k$-induction principle  is formally expressed in the following
+two entailments:
+\begin{eqnarray*}
+I(s_0) \tland T(s_0,s_1) \tland \cdots \tland T(s_{k-1},s_k) &\models&
+P(s_k) \\
+P(s_0) \tland \cdots \tland P(s_{k-1}) \tland T(s_0,s_1) \tland \cdots \tland T(s_{k-1},s_k) &\models&
+P(s_k) 
+\end{eqnarray*} 
+
+Property $P$ said to be a $k$-inductive property with respect to
+$(S,I,T)$ if there exists some $k \in \mathbb{N}^{0<}$ such that $P$
+satisfies the $k$-induction principle. As $k$ increases, weaker
+invariants may be proved. The trick is to find an invariant that is
+tractable by the SMT solver yet weak enough to satisfy the desired
+property.  
+
+\paragraph{Path Compression}  A major enhancement to the basic
+algorithm eliminates redundant searches via a procedure
+known as path compression~\cite{dMRS03} that strengthens the left-hand
+side of the entailments to eliminate paths that contain repeated configurations  (due to
+a cycle) or configurations that are equivalent.  
+
+If $P$ is not invariant, a
+counterexample exists such that:
+\begin{itemize}
+\item It is cycle-free
+\item Only its first state belongs to $I$ 
+\end{itemize}
+formalizing these constraints:
+$$C_k(s_0,\ldots,s_k) = \bigwedge_{i \neq j} s_i \neq s_j  \tland
+\bigwedge_{i > 0} \tlnot I(s_i),$$
+where equality is defined  pointwise over the state vectors.
+We can now strengthen the left hand side of the induction step
+entailment:
+$$\bigwedge^{k-1}_{i=0} P(s_i) \tland \bigwedge ^{k-1}_{i=0}
+T(s_i,s_{i+1}) \tland C_k(s_0, \ldots, s_k) \models P(s_k). $$
+Now, we can make the algorithm complete for bounded state spaces by
+checking the entailment 
+$$I(s_0) \tland T(s_0,s_1) \tland \cdots \tland T(s_{k-1}, s_{k})
+ \models \tlnot C_k(s_0,\ldots, s_{k-1})$$
+after the $k$-th bounded model checking iteration.  If this entailment
+holds, and $P$ is $k$-invariant, then $P$ is invariant. 
+
+\paragraph{Structural Abstraction}
+A limiting factor when it comes to applying $k-$induction in practice
+is the computing resources required by the SMT solver.  {\em
+  Structural abstraction}~\cite{ bh07structural} is a technique
+related to counterexample guided refinement (CEGAR)~\cite{Clarke2003CAR} that can reduce the size of the problem
+space and render $k-$induction tractable. The idea is to replace $T$
+by a weaker approximation $T'$ by removing some clauses. Then, 
+\begin{itemize}
+\item If $P$ is invariant for $T',$ then $P$ is also invariant for $T.$
+\item Otherwise, we use the counterexample produced by the SMT solver
+  to refine $T'$ by restoring some well-chosen clauses.
+\end{itemize}  
+Suppose a counterexample $(v_0,\ldots, v_k)$ is found for $T',$ we can
+check  whether or not
+$$\bigwedge_{i=0}^k  \bigwedge_{j=1}^n v_{ij} = s_{ij} \tland I(x)
+\tland \bigwedge_{i=0}^{k-1} T(s_i,s_{i+1})$$ 
+is satisfiable.  If it is, then the counterexample is valid for $T.$
+Otherwise, the counterexample is spurious.   It is possible to query
+the SMT solver to obtain an unsatisfiable core of state variables that
+candidates for refinement.
 
 
+\paragraph{IC3 Algorithm} 
+
+\alwyn{TBD} 

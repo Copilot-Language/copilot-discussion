@@ -1,5 +1,41 @@
 \section{Intermediate Language}~\label{sec:il}
 
-Describe the intermediate language
+Each prover first translates the Copilot specification into an
+intermediate representation best suited for model checking. Two
+representations are available :
+
+\begin{itemize}
+\item
+  The \textbf{IL} format : a Copilot program is translated into a list
+  of quantifier-free equations over integer sequences, implicitly
+  universally quantified by a free variable \emph{n}. Each sequence
+  roughly corresponds to a stream. This format is the one used in G.
+  Hagen's thesis~\cite{HagenPhD}. The \emph{light prover} works with this
+  format.
+\item
+  The \textbf{TransSys} format : a Copilot program is \emph{flattened}
+  and translated into a \emph{state transition system} {[}1{]}.
+  Moreover, in order to keep some structure in this representation, the
+  variables of this system are grouped by \emph{nodes}, each node
+  exporting and importing variables. The \emph{Kind2 prover} uses this
+  format, which can be easily translated into the native format.
+\end{itemize}
+
+\textbf{Cnub} is a simplified representation of a Copilot program where
+only the informations useful for SMT-based model checking are kept. For
+now, it is not used by the two standard provers but it could be used in
+the future as an intermediate step in the translation from
+\texttt{Copilot.Spec} to \texttt{IL.Spec} or \texttt{TransSys.Spec}.
+
+For each of these formats, there is a folder in
+\texttt{src/Copilot/Kind} which contains at least * \texttt{Spec.hs}
+where the format is defined * \texttt{PrettyPrint.hs} for pretty
+printing (useful for debugging) * \texttt{Translate.hs} where the
+translation process from \texttt{Core.Spec} is defined. 
+
+These three formats share a simplified set of types and operators,
+defined respectively in \texttt{Misc.Type} and \texttt{Misc.Operator}.
+
+
 
 

@@ -1,12 +1,36 @@
 \section{Introduction}~\label{sec:intro}
 
-In this section we shall put an introduction 
+%In this section we shall put an introduction 
 
-What are we trying to accomplish
+%What are we trying to accomplish
 
-Why
+%Why
 
-How  (by connecting copilot with model checking) 
+%How  (by connecting copilot with model checking) 
+
+Critical cyber-physical systems that require correct software behavior
+such as aircraft, spacecraft, medical devices, and nuclear reactors
+undergo extensive testing and may require certification by regulatory
+bodies before being deployed. Despite being constructed with thorough
+engineering processes there continue to be well documented incidents
+that demonstrate how hard it is to build robust software systems.
 
 
+Runtime verification (RV)~\cite{KimVBKLS99, monitors} is a family of
+approaches that employ {\em monitors} to observe the behavior of an
+executing system and to detect if it is consistent with a formal
+specification. Copilot is a RV framework that has been developed as
+part of a NASA project investigating applying RV to safety-critical
+hard real-time systems as a ``last line of defense.''  Given that RV
+acts in the role last defense  the natural question arises
+``who watches the watchmen?''  Nobody. For this reason, monitors for
+safety-critical systems cannot fail.  Consequently, the Copilot team
+has been investigating the question of how to produce monitors in
+which we can be assured of a high-degree of confidence that they will
+not fail when needed most. Earlier work focused on the light-weight
+verification of the monitor compilation
+process~\cite{pike-icfp-12}. The current report focuses on applying
+SMT-based model checking to ensure that the monitor itself is correct. 
 
+
+  
