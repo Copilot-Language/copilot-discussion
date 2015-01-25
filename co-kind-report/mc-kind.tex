@@ -4,6 +4,9 @@
 
 \alwyn{Jonathan: When I wrote this I tried to keep the notation as consistent as possible when expaining different ideas, but I hope I didn't over simplify things. When you read it make sure I didn't change some notation in a way that makes either makes it harder to read or just makes it false}
 
+
+\jonathan{Is model checking the \textit{most widely used} technique ? What about abstract interpretation ? Of course, modern techniques often consists in a mix of both of them but maybe your sentence is a bit radical. }
+
 Highly automated proof techniques are a necessary step for the
 widespread adoption of formal methods in the software industry.
 Probably the most widely used automated technique is {\em model
@@ -12,11 +15,18 @@ specification of some property is formalized in a suitable logic.  The
 model checker traverses all of the 
 reachable states of the design in order to verify that the property
 holds.  If the property fails, then a sequence of states leading to
-the failure is produced as a {\em counterexample.} Our work applies
+the failure is produced as a {\em counterexample.} \jonathantxt{The main difficulty with this technique is the huge size of usual search spaces. To tackle this, we use logical formula as a concise description for sets of states and the transition relation in the graph of states is decided by SMT solvers.} Our work applies
 the technique of {\em bounded model checking with satisfiability
   solving}~\cite{ClarkeBounded01,ClarkeBounded03} to the problem of
-verifying Copilot monitors. Bounded model checking searchers for
+verifying Copilot monitors. 
+
+
+\jonathan{I do not know the definition of \textit{bounded} model checking and it doesn't seem obvious what the term \textit{bounded} relates to. Indeed, in most of our examples, the search space is not bounded except if you consider integers to be bounded, which is usually not the case in most SMT theories. Anyway, even if it were, the search space is so large that it's a reasonable approximation of what infinity is :). Therefore, we should add a sentence to make this definition clearer.     }
+
+Bounded model checking searches for
 counterexamples of length bounded by some user provided integer $k.$
+\jonathan{Are you sure of this definition ? In fact, counterexamples are necessary bounded as a consequence of the fact that we restrain ourselves to \textit{safety} properties. Anyway, it could be a good idea to move here the definition of a safety property.}
+
 
 
 \paragraph{Background and Definitions} Recall that a state transition system is a triple $(S,I,T),$
@@ -67,7 +77,7 @@ If the base case holds, then show the inductive step that $P$ holds
 for some state $n$ and prove it holds for the next state $n+1:$
 $$ T(s_{n},s_{n+1}) \tland P(s_n) \models P(s_{n+1}).$$
 Unfortunately, it is often the case that the induction step cannot be
-done automatically.  Sheeran~\etal~\cite{Sheeran00, EenS03} introduced
+done automatically.  \jonathan{I don't think it is the main problem. In fact, if the inductive step holds, the SMT solver will \textit{always} figure it out if the theories we are using are decidable, although it could take too long. The main problem is that most interesting properties can't be proven by induction at all : most of them are not inductive.} Sheeran~\etal~\cite{Sheeran00, EenS03} introduced
 $k-$induction that has the advantage that it is well suited for SAT
 based bounded model checking.  One begins as with the standard
 induction, but if one cannot show the property to be true, the
@@ -89,7 +99,7 @@ P(s_k)
 Property $P$ said to be a $k$-inductive property with respect to
 $(S,I,T)$ if there exists some $k \in \mathbb{N}^{0<}$ such that $P$
 satisfies the $k$-induction principle. As $k$ increases, weaker
-invariants may be proved. The trick is to find an invariant that is
+invariants may be proved. \jonathantxt{If $P$ is a safety property that doesn't hold, then the first entailment will break for a finite $k$ and a counterexample will be provided.} The trick is to find an invariant that is
 tractable by the SMT solver yet weak enough to satisfy the desired
 property.  
 
@@ -100,16 +110,13 @@ known as path compression~\cite{dMRS03} that strengthens the left-hand
 side of the entailments to eliminate paths that contain repeated configurations  (due to
 a cycle) or configurations that are equivalent.  
 
-If $P$ is not invariant, a
-counterexample exists such that:
-\begin{itemize}
-\item It is cycle-free
-\item Only its first state belongs to $I$ 
-\end{itemize}
-formalizing these constraints:
+
+Indeed, if $P$ is not invariant, a
+counterexample exists such that it is cycle-free and only its first state belongs to $I$. More formally, these constraints hold for the path $s_0 \cdots s_k$ if and only if  $C_k(s_0,\ldots,s_k)$ hold, where :
+
 $$C_k(s_0,\ldots,s_k) = \bigwedge_{i \neq j} s_i \neq s_j  \tland
 \bigwedge_{i > 0} \tlnot I(s_i),$$
-where equality is defined  pointwise over the state vectors.
+and where equality is defined  pointwise over the state vectors.
 We can now strengthen the left hand side of the induction step
 entailment:
 $$\bigwedge^{k-1}_{i=0} P(s_i) \tland \bigwedge ^{k-1}_{i=0}
@@ -136,32 +143,51 @@ related to counterexample guided refinement
 (CEGAR)~\cite{Clarke2003CAR}, where if a counterexample is produced in
 the analysis of the abstract model that is inconsistent with the
 concrete model, the abstraction is refined to eliminate the
-counterexample.The idea is to replace $T$
+counterexample. The idea is to replace $T$
 by a weaker approximation $T'$ by removing some clauses. Then, 
 \begin{itemize}
 \item If $P$ is invariant for $T',$ then $P$ is also invariant for $T.$
 \item Otherwise, we use the counterexample produced by the SMT solver
   to refine $T'$ by restoring some well-chosen clauses.
 \end{itemize}  
-Suppose a counterexample $(v_0,\ldots, v_k)$ is found for $T',$ we can
-check  whether or not
-$$\bigwedge_{i=0}^k  \bigwedge_{j=1}^n v_{ij} = s_{ij} \tland I(x)
-\tland \bigwedge_{i=0}^{k-1} T(s_i,s_{i+1})$$ 
-is satisfiable.  If it is, then the counterexample is valid for $T.$
-Otherwise, the counterexample is spurious.   It is possible to query
+Indeed, suppose a counterexample $(v_0,\ldots, v_k)$ is found for $T'$. Then we can
+check whether or not
+%$$\bigwedge_{i=0}^k  \bigwedge_{j=1}^n v_{ij} = s_{ij} \tland I(s_0)
+%\tland \bigwedge_{i=0}^{k-1} T(s_i,s_{i+1})$$ 
+
+$$ I(v_0)
+\tland \bigwedge_{i=0}^{k-1} T(v_i,v_{i+1})$$ 
+
+\jonathan{I simplified the old formula, which I originally made too complex for subtle reasons (optimal use of incremental SMT solvers)}
+
+is satisfiable.  If it is, then the counterexample is valid for $T$.
+Otherwise, the counterexample is spurious. In that case, it is possible to query
 the SMT solver to obtain an unsatisfiable core of state variables that
 candidates for refinement.
 
 
+
+
+
+
+
 \paragraph{IC3 Algorithm} 
+
+\jonathan{Concerning this paragraph, I wonder if it's a good thing to give such a brief but formal description. I'm not sure anyone who don't already know the algorithm could understand more than the very basic idea just with this. In my case, it took me several much longer articles to understand the very subtle IC3 algorithm. Maybe we should give up trying to give a formal description, just give the main idea and a reference to a more detailed document in a shorter paragraph. What do you think ? I'm not sure I'm right, I'm really biased on this question.}
 
 Bounded model checking approaches such as $k$-induction suffer from
 the drawback of searching for a single strengthening of the invariant
 to be proved. This monolithic approach often  overwhelms the SAT
-solver due to its many iterations.  
+solver due to its many iterations. \jonathan{Moreover, we should add that k-induction technique is limited to k-inductive properties.} 
+
+
+
 
 Recall that a property $P$ is inductive if 
-$$ P(s_{k-1}) \tland T(s_{k-1},s_k) \models P(s_k). $$ Otherwise there
+\jonathan{I don't agree with your notations in this paragraph. Instead of :}
+$$ P(s_{k-1}) \tland T(s_{k-1},s_k) \models P(s_k). $$
+\jonathan{I would have written $$ P(s) \tland T(s, s') \models P(s'). $$ Indeed, you notation suggests the last equation is about a path and not about a single transition. The use of indexes is misleading I think. What is your opinion about this ? }
+ Otherwise there
 exists states $s_{k-1}$ and $s_k$ such that  
 $$P(s_{k-1}) \tland T(s_{k-1},s_k) \tland \tlnot P(s_k),$$
 where $s_{k-1}$ is said to be the {\em counterexample to

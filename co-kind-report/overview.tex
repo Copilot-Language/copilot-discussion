@@ -1,6 +1,13 @@
 \section{Implementation Overview}~\label{sec:overview}
 
-\emph{copilot-kind} is aimed at checking \textbf{safety properties} on
+
+\jonathan{I find the typography and layout of this part not very good. The indentation should be handled better and it would be great to display the code into boxes. Syntax highlighting would be a bonus. Could you do it Alwyn ? }
+
+
+%\jonathan{Is this really an implementation overview ? Shouldn't we add a section "Presentation of Copilot Kind"}
+\jonathan{Maybe we should move the definition of a safety property in the previous part}
+
+The library \emph{copilot-kind} is aimed at checking \textbf{safety properties} on
 Copilot programs. Intuitively, a safety property is a property which
 express the idea that \emph{nothing bad can happen}. In particular, any
 invalid safety property can be disproved by a finite execution trace of
@@ -99,18 +106,9 @@ Two provers are provided by default : \texttt{Light} and \texttt{Kind2}.
 
 The \emph{light prover} is a really simple prover which uses the Yices
 SMT solver with the \texttt{QF\_UFLIA} theory and is limited to prove
-\emph{k-inductive} properties, that is properties such that there exists
-some \emph{k} such that :
+\emph{k-inductive} properties.
 
-\begin{itemize}
-\itemsep1pt\parskip0pt\parsep0pt
-\item
-  The property holds during the first \emph{k} steps of the algorithm.
-\item
-  From the hypothesis the property has held during \emph{k} consecutive
-  steps, we can prove it is still true one step further.
-\end{itemize}
-
+\jonathan{Removed a redundant explanation of what k-induction is}
 For instance, in this example
 
 \begin{code}
@@ -257,6 +255,8 @@ We will discuss the limitations of this tool and a way to use it in
 practice later.
 
 \subsubsection{Some examples}\label{some-examples}
+
+\jonathan{I will add a deeper analysis of these examples.}
 
 Some examples are included in the \emph{examples} folder of the implementation. The \texttt{Driver.hs}
 contains the \texttt{main} function to run any example. Each other
