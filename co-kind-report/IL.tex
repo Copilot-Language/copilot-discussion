@@ -46,7 +46,89 @@ the future as an intermediate step in the translation of a copilot specification
 
 \subsection{The \textbf{Cnub} format}
 
+The complexity of the models that are built from Copilot specification is limited by the power and expressiveness of the theories handled by the current SMT solver. For instance, bounded integer arithmetic is often approximated by standard integer arithmetic as overflow problems are ignored and most real functions like trigonometric functions are not handled.
+
+\begin{comment}
+
+
+
+In the \textbf{Cnub} format, the stream structure is kept from the copilot core one. However, the following differences have to be emphasized :
+
+\begin{itemize}
+\item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \texttt{SMTLib} standard and defined in \texttt{Kind.Misc.Types} : \texttt{Bool}, \texttt{Integer} and \texttt{Real}.
+
+
+\item Uninterpreted functions are used to model the following behaviours :
+
+
+\begin{itemize}
+\item Non-deterministic values like input values
+\item Operators that are not handled like trigonometric functions
+\item The copilot expressions of type \texttt{ExternFun}, \texttt{ExternVar} and \texttt{ExternArray}
+\end{itemize}
+
+\item Some polymorphic operators like \texttt{abs} are specialized as SMT solvers sometimes doesn't support other polymorphic operators than the equality and inequality operators
+\end{itemize}
+
+
+\end{comment}
+
+The \textbf{Cnub} format is aimed at abstracting a copilot specification to a format relying on a simple theory including basic integer and real arithmetic and uninterpreted functions. As said before, using it as an intermediate step in the translation process to \textbf{IL} or \textbf{TransSys} would result in a significant simplification of the latter.
+
+
 \subsection{The \textbf{IL} format}
+
+In this format, a stream of type $a$ is modeled by a function of type $\mathbb{N} \to a$. Each stream definition is translated into a list of constraints on such functions. For instance, the stream definition :
+
+\begin{code}
+fib = [1, 1] ++ (fib + drop 1 fib)
+\end{code}
+
+is translated into a function $f : \mathbb{N} \to \mathbb{N}$ with the constraints :
+
+
+$$
+\begin{array}{c}
+f(0) = 1 \\
+f(1) = 1 \\
+\forall n . \; f(n + 2) = f(n + 1) + f(n)
+\end{array}
+$$
+
+
+\medskip
+
+This translation process is straightforward as the reification process~\cite{} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition : all stream definitions are written with the pattern
+\begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
+where \texttt{e} is an expression in which \texttt{(++)} does not occur. Indeed, in \texttt{Core.Spec}, a stream is defined as :
+\begin{code}
+data Stream = forall a. Typed a => Stream
+  { streamId         :: Id
+  , streamBuffer     :: [a]
+  , streamExpr       :: Expr a
+  , streamExprType   :: Type a }
+\end{code}
+and a simplified definition of the type \texttt{Expr a} is :
+\begin{code}
+data Expr a where
+  Const  :: Type a -> a -> Expr a
+  Drop   :: Type a -> DropIdx -> Id -> Expr a
+  Op2    :: Op2 a b c -> Expr a -> Expr b -> Expr c
+\end{code}
+Then, the translation algorithm is the following : for each stream equation \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e},\end{center}we introduce a new fresh function $f_s$ and the following constraints :
+
+\begin{itemize}
+\item $f_s(i) = s_i$ \quad for $1 \leq i \leq p$
+\item $\forall n . \; f_s(n + p) = \texttt{expr}_p \; e$
+\end{itemize}
+where $\texttt{expr}_p$ is defined in this way on expressions :
+\begin{itemize}
+\item $\texttt{expr}_p \; (\texttt{Const } v) = v$
+\item $\texttt{expr}_p \; (\texttt{Drop } g \; i) = f_g(n + p - i)$
+\item $\texttt{expr}_p \; (\texttt{Op2 } \oplus \; x_1 \; x_2) =  {expr}_p \; x_1 \; \oplus \; {expr}_p \; x_2 $
+\end{itemize}
+
+
 
 \subsection{The \textbf{TransSys} format}
 
