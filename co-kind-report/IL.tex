@@ -48,8 +48,7 @@ the future as an intermediate step in the translation of a copilot specification
 
 The complexity of the models that are built from Copilot specification is limited by the power and expressiveness of the theories handled by the current SMT solver. For instance, bounded integer arithmetic is often approximated by standard integer arithmetic as overflow problems are ignored and most real functions like trigonometric functions are not handled.
 
-\begin{comment}
-
+The \textbf{Cnub} format is aimed at abstracting a copilot specification to a format relying on a simple theory including basic integer and real arithmetic and uninterpreted functions. As said before, using it as an intermediate step in the translation process to \textbf{IL} or \textbf{TransSys} would result in a significant simplification of the latter.
 
 
 In the \textbf{Cnub} format, the stream structure is kept from the copilot core one. However, the following differences have to be emphasized :
@@ -58,22 +57,33 @@ In the \textbf{Cnub} format, the stream structure is kept from the copilot core 
 \item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \texttt{SMTLib} standard and defined in \texttt{Kind.Misc.Types} : \texttt{Bool}, \texttt{Integer} and \texttt{Real}.
 
 
-\item Uninterpreted functions are used to model the following behaviours :
+\item Uninterpreted functions are used to model operators that are not handled. Uninterpreted functions are abstract symbols with the property that : $$ \left( \forall i . \; x_i = y_i \right) \Longrightarrow f(x_1, \cdots, x_n) = f(y_1, \cdots, y_n). $$ They are handled by most SMT solvers.
 
+\item Non-deterministic functions are used to deal with extern values, which corresponds to the copilot constructions \texttt{ExternFun}, \texttt{ExternVar} and \texttt{ExternArray}. They could be seen as uninterpreted functions taking as an additional argument the current time. Indeed, between two clock ticks, they yield the same result if given the same argument. However, they can change at each clock tick.
+
+\end{itemize}
+
+
+\paragraph{Remark : some ideas to build more faithful models}
+
+Treating machine integers as unbounded integers and complex operators as uninterpreted functions might be an unacceptable approximation in many cases. The first problem could be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. This solution has many weaknesses :
 
 \begin{itemize}
-\item Non-deterministic values like input values
-\item Operators that are not handled like trigonometric functions
-\item The copilot expressions of type \texttt{ExternFun}, \texttt{ExternVar} and \texttt{ExternArray}
+\item It treats every program which causes an integer overflow as wrong, although this behaviour could be intended.
+\item It generates a great overhead for the proof engine.
 \end{itemize}
 
-\item Some polymorphic operators like \texttt{abs} are specialized as SMT solvers sometimes doesn't support other polymorphic operators than the equality and inequality operators
-\end{itemize}
+An intermediate solution could be to let the developper write annotations to the program so he can specify which bounds have to be checked automatically.
 
 
-\end{comment}
+\medskip
 
-The \textbf{Cnub} format is aimed at abstracting a copilot specification to a format relying on a simple theory including basic integer and real arithmetic and uninterpreted functions. As said before, using it as an intermediate step in the translation process to \textbf{IL} or \textbf{TransSys} would result in a significant simplification of the latter.
+The problem of complex operators like trigonometry operators is more difficult to handle. A seemingly good solution would be to give some classical properties of these operators as additional constraints for the SMT solvers. For instance, we could add the following constraint to any specification where the sine function appear : \[ \forall x . \; -1 \leq \sin x \leq 1 \]
+
+Unfortunately, quantifiers are not handled well by the current state of the art SMT solvers~\footnote{As we will discuss it later, it seems to us it is one of the main limitation of SMT-based techniques which keeps them from scaling well.}. An alternative would be to add automatically a specialized version of these constraints for each appropriate variable. For instance, we could add the constraint \[-1 \leq y \leq 1 \] for all variables $y$ such that we have a constraint \[ y = \sin x \] for $x$ any variable. Many refinements of this kind of techniques might be worth studying.
+
+
+
 
 
 \subsection{The \textbf{IL} format}
@@ -98,9 +108,13 @@ $$
 
 \medskip
 
-This translation process is straightforward as the reification process~\cite{} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition : all stream definitions are written with the pattern
+Specifications in the \textbf{IL} format can be printed out in the SMTLib format.
+
+\paragraph{The translation process} 
+
+The translation process is straightforward as the reification process~\cite{} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition. Indeed, all stream definitions are written with the pattern
 \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
-where \texttt{e} is an expression in which \texttt{(++)} does not occur. Indeed, in \texttt{Core.Spec}, a stream is defined as :
+where \texttt{e} is an expression in which \texttt{(++)} does not occur. In \texttt{Core.Spec}, a stream is defined as :
 \begin{code}
 data Stream = forall a. Typed a => Stream
   { streamId         :: Id
@@ -108,7 +122,7 @@ data Stream = forall a. Typed a => Stream
   , streamExpr       :: Expr a
   , streamExprType   :: Type a }
 \end{code}
-and a simplified definition of the type \texttt{Expr a} is :
+where the the field \texttt{streamBuffer} corresponds to \texttt{[$s_0$,...,$s_p$]} and the field \texttt{streamExpr} to \texttt{e}. Moreover, a simplified definition of the type \texttt{Expr} defined in \texttt{Core.Spec} is :
 \begin{code}
 data Expr a where
   Const  :: Type a -> a -> Expr a
@@ -129,6 +143,48 @@ where $\texttt{expr}_p$ is defined in this way on expressions :
 \end{itemize}
 
 
+\paragraph{A formal specification of the IL format} 
+
+
+The IL format is given by the  following grammar :
+
+\bigskip
+
+\begin{tabular}{llclr}
+& \textbf{spec} & = & \textbf{constr}$\,^*$ & \\
+& \textbf{constr} & = & \textbf{expr}$_{Bool}$ & \\
+$\forall \tau$ & \textbf{expr}$_{\tau}$ & = & $\left< \textit{const}_\tau  \right>$ &\\
+& & $\textbar$ & \textit{if} \textbf{expr}$_{Bool}$ \textit{then} \textbf{expr}$_{\tau}$ \textit{else} \textbf{expr}$_{\tau}$ \\
+
+& & $\textbar$ &\textbf{op}$^1_{\alpha, \tau}$ \textbf{expr}$_{\alpha}$ \\
+& & $\textbar$ & \textbf{expr}$_{\alpha}$ \textbf{op}$^2_{\alpha, \beta, \tau}$ \textbf{expr}$_{\beta}$ \\
+& & $\textbar$ & $\left< \textit{sid} \,  \right> \, \left(\,\textbf{sindex}\,\right)$ \\
+& & $\textbar$ & $\left< \textit{unintid} \,  \right> $ $\left(  \exists \alpha . \, \textbf{expr}_\alpha \right)^{*}$
+\\
+& \textbf{sindex} & = & $\left< \textit{int} \,  \right> $ & \\
+& & $\textbar$ & $ \textit{n} +  \left< \textit{int} \,  \right> $ & \\
+
+
+& $\cdots$ & & \\
+&&& \\
+
+& \textbf{op}$^2_{Int, Int, Int}$ & = & $+ \,\textbar \, - \,\textbar\, *  \,\textbar\, mod  \,\textbar\, div  \,\textbar\, \cdots $ & \\
+& \textbf{op}$^2_{Int, Int, Bool}$ & = & $< \,\textbar \, \leq \,\textbar\, \geq \,\textbar\, >  \,\textbar\, =  \,\textbar\, \cdots $ & \\
+&&& \\
+& $\cdots$ & & \\
+&&& \\
+\end{tabular}
+
+\medskip
+
+Therefore, a specification is a list of constraints, a constraint being an boolean expression. Each expression is parametrized by its type, which belongs to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$ and consists in a constant, an \textit{if-then-else} construction, other expressions glued by an operator, or :
+
+\begin{itemize}
+\item The value of a stream at a given time. It consists in an identifier \textit{sid} and an index. The index is either an integer constant or an expression matching the pattern $ \textit{n} +  \left< \textit{int} \,  \right> $, $n$ being an integer variable by which each constraint is implicitly universally quantified.
+
+\item The application of an uninterpreted function, which identifier is given, to a list of arguments.
+\end{itemize}
+To access a full list of the operators supported by \textit{copilot-kind}, see the module \texttt{Kind.Misc.Operators}.
 
 \subsection{The \textbf{TransSys} format}
 
