@@ -18,7 +18,7 @@ representations are available :
   Hagen's thesis~\cite{HagenPhD}. The \emph{light prover} works with this
   format.
 \item
-  The \textbf{TransSys} format : a modular representation of a \emph{state transition system} \cite{} The \emph{Kind2 prover} uses this
+  The \textbf{TransSys} format : a modular representation of a \emph{state transition system} \cite{} The \emph{Kind2 prover} uses thisitio
   format, which is similar to Kind2's native format.
 \end{itemize}
 
@@ -48,18 +48,18 @@ the future as an intermediate step in the translation of a copilot specification
 
 The complexity of the models that are built from Copilot specification is limited by the power and expressiveness of the theories handled by the current SMT solver. For instance, bounded integer arithmetic is often approximated by standard integer arithmetic as overflow problems are ignored and most real functions like trigonometric functions are not handled.
 
-The \textbf{Cnub} format is aimed at abstracting a copilot specification to a format relying on a simple theory including basic integer and real arithmetic and uninterpreted functions. As said before, using it as an intermediate step in the translation process to \textbf{IL} or \textbf{TransSys} would result in a significant simplification of the latter.
+The \textbf{Cnub} format is aimed at abstracting a copilot specification in a format relying on a simple theory including basic integer and real arithmetic and uninterpreted functions. As said before, using it as an intermediate step in the translation process to \textbf{IL} or \textbf{TransSys} would result in a significant simplification of the latter.
 
 
-In the \textbf{Cnub} format, the stream structure is kept from the copilot core one. However, the following differences have to be emphasized :
+In the \textbf{Cnub} format, the stream structure is kept from the copilot core. However, the following differences have to be emphasized :
 
 \begin{itemize}
 \item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \texttt{SMTLib} standard and defined in \texttt{Kind.Misc.Types} : \texttt{Bool}, \texttt{Integer} and \texttt{Real}.
 
 
-\item Uninterpreted functions are used to model operators that are not handled. Uninterpreted functions are abstract symbols with the property that : $$ \left( \forall i . \; x_i = y_i \right) \Longrightarrow f(x_1, \cdots, x_n) = f(y_1, \cdots, y_n). $$ They are handled by most SMT solvers.
+\item \textit{Uninterpreted functions} are used to model operators that are not handled. Uninterpreted functions are abstract symbols with the property that : $$ \left( \forall i . \; x_i = y_i \right) \Longrightarrow f(x_1, \cdots, x_n) = f(y_1, \cdots, y_n). $$ They are provided by most SMT solvers.
 
-\item Non-deterministic functions are used to deal with extern values, which corresponds to the copilot constructions \texttt{ExternFun}, \texttt{ExternVar} and \texttt{ExternArray}. They could be seen as uninterpreted functions taking as an additional argument the current time. Indeed, between two clock ticks, they yield the same result if given the same argument. However, they can change at each clock tick.
+\item \textit{Non-deterministic} functions are used to deal with extern values, which corresponds to the copilot constructions \texttt{ExternFun}, \texttt{ExternVar} and \texttt{ExternArray}. They could be seen as uninterpreted functions taking as an additional argument the current time. Indeed, between two clock ticks, they yield the same result if given the same argument. However, they can change at each clock tick.
 
 \end{itemize}
 
@@ -73,14 +73,14 @@ Treating machine integers as unbounded integers and complex operators as uninter
 \item It generates a great overhead for the proof engine.
 \end{itemize}
 
-An intermediate solution could be to let the developper write annotations to the program so he can specify which bounds have to be checked automatically.
+An intermediate solution could be to let the developper annotate the program so he can specify which bounds have to be checked automatically.
 
 
 \medskip
 
-The problem of complex operators like trigonometry operators is more difficult to handle. A seemingly good solution would be to give some classical properties of these operators as additional constraints for the SMT solvers. For instance, we could add the following constraint to any specification where the sine function appear : \[ \forall x . \; -1 \leq \sin x \leq 1 \]
+The problem of complex operators like trigonometry operators is more difficult to handle. A seemingly good solution would be to give some classical properties of these operators as additional constraints for the SMT solvers. For instance, we could add the following constraint to any specification where the sine function appears : \[ \forall x . \; -1 \leq \sin x \leq 1 \]
 
-Unfortunately, quantifiers are not handled well by the current state of the art SMT solvers~\footnote{As we will discuss it later, it seems to us it is one of the main limitation of SMT-based techniques which keeps them from scaling well.}. An alternative would be to add automatically a specialized version of these constraints for each appropriate variable. For instance, we could add the constraint \[-1 \leq y \leq 1 \] for all variables $y$ such that we have a constraint \[ y = \sin x \] for $x$ any variable. Many refinements of this kind of techniques might be worth studying.
+Unfortunately, quantifiers are not handled well by the current state of the art SMT solvers.~\footnote{As we will discuss it later, it seems to us it is one of the main limitation of SMT-based techniques which keeps them from scaling well.} An alternative would be to add automatically a specialized version of these constraints for each appropriate variable. For instance, we could add the constraint \[-1 \leq y \leq 1 \] for all variables $y$ such that we have a constraint \[ y = \sin x \] for $x$ any variable. Many refinements of this kind of techniques might be worth studying.
 
 
 
@@ -89,14 +89,10 @@ Unfortunately, quantifiers are not handled well by the current state of the art 
 \subsection{The \textbf{IL} format}
 
 In this format, a stream of type $a$ is modeled by a function of type $\mathbb{N} \to a$. Each stream definition is translated into a list of constraints on such functions. For instance, the stream definition :
-
 \begin{code}
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{code}
-
 is translated into a function $f : \mathbb{N} \to \mathbb{N}$ with the constraints :
-
-
 $$
 \begin{array}{c}
 f(0) = 1 \\
@@ -104,7 +100,6 @@ f(1) = 1 \\
 \forall n . \; f(n + 2) = f(n + 1) + f(n)
 \end{array}
 $$
-
 
 \medskip
 
@@ -122,14 +117,14 @@ data Stream = forall a. Typed a => Stream
   , streamExpr       :: Expr a
   , streamExprType   :: Type a }
 \end{code}
-where the the field \texttt{streamBuffer} corresponds to \texttt{[$s_0$,...,$s_p$]} and the field \texttt{streamExpr} to \texttt{e}. Moreover, a simplified definition of the type \texttt{Expr} defined in \texttt{Core.Spec} is :
+where the field \texttt{streamBuffer} corresponds to \texttt{[$s_0$,...,$s_p$]} and the field \texttt{streamExpr} to \texttt{e}. Moreover, a simplified definition of the type \texttt{Expr} defined in \texttt{Core.Spec} is :
 \begin{code}
 data Expr a where
   Const  :: Type a -> a -> Expr a
   Drop   :: Type a -> DropIdx -> Id -> Expr a
   Op2    :: Op2 a b c -> Expr a -> Expr b -> Expr c
 \end{code}
-Then, the translation algorithm is the following : for each stream equation \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e},\end{center}we introduce a new fresh function $f_s$ and the following constraints :
+Then, the translation algorithm is the following. For each stream equation \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e},\end{center}we introduce a new fresh function $f_s$ and the following constraints :
 
 \begin{itemize}
 \item $f_s(i) = s_i$ \quad for $1 \leq i \leq p$
@@ -146,18 +141,23 @@ where $\texttt{expr}_p$ is defined in this way on expressions :
 \paragraph{A formal specification of the IL format} 
 
 
-The IL format is given by the  following grammar :
+An \textbf{IL} specification is given by :
+\begin{itemize}
+\item Some identifiers for stream functions and some uninterpreted function symbols
+\item A list of constraint between stream functions
+\item A list of properties, that is boolean stream functions which should be proved to be constant to \texttt{true}.
+Constraints are defined by the following grammar.
+\end{itemize}
 
 \bigskip
 
 \begin{tabular}{llclr}
-& \textbf{spec} & = & \textbf{constr}$\,^*$ & \\
 & \textbf{constr} & = & \textbf{expr}$_{Bool}$ & \\
-$\forall \tau$ & \textbf{expr}$_{\tau}$ & = & $\left< \textit{const}_\tau  \right>$ &\\
+$\forall \tau$ & \textbf{expr}$_{\tau}$ & = & $\left< \textit{const}\,_\tau  \right>$ &\\
 & & $\textbar$ & \textit{if} \textbf{expr}$_{Bool}$ \textit{then} \textbf{expr}$_{\tau}$ \textit{else} \textbf{expr}$_{\tau}$ \\
 
 & & $\textbar$ &\textbf{op}$^1_{\alpha, \tau}$ \textbf{expr}$_{\alpha}$ \\
-& & $\textbar$ & \textbf{expr}$_{\alpha}$ \textbf{op}$^2_{\alpha, \beta, \tau}$ \textbf{expr}$_{\beta}$ \\
+& & $\textbar$ & \textbf{expr}$_{\alpha}$ \textbf{op}$^2_{\alpha, \, \beta, \, \tau}$ \textbf{expr}$_{\beta}$ \\
 & & $\textbar$ & $\left< \textit{sid} \,  \right> \, \left(\,\textbf{sindex}\,\right)$ \\
 & & $\textbar$ & $\left< \textit{unintid} \,  \right> $ $\left(  \exists \alpha . \, \textbf{expr}_\alpha \right)^{*}$
 \\
@@ -177,7 +177,7 @@ $\forall \tau$ & \textbf{expr}$_{\tau}$ & = & $\left< \textit{const}_\tau  \righ
 
 \medskip
 
-Therefore, a specification is a list of constraints, a constraint being an boolean expression. Each expression is parametrized by its type, which belongs to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$ and consists in a constant, an \textit{if-then-else} construction, other expressions glued by an operator, or :
+Each expression is parametrized by its type, which belongs to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$ and consists in a constant, an \textit{if-then-else} construction or other expressions glued by an operator :
 
 \begin{itemize}
 \item The value of a stream at a given time. It consists in an identifier \textit{sid} and an index. The index is either an integer constant or an expression matching the pattern $ \textit{n} +  \left< \textit{int} \,  \right> $, $n$ being an integer variable by which each constraint is implicitly universally quantified.
@@ -187,6 +187,100 @@ Therefore, a specification is a list of constraints, a constraint being an boole
 To access a full list of the operators supported by \textit{copilot-kind}, see the module \texttt{Kind.Misc.Operators}.
 
 \subsection{The \textbf{TransSys} format}
+
+As recalled before, a state transition system is a triple $(S,I,T),$
+where $S$ is a set of states, $I \subseteq S$ is the set of initial
+states and $T \subseteq S \times S $ is a transition relation over $S$.
+
+
+Here, a state consists in the values of a finite set of variables, which types belong to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$. $I$ is encoded by a logical formula whose free variables correspond to the state variables and that holds for a state $q$ if and only if $q$ is an initial state. Similarly, the transition relation is given by a formula $T$ such that $T\left[\, q, \, q' \,\right]$ holds if and only if $q \rightarrow q'$. 
+
+
+The \textbf{TransSys} format is a modular encoding of such a state transition system. Related variables are grouped into \textit{nodes}, each node providing a distinct namespace and expressing some constraints between its variables. 
+
+
+
+\paragraph{Formal definition}
+
+Inside a node, a variable is referenced by a string identifier. Indeed, the corresponding \texttt{Var} type is defined as :
+\begin{code}
+data Var = Var {varName :: String}
+\end{code}
+Outside a node, a variable is referenced by a node identifier and an instance of \texttt{Var} :
+\begin{code}
+data ExtVar = ExtVar {extVarNode :: NodeId, extVarLocalPart :: Var} 
+\end{code}
+where \texttt{NodeId = String}. Then, the \texttt{Node} type is defined by :
+\begin{code}
+data Node = Node
+  { nodeId            :: NodeId
+  , nodeDependencies  :: [NodeId]
+  , nodeLocalVars     :: Map Var VarDescr
+  , nodeImportedVars  :: Bimap Var ExtVar 
+  , nodeConstrs       :: [Expr Bool] }
+\end{code} where :
+\begin{itemize}
+\item \texttt{nodeId} is the identifier of the node
+\item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, we can't refer inside a node to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
+\item \texttt{nodeDependencies} is the list of the nodes from which a variable is given a local alias. This information is redundant.
+\item \texttt{nodeLocalVars} is a dictionnary which binds each local variable to its descriptor. The type of descriptors \texttt{VarDescr} will be described later.
+\item \texttt{nodeConstrs} is a list of constraints on local variables.
+\end{itemize}
+A variable descriptor consists in a type and a definition :
+\begin{code}
+data VarDescr = forall t . VarDescr
+  { varType :: Type t
+  , varDef  :: VarDef t }
+\end{code}
+Note that in the same way as in \texttt{Copilot.Core}, {\sc gadt}s are used to achieve some additional type safety~\cite{}. The \texttt{VarDef} type is defined as :
+\begin{code}
+data VarDef t =
+    Pre t Var
+  | Expr (Expr t)
+  | Constrs [Expr Bool]
+\end{code}
+As we can see, a local variable can be defined
+\begin{itemize}
+\item as the previous value of another variable (\texttt{Pre} constructor)
+\item by an expression involving other variables (\texttt{Expr} constructor)
+\item implicitly by a serie of constraints (\texttt{Constrs} constructor)
+\end{itemize}
+Note that the last constructor can be used to achieve some non-determinism. For instance, a variable whose \texttt{varDef} field is \texttt{Constrs []} is left totally unconstrained.~\footnote{In fact, this is not exact as each constraint which is put in a \texttt{Constrs} constructor could have been put in the \texttt{nodeConstrs} field of the current node instead. However, this is to be avoided for readability and the \texttt{nodeConstrs} field should be left empty as often as possible.
+}. The expression type associated with the second constructor is defined as :
+\begin{code}
+data Expr t where
+  Const  :: Type t -> t -> Expr t
+  Ite    :: Type t -> Expr Bool -> Expr t -> Expr t -> Expr t
+  Op1    :: Type t -> Op1 x t -> Expr x -> Expr t
+  Op2    :: Type t -> Op2 x y t -> Expr x -> Expr y -> Expr t
+  VarE   :: Type t -> Var -> Expr t
+\end{code}
+Therefore, an expression is a combination of constants, operators, and local variable names.
+
+
+Finally, a specification in the \textbf{TransSys} format consists in a list of node and a dictionary binding property names to boolean variables which have to be shown constant equals to \texttt{true}.
+\begin{code}
+data Spec = Spec
+  { specNodes :: [Node]
+  , specProps :: Map PropId ExtVar }
+\end{code}
+
+
+\paragraph{Semantics of a transition system}
+We give a semantics to \textbf{TransSys} specifications by extracting from them a state transition system in the form of a list of variables and two boolean formulas $I$ and $T$. 
+
+The list of variables is simply a concatenation of the local variables of all nodes. Then, we define the formula $C$ as the concatenation of the fllowing clauses :
+
+
+\begin{itemize}
+\item 
+\item 
+\end{itemize}
+
+
+
+
+
 
 
 
