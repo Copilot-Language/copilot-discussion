@@ -74,7 +74,7 @@ The \texttt{Copilot.Kind.Prover} defines a general interface for
 provers. Therefore, it is really easy to add a new prover by creating a
 new object of type \texttt{Prover}. The latter is defined like this :
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Cex = Cex
 
 type Infos = [String]
@@ -97,7 +97,7 @@ data Prover = forall r . Prover
   , closeProver    :: r -> IO () 
   }
 
-\end{code}
+\end{lstlisting}
 
 Each prover mostly has to provide a \texttt{askProver} function which
 takes as an argument * The prover descriptor * A list of assumptions * A
@@ -116,14 +116,14 @@ SMT solver with the \texttt{QF\_UFLIA} theory and is limited to prove
 \jonathan{Removed a redundant explanation of what k-induction is}
 For instance, in this example
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 spec :: Spec
 spec = do
   prop "gt0"  (x > 0)
   prop "neq0" (x /= 0)
   where
     x = [1] ++ (1 + x)
-\end{code}
+\end{lstlisting}
 
 the property \texttt{"gt0"} is inductive (1-inductive) but the property
 \texttt{"neq0"} is not.
@@ -133,13 +133,12 @@ module exports the
 $$\texttt{lightProver :: Options -\textgreater{} Prover}$$ function which
 builds a prover from a record of type \texttt{Options} :
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Options = Options 
   { kTimeout  :: Integer
   , onlyBmc   :: Bool
   , debugMode :: Bool } 
-
-\end{code}
+\end{lstlisting}
 Here,
 
 \begin{itemize}
@@ -158,14 +157,14 @@ Here,
 
 \texttt{Options} is an instance of the \texttt{Data.Default} typeclass :
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 instance Default Options where
   def = Options 
     { kTimeout  = 100
     , debugMode = False 
     , onlyBmc   = False }
 
-\end{code}
+\end{lstlisting}
 
 Therefore, \texttt{def} stands for the default configuration.
 
@@ -180,9 +179,9 @@ It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
 a $$\texttt{kind2Prover :: Options -\textgreater{} Prover}$$ where the
 \texttt{Options} type is defined as
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Options = Options { bmcMax :: Int }
-\end{code}
+\end{lstlisting}
 
 and where \texttt{bmcMax} corresponds to the \texttt{-\/-bmc\_max}
 option of \emph{kind2} and is equivalent to the \texttt{kTimeout} option
@@ -200,11 +199,11 @@ has returns \emph{unknown} or \emph{error}.
 
 As an example, the following prover is used in \texttt{Driver.hs} :
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 prover =
   lightProver def {onlyBmc = True, kTimeout = 5} 
   `combine` kind2Prover def
-\end{code}
+\end{lstlisting}
 
 We will discuss the internals and the experimental results of these
 provers later.
@@ -213,7 +212,7 @@ provers later.
 
 Let's consider again this example :
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 spec :: Spec
 spec = do
   prop "gt0"  (x > 0)
@@ -221,16 +220,16 @@ spec = do
   where
     x = [1] ++ (1 + x)
 
-\end{code}
+\end{lstlisting}
 and let's say we want to prove \texttt{"neq0"}. Currently, the two
 available solvers fail at showing this non-inductive property (we will
 discuss this limitation later). Therefore, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
 this, we use the proof scheme
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 assert "gt0" >> check "neq0"
-\end{code}
+\end{lstlisting}
 
 
 instead of just \texttt{check "neq0"}. A proof scheme is chain of
