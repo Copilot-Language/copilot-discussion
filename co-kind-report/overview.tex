@@ -25,21 +25,24 @@ the specification.
 
 For instance, here is a straightforward specification declaring one
 property :
-\begin{code}
+%\begin{framed}
+\begin{lstlisting}[frame=single]
 spec :: Spec
 spec = do
   prop "gt0" (x > 0)
   where
     x = [1] ++ (1 + x)
-\end{code}
-
+\end{lstlisting}
+%\end{framed}
 
 Let's say we want to check that \texttt{gt0} holds. For this, we use
 the function
 
-\begin{code}
+
+\begin{lstlisting}[frame=single]
     prove :: Prover -> ProofScheme -> Spec -> IO ()
-\end{code}
+\end{lstlisting}
+
 
 exported by \texttt{Copilot.Kind}. This function takes three
 arguments :

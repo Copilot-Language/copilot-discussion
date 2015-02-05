@@ -11,47 +11,47 @@ operators are automatically promoted point-wise to the list level, much like in
 Lustre, a declarative language for embedded programming~\cite{lustre}.  For
 example, the Fibonacci sequence modulo $2^{32}$ can be written as follows in Haskell:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 fib :: [Word32]
 fib = [0,1] ++ zipWith (+) fib (drop 1 fib)
-\end{code}
+\end{lstlisting}
 %
 In Copilot, the equivalent definition is the following:
-\begin{code}
+\begin{lstlisting}[frame=single]
 fib :: Stream Word32
 fib = [0,1] ++ (fib + drop 1 fib)
-\end{code}
+\end{lstlisting}
 %
 Copilot overloads or redefines many standard operators from Haskell's Prelude
 Library.  Here is a Haskell and equivalent Copilot function that implements a
 latch (flip-flop) over streams---the output is the XOR of the input stream and
 the latch's previous output.  For example, for the input stream
 %
-\begin{code}
-T, F, F, T, F, F, T, F, F, ...
-\end{code}
+\begin{lstlisting}
+T, F, F, T, F, F, T, F, F,  ...
+\end{lstlisting}
 %
 {\tt latch} generates the stream
-\begin{code}
+\begin{lstlisting}
 F, T, T, T, F, F, F, T, T, T, ...
-\end{code}
+\end{lstlisting}
 %
 In Haskell, {\tt latch} can be defined
-\begin{code}
+\begin{lstlisting}[frame=single]
 latch :: [Bool] -> [Bool]
 latch x = out x
   where
   out ls   = [False] ++ zipWith xor ls (out ls)
   xor n m  = (n || m) && not (n && m)
-\end{code}
+\end{lstlisting}
 %
 and then in Copilot ({\tt xor} is a built-in operator for Copilot):
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 latch :: Stream Bool -> Stream Bool
 latch x = out
   where out = [False] ++ x `xor` out
-\end{code}
+\end{lstlisting}
 %
 The base types of Copilot over which streams are built include Booleans, signed
 and unsigned words of 8, 16, 32, and 64 bits, floats, and doubles. Type-safe
@@ -73,11 +73,11 @@ example, the following stream samples the C variable {\tt e0} of type {\tt
   uint8\_t} to create each new stream index.  If {\tt e0} takes the values {\tt
   2, 4, 6, 8, ...}  the stream {\tt ext} has the values {\tt 1, 3, 7, 13, ...}.
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 ext :: Stream Word8
 ext = [1] ++ (ext + extern "e0" interp)
   where interp = Just [2,4..]
-\end{code}
+\end{lstlisting}
 %
 We make the design decision to build interpreter values for external values
 into the language.  (If the user wishes not to provide interpreter values,
@@ -87,13 +87,13 @@ Sampling arrays and functions is similar (for space constraints, we omit an
 example of function sampling).  For example, the following stream samples an
 array with the prototype {\tt uint32\_t arr[3]}:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 arr :: Stream Word32
 arr = externArray "arr" idx 3 interp
   where idx :: Stream Word8
         idx    = [0] ++ (idx + 1) `mod` 2
         interp = Just (repeat [0,1,2])
-\end{code}
+\end{lstlisting}
 % $
 The interpreter takes a list of lists to represent possible array values.
 
@@ -101,7 +101,7 @@ Finally, the following stream samples the return value of an external function
 with the prototype {\tt int16\_t f(double x, bool y)} by calling the function
 with appropriately-typed arguments:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 func :: Stream Word16
 func = [3] ++ externFun "f" [ arg x, arg y ] interp
   where x :: Stream Double
@@ -109,7 +109,7 @@ func = [3] ++ externFun "f" [ arg x, arg y ] interp
         y :: Stream Double
         y = [5.0] ++ y * 2
         interp = Just (x + y)
-\end{code}
+\end{lstlisting}
 %
 Note that for functions, the interpreter takes a Copilot program over the input
 streams to the function.
@@ -119,10 +119,10 @@ streams to the function.
 Copilot has exactly one mechanism for output called \emph{triggers}.  For
 example, consider the following example trigger:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 trigger "trig" (fib `mod` 2 == 0)
   [ arg fib, arg (latch fib) ]
-\end{code}
+\end{lstlisting}
 A trigger has a guard that is a Boolean-valued Copilot stream, and a list of
 arguments, which are Copilot expressions.  A trigger is \emph{fired} exactly
 when its guard (stating that the current value from the {\tt fib} stream is
@@ -132,9 +132,9 @@ arguments.  For example, given the definition of {\tt fib} and {\tt latch}
 above, the prototype of the C-function implementing the trigger {\tt trig}
 defined above is
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 void trig(uint32_t, bool);
-\end{code}
+\end{lstlisting}
 %
 The definition of a trigger is implementation-dependent and up to
 the programmer to implement.
