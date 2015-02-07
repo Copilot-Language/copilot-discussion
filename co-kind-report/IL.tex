@@ -221,7 +221,7 @@ data Node = Node
 \end{code} where :
 \begin{itemize}
 \item \texttt{nodeId} is the identifier of the node
-\item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, we can't refer inside a node to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
+\item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, inside a node we can't refer to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
 \item \texttt{nodeDependencies} is the list of the nodes from which a variable is given a local alias. This information is redundant.
 \item \texttt{nodeLocalVars} is a dictionnary which binds each local variable to its descriptor. The type of descriptors \texttt{VarDescr} will be described later.
 \item \texttt{nodeConstrs} is a list of constraints on local variables.
@@ -241,11 +241,11 @@ data VarDef t =
 \end{code}
 As we can see, a local variable can be defined
 \begin{itemize}
-\item as the previous value of another variable (\texttt{Pre} constructor)
+\item as the previous value of another variable, an initial value being given too (\texttt{Pre} constructor)
 \item by an expression involving other variables (\texttt{Expr} constructor)
 \item implicitly by a serie of constraints (\texttt{Constrs} constructor)
 \end{itemize}
-Note that the last constructor can be used to achieve some non-determinism. For instance, a variable whose \texttt{varDef} field is \texttt{Constrs []} is left totally unconstrained.~\footnote{In fact, this is not exact as each constraint which is put in a \texttt{Constrs} constructor could have been put in the \texttt{nodeConstrs} field of the current node instead. However, this is to be avoided for readability and the \texttt{nodeConstrs} field should be left empty as often as possible.
+Note that the last constructor can be used to achieve some non-determinism. For instance, a variable whose \texttt{varDef} field is \texttt{Constrs []} is left totally unconstrained~\footnote{In fact, this is not exact as each constraint which is put in a \texttt{Constrs} constructor could have been put in the \texttt{nodeConstrs} field of the current node instead. However, this is to be avoided for readability and the \texttt{nodeConstrs} field should be left empty as often as possible.
 }. The expression type associated with the second constructor is defined as :
 \begin{code}
 data Expr t where
@@ -269,19 +269,379 @@ data Spec = Spec
 \paragraph{Semantics of a transition system}
 We give a semantics to \textbf{TransSys} specifications by extracting from them a state transition system in the form of a list of variables and two boolean formulas $I$ and $T$. 
 
-The list of variables is simply a concatenation of the local variables of all nodes. Then, we define the formula $C$ as the concatenation of the fllowing clauses :
+The list of variables is simply a concatenation of the local variables of all nodes. Then, we define the formula $C$ as the concatenation of the following clauses, for each node :
 
 
 \begin{itemize}
-\item 
-\item 
+\item A serie of equalities $a_i = b_i$ for each entry $(a_i, b_i)$ in \texttt{nodeImportedVars}
+\item Each constraint defined in \texttt{nodeConstrs}
+\item For each local variable $v$ defined in \texttt{nodeLocalVars} :
+
+\begin{itemize}
+\item If the \texttt{Expr} $e$ constructor is used, add the constraint $v = e$
+\item If the \texttt{Constrs cs} constructor is used, add the constraints \texttt{cs} 
+\item If the \texttt{Pre} constructor is used, add no constraint
+\end{itemize}
+
 \end{itemize}
 
 
+Then, we define a formula $T_0[\vec q, \vec q \,']$ where $\vec q$ is the vector of variables representing the current state. Moreover, $\vec q \,'$ is a vector containing the same variables, primed, and represents the \textit{next} state. $T_0$ is defined as the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre \_} $v$ :
+\begin{center} $u' = v$ \end{center}
+After this, we define a formula $I_0[\vec q]$ which is the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre} $a$ \_ :
+\begin{center} $u = a$ \end{center}
+Finally we define $I$ and $T$ as :
+\[  I[\vec q] =  I_0[\vec q] \;\wedge\; C[\vec q] \qquad T[\vec q, \; \vec q \, '] = T_0[\vec q, \; \vec q \,'] \, \wedge \, C[\vec q \, ']  \]
 
 
 
 
+\paragraph{Translation from the \texttt{Core} format to the \texttt{TransSys} format}
+
+This translation process is pretty straightforward : for each stream definition
+\begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
+we add a node with the same name as $s$ and the local variables $out_0, out_1, \cdots, \, out_p$ with the descriptors :
+
+\begin{itemize}
+\item $out_{i} = $  \texttt{Pre} $s_i$  $out_{i + 1}$
+\item $out_{p} = $  \texttt{Expr} $\tilde e$  where $\tilde e$ is a translation of $e$ in the \textbf{TransSys} expression format, which is quite similar to the core expression format. Moreover :
+
+\begin{itemize}
+\item Local variables in the core format can be expressed by adding variables in the current node.
+\item The core expression \texttt{Drop} $g$ $i$ is translated by $out_{p - i}$ if $g = s$. Otherwise, a local alias is defined for the variable $out_{p - i}$ of the node $g$ and is returned.
+\end{itemize}
+
+\end{itemize}
+
+\paragraph{Some transformations on modular transition systems} 
+%The transition system obtained by the previously discuddes translation process is perfectly consistent. However, it can't be directly translated into the Kind2 native file format. Indeed, it is natural to bind each node to a predicate but the Kind2 file format requires that each predicate only uses previously defined predicates. However, some nodes in our transition system could be mutually recursive. 
+
+The modular transition systems obtained after the translation process defined in the previous paragraph can't be printed out in the \texttt{Kind2} native format yet. For instance, some nodes could be mutually dependent whereas \texttt{Kind2} requires its predicates to be cycle-dependence free and written in topological order.
 
 
+In fact, the actual implementation design is aimed at splitting an otherwise longer and more complex translation process in a serie of simple program transformations. These transformations are defined in the \texttt{Kind.TransSys.Transform} module.
+
+\bigskip
+
+One of the most basic transformation consists in merging some nodes, that is replacing these nodes by a bigger one which contains the concatenation of their local variables. Some of them might have to be renamed to avoid name conflicts. This renaming process is made easier by the use of a specific monad defined in \texttt{Kind.Misc.Renaming}.
+
+The \texttt{removeCycles} :: \texttt{Spec -> Spec} transformation turns a \texttt{TransSys} specification into the \textit{most modular} specification with the same semantics which is dependence-cycle free. This function relies on the \texttt{mergeNodes} :: \texttt{[NodeId] -> Spec -> Spec} function previously discussed. The \texttt{removeCycles} function computes the strongly connected components of the dependency graph of a specification and merge each one into a single node. The complexity of this process is high in the worst case (the square of the total size of the system times the size of the biggest node) but good in practice as few nodes are to be merged in most practical cases.
+
+Note that, with the \texttt{mergeNodes} function, we can get for free the function
+\begin{code}
+inline :: Spec -> Spec
+inline spec = mergeNodes [nodeId n | n <- specNodes spec] spec
+\end{code}
+which discards all the structure of a modular transition system and turns it into a non-modular transition system with only one node.
+
+\bigskip
+
+
+Once the dependence-cycles have been discarded in a specification, a last transformation is to be applied before an output in the Kind2 native format can be produced. This transformation, whose signature is  \texttt{complete} :: \texttt{Spec -> Spec}, is a bit technical. To put it in a nutshell, it transforms a specification into a semantically equivalent one such that :
+
+\begin{itemize}
+\item The dependency graph is transitive, that is if A depends of B which depends of C then A depends on C.
+\item If a node depends on another one, it defines a local alias for all its variables.
+\end{itemize}
+This way, it is possible to see a node as a predicate on its variables whose definition makes a call to the predicates associated to the nodes of its dependency list. After this, a translation to the Kind2 native format is only a matter of syntax.
+
+\subsection{Some examples}
+
+\paragraph{A simple property about the Fibonacci sequence}
+
+The following specification :
+
+\begin{code}
+spec = do
+  prop "pos" (fib > 0)
+
+  where
+    fib :: Stream Word64
+    fib = [1, 1] ++ (fib + drop 1 fib)
+\end{code}
+can be translated into this IL specification :
+\begin{code}
+SEQUENCES
+    s0 : Int
+
+MODEL INIT
+    s0[0] = 1
+    s0[1] = 1
+
+MODEL REC
+    s0[n + 2] = s0[n] + s0[n + 1]
+
+PROPERTIES
+    'pos' : s0[n] > 0
+\end{code}
+Then, it is possible to use a SMT solver to prove \textit{"pos"}. For instance, here is the SMTLib code produced for the verification of the induction step :
+\begin{code}
+<step>  (set-logic QF_UFLIA)
+<step>  (declare-fun n () Int)
+<step>  (declare-fun s0 (Int) Int)
+<step>  (assert (= (s0 (+ n 2)) (+ (s0 (+ n 0)) (s0 (+ n 1)))))
+<step>  (assert (= (s0 (+ n 3)) (+ (s0 (+ n 1)) (s0 (+ n 2)))))
+<step>  (assert (> (s0 (+ n 0)) 0))
+<step>  (push 1)
+<step>  (assert (or false (not (> (s0 (+ n 1)) 0))))
+<step>  (check-sat)
+<step>  (pop 1)
+<step>  (assert (= (s0 (+ n 4)) (+ (s0 (+ n 2)) (s0 (+ n 3)))))
+<step>  (assert (> (s0 (+ n 1)) 0))
+<step>  (push 1)
+<step>  (assert (or false (not (> (s0 (+ n 2)) 0))))
+<step>  (check-sat)
+unsat
+<step>  (pop 1)
+\end{code}
+
+\bigskip
+
+Otherwise, the original Copilot specification could be translated into a modular transition system (shown here after the \texttt{removeCycles} and \texttt{complete} transformations are applied) :
+\begin{code}
+NODE 's0' DEPENDS ON []
+DEFINES
+    out : Int =
+        1 -> pre out.1
+    out.1 : Int =
+        1 -> pre out.2
+    out.2 : Int =
+        (out) + (out.1)
+
+NODE 'prop-pos' DEPENDS ON [s0]
+IMPORTS
+    (s0 : out) as 's0.out'
+    (s0 : out.1) as 's0.out.1'
+    (s0 : out.2) as 's0.out.2'
+DEFINES
+    out : Bool =
+        (s0.out) > (0)
+
+NODE 'top' DEPENDS ON [prop-pos, s0]
+IMPORTS
+    (prop-pos : out) as 'pos'
+    (s0 : out) as 's0.out'
+    (s0 : out.1) as 's0.out.1'
+    (s0 : out.2) as 's0.out.2'
+
+PROPS
+'pos' is (top : pos)
+\end{code}
+This system is translated into 
+
+\begin{code}
+(define-pred s0
+  ((out Int)
+   (out.1 Int)
+   (out.2 Int))
+  (init
+    (and
+      (= out 1)
+      (= out.1 1)
+      (= out.2
+        (+ out out.1))))
+  (trans
+    (and
+      (= (prime out) out.1)
+      (= (prime out.1) out.2)
+      (= (prime out.2)
+        (+ (prime out) (prime out.1))))))
+
+(define-pred prop-pos
+  ((out Bool)
+   (s0.out Int)
+   (s0.out.1 Int)
+   (s0.out.2 Int))
+  (init
+    (and
+      (= out
+        (> s0.out 0))
+      (s0.init s0.out s0.out.1 s0.out.2)))
+  (trans
+    (and
+      (= (prime out)
+        (> (prime s0.out) 0))
+      (s0.trans s0.out s0.out.1 s0.out.2 (prime s0.out) (prime s0.out.1) (prime s0.out.2)))))
+
+(define-pred top
+  ((pos Bool)
+   (s0.out Int)
+   (s0.out.1 Int)
+   (s0.out.2 Int))
+  (init
+    (prop-pos.init pos s0.out s0.out.1 s0.out.2))
+  (trans
+    (prop-pos.trans pos s0.out s0.out.1 s0.out.2 (prime pos) (prime s0.out) (prime s0.out.1) (prime s0.out.2))))
+
+(check-prop
+  ((pos pos)))
+\end{code}
+
+
+
+\paragraph{An example of transformations on transition systems}
+
+
+Let's consider this Copilot specification : 
+
+\begin{code}
+spec :: Spec
+spec = do
+  prop "prop" (a == c)
+
+  where
+
+    a :: Stream Word64
+    a = [1] ++ b
+    
+    b :: Stream Word64
+    b = [1] ++ a
+
+    c :: Stream Word64
+    c = [1] ++ c
+\end{code}
+Translated to the TransSys format, we get :
+\begin{code}
+NODE 's2' DEPENDS ON []
+DEFINES
+    out : Int =
+        1 -> pre out.1
+    out.1 : Int =
+        out
+
+NODE 's1' DEPENDS ON [s0]
+IMPORTS
+    (s0 : out) as 's0.out'
+DEFINES
+    out : Int =
+        1 -> pre out.1
+    out.1 : Int =
+        s0.out
+
+NODE 's0' DEPENDS ON [s1]
+IMPORTS
+    (s1 : out) as 's1.out'
+DEFINES
+    out : Int =
+        1 -> pre out.1
+    out.1 : Int =
+        s1.out
+
+NODE 'prop-prop' DEPENDS ON [s0, s2]
+IMPORTS
+    (s0 : out) as 's0.out'
+    (s2 : out) as 's2.out'
+DEFINES
+    out : Bool =
+        (s0.out) = (s2.out)
+
+NODE 'top' DEPENDS ON [prop-prop]
+IMPORTS
+    (prop-prop : out) as 'prop'
+
+PROPS
+'prop' is (top : prop)
+\end{code}
+As we can see, the nodes \textit{'s0'} and \textit{'s1'} are mutually dependent. A call to the \texttt{removeCycles} function merges them :
+\begin{code}
+NODE 's2' DEPENDS ON []
+DEFINES
+    out : Int =
+        1 -> pre out.1
+    out.1 : Int =
+        out
+
+NODE 's0-s1' DEPENDS ON []
+DEFINES
+    s0.out : Int =
+        1 -> pre s0.out.1
+    s0.out.1 : Int =
+        s1.out
+    s1.out : Int =
+        1 -> pre s1.out.1
+    s1.out.1 : Int =
+        s0.out
+
+NODE 'prop-prop' DEPENDS ON [s0-s1, s2]
+IMPORTS
+    (s0-s1 : s0.out) as 's0.out'
+    (s2 : out) as 's2.out'
+DEFINES
+    out : Bool =
+        (s0.out) = (s2.out)
+
+NODE 'top' DEPENDS ON [prop-prop]
+IMPORTS
+    (prop-prop : out) as 'prop'
+
+PROPS
+'prop' is (top : prop) 
+\end{code}
+At least, if we apply the \texttt{complete} function, we get :
+\begin{code}
+NODE 's2' DEPENDS ON []
+DEFINES
+    out : Int =
+        1 -> pre out.1
+    out.1 : Int =
+        out
+
+NODE 's0-s1' DEPENDS ON []
+DEFINES
+    s0.out : Int =
+        1 -> pre s0.out.1
+    s0.out.1 : Int =
+        s1.out
+    s1.out : Int =
+        1 -> pre s1.out.1
+    s1.out.1 : Int =
+        s0.out
+
+NODE 'prop-prop' DEPENDS ON [s0-s1, s2]
+IMPORTS
+    (s0-s1 : s0.out) as 's0.out'
+    (s0-s1 : s0.out.1) as 's0.out.1'
+    (s0-s1 : s1.out) as 's1.out'
+    (s0-s1 : s1.out.1) as 's1.out.1'
+    (s2 : out) as 's2.out'
+    (s2 : out.1) as 's2.out.1'
+DEFINES
+    out : Bool =
+        (s0.out) = (s2.out)
+
+NODE 'top' DEPENDS ON [prop-prop, s0-s1, s2]
+IMPORTS
+    (prop-prop : out) as 'prop'
+    (s0-s1 : s0.out) as 's0.out'
+    (s0-s1 : s0.out.1) as 's0.out.1'
+    (s0-s1 : s1.out) as 's1.out'
+    (s0-s1 : s1.out.1) as 's1.out.1'
+    (s2 : out) as 's2.out'
+    (s2 : out.1) as 's2.out.1'
+
+PROPS
+'prop' is (top : prop)
+\end{code}
+At least, if we had used \texttt{inline} instead of \texttt{complete . removeCycles}, we would have gotten :
+\begin{code}
+NODE 'top' DEPENDS ON []
+DEFINES
+    prop-prop.out : Bool =
+        (s0.out) = (s2.out)
+    s0.out : Int =
+        1 -> pre s0.out.1
+    s0.out.1 : Int =
+        s1.out
+    s1.out : Int =
+        1 -> pre s1.out.1
+    s1.out.1 : Int =
+        s0.out
+    s2.out : Int =
+        1 -> pre s2.out.1
+    s2.out.1 : Int =
+        s2.out
+
+PROPS
+'prop' is (top : prop-prop.out)
+\end{code}
 
