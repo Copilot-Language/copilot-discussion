@@ -89,7 +89,7 @@ data Status
   
 data Feature = GiveCex | HandleAssumptions
   
-data Prover = forall r . Prover 
+data Prover = forall r.Prover 
   { proverName     :: String
   , hasFeature     :: Feature -> Bool
   , startProver    :: Core.Spec -> IO r

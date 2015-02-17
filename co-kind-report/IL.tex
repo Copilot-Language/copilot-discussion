@@ -1,10 +1,5 @@
 \section{Intermediate Language}~\label{sec:il}
 
-\alwyn{Jonathan. This is where we need a lot of work. Since there isn't much in the way of documentation of the code so this section should spell out the syntax of the two formats as well as describe the translation algorithms. You might want to keep the description high level but include two small examples, but I will leave that up to you}
-
-\alwyn{Jonathan. If I remember correctly, the IL format is translated into SMTLIB s-expressions for YICES2 or something very close to that. I'm hoping add a connection to another back end can handle math even a lot of trig stuff, but that's all it does). This would allow us to combine the three provers in really cool ways I think. It will take some experimenting on my part, but will make a cool paper on how we can orchestate the three provers to verify small but rather complex monitors. This desire to do this is one of the reasons I want to get the two translations well documented so me or another student could make add the third prover.} 
-
-
 Each prover first translates the Copilot specification into an
 intermediate representation best suited for model checking. Two
 representations are available :
@@ -111,7 +106,7 @@ The translation process is straightforward as the reification process~\cite{} ha
 \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
 where \texttt{e} is an expression in which \texttt{(++)} does not occur. In \texttt{Core.Spec}, a stream is defined as :
 \begin{code}
-data Stream = forall a. Typed a => Stream
+data Stream = forall a.Typed a => Stream
   { streamId         :: Id
   , streamBuffer     :: [a]
   , streamExpr       :: Expr a
@@ -211,14 +206,15 @@ Outside a node, a variable is referenced by a node identifier and an instance of
 data ExtVar = ExtVar {extVarNode :: NodeId, extVarLocalPart :: Var} 
 \end{code}
 where \texttt{NodeId = String}. Then, the \texttt{Node} type is defined by :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Node = Node
   { nodeId            :: NodeId
   , nodeDependencies  :: [NodeId]
   , nodeLocalVars     :: Map Var VarDescr
   , nodeImportedVars  :: Bimap Var ExtVar 
   , nodeConstrs       :: [Expr Bool] }
-\end{code} where :
+\end{lstlisting} 
+where :
 \begin{itemize}
 \item \texttt{nodeId} is the identifier of the node
 \item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, inside a node we can't refer to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
@@ -227,18 +223,18 @@ data Node = Node
 \item \texttt{nodeConstrs} is a list of constraints on local variables.
 \end{itemize}
 A variable descriptor consists in a type and a definition :
-\begin{code}
-data VarDescr = forall t . VarDescr
+\begin{lstlisting}[frame=single]
+data VarDescr = forall t.VarDescr
   { varType :: Type t
   , varDef  :: VarDef t }
-\end{code}
+\end{lstlisting}
 Note that in the same way as in \texttt{Copilot.Core}, {\sc gadt}s are used to achieve some additional type safety~\cite{}. The \texttt{VarDef} type is defined as :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data VarDef t =
     Pre t Var
   | Expr (Expr t)
   | Constrs [Expr Bool]
-\end{code}
+\end{lstlisting}
 As we can see, a local variable can be defined
 \begin{itemize}
 \item as the previous value of another variable, an initial value being given too (\texttt{Pre} constructor)
@@ -247,23 +243,23 @@ As we can see, a local variable can be defined
 \end{itemize}
 Note that the last constructor can be used to achieve some non-determinism. For instance, a variable whose \texttt{varDef} field is \texttt{Constrs []} is left totally unconstrained~\footnote{In fact, this is not exact as each constraint which is put in a \texttt{Constrs} constructor could have been put in the \texttt{nodeConstrs} field of the current node instead. However, this is to be avoided for readability and the \texttt{nodeConstrs} field should be left empty as often as possible.
 }. The expression type associated with the second constructor is defined as :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Expr t where
   Const  :: Type t -> t -> Expr t
   Ite    :: Type t -> Expr Bool -> Expr t -> Expr t -> Expr t
   Op1    :: Type t -> Op1 x t -> Expr x -> Expr t
   Op2    :: Type t -> Op2 x y t -> Expr x -> Expr y -> Expr t
   VarE   :: Type t -> Var -> Expr t
-\end{code}
+\end{lstlisting}
 Therefore, an expression is a combination of constants, operators, and local variable names.
 
 
 Finally, a specification in the \textbf{TransSys} format consists in a list of node and a dictionary binding property names to boolean variables which have to be shown constant equals to \texttt{true}.
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Spec = Spec
   { specNodes :: [Node]
   , specProps :: Map PropId ExtVar }
-\end{code}
+\end{lstlisting}
 
 
 \paragraph{Semantics of a transition system}
@@ -273,7 +269,7 @@ The list of variables is simply a concatenation of the local variables of all no
 
 
 \begin{itemize}
-\item A serie of equalities $a_i = b_i$ for each entry $(a_i, b_i)$ in \texttt{nodeImportedVars}
+\item A series of equalities $a_i = b_i$ for each entry $(a_i, b_i)$ in \texttt{nodeImportedVars}
 \item Each constraint defined in \texttt{nodeConstrs}
 \item For each local variable $v$ defined in \texttt{nodeLocalVars} :
 
@@ -319,7 +315,7 @@ we add a node with the same name as $s$ and the local variables $out_0, out_1, \
 The modular transition systems obtained after the translation process defined in the previous paragraph can't be printed out in the \texttt{Kind2} native format yet. For instance, some nodes could be mutually dependent whereas \texttt{Kind2} requires its predicates to be cycle-dependence free and written in topological order.
 
 
-In fact, the actual implementation design is aimed at splitting an otherwise longer and more complex translation process in a serie of simple program transformations. These transformations are defined in the \texttt{Kind.TransSys.Transform} module.
+In fact, the actual implementation design is aimed at splitting an otherwise longer and more complex translation process in a series of simple program transformations. These transformations are defined in the \texttt{Kind.TransSys.Transform} module.
 
 \bigskip
 
@@ -328,10 +324,10 @@ One of the most basic transformation consists in merging some nodes, that is rep
 The \texttt{removeCycles} :: \texttt{Spec -> Spec} transformation turns a \texttt{TransSys} specification into the \textit{most modular} specification with the same semantics which is dependence-cycle free. This function relies on the \texttt{mergeNodes} :: \texttt{[NodeId] -> Spec -> Spec} function previously discussed. The \texttt{removeCycles} function computes the strongly connected components of the dependency graph of a specification and merge each one into a single node. The complexity of this process is high in the worst case (the square of the total size of the system times the size of the biggest node) but good in practice as few nodes are to be merged in most practical cases.
 
 Note that, with the \texttt{mergeNodes} function, we can get for free the function
-\begin{code}
+\begin{lstlisting}[frame=single]
 inline :: Spec -> Spec
 inline spec = mergeNodes [nodeId n | n <- specNodes spec] spec
-\end{code}
+\end{lstlisting}
 which discards all the structure of a modular transition system and turns it into a non-modular transition system with only one node.
 
 \bigskip
@@ -351,14 +347,14 @@ This way, it is possible to see a node as a predicate on its variables whose def
 
 The following specification :
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 spec = do
   prop "pos" (fib > 0)
 
   where
     fib :: Stream Word64
     fib = [1, 1] ++ (fib + drop 1 fib)
-\end{code}
+\end{lstlisting}
 can be translated into this IL specification :
 \begin{code}
 SEQUENCES
@@ -484,7 +480,7 @@ This system is translated into
 
 Let's consider this Copilot specification : 
 
-\begin{code}
+\begin{lstlisting}[frame=single]
 spec :: Spec
 spec = do
   prop "prop" (a == c)
@@ -499,7 +495,7 @@ spec = do
 
     c :: Stream Word64
     c = [1] ++ c
-\end{code}
+\end{lstlisting}
 Translated to the TransSys format, we get :
 \begin{code}
 NODE 's2' DEPENDS ON []
