@@ -75,7 +75,15 @@ An intermediate solution could be to let the developper annotate the program so 
 
 The problem of complex operators like trigonometry operators is more difficult to handle. A seemingly good solution would be to give some classical properties of these operators as additional constraints for the SMT solvers. For instance, we could add the following constraint to any specification where the sine function appears : \[ \forall x . \; -1 \leq \sin x \leq 1 \]
 
-Unfortunately, quantifiers are not handled well by the current state of the art SMT solvers.~\footnote{As we will discuss it later, it seems to us it is one of the main limitation of SMT-based techniques which keeps them from scaling well.} An alternative would be to add automatically a specialized version of these constraints for each appropriate variable. For instance, we could add the constraint \[-1 \leq y \leq 1 \] for all variables $y$ such that we have a constraint \[ y = \sin x \] for $x$ any variable. Many refinements of this kind of techniques might be worth studying.
+Unfortunately, quantifiers are not handled well by the current state
+of the art SMT solvers.~\footnote{As we will discuss it later, it
+  seems to us it is one of the main limitation of SMT-based techniques
+  which keeps them from scaling well.} An alternative would be to add
+automatically a specialized version of these constraints for each
+appropriate variable. For instance, we could add the constraint \[-1
+\leq y \leq 1 \] for all variables $y$ such that we have a
+constraint \[ y = \sin x \] for $x$ any variable.  Further
+improvements on these techniques warrant further study.
 
 
 
@@ -84,9 +92,9 @@ Unfortunately, quantifiers are not handled well by the current state of the art 
 \subsection{The \textbf{IL} format}
 
 In this format, a stream of type $a$ is modeled by a function of type $\mathbb{N} \to a$. Each stream definition is translated into a list of constraints on such functions. For instance, the stream definition :
-\begin{code}
+\begin{lstlisting}[frame=single]
 fib = [1, 1] ++ (fib + drop 1 fib)
-\end{code}
+\end{lstlisting}
 is translated into a function $f : \mathbb{N} \to \mathbb{N}$ with the constraints :
 $$
 \begin{array}{c}
@@ -105,20 +113,20 @@ Specifications in the \textbf{IL} format can be printed out in the SMTLib format
 The translation process is straightforward as the reification process~\cite{} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition. Indeed, all stream definitions are written with the pattern
 \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
 where \texttt{e} is an expression in which \texttt{(++)} does not occur. In \texttt{Core.Spec}, a stream is defined as :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Stream = forall a.Typed a => Stream
   { streamId         :: Id
   , streamBuffer     :: [a]
   , streamExpr       :: Expr a
   , streamExprType   :: Type a }
-\end{code}
+\end{lstlisting}
 where the field \texttt{streamBuffer} corresponds to \texttt{[$s_0$,...,$s_p$]} and the field \texttt{streamExpr} to \texttt{e}. Moreover, a simplified definition of the type \texttt{Expr} defined in \texttt{Core.Spec} is :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Expr a where
   Const  :: Type a -> a -> Expr a
   Drop   :: Type a -> DropIdx -> Id -> Expr a
   Op2    :: Op2 a b c -> Expr a -> Expr b -> Expr c
-\end{code}
+\end{lstlisting}
 Then, the translation algorithm is the following. For each stream equation \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e},\end{center}we introduce a new fresh function $f_s$ and the following constraints :
 
 \begin{itemize}
@@ -172,10 +180,14 @@ $\forall \tau$ & \textbf{expr}$_{\tau}$ & = & $\left< \textit{const}\,_\tau  \ri
 
 \medskip
 
-Each expression is parametrized by its type, which belongs to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$ and consists in a constant, an \textit{if-then-else} construction or other expressions glued by an operator :
+Each expression is parametrized by its type, which belongs to $\{
+\texttt{Int}, \texttt{Real},  \texttt{Bool}\}$ and is comprised of a
+constant, an \textit{if-then-else} construction or other expressions
+glued by an operator, or one of the following :
 
 \begin{itemize}
-\item The value of a stream at a given time. It consists in an identifier \textit{sid} and an index. The index is either an integer constant or an expression matching the pattern $ \textit{n} +  \left< \textit{int} \,  \right> $, $n$ being an integer variable by which each constraint is implicitly universally quantified.
+\item The value of a stream at a given time. The grammar for such
+a constraint is defined by  an identifier \textit{sid} and an index. The index is either an integer constant or an expression matching the pattern $ \textit{n} +  \left< \textit{int} \,  \right> $, $n$ being an integer variable by which each constraint is implicitly universally quantified.
 
 \item The application of an uninterpreted function, which identifier is given, to a list of arguments.
 \end{itemize}
@@ -183,12 +195,12 @@ To access a full list of the operators supported by \textit{copilot-kind}, see t
 
 \subsection{The \textbf{TransSys} format}
 
-As recalled before, a state transition system is a triple $(S,I,T),$
+Recall, a state transition system is a triple $(S,I,T),$
 where $S$ is a set of states, $I \subseteq S$ is the set of initial
 states and $T \subseteq S \times S $ is a transition relation over $S$.
 
 
-Here, a state consists in the values of a finite set of variables, which types belong to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$. $I$ is encoded by a logical formula whose free variables correspond to the state variables and that holds for a state $q$ if and only if $q$ is an initial state. Similarly, the transition relation is given by a formula $T$ such that $T\left[\, q, \, q' \,\right]$ holds if and only if $q \rightarrow q'$. 
+Here, a state consists of  the values of a finite set of variables, with types belong to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$. $I$ is encoded by a logical formula whose free variables correspond to the state variables and that holds for a state $q$ if and only if $q$ is an initial state. Similarly, the transition relation is given by a formula $T$ such that $T\left[\, q, \, q' \,\right]$ holds if and only if $q \rightarrow q'$. 
 
 
 The \textbf{TransSys} format is a modular encoding of such a state transition system. Related variables are grouped into \textit{nodes}, each node providing a distinct namespace and expressing some constraints between its variables. 
@@ -198,13 +210,13 @@ The \textbf{TransSys} format is a modular encoding of such a state transition sy
 \paragraph{Formal definition}
 
 Inside a node, a variable is referenced by a string identifier. Indeed, the corresponding \texttt{Var} type is defined as :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data Var = Var {varName :: String}
-\end{code}
+\end{lstlisting}
 Outside a node, a variable is referenced by a node identifier and an instance of \texttt{Var} :
-\begin{code}
+\begin{lstlisting}[frame=single]
 data ExtVar = ExtVar {extVarNode :: NodeId, extVarLocalPart :: Var} 
-\end{code}
+\end{lstlisting}
 where \texttt{NodeId = String}. Then, the \texttt{Node} type is defined by :
 \begin{lstlisting}[frame=single]
 data Node = Node
@@ -217,18 +229,19 @@ data Node = Node
 where :
 \begin{itemize}
 \item \texttt{nodeId} is the identifier of the node
-\item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, inside a node we can't refer to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
+\item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, inside a node we cannot refer to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
 \item \texttt{nodeDependencies} is the list of the nodes from which a variable is given a local alias. This information is redundant.
 \item \texttt{nodeLocalVars} is a dictionnary which binds each local variable to its descriptor. The type of descriptors \texttt{VarDescr} will be described later.
 \item \texttt{nodeConstrs} is a list of constraints on local variables.
 \end{itemize}
-A variable descriptor consists in a type and a definition :
+A variable descriptor is comprised  of a type and a definition :
 \begin{lstlisting}[frame=single]
 data VarDescr = forall t.VarDescr
   { varType :: Type t
   , varDef  :: VarDef t }
 \end{lstlisting}
-Note that in the same way as in \texttt{Copilot.Core}, {\sc gadt}s are used to achieve some additional type safety~\cite{}. The \texttt{VarDef} type is defined as :
+Note that in the same way as in \texttt{Copilot.Core}, {\sc
+  gadt}s~\cite{Xi2003,CheneyHinze03, Johann2008} are used to achieve some additional type safety. The \texttt{VarDef} type is defined as :
 \begin{lstlisting}[frame=single]
 data VarDef t =
     Pre t Var
@@ -254,7 +267,8 @@ data Expr t where
 Therefore, an expression is a combination of constants, operators, and local variable names.
 
 
-Finally, a specification in the \textbf{TransSys} format consists in a list of node and a dictionary binding property names to boolean variables which have to be shown constant equals to \texttt{true}.
+Finally, a specification in the \textbf{TransSys} format is comprised
+of  a list of node and a dictionary binding property names to boolean variables which have to be shown constant equals to \texttt{true}.
 \begin{lstlisting}[frame=single]
 data Spec = Spec
   { specNodes :: [Node]
@@ -284,9 +298,9 @@ The list of variables is simply a concatenation of the local variables of all no
 
 Then, we define a formula $T_0[\vec q, \vec q \,']$ where $\vec q$ is the vector of variables representing the current state. Moreover, $\vec q \,'$ is a vector containing the same variables, primed, and represents the \textit{next} state. $T_0$ is defined as the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre \_} $v$ :
 \begin{center} $u' = v$ \end{center}
-After this, we define a formula $I_0[\vec q]$ which is the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre} $a$ \_ :
+After this, we define a formula $I_0[\vec q]$ that  is the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre} $a$ \_ :
 \begin{center} $u = a$ \end{center}
-Finally we define $I$ and $T$ as :
+Finally, we define $I$ and $T$ as :
 \[  I[\vec q] =  I_0[\vec q] \;\wedge\; C[\vec q] \qquad T[\vec q, \; \vec q \, '] = T_0[\vec q, \; \vec q \,'] \, \wedge \, C[\vec q \, ']  \]
 
 
@@ -309,19 +323,20 @@ we add a node with the same name as $s$ and the local variables $out_0, out_1, \
 
 \end{itemize}
 
-\paragraph{Some transformations on modular transition systems} 
+\paragraph{Transformations on modular transition systems} 
 %The transition system obtained by the previously discuddes translation process is perfectly consistent. However, it can't be directly translated into the Kind2 native file format. Indeed, it is natural to bind each node to a predicate but the Kind2 file format requires that each predicate only uses previously defined predicates. However, some nodes in our transition system could be mutually recursive. 
 
-The modular transition systems obtained after the translation process defined in the previous paragraph can't be printed out in the \texttt{Kind2} native format yet. For instance, some nodes could be mutually dependent whereas \texttt{Kind2} requires its predicates to be cycle-dependence free and written in topological order.
+The modular transition systems obtained after the translation process
+defined in the previous paragraph cannot  be printed out in the \texttt{Kind2} native format yet. For instance, some nodes could be mutually dependent whereas \texttt{Kind2} requires its predicates to be cycle-dependence free and written in topological order.
 
 
 In fact, the actual implementation design is aimed at splitting an otherwise longer and more complex translation process in a series of simple program transformations. These transformations are defined in the \texttt{Kind.TransSys.Transform} module.
 
 \bigskip
 
-One of the most basic transformation consists in merging some nodes, that is replacing these nodes by a bigger one which contains the concatenation of their local variables. Some of them might have to be renamed to avoid name conflicts. This renaming process is made easier by the use of a specific monad defined in \texttt{Kind.Misc.Renaming}.
+One of the most basic transformations is merging  nodes, that is, replacing these nodes by a bigger one which contains the concatenation of their local variables. Some of them might have to be renamed to avoid name conflicts. This renaming process is made easier by the use of a specific monad defined in \texttt{Kind.Misc.Renaming}.
 
-The \texttt{removeCycles} :: \texttt{Spec -> Spec} transformation turns a \texttt{TransSys} specification into the \textit{most modular} specification with the same semantics which is dependence-cycle free. This function relies on the \texttt{mergeNodes} :: \texttt{[NodeId] -> Spec -> Spec} function previously discussed. The \texttt{removeCycles} function computes the strongly connected components of the dependency graph of a specification and merge each one into a single node. The complexity of this process is high in the worst case (the square of the total size of the system times the size of the biggest node) but good in practice as few nodes are to be merged in most practical cases.
+The \texttt{removeCycles} :: \texttt{Spec -> Spec} transformation turns a \texttt{TransSys} specification into the \textit{most modular} specification with the same semantics which is dependence-cycle free. This function relies on the \texttt{mergeNodes} :: \texttt{[NodeId] -> Spec -> Spec} function previously discussed. The \texttt{removeCycles} function computes the strongly connected components of the dependency graph of a specification and merges each one into a single node. The complexity of this process is high in the worst case (the square of the total size of the system times the size of the biggest node), but good in practice as few nodes are to be merged in most practical cases.
 
 Note that, with the \texttt{mergeNodes} function, we can get for free the function
 \begin{lstlisting}[frame=single]
@@ -336,7 +351,7 @@ which discards all the structure of a modular transition system and turns it int
 Once the dependence-cycles have been discarded in a specification, a last transformation is to be applied before an output in the Kind2 native format can be produced. This transformation, whose signature is  \texttt{complete} :: \texttt{Spec -> Spec}, is a bit technical. To put it in a nutshell, it transforms a specification into a semantically equivalent one such that :
 
 \begin{itemize}
-\item The dependency graph is transitive, that is if A depends of B which depends of C then A depends on C.
+\item The dependency graph is transitive, that is, if A depends of B which depends of C then A depends on C.
 \item If a node depends on another one, it defines a local alias for all its variables.
 \end{itemize}
 This way, it is possible to see a node as a predicate on its variables whose definition makes a call to the predicates associated to the nodes of its dependency list. After this, a translation to the Kind2 native format is only a matter of syntax.
@@ -478,7 +493,7 @@ This system is translated into
 \paragraph{An example of transformations on transition systems}
 
 
-Let's consider this Copilot specification : 
+Consider the following Copilot specification : 
 
 \begin{lstlisting}[frame=single]
 spec :: Spec

@@ -1,11 +1,6 @@
 \section{Implementation Overview}~\label{sec:overview}
 
 
-\jonathan{I find the typography and layout of this part not very good. The indentation should be handled better and it would be great to display the code into boxes. Syntax highlighting would be a bonus. Could you do it Alwyn ? }
-
-\jonathan{Warning : the code environment removes the curly braces}
-
-
 %\jonathan{Is this really an implementation overview ? Shouldn't we add a section "Presentation of Copilot Kind"}
 \jonathan{Maybe we should move the definition of a safety property in the previous part}
 
@@ -54,8 +49,8 @@ arguments :
   exported by the \texttt{Copilot.Kind.Light} and
   \texttt{Copilot.Kind.Kind2} module.
 \item
-  A \emph{proof scheme}, which is a sequence of instructions like
-  \emph{check}, \emph{assume}, \emph{assert}\ldots{}
+  A \emph{proof scheme}, which is a sequence of instructions such as
+  \emph{check}, \emph{assume}, \emph{assert},\ldots{}
 \item
   The Copilot specification
 \end{itemize}
@@ -99,13 +94,16 @@ data Prover = forall r.Prover
 
 \end{lstlisting}
 
-Each prover mostly has to provide a \texttt{askProver} function which
-takes as an argument * The prover descriptor * A list of assumptions * A
-conclusion
+To interface with a  particular prover, one must  provide a \texttt{askProver} function that
+takes as an argument  the following three parameters: 
+\begin{itemize} 
+\item  The prover descriptor 
+\item  A list of assumptions 
+\item  A conclusion
+\end{itemize} 
+and uses the prover to check if the assumptions logically entail the conclusion.
 
-and checks if the assumptions logically entail the conclusion.
-
-Two provers are provided by default : \texttt{Light} and \texttt{Kind2}.
+Two provers are currently supported by default : \texttt{Light} and \texttt{Kind2}.
 
 \paragraph{The light prover}\label{the-light-prover}
 
@@ -166,12 +164,12 @@ instance Default Options where
 
 \end{lstlisting}
 
-Therefore, \texttt{def} stands for the default configuration.
+Where, \texttt{def} stands for the default configuration.
 
 \paragraph{The Kind2 prover}\label{the-kind2-prover}
 
 The \emph{Kind2} prover uses the model checker with the same name, from
-Iowa university. It translates the Copilot specification into a
+the University of Iowa. It translates the Copilot specification into a
 \emph{modular transition system} (the Kind2 native format) and then
 calls the \texttt{kind2} executable.
 
@@ -185,7 +183,7 @@ data Options = Options { bmcMax :: Int }
 
 and where \texttt{bmcMax} corresponds to the \texttt{-\/-bmc\_max}
 option of \emph{kind2} and is equivalent to the \texttt{kTimeout} option
-of the light prover. Its default value is 0, which stands for infinity.
+of the light prover. Its default value is $0,$ which stands for infinity.
 
 \paragraph{Combining provers}\label{combining-provers}
 
@@ -221,7 +219,7 @@ spec = do
     x = [1] ++ (1 + x)
 
 \end{lstlisting}
-and let's say we want to prove \texttt{"neq0"}. Currently, the two
+and let us say we want to prove \texttt{"neq0"}. Currently, the two
 available solvers fail at showing this non-inductive property (we will
 discuss this limitation later). Therefore, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
@@ -232,7 +230,11 @@ assert "gt0" >> check "neq0"
 \end{lstlisting}
 
 
-instead of just \texttt{check "neq0"}. A proof scheme is chain of
+instead of just 
+\begin{lstlisting}[frame=single] 
+  check "neq0" 
+\end{lstlisting}
+A proof scheme is chain of
 primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
 operator. For now, the available primitives are :
 
