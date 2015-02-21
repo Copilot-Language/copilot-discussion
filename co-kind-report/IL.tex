@@ -13,7 +13,7 @@ representations are available :
   Hagen's thesis~\cite{HagenPhD}. The \emph{light prover} works with this
   format.
 \item
-  The \textbf{TransSys} format : a modular representation of a \emph{state transition system} \cite{} The \emph{Kind2 prover} uses thisitio
+  The \textbf{TransSys} format : a modular representation of a \emph{state transition system}~\cite{XX} The \emph{Kind2 prover} uses thisitio
   format, which is similar to Kind2's native format.
 \end{itemize}
 
@@ -110,7 +110,7 @@ Specifications in the \textbf{IL} format can be printed out in the SMTLib format
 
 \paragraph{The translation process} 
 
-The translation process is straightforward as the reification process~\cite{} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition. Indeed, all stream definitions are written with the pattern
+The translation process is straightforward as the reification process~\cite{gill,pike-icfp-12} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition. Indeed, all stream definitions are written with the pattern
 \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
 where \texttt{e} is an expression in which \texttt{(++)} does not occur. In \texttt{Core.Spec}, a stream is defined as :
 \begin{lstlisting}[frame=single]
