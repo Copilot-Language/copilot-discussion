@@ -12,18 +12,23 @@ specification of some property is formalized in a suitable logic.  The
 model checker traverses all of the 
 reachable states of the design in order to verify that the property
 holds.  If the property fails, then a sequence of states leading to
-the failure is produced as a {\em counterexample.} \jonathantxt{The main difficulty with this technique is the huge size of usual search spaces. To tackle this, we use logical formula as a concise description for sets of states and the transition relation in the graph of states is decided by SMT solvers.} Our work applies
+the failure is produced as a {\em counterexample.} The main difficulty
+with this technique is the huge size of usual search spaces. To tackle
+this, we use logical formula as a concise description for sets of
+states and the transition relation in the graph of states is decided
+by SMT solvers.  Our work applies
 the technique of {\em bounded model checking with satisfiability
   solving}~\cite{ClarkeBounded01,ClarkeBounded03} to the problem of
-verifying Copilot monitors. 
+verifying Copilot monitors.
 
-
-\jonathan{I do not know the definition of \textit{bounded} model checking and it doesn't seem obvious what the term \textit{bounded} relates to. Indeed, in most of our examples, the search space is not bounded except if you consider integers to be bounded, which is usually not the case in most SMT theories. Anyway, even if it were, the search space is so large that it's a reasonable approximation of what infinity is :). Therefore, we should add a sentence to make this definition clearer.     }
-
-Bounded model checking searches for
-counterexamples of length bounded by some user provided integer $k.$
-\jonathan{Are you sure of this definition ? In fact, counterexamples are necessary bounded as a consequence of the fact that we restrain ourselves to \textit{safety} properties. Anyway, it could be a good idea to move here the definition of a safety property.}
-
+To quote Clarke~\cite{ClarkeBounded01}
+\begin{quote}
+  In bounded model checking, we construct a Boolean formula that is
+  satisfiable if and only if the underlying state transition system
+  can realize a finite sequence of state transitions that reaches
+  certain states of interest. If such a path segment cannot be found
+  at a given length, $k$, the search is continued for larger $k.$
+\end{quote} 
 
 
 \paragraph{Background and Definitions} Recall that a state transition system is a triple $(S,I,T),$
