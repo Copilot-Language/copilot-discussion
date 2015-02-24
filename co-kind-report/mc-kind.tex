@@ -1,15 +1,12 @@
 \section{Bounded Model Checking,  k-induction, and IC3}~\label{sec:mck}
 
-\alwyn{Jonathan: please proof read this section especially the IC3 part and add in any text you think may make it easier to read or further the explanation.}
-
-\alwyn{Jonathan: When I wrote this I tried to keep the notation as consistent as possible when expaining different ideas, but I hope I didn't over simplify things. When you read it make sure I didn't change some notation in a way that makes either makes it harder to read or just makes it false}
 
 
-\jonathan{Is model checking the \textit{most widely used} technique ? What about abstract interpretation ? Of course, modern techniques often consists in a mix of both of them but maybe your sentence is a bit radical. }
+
 
 Highly automated proof techniques are a necessary step for the
 widespread adoption of formal methods in the software industry.
-Probably the most widely used automated technique is {\em model
+ One of the more popular techniques used in industry is {\em Model
   checking}, where a design is modeled as finite state machine, and
 specification of some property is formalized in a suitable logic.  The
 model checker traverses all of the 
@@ -171,117 +168,117 @@ candidates for refinement.
 
 
 
-\paragraph{IC3 Algorithm} 
+%\paragraph{IC3 Algorithm} 
 
-\jonathan{Concerning this paragraph, I wonder if it's a good thing to give such a brief but formal description. I'm not sure anyone who don't already know the algorithm could understand more than the very basic idea just with this. In my case, it took me several much longer articles to understand the very subtle IC3 algorithm. Maybe we should give up trying to give a formal description, just give the main idea and a reference to a more detailed document in a shorter paragraph. What do you think ? I'm not sure I'm right, I'm really biased on this question.}
+%\jonathan{Concerning this paragraph, I wonder if it's a good thing to give such a brief but formal description. I'm not sure anyone who don't already know the algorithm could understand more than the very basic idea just with this. In my case, it took me several much longer articles to understand the very subtle IC3 algorithm. Maybe we should give up trying to give a formal description, just give the main idea and a reference to a more detailed document in a shorter paragraph. What do you think ? I'm not sure I'm right, I'm really biased on this question.}
 
-Bounded model checking approaches such as $k$-induction suffer from
-the drawback of searching for a single strengthening of the invariant
-to be proved. This monolithic approach often  overwhelms the SAT
-solver due to its many iterations. \jonathan{Moreover, we should add that k-induction technique is limited to k-inductive properties.} 
-
-
+%Bounded model checking approaches such as $k$-induction suffer from
+%the drawback of searching for a single strengthening of the invariant
+%to be proved. This monolithic approach often  overwhelms the SAT
+%solver due to its many iterations. \jonathan{Moreover, we should add that k-induction technique is limited to k-inductive properties.} 
 
 
-Recall that a property $P$ is inductive if 
-\jonathan{I don't agree with your notations in this paragraph. Instead of :}
-$$ P(s_{k-1}) \tland T(s_{k-1},s_k) \models P(s_k). $$
-\jonathan{I would have written $$ P(s) \tland T(s, s') \models P(s'). $$ Indeed, you notation suggests the last equation is about a path and not about a single transition. The use of indexes is misleading I think. What is your opinion about this ? }
- Otherwise there
-exists states $s_{k-1}$ and $s_k$ such that  
+
+
+%Recall that a property $P$ is inductive if 
+%\jonathan{I don't agree with your notations in this paragraph. Instead of :}
+%$$ P(s_{k-1}) \tland T(s_{k-1},s_k) \models P(s_k). $$
+%\jonathan{I would have written $$ P(s) \tland T(s, s') \models P(s'). $$ Indeed, you notation suggests the last equation is about a path and not about a single transition. The use of indexes is misleading I think. What is your opinion about this ? }
+% Otherwise there
+%exists states $s_{k-1}$ and $s_k$ such that  
 $$P(s_{k-1}) \tland T(s_{k-1},s_k) \tland \tlnot P(s_k),$$
-where $s_{k-1}$ is said to be the {\em counterexample to
-  inductiveness} (CTI). The property $P$ is said to be inductive
-relative to $A$ if and only if
-$$A(s_{k-1}) \tland  P(s_{k-1}) \tland T(s_{k-1},s_k) \models P(s_k). $$
-Note that if $P$ is inductive relative to $Q$ and $Q$ is inductive
-relative to $P,$ then $P \tland Q$ is inductive.  The idea of using
-relative inductiveness to prove inductiveness lead to the development
-of incremental approaches such as that used in the FSIS model
-checker~\cite{Bradley06, Bradley2011}.  The basic incremental
-algorithm used in FSIS is as follows:
-\begin{itemize}
-\item Try to prove $P$ is inductive.
-\item If fails,  if $s$ is CTI, then find an inductive invariant
-  $\phi_0$ such that $\phi_0(s)$ does not hold. 
-\item Continue finding such lemmas $\phi_0, \phi_1, \ldots$ until
-  there are no more CTIs. 
-\item As $P$ is inductive to $\bigwedge_{i} \phi_i$ it s proven
-  invariant if it holds for the initial states.
-\end{itemize}  
-Note that each $\phi_i$ has only to be proven inductive relative to
-the previously discovered CTIs $\phi_0, \phi_1, \ldots, \phi_{i-1}$
-or even inductive to $\{ \phi_j \}_{j<i} \tland P.$ 
+%where $s_{k-1}$ is said to be the {\em counterexample to
+%  inductiveness} (CTI). The property $P$ is said to be inductive
+%relative to $A$ if and only if
+%$$A(s_{k-1}) \tland  P(s_{k-1}) \tland T(s_{k-1},s_k) \models P(s_k). $$
+%Note that if $P$ is inductive relative to $Q$ and $Q$ is inductive
+%relative to $P,$ then $P \tland Q$ is inductive.  The idea of using
+%relative inductiveness to prove inductiveness lead to the development
+%of incremental approaches such as that used in the FSIS model
+%checker~\cite{Bradley06, Bradley2011}.  The basic incremental
+%algorithm used in FSIS is as follows:
+%\begin{itemize}
+%\item Try to prove $P$ is inductive.
+%\item If fails,  if $s$ is CTI, then find an inductive invariant
+ % $\phi_0$ such that $\phi_0(s)$ does not hold. 
+%\item Continue finding such lemmas $\phi_0, \phi_1, \ldots$ until
+%  there are no more CTIs. 
+%\item As $P$ is inductive to $\bigwedge_{i} \phi_i$ it s proven
+%  invariant if it holds for the initial states.
+%\end{itemize}  
+%Note that each $\phi_i$ has only to be proven inductive relative to
+%the previously discovered CTIs $\phi_0, \phi_1, \ldots, \phi_{i-1}$
+%or even inductive to $\{ \phi_j \}_{j<i} \tland P.$ 
 
 
-As it is difficult to find inductive lemmas, we can limit our search
-to lemmas that are inductive relative to a formula $R_k$ that
-over-approximates the set of $k$-reachable states. We then try to
-propagate these lemmas as $k$ increases, stopping only when reaching a
-fixed point. The IC3 algorithm~\cite{Somenzi-FMCAD11,
-  BradleyCAV12,bradley2012understanding} searches for an
-over approximation $R$ of the reachable sets such that:
-\begin{eqnarray*} 
-I(s_{k-1})  & \models & R(s_{k-1}) \\
-R(s_{k-1})  \tland  T(s_{k-1},s_k) &\models & R(s_k)  \\
-R(s_{k-1})  & \models & P(s_{k-1})
-\end{eqnarray*}
-where $R$  is constructed as a fixed point of an increasing sequence
-of $(R_k),$ where each frame $(R_k)$ can be viewed as a conjunction of
-lemmas. The sequence exhibits the following properties: 
-\begin{eqnarray*}
-R_0 & = & \{ I \} \\
-R_{i+1} & \subset & R_i \\
-R_i(s_{k-1}) \tland  T(s_{k-1},s_k) &\models & R_{i+1}(s_k)   \\
-P &\in& R_i \ \ \mbox{for} \ i > 0. 
-\end{eqnarray*}
- If the sequence satisfies these four constraints and admits a fixed
- point, then $P$ is invariant.   In constructing the sequence, $R_0$
- is initialized to $\{ I \}$ and  $R_1 = P.$  We continue in similar
- fashion, at  each step, $k,$ is initialized to $P$ then propagate as
- many lemmas from the previous frame as possible while ensuring that
- the an error is not reached within one transition step. 
+%As it is difficult to find inductive lemmas, we can limit our search
+%to lemmas that are inductive relative to a formula $R_k$ that
+%over-approximates the set of $k$-reachable states. We then try to
+%propagate these lemmas as $k$ increases, stopping only when reaching a
+%fixed point. The IC3 algorithm~\cite{Somenzi-FMCAD11,
+%  BradleyCAV12,bradley2012understanding} searches for an
+%over approximation $R$ of the reachable sets such that:
+%\begin{eqnarray*} 
+%I(s_{k-1})  & \models & R(s_{k-1}) \\
+%R(s_{k-1})  \tland  T(s_{k-1},s_k) &\models & R(s_k)  \\
+%R(s_{k-1})  & \models & P(s_{k-1})
+%\end{eqnarray*}
+%where $R$  is constructed as a fixed point of an increasing sequence
+%of $(R_k),$ where each frame $(R_k)$ can be viewed as a conjunction of
+%lemmas. The sequence exhibits the following properties: 
+%\begin{eqnarray*}
+%R_0 & = & \{ I \} \\
+%R_{i+1} & \subset & R_i \\
+%R_i(s_{k-1}) \tland  T(s_{k-1},s_k) &\models & R_{i+1}(s_k)   \\
+%P &\in& R_i \ \ \mbox{for} \ i > 0. 
+%\end{eqnarray*}
+ %If the sequence satisfies these four constraints and admits a fixed
+ %point, then $P$ is invariant.   In constructing the sequence, $R_0$
+ %is initialized to $\{ I \}$ and  $R_1 = P.$  We continue in similar
+ %fashion, at  each step, $k,$ is initialized to $P$ then propagate as
+% many lemmas from the previous frame as possible while ensuring that
+ %the an error is not reached within one transition step. 
 
-Just as $R$ represents the reachable good states, the IC3 algorithm
-maintains a set of bad states $B$ such that each state in $B$ leads to
-an error in one step.  In order to show $B$ is unreachable in $R_k$
-the predicate $\tlnot B$ is conjoined to $R_k$ as a lemma.  Although
-$B$ may not be inductive, it is sufficient to show that it is
-inductive relative to the previous frame and consequently $B$ is not
-$k-$reachable.  This can be accomplished by checking the following two
-entailments:
-\begin{eqnarray*}
-I(s_{i-1}) & \models & \tlnot B(s_{i-1}) \\ 
-R_{k-1} (s_{i-1}) \tland \tlnot  B(s_{i-1}) \tland T(s_{i-1}, s_i) 
-& \models & \tlnot B(s_i).
-\end{eqnarray*}
-If the first entailment fails, then $P$ is not an invariant. If the
-second fails,  then $B$ is reachable from some state of the previous
-frame. We generalize this state to a set of states $B',$ consisting of
-states belonging to the previous frame that lead to $B$ in a single
-transition.  Next, the algorithm recursively refines $R_{k-1}$ to
-remove the states in $B'.$ This backward reachability is performed
-until one of the following conditions are met:
-\begin{itemize}
-\item The algorithm reaches $R_0 = I$ whence $P$ is not invariant. 
-\item All the bad states that are recursively generated have been
-  shown to be $k$-unreachable. 
-\end{itemize} 
+%Just as $R$ represents the reachable good states, the IC3 algorithm
+%maintains a set of bad states $B$ such that each state in $B$ leads to
+%an error in one step.  In order to show $B$ is unreachable in $R_k$
+%the predicate $\tlnot B$ is conjoined to $R_k$ as a lemma.  Although
+%$B$ may not be inductive, it is sufficient to show that it is
+%inductive relative to the previous frame and consequently $B$ is not
+%$k-$reachable.  This can be accomplished by checking the following two
+%entailments:
+%\begin{eqnarray*}
+%I(s_{i-1}) & \models & \tlnot B(s_{i-1}) \\ 
+%R_{k-1} (s_{i-1}) \tland \tlnot  B(s_{i-1}) \tland T(s_{i-1}, s_i) 
+%& \models & \tlnot B(s_i).
+%\end{eqnarray*}
+%If the first entailment fails, then $P$ is not an invariant. If the
+%second fails,  then $B$ is reachable from some state of the previous
+%frame. We generalize this state to a set of states $B',$ consisting of
+%states belonging to the previous frame that lead to $B$ in a single
+%transition.  Next, the algorithm recursively refines $R_{k-1}$ to
+%remove the states in $B'.$ This backward reachability is performed
+%until one of the following conditions are met:
+%\begin{itemize}
+%\item The algorithm reaches $R_0 = I$ whence $P$ is not invariant. 
+%\item All the bad states that are recursively generated have been
+ % shown to be $k$-unreachable. 
+%\end{itemize} 
 
-Once the strengthening process completes, meaning that no error state
-is reachable from the last frame, the IC3 algorithm propagates the new
-lemmas we discovered from each frame to its successor. This is
-accomplished by verifying the entailment
+%Once the strengthening process completes, meaning that no error state
+%is reachable from the last frame, the IC3 algorithm propagates the new
+%lemmas we discovered from each frame to its successor. This is
+%accomplished by verifying the entailment
 
-$$ R_j(s_{i-1}) \tland  T(s_{i-1}, s_i)  \models C(s_i)$$
-for all $C \in R_j - R_{j+1},$ where $j$ increases from $0$ to $k.$
-If all the lemmas of $R_{k-1}$ are successfully propagated to $R_k$,
-the sequence $(R_j)$ reaches a fixed point and $P$ is proven to be
-invariant.  Otherwise,  a new frame $R_{k+1}$ is added that is  initialized to $P$
-and the algorithm continues.  Numerous improvements to the basic
-algorithm such as {\em lemma tightening} can be found in the
-literature that can produce an invariant that is more tractable to
-modern SMT solvers. 
+%$$ R_j(s_{i-1}) \tland  T(s_{i-1}, s_i)  \models C(s_i)$$
+%for all $C \in R_j - R_{j+1},$ where $j$ increases from $0$ to $k.$
+%If all the lemmas of $R_{k-1}$ are successfully propagated to $R_k$,
+%the sequence $(R_j)$ reaches a fixed point and $P$ is proven to be
+%invariant.  Otherwise,  a new frame $R_{k+1}$ is added that is  initialized to $P$
+%and the algorithm continues.  Numerous improvements to the basic
+%algorithm such as {\em lemma tightening} can be found in the
+%literature that can produce an invariant that is more tractable to
+%modern SMT solvers. 
 
 
 
