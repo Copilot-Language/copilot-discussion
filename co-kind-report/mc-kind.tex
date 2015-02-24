@@ -78,8 +78,8 @@ $$I(s_0) \models P(s_0).$$
 If the base case holds, then show the inductive step that $P$ holds
 for some state $n$ and prove it holds for the next state $n+1:$
 $$ T(s_{n},s_{n+1}) \tland P(s_n) \models P(s_{n+1}).$$
-Unfortunately, it is often the case that the induction step cannot be
-done automatically.  \jonathan{I don't think it is the main problem. In fact, if the inductive step holds, the SMT solver will \textit{always} figure it out if the theories we are using are decidable, although it could take too long. The main problem is that most interesting properties can't be proven by induction at all : most of them are not inductive.} Sheeran~\etal~\cite{Sheeran00, EenS03} introduced
+
+Sheeran~\etal~\cite{Sheeran00, EenS03} introduced
 $k-$induction that has the advantage that it is well suited for SAT
 based bounded model checking.  One begins as with the standard
 induction, but if one cannot show the property to be true, the
