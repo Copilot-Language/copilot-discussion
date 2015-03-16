@@ -1,0 +1,37 @@
+\section{Structure of the Toolchain}~\label{sec:structure} 
+
+
+\begin{figure}[ht!]
+  \begin{tikzpicture}[->, node distance=3.00cm, auto, shorten >=1pt, bend angle=45,
+   thick]
+    \tikzstyle{every state}=[rectangle, rounded corners]
+
+    \node[state]         (Lang) 
+         {
+           \begin{tabular}[b]{l}
+           Copilot Libraries\\ \hline Copilot Language
+           \end{tabular}};
+   \node[state]         (Core) [below of =Lang]          {Copilot Core};
+   %\node[state]        (Cnub) [below of = Core]       {Cnub}; 
+   \node[state]        (TransSys) [left of=Core] {$\mathrm{Transition  Sys}^{m}$};
+   \node[state]        (IL) [right of =Core] {IL}; 
+    \node[state]       (SmtLib) [below of=IL] {SMT LIB Format};
+   \node[state]        (NMTransSys)[below left of = TransSys]   {$\mathrm{Transition  Sys}^{nm}$} ;
+   \node[state]        (MprimeTransSys)[below right of = TransSys] {$\mathrm{Transition  Sys}^{m}$} ;
+    \node[state]       (Kind2Native) [below of = NMTransSys]{Kind 2  Native Format} ;
+    \tikzstyle{every node}=[]
+
+    \path 
+    (Lang) edge   [ anchor=west, text width=5.00cm] node {Reification and DSL-specific type-checking} (Core)
+  % (Core) edge              node {} (Cnub)
+      (Core)   edge              node {} (TransSys)
+            edge              node {} (IL)
+    (TransSys)     edge             node[swap] {Inline} (NMTransSys)
+                         edge              node {Remove Cycles}  (MprimeTransSys)
+    (NMTransSys) edge              node {} (Kind2Native)
+    (MprimeTransSys)  edge  node  {}   (Kind2Native)   
+   (IL) edge             node{} (SmtLib) ;
+  \end{tikzpicture}
+  \caption{The Copilot verification  toolchain.}
+  \label{fig:toolchain}
+\end{figure}
