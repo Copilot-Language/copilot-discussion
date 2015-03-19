@@ -4,7 +4,10 @@ runtime verification~\cite{pike-isse-13}. In this work we employed the Boyer-Moo
 Majority Vote Algorithm~\cite{MooreBoyer82,Hesselink2005} to determine
 if in a given list of votes there is a candidate that has more than
 half of the votes, and if so, of finding this candidate. The algorithm
-operates in two passes, first it 
+operates in two passes, first it chooses a candidate and the second
+pass verifies that the candidate is indeed a majority.  The algorithm
+is subtle and the desire to apply formal verification to our Copilot
+implementation helped motivate the effort described here. 
 
 
 \begin{figure*}[ht]
@@ -26,22 +29,22 @@ majority' (x:xs) can cnt =
 \label{fig:majority}
 \end{figure*}
 
-\begin{figure*}[ht]
-\begin{lstlisting}[frame=single]
-aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
-aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
+%\begin{figure*}[ht]
+%\begin{lstlisting}[frame=single]
+%aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
+%aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
+%
+%aMajority' cnt []     _   = cnt
+%aMajority' cnt (x:xs) can =
+%  local
+%    (if x == can then cnt+1 else cnt) $
+%      \ cnt' ->
+%        aMajority' cnt' xs can
+%\end{lstlisting}
+%\caption{The second pass of the majority vote algorithm in Copilot.}
+%\label{fig:amajority}
+%\end{figure*}
 
-aMajority' cnt []     _   = cnt
-aMajority' cnt (x:xs) can =
-  local
-    (if x == can then cnt+1 else cnt) $
-      \ cnt' ->
-        aMajority' cnt' xs can
-\end{lstlisting}
-\caption{The second pass of the majority vote algorithm in Copilot.}
-\label{fig:amajority}
-\end{figure*}
-
-The Copilot implementations of the first and the second
-pass are given in Figure \ref{fig:majority} and Figure \ref{fig:amajority}
+The Copilot implementations of the first a
+pass is  given in Figure \ref{fig:majority} and Figure \ref{fig:amajority}
 respectively. 
