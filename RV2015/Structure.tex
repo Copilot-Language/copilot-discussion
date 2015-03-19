@@ -1,4 +1,4 @@
-\section{Structure of the Toolchain}~\label{sec:structure} 
+\section{Implementation}~\label{sec:structure} 
 
 \begin{figure}[ht!]
   \begin{tikzpicture}[->, node distance=2.5cm, auto, shorten >=1pt, bend angle=45,
@@ -34,3 +34,55 @@
   \caption{The Copilot verification  toolchain.}
   \label{fig:toolchain}
 \end{figure}
+
+In this section, we shall outline the structure of the implementation
+or our Copilot verification system as illustrated in
+Figure~\ref{fig:toolchain}.  Copilot is deeply embedded in
+Haskell.  A Copilot program is \emph{reified} (i.e. transformed from
+a recursive structure into explicit graphs) and then domain specific
+type checking is done. Our current implementation employs two internal
+representations into the 
+on whether one uses the light prover or the Kind2 proving engine. 
+
+When using the \emph{light prover}, we translate the Copilot Core
+language into \textbf{IL} format: a list of quantifier-free equations
+over integer sequences, implicitly universally quantified by a free
+variable \emph{n}. Each sequence roughly corresponds to a stream. This
+format is similar to the one used in G.  Hagen's
+thesis~\cite{HagenPhD}.  
+In this format, a stream of type $a$ is modeled by a function of type $\mathbb{N} \to a$. Each stream definition is translated into a list of constraints on such functions. For instance, the stream definition :
+\begin{lstlisting}
+fib = [1, 1] ++ (fib + drop 1 fib)
+\end{lstlisting}
+is translated into a function $f : \mathbb{N} \to \mathbb{N}$ with the constraints :
+$$
+\begin{array}{c}
+f(0) = 1 \\
+f(1) = 1 \\
+\forall n . \; f(n + 2) = f(n + 1) + f(n)
+\end{array}
+$$
+Specifications in the \textbf{IL} format can be printed out in the
+SMTLib format. 
+
+
+When using the Kind2 prover, we the Copilot Core
+language into   textbf{TransitionSys} format : a modular
+representation of a \emph{state transition system}. This translation process is pretty straightforward : for each stream definition
+\begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
+we add a node with the same name as $s$ and the local variables $out_0, out_1, \cdots, \, out_p$ with the descriptors :
+
+\begin{itemize}
+\item $out_{i} = $  \texttt{Pre} $s_i$  $out_{i + 1}$
+\item $out_{p} = $  \texttt{Expr} $\tilde e$  where $\tilde e$ is a translation of $e$ in the \textbf{TransSys} expression format, which is quite similar to the core expression format. Moreover :
+
+\begin{itemize}
+\item Local variables in the core format can be expressed by adding variables in the current node.
+\item The core expression \texttt{Drop} $g$ $i$ is translated by $out_{p - i}$ if $g = s$. Otherwise, a local alias is defined for the variable $out_{p - i}$ of the node $g$ and is returned.
+\end{itemize}
+
+\end{itemize}
+This format  is similar
+to Kind2's native format thus interfacing with prover was
+straightforward. 
+
