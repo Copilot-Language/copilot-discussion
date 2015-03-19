@@ -1,0 +1,39 @@
+\section{Copilot Prover Interface}~\label{sec:prover} 
+We are the Copilot framework with an extensible interface to multiple
+provers aimed at checking  safety properties on Copilot
+programs. Currently Copilot interacts with two provers: the first is a
+homegrown prover we call ``the light prover'' built on top of
+Yices~\cite{Dutertre:cav2014} and the second is the Kind 2 prover~\cite{ZZZ} being developed at
+the University of Iowa.  
+
+Let us illustrate the use of the verification functionality with a
+very simple example.  Safety properties are simply expressed with
+standard boolean streams.  We bind a boolean stream to a property name
+with the \texttt{prop} construct in the specification, where the
+specification has type \texttt{Spec}.
+
+For instance, here is a straightforward specification declaring one
+property :
+
+\begin{lstlisting}[frame=single]
+spec :: Spec
+spec = do
+  prop "gt0" (x > 0)
+  where
+    x = [1] ++ (1 + x)
+\end{lstlisting}
+
+Let's say we want to check that \texttt{gt0} holds. For this, we use
+the function
+
+\begin{lstlisting}[frame=single]
+    prove :: Prover -> ProofScheme -> Spec -> IO ()
+\end{lstlisting}
+
+Here, we can discharge the proof by  using the light prover using the command:
+\begin{code}
+prove (lightProver def) (check "gt0") spec
+\end{code}
+where \texttt{lightProver def} stands for the \emph{light prover} with
+default configuration.  
+

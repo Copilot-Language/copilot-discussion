@@ -1,5 +1,47 @@
-\section{Example}\label{sec:example}
+\subsection{Example}\label{sec:example}
+The Copliot research team has previously investigated fault-tolerant
+runtime verification~\cite{pike-isse-13}. In this work we employed the Boyer-Moore
+Majority Vote Algorithm~\cite{MooreBoyer82,Hesselink2005} to determine
+if in a given list of votes there is a candidate that has more than
+half of the votes, and if so, of finding this candidate. The algorithm
+operates in two passes, first it 
 
-TBD: I'm thinking I want to discuss the Boyer-Moore example 
 
+\begin{figure*}[ht]
+\begin{lstlisting}[frame=single]
+majority :: (Eq a, Typed a) => [Stream a] -> Stream a
+majority []     = error "majority: empty list!"
+majority (x:xs) = majority' xs x 1
 
+majority' []     can _   = can
+majority' (x:xs) can cnt =
+  local
+    (if cnt == 0 then x else can) $
+      \ can' ->
+        local (if cnt == 0 || x == can then cnt+1 else cnt-1) $
+          \ cnt' ->
+            majority' xs can' cnt'
+\end{lstlisting}
+\caption{The first pass of the majority vote algorithm in Copilot.}
+\label{fig:majority}
+\end{figure*}
+
+\begin{figure*}[ht]
+\begin{lstlisting}[frame=single]
+aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
+aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
+
+aMajority' cnt []     _   = cnt
+aMajority' cnt (x:xs) can =
+  local
+    (if x == can then cnt+1 else cnt) $
+      \ cnt' ->
+        aMajority' cnt' xs can
+\end{lstlisting}
+\caption{The second pass of the majority vote algorithm in Copilot.}
+\label{fig:amajority}
+\end{figure*}
+
+The Copilot implementations of the first and the second
+pass are given in Figure \ref{fig:majority} and Figure \ref{fig:amajority}
+respectively. 

@@ -2,28 +2,26 @@
 Runtime Verification (RV), where monitors detect and respond to
 property violations at runtime, can help address several of the
 verification challenges facing ultra-critical systems.  As RV matures
- it will be employed to verify more and more sophisticated
+it will be employed to verify more and more sophisticated
 properties. For instance, checking complex stability properties of a
-control system or ensuring that a critical system is
-fault-tolerant.  Strictly regulated ultra-critical areas such
-as civil aviation, systems must demonstrate highly predicable behavior
-in order to be certified. As interest grows in techniques such as
-adaptive flight control and fully autonomous vehicles that utilize
-learning to adapt to unpredictable environments, architectures have
-been proposed~\cite{XX} that use RV to switch from the more exotic
-uncertified software to a certified, but less capable, system when
-safety properties are violated. If monitors in ultra-critical systems
-are to be the last line of defense, then we need to ensure they are
-correct.  As the monitors  we execute at runtime become more and more
-sophisticated, applying formal verification tools to the monitors to
-ensure they are correct can help safeguard that the last line of
-defense is actually effective. The ongoing work described here focuses
-on the verification of safety properties by applying temporal
-reasoning using a first order logic with built in theories for
-equality over uninterpreted symbols and linear real and integer
-arithmetic. To date our work has focused on verifying inductive
-properties by applying  $k-$induction  using Satisfiability Modulo Theories (SMT)
-based model checking.  
+control system or ensuring that a critical system is fault-tolerant.
+Strictly regulated ultra-critical areas such as civil aviation,
+systems must demonstrate highly predicable behavior in order to be
+certified. As interest grows in techniques such as adaptive flight
+control and fully autonomous vehicles that utilize learning to adapt
+to unpredictable environments, RV may be a way to regain the necessary
+level of predictability required of ultra-critical systems.  If
+monitors in ultra-critical systems are to be the last line of defense,
+then we need to ensure they are correct.  As the monitors we execute
+at runtime become more and more sophisticated, applying formal
+verification tools to the monitors to ensure they are correct can help
+safeguard that the last line of defense is actually effective. The
+ongoing work described here focuses on the verification of safety
+properties by applying temporal reasoning using a first order logic
+with built in theories for equality over uninterpreted symbols and
+linear real and integer arithmetic. To date our work has focused on
+verifying inductive properties by applying $k-$induction using
+Satisfiability Modulo Theories (SMT) based model checking.
 
   The case study applies our approach to the Copilot language and
   framework initially developed at the National Institute of Aerospace
@@ -44,7 +42,12 @@ based model checking.
 %technology into the Copilot RV  framework in order to verify
 %our monitors before they are deployed in unltra-critical systems.  
 
-
+%As interest grows in techniques such as
+%adaptive flight control and fully autonomous vehicles that utilize
+%learning to adapt to unpredictable environments, architectures have
+%been proposed~\cite{XX} that use RV to switch from the more exotic
+%uncertified software to a certified, but less capable, system when
+%safety properties are violated.
 
 
 

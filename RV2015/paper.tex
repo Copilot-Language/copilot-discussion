@@ -3,6 +3,7 @@
 \usepackage{makeidx}  % allows for indexgeneration
 %\usepackage{fullpage}
 \usepackage{cite,xcolor}
+\usepackage{xcolor} 
 \usepackage{amsfonts} 
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -29,13 +30,13 @@
       flexiblecolumns=false,
      basewidth={0.5em,0.45em},
       literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
-               {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{$\lambda$}}1
+               {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{${\color{blue}\lambda}$}}1
                {\\\\}{{\char`\\\char`\\}}1
-               {->}{{$\rightarrow$}}2 {>=}{{$\geq$}}2 {<-}{{$\leftarrow$}}2
+               {->}{{${\color{blue}\rightarrow}$}}2 {>=}{{$\geq$}}2 {<-}{{$\leftarrow$}}2
                {<=}{{$\leq$}}2 {=>}{{$\Rightarrow$}}2 
                {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
                {>>}{{>>}}2 {>>=}{{>>=}}2
-               {++}{{$++$}}2
+               {++}{{${\color{blue}++}$}}2
                {|}{{$\mid$}}1               
    }  
 
@@ -59,7 +60,7 @@
   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
   keywordstyle=\color{blue},       % keyword style
   language=Octave,                 % the language of the code
-  morekeywords={where, let,data,assert,Word8,Word32,Word64,Bool,
+  morekeywords={where, then,let,data,assert,Word8,Word32,Word64,Bool,
     Stream,trigger,Spec},            % if you want to add more keywords to the set
   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
@@ -129,6 +130,7 @@ TBD
 
 \input{intro}
 \input{copilot-intro}
+\input{prover}
 \input{CaseStudy} 
 \input{Structure}
 
