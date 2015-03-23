@@ -41,11 +41,22 @@ Figure~\ref{fig:toolchain}.  Copilot is deeply embedded in
 Haskell.  A Copilot program is \emph{reified} (i.e. transformed from
 a recursive structure into explicit graphs) and then domain specific
 type checking is done. Our current implementation employs two internal
-representations into the 
-on whether one uses the light prover or the Kind2 proving engine. 
+representations 
+\begin{itemize}
+\item
+  The \textbf{IL} format : a list
+  of quantifier-free equations over integer sequences, implicitly
+  universally quantified by a free variable \emph{n}. Each sequence
+  roughly corresponds to a stream.   This
+format is similar to the one used in G.  Hagen's
+dissertation~\cite{HagenPhD}, but somewhat customized for Copilot.   The \emph{light prover} works with this
+  format.
+\item The \textbf{TransSys} format : a modular representation of a
+  \emph{state transition system}. The \emph{Kind2 prover} uses this
+  format, which is similar to Kind2's native format.
+\end{itemize}
 
-When using the \emph{light prover}, we translate the Copilot Core
-language into \textbf{IL} format: a list of quantifier-free equations
+\subsection{IL Format} \textbf{IL} format: a list of quantifier-free equations
 over integer sequences, implicitly universally quantified by a free
 variable \emph{n}. Each sequence roughly corresponds to a stream. This
 format is similar to the one used in G.  Hagen's
@@ -64,6 +75,40 @@ f(1) = 1 \\
 $$
 Specifications in the \textbf{IL} format can be printed out in the
 SMTLib format. 
+
+paragraph{The translation process} 
+
+The translation process is straightforward as the reification process~\cite{gill,pike-icfp-12} has previously transformed the copilot program such that the \texttt{(++)} operator only occurs at the top of a stream definition. Indeed, all stream definitions are written with the pattern
+\begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
+where \texttt{e} is an expression in which \texttt{(++)} does not occur. In \texttt{Core.Spec}, a stream is defined as :
+\begin{lstlisting}[frame=single]
+data Stream = forall a.Typed a => Stream
+  { streamId         :: Id
+  , streamBuffer     :: [a]
+  , streamExpr       :: Expr a
+  , streamExprType   :: Type a }
+\end{lstlisting}
+where the field \texttt{streamBuffer} corresponds to \texttt{[$s_0$,...,$s_p$]} and the field \texttt{streamExpr} to \texttt{e}. Moreover, a simplified definition of the type \texttt{Expr} defined in \texttt{Core.Spec} is :
+\begin{lstlisting}[frame=single]
+data Expr a where
+  Const  :: Type a -> a -> Expr a
+  Drop   :: Type a -> DropIdx -> Id -> Expr a
+  Op2    :: Op2 a b c -> Expr a -> Expr b -> Expr c
+\end{lstlisting}Then, the translation algorithm is the following. For each stream equation \begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e},\end{center}we introduce a new fresh function $f_s$ and the following constraints :
+
+\begin{itemize}
+\item $f_s(i) = s_i$ \quad for $1 \leq i \leq p$
+\item $\forall n . \; f_s(n + p) = \texttt{expr}_p \; e$
+\end{itemize}
+where $\texttt{expr}_p$ is defined in this way on expressions :
+\begin{itemize}
+\item $\texttt{expr}_p \; (\texttt{Const } v) = v$
+\item $\texttt{expr}_p \; (\texttt{Drop } g \; i) = f_g(n + p - i)$
+\item $\texttt{expr}_p \; (\texttt{Op2 } \oplus \; x_1 \; x_2) =  {expr}_p \; x_1 \; \oplus \; {expr}_p \; x_2 $
+\end{itemize}
+
+
+
 
 
 When using the Kind2 prover, we the Copilot Core
@@ -86,3 +131,131 @@ This format  is similar
 to Kind2's native format thus interfacing with prover was
 straightforward. 
 
+
+
+\subsection{The \textbf{TransSys} format}
+
+Recall, a state transition system is a triple $(S,I,T),$
+where $S$ is a set of states, $I \subseteq S$ is the set of initial
+states and $T \subseteq S \times S $ is a transition relation over $S$.
+Here, a state consists of  the values of a finite set of variables, with types belong to $\{ \texttt{Int}, \texttt{Real},  \texttt{Bool}\}$. $I$ is encoded by a logical formula whose free variables correspond to the state variables and that holds for a state $q$ if and only if $q$ is an initial state. Similarly, the transition relation is given by a formula $T$ such that $T\left[\, q, \, q' \,\right]$ holds if and only if $q \rightarrow q'$. 
+
+The \textbf{TransSys} format is a modular encoding of such a state transition system. Related variables are grouped into \textit{nodes}, each node providing a distinct namespace and expressing some constraints between its variables. 
+
+
+
+\paragraph{Formal definition}
+
+Inside a node, a variable is referenced by a string identifier. Indeed, the corresponding \texttt{Var} type is defined as :
+\begin{lstlisting}[frame=single]
+data Var = Var {varName :: String}
+\end{lstlisting}
+Outside a node, a variable is referenced by a node identifier and an instance of \texttt{Var} :
+\begin{lstlisting}[frame=single]
+data ExtVar = ExtVar {extVarNode :: NodeId, extVarLocalPart :: Var} 
+\end{lstlisting}
+where \texttt{NodeId = String}. Then, the \texttt{Node} type is defined by :
+\begin{lstlisting}[frame=single]
+data Node = Node
+  { nodeId            :: NodeId
+  , nodeDependencies  :: [NodeId]
+  , nodeLocalVars     :: Map Var VarDescr
+  , nodeImportedVars  :: Bimap Var ExtVar 
+  , nodeConstrs       :: [Expr Bool] }
+\end{lstlisting} 
+where :
+\begin{itemize}
+\item \texttt{nodeId} is the identifier of the node
+\item \texttt{nodeImportedVars} contains the bijection between the external variables used in the node and their local aliases. Indeed, inside a node we cannot refer to an external variable (a variable belonging to another node). Therefore, a mean to bind it to a local name is provided.
+\item \texttt{nodeDependencies} is the list of the nodes from which a variable is given a local alias. This information is redundant.
+\item \texttt{nodeLocalVars} is a dictionnary which binds each local variable to its descriptor. The type of descriptors \texttt{VarDescr} will be described later.
+\item \texttt{nodeConstrs} is a list of constraints on local variables.
+\end{itemize}
+A variable descriptor is comprised  of a type and a definition :
+\begin{lstlisting}[frame=single]
+data VarDescr = forall t.VarDescr
+  { varType :: Type t
+  , varDef  :: VarDef t }
+\end{lstlisting}
+Note that in the same way as in \texttt{Copilot.Core}, {\sc
+  gadt}s~\cite{Xi2003,CheneyHinze03, Johann2008} are used to achieve some additional type safety. The \texttt{VarDef} type is defined as :
+\begin{lstlisting}[frame=single]
+data VarDef t =
+    Pre t Var
+  | Expr (Expr t)
+  | Constrs [Expr Bool]
+\end{lstlisting}
+As we can see, a local variable can be defined
+\begin{itemize}
+\item as the previous value of another variable, an initial value being given too (\texttt{Pre} constructor)
+\item by an expression involving other variables (\texttt{Expr} constructor)
+\item implicitly by a serie of constraints (\texttt{Constrs} constructor)
+\end{itemize}
+Note that the last constructor can be used to achieve some non-determinism. For instance, a variable whose \texttt{varDef} field is \texttt{Constrs []} is left totally unconstrained~\footnote{In fact, this is not exact as each constraint which is put in a \texttt{Constrs} constructor could have been put in the \texttt{nodeConstrs} field of the current node instead. However, this is to be avoided for readability and the \texttt{nodeConstrs} field should be left empty as often as possible.
+}. The expression type associated with the second constructor is defined as :
+\begin{lstlisting}[frame=single]
+data Expr t where
+  Const  :: Type t -> t -> Expr t
+  Ite    :: Type t -> Expr Bool -> Expr t -> Expr t -> Expr t
+  Op1    :: Type t -> Op1 x t -> Expr x -> Expr t
+  Op2    :: Type t -> Op2 x y t -> Expr x -> Expr y -> Expr t
+  VarE   :: Type t -> Var -> Expr t
+\end{lstlisting}
+Therefore, an expression is a combination of constants, operators, and local variable names.
+
+
+Finally, a specification in the \textbf{TransSys} format is comprised
+of  a list of node and a dictionary binding property names to boolean variables which have to be shown constant equals to \texttt{true}.
+\begin{lstlisting}[frame=single]
+data Spec = Spec
+  { specNodes :: [Node]
+  , specProps :: Map PropId ExtVar }
+\end{lstlisting}
+
+
+\paragraph{Semantics of a transition system}
+We give a semantics to \textbf{TransSys} specifications by extracting from them a state transition system in the form of a list of variables and two boolean formulas $I$ and $T$. 
+
+The list of variables is simply a concatenation of the local variables of all nodes. Then, we define the formula $C$ as the concatenation of the following clauses, for each node :
+
+
+\begin{itemize}
+\item A series of equalities $a_i = b_i$ for each entry $(a_i, b_i)$ in \texttt{nodeImportedVars}
+\item Each constraint defined in \texttt{nodeConstrs}
+\item For each local variable $v$ defined in \texttt{nodeLocalVars} :
+
+\begin{itemize}
+\item If the \texttt{Expr} $e$ constructor is used, add the constraint $v = e$
+\item If the \texttt{Constrs cs} constructor is used, add the constraints \texttt{cs} 
+\item If the \texttt{Pre} constructor is used, add no constraint
+\end{itemize}
+
+\end{itemize}
+
+
+Then, we define a formula $T_0[\vec q, \vec q \,']$ where $\vec q$ is the vector of variables representing the current state. Moreover, $\vec q \,'$ is a vector containing the same variables, primed, and represents the \textit{next} state. $T_0$ is defined as the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre \_} $v$ :
+\begin{center} $u' = v$ \end{center}
+After this, we define a formula $I_0[\vec q]$ that  is the conjunction of the following clauses, for each node and each local variable $u$ which descriptor is \texttt{Pre} $a$ \_ :
+\begin{center} $u = a$ \end{center}
+Finally, we define $I$ and $T$ as :
+\[  I[\vec q] =  I_0[\vec q] \;\wedge\; C[\vec q] \qquad T[\vec q, \; \vec q \, '] = T_0[\vec q, \; \vec q \,'] \, \wedge \, C[\vec q \, ']  \]
+
+
+
+
+\paragraph{Translation from the \texttt{Core} format to the \texttt{TransSys} format}
+
+This translation process is pretty straightforward : for each stream definition
+\begin{center}\texttt{ s = [$s_0$,...,$s_p$] ++ e}\end{center}
+we add a node with the same name as $s$ and the local variables $out_0, out_1, \cdots, \, out_p$ with the descriptors :
+
+\begin{itemize}
+\item $out_{i} = $  \texttt{Pre} $s_i$  $out_{i + 1}$
+\item $out_{p} = $  \texttt{Expr} $\tilde e$  where $\tilde e$ is a translation of $e$ in the \textbf{TransSys} expression format, which is quite similar to the core expression format. Moreover :
+
+\begin{itemize}
+\item Local variables in the core format can be expressed by adding variables in the current node.
+\item The core expression \texttt{Drop} $g$ $i$ is translated by $out_{p - i}$ if $g = s$. Otherwise, a local alias is defined for the variable $out_{p - i}$ of the node $g$ and is returned.
+\end{itemize}
+
+\end{itemize}

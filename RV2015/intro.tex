@@ -1,7 +1,8 @@
 \section{Introduction}\label{sec:intro}
 Runtime Verification (RV), where monitors detect and respond to
 property violations at runtime, can help address several of the
-verification challenges facing ultra-critical systems.  As RV matures
+verification challenges facing ultra-critical
+systems~\cite{pike-rv-11}.  As RV matures
 it will be employed to verify more and more sophisticated
 properties. For instance, checking complex stability properties of a
 control system or ensuring that a critical system is fault-tolerant.
@@ -10,7 +11,8 @@ systems must demonstrate highly predicable behavior in order to be
 certified. As interest grows in techniques such as adaptive flight
 control and fully autonomous vehicles that utilize learning to adapt
 to unpredictable environments, RV may be a way to regain the necessary
-level of predictability required of ultra-critical systems.  If
+level of predictability required of ultra-critical
+systems~\cite{simplex}.  If
 monitors in ultra-critical systems are to be the last line of defense,
 then we need to ensure they are correct.  As the monitors we execute
 at runtime become more and more sophisticated, applying formal
@@ -23,9 +25,11 @@ linear real and integer arithmetic. To date our work has focused on
 verifying inductive properties by applying $k-$induction using
 Satisfiability Modulo Theories (SMT) based model checking. 
 
-The case study applies our approach to the Copilot language and
+The case study applies our approach to the Copilot language, and
  framework initially developed at the National Institute of Aerospace
- and Galois Inc under a contract to NASA.  
+ and Galois Inc under a contract to NASA~\cite{copilot,pike-isse-13}.  
+
+
 
 
 %Copilot is a stream

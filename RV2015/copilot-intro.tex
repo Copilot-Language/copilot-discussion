@@ -1,13 +1,38 @@
 \section{Copilot}~\label{sec:co-intro} 
+Copilot is a Domain Specific Language embedded in the functional
+programming language Haskell~\cite{Haskell98}   tailored to
+programming monitors for hard real-time, reactive systems. Given that
+Copilot is a deep embedding in Haskell, one must have a working
+knowledge of the programming language to effectively use Copilot. 
+
+ Copilot is a \emph{stream} based language, where a stream is an infinite ordered
+ sequence of values that must conform to the same type.  All
+ transformation of data in Copilot must be propagated through
+ streams.  In this respect, Copilot is similar to 
+ Lustre~\cite{CaspiPHP87}, but is specialized for RV. 
 
 
-\paragraph{Copilot's expression language.}
+
+\subsubsection{Copilot's expression language.}
 In the following, we briefly and informally introduce Copilot's expression
-language. Copilot is a \emph{steam} based language with many similarities to Lustre~\cite{CaspiPHP87}.
- The Copilot language mimics both the syntax and semantics of lazy lists (which we
-call \emph{streams}) in Haskell.  One notable exception though is that
-operators are automatically promoted point-wise to the list level..  For
-example, the Fibonacci sequence modulo $2^{32}$ can be written in Copilot as follows:
+language.  The Copilot streams mimic both the syntax and semantics of
+Haskell lazy lists with the exception that  operators are
+automatically promoted point-wise to the list level. 
+
+Two types of temporal operators are provided in Copilot, one for
+delaying streams and one for looking into the future of streams:
+\begin{lstlisting}[frame=single]
+(++) :: [a] -> Stream a -> Stream a
+drop :: Int -> Stream a -> Stream a
+\end{lstlisting}
+%
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
+The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
+  s}, returning the remainder of the stream.
+
+
+
+ For example, the Fibonacci sequence modulo $2^{32}$ can be written in Copilot as follows:
 
 \begin{lstlisting}[frame=single]
 fib :: Stream Word32
@@ -32,7 +57,7 @@ The base types of Copilot over which streams are built include Booleans, signed
 and unsigned words of 8, 16, 32, and 64 bits, floats, and doubles. Type-safe
 casts in which overflow cannot occur are permitted.
 
-\paragraph{Sampling.}
+\subsubsection{Sampling.}
 Copilot programs are meant to monitor arbitrary C~programs.  They do
 so by
 periodically \emph{sampling} symbol values. (Copilot samples variables, arrays,

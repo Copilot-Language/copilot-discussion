@@ -37,3 +37,141 @@ prove (lightProver def) (check "gt0") spec
 where \texttt{lightProver def} stands for the \emph{light prover} with
 default configuration.  
 
+\subsubsection{The Prover Interface.}\label{the-prover-interface}
+
+The \texttt{Copilot.Kind.Prover} defines a general interface for
+provers. Therefore, it is really easy to add a new prover by creating a
+new object of type \texttt{Prover}. The latter is defined like this :
+
+\begin{lstlisting}[frame=single]
+data Cex = Cex
+
+type Infos = [String]
+
+data Output = Output Status Infos
+
+data Status
+  = Valid
+  | Invalid (Maybe Cex)
+  | Unknown
+  | Error
+  
+data Feature = GiveCex | HandleAssumptions
+  
+data Prover = forall r.Prover 
+  { proverName     :: String
+  , hasFeature     :: Feature -> Bool
+  , startProver    :: Core.Spec -> IO r
+  , askProver      :: r -> [PropId] -> PropId -> IO Output 
+  , closeProver    :: r -> IO () 
+  }
+
+\end{lstlisting}
+
+To interface with a  particular prover, one must  provide a \texttt{askProver} function that
+takes as an argument  the following three parameters: 
+\begin{itemize} 
+\item  The prover descriptor 
+\item  A list of assumptions 
+\item  A conclusion
+\end{itemize} 
+and uses the prover to check if the assumptions logically entail the conclusion.
+
+Two provers are currently supported by default : \texttt{Light} and \texttt{Kind2}.
+
+\subsubsection{The Light Prover.}\label{the-light-prover}
+
+The \emph{light prover} is a really simple prover which uses the Yices
+SMT solver with the \texttt{QF\_UFLIA} theory and is limited to prove
+\emph{k-inductive} properties.
+
+\subsubsection{The Kind2 Prover.}\label{the-kind2-prover}
+
+The \emph{Kind2} prover uses the model checker with the same name, from
+the University of Iowa. It translates the Copilot specification into a
+\emph{modular transition system} (the Kind2 native format) and then
+calls the \texttt{kind2} executable.
+
+It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
+a $$\texttt{kind2Prover :: Options -\textgreater{} Prover}$$ where the
+\texttt{Options} type is defined as
+
+\begin{lstlisting}[frame=single]
+data Options = Options { bmcMax :: Int }
+\end{lstlisting}
+
+and where \texttt{bmcMax} corresponds to the \texttt{-\/-bmc\_max}
+option of \emph{kind2} and is equivalent to the \texttt{kTimeout} option
+of the light prover. Its default value is $0,$ which stands for infinity.
+
+\subsubsection{Combining Provers.}\label{combining-provers}
+
+The
+$$\texttt{combine :: Prover -\textgreater{} Prover -\textgreater{} Prover}$$
+function lets you merge two provers A and B into a prover C which
+launches both A and B and returns the \emph{most precise} output. It
+would be interesting to implement other merging behaviours in the
+future. For instance, a \emph{lazy} one such that C launches B only if A
+has returns \emph{unknown} or \emph{error}.
+
+As an example, the following prover is used in \texttt{Driver.hs} :
+
+\begin{lstlisting}[frame=single]
+prover =
+  lightProver def {onlyBmc = True, kTimeout = 5} 
+  `combine` kind2Prover def
+\end{lstlisting}
+
+We will discuss the internals and the experimental results of these
+provers later.
+
+\subsubsection{Proof Schemes.}\label{proof-schemes}
+
+Let's consider again this example :
+
+\begin{lstlisting}[frame=single]
+spec :: Spec
+spec = do
+  prop "gt0"  (x > 0)
+  prop "neq0" (x /= 0)
+  where
+    x = [1] ++ (1 + x)
+
+\end{lstlisting}
+and let us say we want to prove \texttt{"neq0"}. Currently, the two
+available solvers fail at showing this non-inductive property (we will
+discuss this limitation later). Therefore, we can prove the more general
+inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
+this, we use the proof scheme
+
+\begin{lstlisting}[frame=single]
+assert "gt0" >> check "neq0"
+\end{lstlisting}
+
+
+instead of just 
+\begin{lstlisting}[frame=single] 
+  check "neq0" 
+\end{lstlisting}
+A proof scheme is chain of
+primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
+operator. For now, the available primitives are :
+
+\begin{itemize}
+\itemsep1pt\parskip0pt\parsep0pt
+\item
+  \texttt{check "prop"} checks whether or not a given property is true
+  in the current context.
+\item
+  \texttt{assume "prop"} adds an assumption in the current context.
+\item
+  \texttt{assert "prop"} is a shortcut for
+  \texttt{check "prop" \textgreater{}\textgreater{} assume "prop"}.
+\item
+  \texttt{assuming :: {[}PropId{]} -\textgreater{} ProofScheme -\textgreater{} ProofScheme}
+  is such that \texttt{assuming props scheme} assumes the list of
+  properties \emph{props}, executes the proof scheme \emph{scheme} in
+  this context, and forgets the assumptions.
+\item
+  \texttt{msg "..."} displays a string in the standard output
+\end{itemize}
