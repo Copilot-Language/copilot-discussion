@@ -21,19 +21,20 @@ safeguard that the last line of defense is actually effective.
 
 
 This paper documents our first efforts in incorporating formal
-verification of monitors with a RV framework. 
-The case study applies our approach to the Copilot language, and
- framework initially developed at the National Institute of Aerospace
- and Galois Inc under a contract to NASA~\cite{copilot,pike-isse-13}.  
-Inspired by reports from working engineers on the utility of the integration of model checking into the Lustre
-framework~\cite{Hagen08} our initial efforts have focused on the
-verification of safety properties using advanced  Satisfiability Modulo Theories
-(SMT) based bounded model checking~\cite{ClarkeBounded01} tools.
+verification of monitors with a RV framework.  The case study applies
+our approach to the Copilot language, and framework initially
+developed at the National Institute of Aerospace and Galois Inc under
+a contract to NASA~\cite{copilot,pike-isse-13}.  Inspired by reports
+from working engineers on the utility of the integration of model
+checking into the Lustre framework~\cite{Hagen08} our initial efforts
+have focused on the verification of safety properties using advanced
+Satisfiability Modulo Theories (SMT) based bounded model
+checking~\cite{ClarkeBounded01} tools.
 
  
 The next section provides the reader with the necessary background on
 Copilot. Section~\ref{sec:prover} introduces the new Copilot prover interface
-that we. In Section~ref{sec:example}  several examples illustrate the
+that we. In Section~\ref{sec:example}  several examples illustrate the
 application of the tool to the Boyer-Moore majority vote
 algorithm. Section~\ref{sec:structure} provides an overview of
 implementation details. Finally, Section~\ref{sec:conclusion}
