@@ -1,1 +1,23 @@
 \section{Future Work and Conclusion}\label{sec:conclusion}
+We have surveyed an ongoing research effort initiated by the authors
+to augment the  Copilot framework
+with a  verification capability  with the  goal  increasing our confidence in
+the monitors that act as watchmen.  The reported efforts have
+primarily focused on verifying inductive properties using
+$k-$induction. Our solution is not a panacea as any model checking
+solution is subject to the well known state explosion problem, but 
+the results in verifying both simple and relatively complex monitors
+are promising. 
+
+ In the near term, we to continue our collaboration with the Kind2
+ team as the prover gets more sophisticated and provides a more
+ flexible interface. Given we already output SMTlib format in order to
+ interface with Yices, we will investigate connecting to other provers
+ that use that input format. Finally, we shall investigate interfacing
+ with MetiTarski~\cite{TTT}.
+
+
+\subsubsection{Acknowledgements} We would like to thank Dr. George Hagen
+for his assistance in implementing the {\bf IL} component and the
+entire Kind2 team at the University of Iowa for their assistance with
+the Kind2 prover. 
