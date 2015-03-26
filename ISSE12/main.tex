@@ -1,8 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Springer Journal format for special issue of ISSE on SHM
 
+
+%%%%%%%%%%%%
+%% SPRINGER
 \documentclass[twocolumn]            % options: twocolumn, smallcondinsed, smallextended 
 {report-templates/svjour3}                       %   plus final, draft, referee
+%%%%%%%%%%%%
+
+%%%%%%%%%%%%
+%% MINE
+%% \documentclass[twocolumn]{article}            % options: twocolumn, smallcondins
+% ed, small
+%%%%%%%%%%%%
 
 \usepackage[utf8]{inputenc}
 \usepackage[hyphens]{url}
@@ -24,7 +34,7 @@
 % \usepackage{tabularx}
 \usepackage[center]{caption}
 \usepackage{subfigure}
-\usepackage{fancyhdr}
+%% \usepackage{fancyhdr}
 
 \usepackage{tikz}
 \usetikzlibrary{arrows,automata}
@@ -93,75 +103,64 @@
 
 %\usepackage{subfigure}
 
+\usepackage{amsmath}
+%% \newtheorem{example}{Example}[section]
 
+%% \newcommand{\acknowledgements}[1]{\section*{#1}}
 
-\usepackage{fancyhdr}
+%% \usepackage{fancyhdr}
 
 \title{Copilot: Monitoring Embedded Systems}
 
-\author{Lee Pike and Nis Wegmann and Sebastian Niller and Alwyn Goodloe}
+\author{Lee Pike\\Galois, Inc.\\\url{leepike@galois.com} 
+\and Nis Wegmann \\University of Copenhagen\\ \url{wegmann@diku.dk}
+\and Sebastian Niller \\Evertz Microsystems \\ \url{sniller@evertz.com} 
+\and Alwyn Goodloe \\ NASA \\\url{a.goodloe@nasa.gov}}
 
-%% \\Galois, Inc.\\\url{leepike@galois.com}
-%%   \and \\University of Copenhagen\\ \url{wegmann@diku.dk} 
-%%   \\ National Institute of
-%%   Aerospace\\ \url{sebastian.niller@gmail.com} \and Alwyn Goodloe\\National
-%%   Institute of Aerospace\\\url{a.goodloe@nasa.gov}\footnote{The research contributed by
-%%   Alwyn Goodloe was performed during his tenure as a staff scientist at the
-%%   National Institute of Aerospace; his current affiliation is with the NASA
-%%   Langley Research Center.}
+  %% \and  \and
+  %% \\  \and Alwyn
+  %% Goodloe\\National Institute of Aerospace\\\url{a.goodloe@nasa.gov}\footnote{The research contributed by
+  %% Alwyn Goodloe was performed during his tenure as a staff scientist at the
+  %% National Institute of Aerospace; his current affiliation is with the NASA
+  %% Langley Research Center.}
 %% }
 
+%%%%%%%%%%%%%%%%%
+%% SPRINGER
+%%  \journalname{Innovations in Systems and Software Engineering}
+%%%%%%%%%%%%%%%%%
 
-%% \author{Lee Pike\\Galois, Inc.\\\url{leepike@galois.com}
-%%   \and Nis Wegmann\\University of Copenhagen\\ \url{wegmann@diku.dk} 
-%%   \and Sebastian Niller\\ National Institute of
-%%   Aerospace\\ \url{sebastian.niller@gmail.com} \and Alwyn Goodloe\\National
-%%   Institute of Aerospace\\\url{a.goodloe@nasa.gov}\footnote{The research contributed by
-%%   Alwyn Goodloe was performed during his tenure as a staff scientist at the
-%%   National Institute of Aerospace; his current affiliation is with the NASA
-%%   Langley Research Center.}
+%%%%%%%%%%%%%%%%%
+%% SPRINGER
+%% \institute{Lee Pike \at 
+%% Galois, Inc., Portland, Oregon\\
+%% \email{leepike@galois.com} 
+%% \and
+%% Nis Wegmann \at 
+%% University of Copenhagen, Copenhagen, Denmark\\
+%% \email{wegmann@diku.dk}
+%% \and 
+%% Sebastian Niller \at 
+%% Evertz Microsystems\\
+%% \email{sniller@evertz.com}
+%% \and
+%% Alwyn Goodloe \at 
+%% NASA Langley Research Center, Hampton, Virginia  \\
+%% \email{a.goodloe@nasa.gov}
 %% }
-
-
- \journalname{Innovations in Systems and Software Engineering}
-
-\institute{Lee Pike \at 
-Galois, Inc., Portland, Oregon\\
-\email{leepike@galois.com} 
-\and
-Nis Wegmann \at 
-University of Copenhagen, Copenhagen, Denmark\\
-\email{wegmann@diku.dk}
-\and 
-Sebastian Niller \at 
-Evertz Microsystems\\
-\email{sniller@evertz.com}
-\and
-Alwyn Goodloe \at 
-NASA Langley Research Center, Hampton, Virginia  \\
-\email{a.goodloe@nasa.gov}
-}
-
+%%%%%%%%%%%%%%%%%
 
 
 
 \begin{document}\sloppy
 
-\maketitle
-\abstract{Runtime verification (RV) is a natural fit for
-  ultra-critical systems that require correct software behavior.  Due
-  to the low reliability of commodity hardware and the adversity of
-  operational environments, it is common in ultra-critical
-  systems to replicate processing units (and their hosted software)
-  and incorporate fault-tolerant algorithms to compare the outputs,
-  even if the software is considered to be fault-free.  In this paper,
-  we investigate the use of software monitoring in distributed
-  fault-tolerant systems and the implementation of fault-tolerance
-  mechanisms using RV techniques.  We describe the Copilot language and
-  compiler that generates monitors for distributed real-time systems,
-  and we discuss two case-studies in which Copilot-generated monitors
-  were used to detect onboard software and hardware faults and monitor
-  air-ground data link messaging protocols.}
+%% \maketitle 
+
+%%  \thispagestyle{fancy}
+%% \chead{\small To appear in {\em Innovations in Systems and Software Engineering:
+%%     Special Issue on Software Health Management.}}
+
+\abstract{Runtime verification (RV) is a natural fit for ultra-critical systems that require correct software behavior.  Due to the low reliability of commodity hardware and the adversity of operational environments, it is common in ultra-critical systems to replicate processing units (and their hosted software) and incorporate fault-tolerant algorithms to compare the outputs, even if the software is considered to be fault-free.  In this paper, we investigate the use of software monitoring in distributed fault-tolerant systems and the implementation of fault-tolerance mechanisms using RV techniques.  We describe the Copilot language and compiler that generates monitors for distributed real-time systems, and we discuss two case-studies in which Copilot-generated monitors were used to detect onboard software and hardware faults and monitor air-ground data link messaging protocols.}
  
 
 %% Runtime verification (RV) is a natural fit for ultra-critical systems, where
