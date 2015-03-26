@@ -1,6 +1,6 @@
 \section{Example}\label{sec:example}
 Earlier research on Copilot  has investigated fault-tolerant
-runtime verification~\cite{pike-isse-13}. In this work we employed the Boyer-Moore
+runtime verification~\cite{pike-isse-13}. In this work, we employed the Boyer-Moore
 Majority Vote Algorithm~\cite{MooreBoyer82,Hesselink2005} to determine
 if in a given list of votes there is a candidate that has more than
 half of the votes, and if so, of finding this candidate. The algorithm
@@ -79,7 +79,19 @@ majorityVote (x : xs) = aux x 1 xs
 \end{lstlisting} 
 Let us denote $A$ as the set of the elements that can be used as
 inputs for the algorithm.  Assume $l$ is a list and $a \in A$, we
-denote $|l|_a$ as the number of occurences of $a$ in $l$. The total length of a list $l$ is simply written $|l|$. The \texttt{majorityVote} functions takes a list of streams $l$ as its input and returns an output $maj$ such that : \[ \forall a \in A, \;  \left( a \neq maj \right) \Longrightarrow \left(|l|_a \leq |l| / {2}\right)  \] As said before, quantifiers are handled very poorly by SMT solvers and their use is restricted in most model-checking tools, including \texttt{copilot-kind}. Hopefully, in this case, we can use a very simple trick to write and check this property. Indeed, if $P(n)$ is a predicate of an integer $n$, we have $\forall n, \; P(n)$ if and only if $\neg P(n)$ is satisfiable, where $n$ an unconstrained integer, which can be solved by a SMT solver. Using this trick, the corresponding copilot specification can be written as :
+denote $|l|_a$ as the number of occurences of $a$ in $l$. The total
+length of a list $l$ is simply written $|l|$. The
+\texttt{majorityVote} functions takes a list of streams $l$ as its
+input and returns an output $maj$ such that : \[ \forall a \in A, \;
+\left( a \neq maj \right) \Longrightarrow \left(|l|_a \leq |l| /
+  {2}\right) \] Given that quantifiers are handled very poorly by SMT
+solvers and their use is restricted in most model-checking tools,
+including \texttt{copilot-kind}, we use a very simple trick to write
+and check this property.  If $P(n)$ is a predicate of an integer $n$,
+we have $\forall n, \; P(n)$ if and only if $\neg P(n)$ is
+satisfiable, where $n$ an unconstrained integer, which can be solved
+by a SMT solver. The corresponding copilot specification can be
+written as :
 \begin{lstlisting}[frame=single]
 okWith :: 
   forall a. (Typed a, Eq a) => 
@@ -98,25 +110,32 @@ spec = do
     ss = [ arbitrary ("s" ++ show i) | i <- [1..10]]
     maj = majorityVote
 \end{lstlisting}
-The function \texttt{arbitrary} is provided by the copilot-kind standard library and introduces an arbitrary stream. In the same way, \texttt{arbitraryCst} introduces a stream taking an unconstrained but constant value.
+The function \texttt{arbitrary} is provided by the \texttt{copilot-kind} standard library and introduces an arbitrary stream. In the same way, \texttt{arbitraryCst} introduces a stream taking an unconstrained but constant value.
 
-Note that we prove the algorithm for a fixed number of $N$ inputs (here $N=10$). Therefore no induction is needed for the proof and the invariant of the Boyer-Moore algorithm doesn't need to be made explicit. However, the size of the problem discharged to the SMT solver grows in proportion to $N$.
+Note that we prove the algorithm for a fixed number of $N$ inputs
+(here $N=10$). Therefore no induction is needed for the proof and the
+invariant of the Boyer-Moore algorithm does not need to be made explicit. However, the size of the problem discharged to the SMT solver grows in proportion to $N$.
 
 
-\subsubsection{The serial version.} Now, we discuss an implementation of the algorithm where the inputs are read one by one in a single stream and the result is updated at each clock tick. As the number of inputs of the algorithm isn't bounded anymore, a proof by induction is necessary and the invariant of the Boyer-Moore algorithm, being non-trivial, have to be stated explicitly. As seen in~\cite{Hesselink2005}, this invariants is :
+\subsubsection{The serial version.} Now, we discuss an implementation
+of the algorithm where the inputs are read one by one in a single
+stream and the result is updated at each clock tick. As the number of
+inputs of the algorithm is not bounded anymore, a proof by induction
+is necessary and the invariant of the Boyer-Moore algorithm, being
+non-trivial, has to be stated explicitly. As stated in  Hesselink~\cite{Hesselink2005}, this invariants is :
 \[ \begin{array}{c}
 \forall m \in A, \;\;\; \left(m \neq p\right) \Longrightarrow \left( s + 2|l|_m \,\leq\, |l| \right) \;\; \wedge \;\; \left(m = p\right) \Longrightarrow \left( 2|l|_m \,\leq\, s + |l| \right)
 \\
 
 \end{array} \]
-where $l$ is the list of processed inputs, $p$ is the intermediary result and $s$ is an internal state of the algorithm. The problem here is that the induction invariant needs universal quantification to be expressed. Unfortunately, this quantifier can't be removed by a similar trick like the one seen previously. Indeed, when an invariant is of the form $\forall x. P(x, s)$, $s$ denoting the current state of the world, the induction formula we have to prove is :
+where $l$ is the list of processed inputs, $p$ is the intermediary result and $s$ is an internal state of the algorithm. The problem here is that the induction invariant needs universal quantification to be expressed. Unfortunately, this quantifier cannot be removed by a similar trick like the one seen previously. Indeed, when an invariant is of the form $\forall x. P(x, s)$, $s$ denoting the current state of the world, the induction formula we have to prove is :
 \[ \forall x. P(x, s) \,\wedge\, T\left(s, s' \right) \,\models\, \forall x. P(x, s') \]
 Sometimes, the stronger entailment 
 \[ P(x, s) \,\wedge\, T\left(s, s' \right) \,\models\, P(x, s') \]
 holds and the problem becomes tractable for the SMT solver, by replacing a universally quantified variable by an unconstrained one. In our current example, it is not the case. 
 
 
-The way we fix this is far from being perfect : we restrains ourselves
+Our solution to  the problem of dealing with quantifiers  is far from being perfect : we restrict ourselves
 to the case where $A$ is finite and replace each formula of the form
 $\forall x \in A \; P(x)$ by $\bigwedge_{x \in A} P(x)$. This can be
 done with the help of the \texttt{forAllCst} function provided by the

@@ -1,10 +1,10 @@
 \section{Copilot Prover Interface}~\label{sec:prover} 
-We have modified  the Copilot framework with an extensible interface to multiple
-provers aimed at checking  safety properties on Copilot
+We have modified  the Copilot framework with an extensible interface  to multiple
+provers, called \texttt{copilot-kind}, aimed at checking  safety properties on Copilot
 programs. Currently Copilot interacts with two provers: the first is a
 homegrown prover we call ``the light prover'' built on top of
-Yices~\cite{Dutertre:cav2014} and the second is the Kind 2 model checker~\cite{kind2} being developed at
-the University of Iowa.  
+Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker~\cite{kind2} being developed at
+the University of Iowa.  The 
 
 Let us illustrate the use of the verification functionality with a
 very simple example.  Safety properties are simply expressed with
@@ -41,7 +41,7 @@ default configuration.
 
 The \texttt{Copilot.Kind.Prover} defines a general interface for
 provers. Therefore, it is really easy to add a new prover by creating a
-new object of type \texttt{Prover}. The latter is defined like this :
+new object of type \texttt{Prover}. The latter is defined as follows:
 
 \begin{lstlisting}[frame=single]
 data Cex = Cex
@@ -92,17 +92,17 @@ the University of Iowa. It translates the Copilot specification into a
 \emph{modular transition system} (the Kind2 native format) and then
 calls the \texttt{kind2} executable.
 
-It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
-a $$\texttt{kind2Prover :: Options -\textgreater{} Prover}$$ where the
-\texttt{Options} type is defined as
+%It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
+%a $$\texttt{kind2Prover :: Options -\textgreater{} Prover}$$ where the
+%\texttt{Options} type is defined as
+%
+%\begin{lstlisting}[frame=single]
+%data Options = Options { bmcMax :: Int }
+%\end{lstlisting}
 
-\begin{lstlisting}[frame=single]
-data Options = Options { bmcMax :: Int }
-\end{lstlisting}
-
-and where \texttt{bmcMax} corresponds to the \texttt{-\/-bmc\_max}
-option of \emph{kind2} and is equivalent to the \texttt{kTimeout} option
-of the light prover. Its default value is $0,$ which stands for infinity.
+%and where \texttt{bmcMax} corresponds to the \texttt{-\/-bmc\_max}
+%option of \emph{kind2} and is equivalent to the \texttt{kTimeout} option
+%of the light prover. Its default value is $0,$ which stands for infinity.
 
 \subsubsection{Combining Provers.}\label{combining-provers}
 
