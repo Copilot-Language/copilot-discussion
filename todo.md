@@ -34,6 +34,8 @@ TODOs
 
 * Add a backend to Feldspar.
 
+* Hmmm... I thought strictness analysis worked for things like 'x = x'.  Maybe
+  let it run longer?
 
 KNOWN BUGS
 ====
