@@ -4,7 +4,7 @@ provers, called \texttt{copilot-kind}, aimed at checking  safety properties on C
 programs. Currently Copilot interacts with two provers: the first is a
 homegrown prover we call ``the light prover'' built on top of
 Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker~\cite{kind2} being developed at
-the University of Iowa.  The 
+the University of Iowa.
 
 Let us illustrate the use of the verification functionality with a
 very simple example.  Safety properties are simply expressed with
@@ -81,7 +81,7 @@ Two provers are currently supported by default : \texttt{Light} and \texttt{Kind
 
 \subsubsection{The Light Prover.}\label{the-light-prover}
 
-The \emph{light prover} is a really simple prover which uses the Yices
+The \emph{light prover} is a simple prover which uses the Yices
 SMT solver with the \texttt{QF\_UFLIA} theory and is limited to prove
 \emph{k-inductive} properties.
 

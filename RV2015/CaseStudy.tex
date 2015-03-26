@@ -59,7 +59,7 @@ algorithm takes $n$ inputs from $n$ distinct streams and is fully
 executed. The second version of the algorithm  is a sequential version, where the inputs are
 delivered one by one in time and where the result is updated at each
 clock tick. Both can be checked with the basic k-induction algorithm
-but the proofs involved are of very different natures.
+but the proofs involved are of different natures.
 
 
 \subsubsection{The parallel version.} The core of the algorithm is the
@@ -84,11 +84,11 @@ length of a list $l$ is simply written $|l|$. The
 \texttt{majorityVote} functions takes a list of streams $l$ as its
 input and returns an output $maj$ such that : \[ \forall a \in A, \;
 \left( a \neq maj \right) \Longrightarrow \left(|l|_a \leq |l| /
-  {2}\right) \] Given that quantifiers are handled very poorly by SMT
+  {2}\right) \] Given that quantifiers are handled poorly by SMT
 solvers and their use is restricted in most model-checking tools,
-including \texttt{copilot-kind}, we use a very simple trick to write
+including \texttt{copilot-kind}, we use a simple trick to write
 and check this property.  If $P(n)$ is a predicate of an integer $n$,
-we have $\forall n, \; P(n)$ if and only if $\neg P(n)$ is
+we have $$\forall n \, . \, P(n)$$ if and only if $\neg P(n)$ is
 satisfiable, where $n$ an unconstrained integer, which can be solved
 by a SMT solver. The corresponding copilot specification can be
 written as :
@@ -181,5 +181,5 @@ scheme = do
 As the reader can see, we make the hypothesis that all the elements
 manipulated by the algorithm are in the set \texttt{allowed}, which is
 finite. As this set grows, the proofs discharged to the SMT solver
-becomes more and more large and redundant, which is why this solution
-is not  scalable and has limited interest in practice.
+becomes larger, which is why this solution
+is not scalable and has limited interest in practice.
