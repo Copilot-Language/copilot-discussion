@@ -2,44 +2,62 @@
 Runtime Verification (RV), where monitors detect and respond to
 property violations at runtime, can help address several of the
 verification challenges facing ultra-critical
-systems~\cite{pike-rv-11}.  As RV matures
-it will be employed to verify increasingly complex 
-properties. For instance, checking complex stability properties of a
-control system or ensuring that a critical system is fault-tolerant.
-Strictly regulated ultra-critical areas such as civil aviation,
-systems must demonstrate highly predicable behavior in order to be
-certified. As interest grows in techniques such as adaptive flight
-control and fully autonomous vehicles that utilize learning to adapt
-to unpredictable environments, RV may be a way to regain the necessary
-level of predictability required of ultra-critical
-systems~\cite{simplex}.  If
-monitors in ultra-critical systems are to be the last line of defense,
-then we need to ensure they are correct.  As the monitors we execute
-at runtime become more and more sophisticated, applying formal
-verification tools to the monitors to ensure they are correct can help
-safeguard that the last line of defense is actually effective. 
+systems~\cite{pike-rv-11}.  As RV matures it will be employed to
+verify increasingly complex properties. For instance, checking complex
+stability properties of a control system or ensuring that a critical
+system is fault-tolerant.  Strictly regulated ultra-critical areas
+such as civil aviation, systems must demonstrate highly predicable
+behavior in order to be certified. As interest grows in techniques
+such as adaptive flight control and fully autonomous vehicles that
+utilize learning to adapt to unpredictable environments, RV may be a
+way to regain the necessary level of predictability required of
+ultra-critical systems~\cite{simplex}.  If monitors in ultra-critical
+systems are to be the last line of defense, then we need to ensure
+they are correct. The work reported on here is part of a larger
+program aimed at creating a framework for \emph{high assurance RV}
+that supports: 
+\begin{itemize}
+\item Validation that the monitor properties support a safety
+case
+\item Verifying that the specification of the monitors are correct
+\item Ensuring that code generated implements the specification of the
+monitor. 
+\end{itemize} 
+ This philosophy is being applied to engineering the
+Copilot~\cite{copilot,pike-isse-13} language and framework that is
+intended to be used in RV of ultra-critical systems.  Earlier
+work~\cite{pike-icfp-12} focused verifying that the monitor synthesis
+process was correct. Here, the focus is on the second requirement for
+high-assurance RV - making sure the monitor  correct. 
+
+                                     
+ As the monitors we execute at runtime become more and more
+sophisticated, applying formal verification tools to the monitors to
+ensure they are correct can help safeguard that the last line of
+defense is actually effective.   This paper documents our first efforts
+in incorporating formal verification of monitors  into the Copilot RV framework.
+Inspired by reports from working engineers on the utility of the
+integration of model checking into the Lustre framework~\cite{Hagen08}
+our initial efforts have focused on the verification of safety
+properties using advanced Satisfiability Modulo Theories (SMT) based
+bounded model checking~\cite{ClarkeBounded01} tools. The modular
+design used here allows for many back-end proof engines so details on
+interfacing to a specific prover are intended to be illustrative of
+the efforts needed to interface with ones favorite proof engine. 
 
 
-This paper documents our first efforts in incorporating formal
-verification of monitors in a RV framework.  The case study applies
-our approach to the Copilot language, and framework initially
-developed at the National Institute of Aerospace and Galois Inc under
-a contract to NASA~\cite{copilot,pike-isse-13}.  Inspired by reports
-from working engineers on the utility of the integration of model
-checking into the Lustre framework~\cite{Hagen08} our initial efforts
-have focused on the verification of safety properties using advanced
-Satisfiability Modulo Theories (SMT) based bounded model
-checking~\cite{ClarkeBounded01} tools.
-
- 
 The next section provides the reader with the necessary background on
-Copilot. Section~\ref{sec:background}  gives a brief introduction to
-the 
-$k-$induction proof technique we apply to verify monitors. Section~\ref{sec:prover} introduces the new Copilot prover interface. In Section~\ref{sec:example}  several examples illustrate the
-application of the tool to the Boyer-Moore majority vote
+Copilot. Section~\ref{sec:background} gives a brief introduction to
+the $k-$induction proof technique we apply to verify
+monitors. Section~\ref{sec:prover} introduces the new Copilot prover
+interface. In Section~\ref{sec:example} several examples illustrate
+the application of the tool to the Boyer-Moore majority vote
 algorithm. Section~\ref{sec:structure} provides an overview of
-implementation details. Finally, Section~\ref{sec:conclusion}
-discusses future work and concludes. 
+implementation details. Section~\ref{sec:related} discusses related
+works. Finally, Section~\ref{sec:conclusion}
+discusses future work and concludes.
+
+
 
 %Copilot is a stream
 %  language for generating embedded C-code monitors for verifying
