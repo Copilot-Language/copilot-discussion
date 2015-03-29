@@ -22,5 +22,27 @@ similarities with Copilot. FeldSpar~\cite{feldspar} is designed for digital sign
 processing;  Kansas Lava~\cite{Gill:14:DSLs} is designed for
 programming  field programmable gate arrays (FPGAs);
 Ivory~\cite{pike-plpv14} is designed for writing secure autonomous
-systems.   
+systems. 
+
+  As we have already mentioned, Copilot is similar in spirit to other languages with stream-based semantics,
+notably represented by the Lustre family of languages~\cite{lustre-intro}.
+Copilot is a simpler language, particularly with respect to Lustre's clock
+calculus, focused on monitoring (as opposed to developing control systems).
+Copilot can be seen as an generalization of the idea of Lustre's ``synchronous
+observers''~\cite{Halbwachs93}, which are Boolean-valued streams used to track
+properties about Lustre programs.  Whereas Lustre uses synchronous observers to
+monitor Lustre programs, we apply the idea to monitoring arbitrary
+periodically-scheduled real-time systems. Canovas-Dumas and Caspi have
+built a tool for verifying Lustre programs using the Prototype
+Verification System (PVS) interactive prover~\cite{Canovas-Dumas:2000}
+and as such can be applied to a much wider range of properties than
+the bounded model checking tools used in \texttt{Copilot-Kind}.  The
+Kind model checker~\cite{kind2} is designed to model
+check Lustre programs and due to the  similarities of the Copilot a
+Lustre we targeted the Kind2 prover to be one of our back ends as
+well.  Yet to the best of our knowledge, the Boyer-Moore majority
+voting examples given in Section~\ref{sec:mvote} are more
+sophisticated than published results using Kind with Lustre. 
+  
+
 

@@ -1,20 +1,43 @@
 \section{Future Work and Conclusion}\label{sec:conclusion}
-We have surveyed an ongoing research effort initiated by the authors
-to augment the  Copilot framework
-with a  verification capability  with the  goal  increasing our confidence in
-the monitors that act as watchmen.  The reported efforts have
-primarily focused on verifying inductive properties using
+
+ Ultra-Critical systems are quickly evolving in complexity, and assured
+ RV is a necessary complement to traditional assurance techniques.  
+In this paper, we have presented the development of
+\texttt{Copilot-Kind} that enhances the Copilot RV framework with an
+integrated model-checking capability for verifying monitors.
+Verified  monitors are by no means sufficient for ensuring assured RV
+since a safety case is far more encompassing, but it is a necessary
+condition.
+
+
+\subsubsection{Assurance} The reported efforts have
+primarily focused on verifying invariant properties of monitors using
 $k-$induction. Our solution is not a panacea as any model checking
 solution is subject to the well known state explosion problem, but 
 the results in verifying both simple and relatively complex monitors
 are promising. 
 
- In the near term, we to continue our collaboration with the Kind2
- team as the prover gets more sophisticated and provides a more
- flexible interface. Given we already output SMTlib format in order to
- interface with Yices, we will investigate connecting to other provers
- that use that input format. Finally, we shall investigate interfacing
- with MetiTarski~\cite{AkbarpourPaulson}.
+\subsubsection{Efficacy of the eDSL Approach} First, we have
+demonstrated that the embedded DSL approach is powerful and flexible
+in that we were able to extend the Copilot RV framework with
+verification capabilities. Being embedded in a  higher-order functional language
+facilitated the creation of  a number of features such as our proof
+scheme capability. The fact Copilot is a Haskell based eDSL yielded
+very  concise properties. For instance, in Section~\ref{sec:mvote}
+the power of higher-order expression is well illustrated in 
+function  \texttt{forAllCst} for the
+serial Boyer-Moore example in that it  uses both a  a \texttt{fold}
+and a \texttt{map} operator to model finite conjunctions. 
+
+
+\subsubsection{Future Work} In the near term, we continue our
+collaboration with the Kind2 team as the prover gets more
+sophisticated and provides a more flexible interface. Given we already
+output SMTLib format in order to interface with Yices, we will
+investigate connecting to other provers that use that input
+format. Finally, we shall interface the verification with
+MetiTarski~\cite{AkbarpourPaulson}, which would allow us to discharge
+proofs of invariants involving real-valued special functions.
 
 
 \subsubsection{Acknowledgements} We would like to thank Dr. George Hagen
