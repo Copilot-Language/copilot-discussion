@@ -1,3 +1,26 @@
 \section{Related Work}\label{sec:related}
+The research reported on here builds on recent  research conducted in a number
+of areas including formal verification, functional programming and
+eDSL design, and RV.  
 
-TBD
+Copilot has many features common to other RV frameworks aimed at
+ monitoring distributed or real-time systems.  
+There are few other instances of RV frameworks targeted to C code.  One exception is {\sc
+  Rmor}, which generates constant-memory C monitors~\cite{havelundc}.  {\sc
+  Rmor} does not address real-time behavior or distributed system RV,
+though.   Research at the University of Waterloo also investigates the use of
+ RV using  periodic sampling~\cite{sampling}.  Unlike with Copilot, the authors
+do not make the assumptions that the target programs are hard real-time
+themselves.  JavaMOP~\cite{javamop}  uses aspect-oriented techniques
+to allow one to write sophisticated monitors. To our knowledge no
+other RV framework has integrated monitor verification tools into
+their systems. 
+
+Haskell eDSLs are of growing popularity and given that they are all
+embedded into the same programming language, they share many
+similarities with Copilot. FeldSpar~\cite{feldspar} is designed for digital signal
+processing;  Kansas Lava~\cite{Gill:14:DSLs} is designed for
+programming  field programmable gate arrays (FPGAs);
+Ivory~\cite{pike-plpv14} is designed for writing secure autonomous
+systems.   
+
