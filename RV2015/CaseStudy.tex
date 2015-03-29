@@ -1,4 +1,77 @@
 \section{Example}\label{sec:example}
+
+In this section,  we will present several examples of
+\texttt{copilot-kind} applied to verify properties on Copilot
+monitors. 
+
+
+ First, let us reexamine the Copilot program from
+ Section~\ref{sec:co-intro} that generates the  Fibonacci
+ sequence. A fundamental property of this program is that it produces
+ a stream of values that are always positive. We express this as follows:
+\begin{lstlisting}[frame=single]
+spec = do
+  prop "pos" (fib > 0)
+
+  where
+    fib :: Stream Word64
+    fib = [1, 1] ++ (fib + drop 1 fib)
+\end{lstlisting}
+This  invariant property is clearly inductive and is easily
+discharged. 
+ 
+The next example applies to verification engine to prove properties
+relating two different specifications. Consider the following
+specification:
+\begin{lstlisting}[frame=single]
+intCounter :: Stream Bool -> Stream Word64
+intCounter reset = time
+  where 
+    time = if reset then 0
+           else [0] ++ if time == 3 then 0 else time + 1
+\end{lstlisting}
+where that acts as a counter performing modulo arithmetic, but is
+reset when the \texttt{reset} stream value is true.  Now consider the
+specification
+\begin{lstlisting}[frame=single]
+greyTick :: Stream Bool -> Stream Bool
+greyTick reset = a && b
+  where
+    a = (not reset) && ([False] ++ not b)
+    b = (not reset) && ([False] ++ a)
+\end{lstlisting}
+A quick back of the envelope calculation reveals that,
+after a reset, \texttt{greyTick}'s output stream forms a cycle of
+boolean values with the third item in the cycle having value
+\texttt{true} and the rest being \texttt{false}.  Thus the two
+specifications both have a cyclic structure and with a cycle that
+begins when the \texttt{reset} stream is set to \texttt{true}.  
+
+From the above observations we 
+conjecture that given the same input stream, when \texttt{reset} is
+true,  the \texttt{intCounter} is $0$ and \texttt{greyTick} is
+\texttt{true} when \texttt{intCounter} is $2.$ We formalize these two
+properties in our framework as follows:
+\begin{lstlisting}[frame=single]
+spec :: Spec
+spec = do
+  prop "iResetOk"   (r ==> (ic == 0))
+  prop "eqCounters" (it == gt)
+  
+  where
+    ic = intCounter r
+    it = ic == 2
+    gt = greyTick r
+    r  = extern "reset" Nothing
+\end{lstlisting}
+These predicates are discharged using the proof scheme
+\begin{lstlisting}[frame=single]
+scheme :: ProofScheme
+scheme = do
+  check "iResetOk"
+  check "eqCounters"
+\end{lstlisting}  
+\subsection{Boyer-Moore Majority Vote}~\label{sec:mvote}
 Earlier research on Copilot  has investigated fault-tolerant
 runtime verification~\cite{pike-isse-13}. In this work, we employed the Boyer-Moore
 Majority Vote Algorithm~\cite{MooreBoyer82,Hesselink2005} to determine
@@ -7,7 +80,7 @@ half of the votes, and if so, of finding this candidate. The algorithm
 operates in two passes, first it chooses a candidate and the second
 pass verifies that the candidate is indeed a majority.  The algorithm
 is subtle and the desire to apply formal verification to our Copilot
-implementation helped motivate the effort described here. 
+implementation helped motivate the effort described here.   
 
 
 %\begin{figure*}[ht]
