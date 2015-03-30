@@ -50,7 +50,9 @@ checking~\cite{ClarkeBounded01}.
 The next section provides the reader with the necessary background on
 Copilot. Section~\ref{sec:background} gives a brief introduction to
 the $k-$induction proof technique we apply to verify
-monitors. Section~\ref{sec:prover} introduces the new Copilot prover
+monitors .
+%\jonathan{To be exact, we don't limit ourselves to k-induction as Kind2 relies heavily on the IC3 algorithm. Maybe we should use the term "SMT-based model-checking" instead. That being said, as I'll try to explain, it's true IC3 didn't work significantly better than basic k-induction in all the test cases I ran.}
+Section~\ref{sec:prover} introduces the new Copilot prover
 interface. In Section~\ref{sec:example} several examples illustrate
 the application of the tool to the Boyer-Moore majority vote
 algorithm. Section~\ref{sec:structure} provides an overview of

@@ -44,53 +44,41 @@ provers. Therefore, it is really easy to add a new prover by creating a
 new object of type \texttt{Prover}. The latter is defined as follows:
 
 \begin{lstlisting}[frame=single]
-data Cex = Cex
-
-type Infos = [String]
-
 data Output = Output Status Infos
-
+type Infos = [String]
 data Status
   = Valid
-  | Invalid (Maybe Cex)
+  | Invalid (Maybe Cex)   -- 'Cex' is the type for counterexamples
   | Unknown
   | Error
   
-data Feature = GiveCex | HandleAssumptions
-  
-data Prover = forall r.Prover 
+data Prover = forall r. Prover 
   { proverName     :: String
   , hasFeature     :: Feature -> Bool
   , startProver    :: Core.Spec -> IO r
-  , askProver      :: r -> [PropId] -> PropId -> IO Output 
   , closeProver    :: r -> IO () 
+  , askProver      :: r          -- ^ The prover internal state
+                   -> [PropId]   -- ^ A list of assumptions A
+                   -> PropId     -- ^ The property to prove P
+                   -> IO Output  -- ^ Whether or not A entails P
   }
 
 \end{lstlisting}
 
-To interface with a  particular prover, one must  provide a \texttt{askProver} function that
-takes as an argument  the following three parameters: 
-\begin{itemize} 
-\item  The prover descriptor 
-\item  A list of assumptions 
-\item  A conclusion
-\end{itemize} 
-and uses the prover to check if the assumptions logically entail the conclusion.
+To interface with a particular prover, one must mostly provide an \texttt{askProver} function that
+takes as its arguments the internal state of the prover, a list of assumptions $(A_i)_i$ and a property $P$ and decides whether or not : \[ \bigwedge_i A_i \models P  \] In the case the answer is \emph{no}, a counterexample trace leading to a state where $\bigwedge_i A_i \,\wedge\, \neg P$ is true is given. Moreover, even if the prover was given no time limit, we might still get the answer \emph{unknown} as the request might not be expressible in a decidable subset of a \textsc{smt-lib} theory\footnote{For instance, even Peano arithmetic is undecidable in general.}.
+%\begin{itemize}
+%\item \texttt{Valid} if the entailment holds.
+%\item \texttt{Invalid} if it does not, in which case.
+%\item \texttt{Unknown} if the prover can't find out. This type of answer is necessary even if the %prover has no time limit, as 
+%\item \texttt{Error} when something wrong happens.
+%\end{itemize}
+Two provers are currently supported by default :
+\begin{itemize}
+\item The homegrown \emph{light prover} which uses the Yices \textsc{smt}-solver with the \textsc{qf\_uflia} theory and which implements the basic $k$-induction algorithm.
+\item A prover based on the \emph{Kind2} model checker, which implements both $k$-induction and the more subtle IC3 algorithm.
+\end{itemize}
 
-Two provers are currently supported by default : \texttt{Light} and \texttt{Kind2}.
-
-\subsubsection{The Light Prover.}\label{the-light-prover}
-
-The \emph{light prover} is a simple prover which uses the Yices
-SMT solver with the \texttt{QF\_UFLIA} theory and is limited to prove
-\emph{k-inductive} properties.
-
-\subsubsection{The Kind2 Prover.}\label{the-kind2-prover}
-
-The \emph{Kind2} prover uses the model checker with the same name, from
-the University of Iowa. It translates the Copilot specification into a
-\emph{modular transition system} (the Kind2 native format) and then
-calls the \texttt{kind2} executable.
 
 %It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
 %a $$\texttt{kind2Prover :: Options -\textgreater{} Prover}$$ where the
@@ -105,25 +93,14 @@ calls the \texttt{kind2} executable.
 %of the light prover. Its default value is $0,$ which stands for infinity.
 
 \subsubsection{Combining Provers.}\label{combining-provers}
+Different provers can be combined into a single one. We provide a \texttt{combine} function whose signature is : $$\texttt{combine :: Prover -\textgreater{} Prover -\textgreater{} Prover}$$ that merge two provers $A$ and $B$ into a prover $C$ which
+launches both $A$ and $B$ and returns the most \emph{precise}\footnote{For instance, \texttt{Valid} is more {precise} than \texttt{Unknown} and one of two \texttt{Invalid} outputs might fail to hold a counterexample, in case the other is more precise.} output after they both stop. Smarter merging behaviors could be implemented, as running two provers in parallel and waiting the first one to stop.
 
-The
-$$\texttt{combine :: Prover -\textgreater{} Prover -\textgreater{} Prover}$$
-function lets you merge two provers A and B into a prover C which
-launches both A and B and returns the \emph{most precise} output. It
-would be interesting to implement other merging behaviours in the
-future. For instance, a \emph{lazy} one such that C launches B only if A
-has returns \emph{unknown} or \emph{error}.
-
-As an example, the following prover is used in \texttt{Driver.hs} :
-
+In practice, we used the following prover in the examples of Section~\ref{sec:example} :
 \begin{lstlisting}[frame=single]
-prover =
-  lightProver def {onlyBmc = True, kTimeout = 5} 
-  `combine` kind2Prover def
+prover = lightProver def {kTimeout = 5} `combine` kind2Prover def
 \end{lstlisting}
-
-We will discuss the internals and the experimental results of these
-provers later.
+which uses both the light and Kind2 provers, the first being limited to 5 steps of the $k$-induction algorithm.
 
 \subsubsection{Proof Schemes.}\label{proof-schemes}
 
@@ -139,7 +116,7 @@ spec = do
 
 \end{lstlisting}
 and let us say we want to prove \texttt{"neq0"}. Currently, the two
-available solvers fail at showing this non-inductive property (we will
+available solvers fail at showing this non-inductive\footnote{Non-inductive : whose induction step does not hold. See Section~\ref{sec:background}.} property (we will
 discuss this limitation later). Therefore, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
 this, we use the proof scheme
@@ -153,7 +130,7 @@ instead of just
 \begin{lstlisting}[frame=single] 
   check "neq0" 
 \end{lstlisting}
-A proof scheme is chain of
+A proof scheme is a chain of
 primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
 operator. For now, the available primitives are :
 
@@ -168,10 +145,14 @@ operator. For now, the available primitives are :
   \texttt{assert "prop"} is a shortcut for
   \texttt{check "prop" \textgreater{}\textgreater{} assume "prop"}.
 \item
-  \texttt{assuming :: {[}PropId{]} -\textgreater{} ProofScheme -\textgreater{} ProofScheme}
-  is such that \texttt{assuming props scheme} assumes the list of
+
+\texttt{assuming props scheme} assumes the list of
   properties \emph{props}, executes the proof scheme \emph{scheme} in
-  this context, and forgets the assumptions.
+  this context, and forgets the assumptions. The signature of \texttt{assuming} is  
+ {\texttt{{[}PropId{]} -\textgreater{} ProofScheme -\textgreater{} ProofScheme}}.
+
 \item
-  \texttt{msg "..."} displays a string in the standard output
+  \texttt{msg "..."} displays a string in the standard output.
 \end{itemize}
+
+Although very simple, such a mechanism is necessary to make our model-checking approach scale up by splitting a proof in small lemmas. Some possible enhancements of it will be discussed in Section~\ref{sec:conclusion}.

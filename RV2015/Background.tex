@@ -8,8 +8,8 @@ advantage that it is well suited  to  SMT
 based bounded model checking. This section profiles the
 basic concepts of the  $k-$induction proof technique needed in the
 remainder of the paper. In practice, we
-use tools that implement  enhancements the basic procedure such as path
-compression~\cite{dMRS03} the help the process scale, but are beyond
+use tools that implement  enhancements of the basic procedure such as path
+compression~\cite{dMRS03} that help the process scale, but are beyond
 the focus of the paper. 
 
 Consider  a state transition system  $(S,I,T),$
@@ -38,3 +38,5 @@ satisfies the $k$-induction principle. As $k$ increases, weaker
 invariants may be proved. If $P$ is a safety property that doesn't hold, then the first entailment will break for a finite $k$ and a counterexample will be provided. The trick is to find an invariant that is
 tractable by the SMT solver yet weak enough to satisfy the desired
 property.  
+
+\jonathan{Maybe I'll add a few words about IC3 here}
