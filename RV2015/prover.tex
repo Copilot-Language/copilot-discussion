@@ -39,7 +39,7 @@ default configuration.
 
 \subsubsection{The Prover Interface.}\label{the-prover-interface}
 
-The \texttt{Copilot.Kind.Prover} defines a general interface for
+The \texttt{Copilot-Kind} provides a general interface for
 provers. Therefore, it is really easy to add a new prover by creating a
 new object of type \texttt{Prover}. The latter is defined as follows:
 
@@ -122,8 +122,6 @@ prover =
   `combine` kind2Prover def
 \end{lstlisting}
 
-We will discuss the internals and the experimental results of these
-provers later.
 
 \subsubsection{Proof Schemes.}\label{proof-schemes}
 
@@ -139,8 +137,7 @@ spec = do
 
 \end{lstlisting}
 and let us say we want to prove \texttt{"neq0"}. Currently, the two
-available solvers fail at showing this non-inductive property (we will
-discuss this limitation later). Therefore, we can prove the more general
+available solvers fail at showing this non-inductive property.  Yet, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
 this, we use the proof scheme
 
