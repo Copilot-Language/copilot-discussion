@@ -11,39 +11,40 @@ behavior in order to be certified. As interest grows in techniques
 such as adaptive flight control and fully autonomous vehicles that
 utilize learning to adapt to unpredictable environments, RV may be a
 way to regain the necessary level of predictability required of
-ultra-critical systems.  If monitors in ultra-critical
+ultra-critical systems.  As RV is applied to more complex systems the
+monitors themselves will become increasing sophisticated and just as
+with the software itself prone to error.  Applying formal verification
+tools to the monitors to ensure they are correct can help safeguard
+that the last line of defense is actually effective.
+
+  If monitors in ultra-critical
 systems are to be the last line of defense, then we need to ensure
 they are correct. The work reported on here is part of a larger
-program aimed at creating a framework for \emph{high assurance RV}
-that supports: 
+program aimed at creating a framework for \emph{high assurance RV}. In
+order to be used in ultra-critical environments, high-assurance RV
+must : 
 \begin{itemize}
-\item Validation that the monitor properties support a safety
-case
-\item Verifying that the specification of the monitors are correct
-\item Ensuring that code generated implements the specification of the
+\item Support the production of evidence needed for a safety case
+  employing RV enforce safety guarantees.
+\item Support the verification that the specification of the monitors
+  are indeed correct. 
+\item Ensure that monitor code generated implements the specification of the
 monitor. 
 \end{itemize} 
- This philosophy is being applied to engineering the
-Copilot~\cite{copilot,pike-isse-13} language and framework that is
+ These guiding principles are informing the continuing development of the Copilot~\cite{copilot,pike-isse-13} language and framework that is
 intended to be used in RV of ultra-critical systems.  Earlier
 work~\cite{pike-icfp-12} focused verifying that the monitor synthesis
 process was correct. Here, the focus is on the second requirement for
 high-assurance RV - making sure the monitor  correct. 
 
                                      
- As the monitors we execute at runtime become more and more
-sophisticated, applying formal verification tools to the monitors to
-ensure they are correct can help safeguard that the last line of
-defense is actually effective.   This paper documents our first efforts
-in incorporating formal verification of monitors  into the Copilot RV framework.
-Inspired by reports from working engineers on the utility of the
-integration of model checking into the Lustre framework~\cite{Hagen08}
-our initial efforts have focused on the verification of safety
-properties using advanced Satisfiability Modulo Theories (SMT) based
-bounded model checking~\cite{ClarkeBounded01} tools. The modular
-design used here allows for many back-end proof engines so details on
-interfacing to a specific prover are intended to be illustrative of
-the efforts needed to interface with ones favorite proof engine. 
+This paper documents our efforts in incorporating formal verification
+of monitors into the Copilot RV framework.  Initial efforts have
+focused on verifying invariants using advanced Satisfiability Modulo
+Theories (SMT) based bounded model
+checking~\cite{ClarkeBounded01}.  
+
+
 
 
 The next section provides the reader with the necessary background on
