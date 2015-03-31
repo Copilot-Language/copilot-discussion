@@ -8,15 +8,20 @@ advantage that it is well suited  to  SMT
 based bounded model checking. This section profiles the
 basic concepts of the  $k-$induction proof technique needed in the
 remainder of the paper. In practice, we
+<<<<<<< HEAD
 use tools that implement  enhancements of the basic procedure such as path
 compression~\cite{dMRS03} that help the process scale, but are beyond
+=======
+use tools that implement  enhancements the basic procedure such as path
+compression~\cite{dMRS03} to help the process scale, but are beyond
+>>>>>>> c96d1a05c88fd487b22a0669d32835a33eff574a
 the focus of the paper. 
 
 Consider  a state transition system  $(S,I,T),$
 where $S$ is a set of states, $I \subseteq S$ is the set of initial
 states and $T \subseteq S \times S $ is a transition relation over
 $S.$ To show $P$ holds in the transition system one must first
-show the base case holds, that is $P$ holds in all states reachable
+show the base case holds, that  $P$ holds in all states reachable
 from an initial state in $k$ steps, and then show the induction step,
 that if $P$ holds in states $s_0,\ldots,s_{k-1}$ then it holds in
 state $s_k.$ The $k$-induction principle is formally expressed in the
