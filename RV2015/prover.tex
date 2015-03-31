@@ -100,11 +100,7 @@ In practice, we used the following prover in the examples of Section~\ref{sec:ex
 \begin{lstlisting}[frame=single]
 prover = lightProver def {kTimeout = 5} `combine` kind2Prover def
 \end{lstlisting}
-<<<<<<< HEAD
-which uses both the light and Kind2 provers, the first being limited to 5 steps of the $k$-induction algorithm.
-=======
-
->>>>>>> c96d1a05c88fd487b22a0669d32835a33eff574a
+which uses both the light and Kind2 provers, the first being limited to 5 steps of the $k$-induction 
 
 \subsubsection{Proof Schemes.}\label{proof-schemes}
 
@@ -119,13 +115,7 @@ spec = do
     x = [1] ++ (1 + x)
 
 \end{lstlisting}
-and let us say we want to prove \texttt{"neq0"}. Currently, the two
-<<<<<<< HEAD
-available solvers fail at showing this non-inductive\footnote{Non-inductive : whose induction step does not hold. See Section~\ref{sec:background}.} property (we will
-discuss this limitation later). Therefore, we can prove the more general
-=======
-available solvers fail at showing this non-inductive property.  Yet, we can prove the more general
->>>>>>> c96d1a05c88fd487b22a0669d32835a33eff574a
+and let us say we want to prove \texttt{"neq0"}. Currently, the two available solvers fail at showing this non-inductive\footnote{Non-inductive : whose induction step does not hold. See Section~\ref{sec:background}.} property. Yet, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
 this, we use the proof scheme
 
