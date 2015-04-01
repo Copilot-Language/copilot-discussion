@@ -23,7 +23,7 @@ spec = do
     x = [1] ++ (1 + x)
 \end{lstlisting}
 
-Let's say we want to check that \texttt{gt0} holds. For this, we use
+In order  to check that \texttt{gt0} holds, we use
 the function
 
 \begin{lstlisting}[frame=single]
@@ -39,7 +39,7 @@ default configuration.
 
 \subsubsection{The Prover Interface.}\label{the-prover-interface}
 
-The \texttt{Copilot-Kind} provides a general interface for
+ \texttt{Copilot-Kind} provides a general interface for
 provers. Therefore, it is really easy to add a new prover by creating a
 new object of type \texttt{Prover}. The latter is defined as follows:
 
@@ -104,7 +104,7 @@ which uses both the light and Kind2 provers, the first being limited to 5 steps 
 
 \subsubsection{Proof Schemes.}\label{proof-schemes}
 
-Let's consider again this example :
+Consider again the example :
 
 \begin{lstlisting}[frame=single]
 spec :: Spec

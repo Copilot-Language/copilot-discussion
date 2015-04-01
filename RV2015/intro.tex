@@ -22,12 +22,12 @@ systems are to be the last line of defense, then we need to ensure
 they are correct. The work reported on here is part of a larger
 program aimed at creating a framework for \emph{high assurance RV}. In
 order to be used in ultra-critical environments, high-assurance RV
-must : 
+must: 
 \begin{itemize}
 \item Support the production of evidence needed for a safety case
   employing RV enforce safety guarantees.
 \item Support the verification that the specification of the monitors
-  are indeed correct. 
+  is indeed correct. 
 \item Ensure that monitor code generated implements the specification of the
 monitor. 
 \end{itemize} 
@@ -50,10 +50,10 @@ checking~\cite{ClarkeBounded01}.
 The next section provides the reader with the necessary background on
 Copilot. Section~\ref{sec:background} gives a brief introduction to
 the $k-$induction proof technique we apply to verify
-monitors .
+monitors.
 %\jonathan{To be exact, we don't limit ourselves to k-induction as Kind2 relies heavily on the IC3 algorithm. Maybe we should use the term "SMT-based model-checking" instead. That being said, as I'll try to explain, it's true IC3 didn't work significantly better than basic k-induction in all the test cases I ran.}
 Section~\ref{sec:prover} introduces the new Copilot prover
-interface. In Section~\ref{sec:example} several examples illustrate
+interface. In Section~\ref{sec:example}, several examples illustrate
 the application of the tool to the Boyer-Moore majority vote
 algorithm. Section~\ref{sec:structure} provides an overview of
 implementation details. Section~\ref{sec:related} discusses related
