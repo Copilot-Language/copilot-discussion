@@ -6,46 +6,53 @@ eDSL design, and RV.
 Copilot has many features common to other RV frameworks aimed at
  monitoring distributed or real-time systems.  
 There are few other instances of RV frameworks targeted to C code.  One exception is {\sc
-  Rmor}, which generates constant-memory C monitors~\cite{havelundc}.  {\sc
+ Rmor}, which generates constant-memory C monitors~\cite{havelundc}.  {\sc
   Rmor} does not address real-time behavior or distributed system RV,
-though.   Research at the University of Waterloo also investigates the use of
- RV using  periodic sampling~\cite{sampling}.  Unlike with Copilot, the authors
-do not make the assumptions that the target programs are hard real-time
-themselves.  JavaMOP~\cite{javamop}  uses aspect-oriented techniques
+though.    JavaMOP~\cite{javamop}  uses aspect-oriented techniques
 to allow one to write sophisticated monitors. To our knowledge no
 other RV framework has integrated monitor verification tools into
 their systems. 
 
+%Research at the University of Waterloo also investigates the use of
+% RV using  periodic sampling~\cite{sampling}.  Unlike with Copilot, the authors
+%do not make the assumptions that the target programs are hard real-time
+%themselves.
+
 Haskell eDSLs are of growing popularity and given that they are all
 embedded into the same programming language, they share many
-similarities with Copilot. FeldSpar~\cite{feldspar} is designed for digital signal
-processing;  Kansas Lava~\cite{Gill:14:DSLs} is designed for
-programming  field programmable gate arrays (FPGAs);
-Ivory~\cite{pike-plpv14} is designed for writing secure autonomous
-systems. 
+similarities with Copilot. For instance, 
+ Kansas Lava~\cite{Gill:14:DSLs}, which is designed for
+programming  field programmable gate arrays,  and 
+Ivory~\cite{pike-plpv14}, which is designed for writing secure autonomous
+systems, are both implemented using techniques similar to Copilot.  
 
-  As we have already mentioned, Copilot is similar in spirit to other languages with stream-based semantics,
-notably represented by the Lustre family of languages~\cite{lustre-intro}.
-Copilot is a simpler language, particularly with respect to Lustre's clock
-calculus, focused on monitoring (as opposed to developing control systems).
-Copilot can be seen as an generalization of the idea of Lustre's ``synchronous
-observers''~\cite{Halbwachs93}, which are Boolean-valued streams used to track
-properties about Lustre programs.  Whereas Lustre uses synchronous observers to
-monitor Lustre programs, we apply the idea to monitoring arbitrary
-periodically-scheduled real-time systems. Canovas-Dumas and Caspi have
-built a tool for verifying Lustre programs using the Prototype
-Verification System (PVS) interactive prover~\cite{Canovas-Dumas:2000}
-and as such can be applied to a much wider range of properties than
-the bounded model checking tools used in \texttt{Copilot-Kind}. 
-The work that is most relevant  the research presented in this paper
-is the application of  the Kind model checking tool to verify Lustre
-programs~\cite{Hagen08}. 
+
+
+%For instance FeldSpar~\cite{feldspar} is designed for digital signal processing
+
+As we have already mentioned, Copilot is similar in spirit to other
+languages with stream-based semantics, notably represented by the
+Lustre family of languages~\cite{lustre-intro}.  Copilot is a simpler
+language, particularly with respect to Lustre's clock calculus,
+focused on monitoring (as opposed to developing control systems).
+Copilot can be seen as an generalization of the idea of Lustre's
+``synchronous observers''~\cite{Halbwachs93}, which are Boolean-valued
+streams used to track properties about Lustre programs.  Whereas
+Lustre uses synchronous observers to monitor Lustre programs, we apply
+the idea to monitoring arbitrary periodically-scheduled real-time
+systems. Canovas-Dumas and Caspi have built a tool for verifying
+Lustre programs using the Prototype Verification System (PVS)
+interactive prover~\cite{Canovas-Dumas:2000} and as such can be
+applied to a much wider range of properties than the bounded model
+checking tools used in \texttt{Copilot-Kind}.  The work that is most
+relevant the research presented in this paper is the application of
+the Kind model checking tool to verify Lustre programs~\cite{Hagen08}.
 Kind and its most recent incarnation~\cite{kind2}is designed to model
-check Lustre programs and due to the  similarities of the Copilot a
+check Lustre programs and due to the similarities of the Copilot a
 Lustre we targeted the Kind2 prover to be one of our back ends as
-well.  Yet to the best of our knowledge, the Boyer-Moore majority
+well.  Yet, to the best of our knowledge, the Boyer-Moore majority
 voting examples given in Section~\ref{sec:mvote} are more
-sophisticated than published results using Kind with Lustre. 
+sophisticated than published results using Kind with Lustre.
   
 
 

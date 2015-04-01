@@ -30,7 +30,7 @@ intCounter reset = time
     time = if reset then 0
            else [0] ++ if time == 3 then 0 else time + 1
 \end{lstlisting}
-where that acts as a counter performing modulo arithmetic, but is
+that acts as a counter performing modulo arithmetic, but is
 reset when the \texttt{reset} stream value is true.  Now consider the
 specification
 \begin{lstlisting}[frame=single]
@@ -195,7 +195,8 @@ of the algorithm where the inputs are read one by one in a single
 stream and the result is updated at each clock tick. As the number of
 inputs of the algorithm is not bounded anymore, a proof by induction
 is necessary and the invariant of the Boyer-Moore algorithm, being
-non-trivial, has to be stated explicitly. As stated in  Hesselink~\cite{Hesselink2005}, this invariants is :
+non-trivial, has to be stated explicitly. As stated in
+Hesselink~\cite{Hesselink2005}, this invariant is :
 \[ \begin{array}{c}
 \forall m \in A, \;\;\; \left(m \neq p\right) \Longrightarrow \left( s + 2|l|_m \,\leq\, |l| \right) \;\; \wedge \;\; \left(m = p\right) \Longrightarrow \left( 2|l|_m \,\leq\, s + |l| \right)
 \\

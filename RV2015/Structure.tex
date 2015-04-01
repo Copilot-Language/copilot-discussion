@@ -1,48 +1,47 @@
 \section{Implementation}~\label{sec:structure} 
 
-\begin{figure}[ht!]
-  \begin{tikzpicture}[->, node distance=2.5cm, auto, shorten >=1pt, bend angle=45,
-   thick]
-    \tikzstyle{every state}=[rectangle, rounded corners]
-
-    \node[state]         (Lang) 
-         {
-           \begin{tabular}[b]{l}
-           Copilot Libraries\\ \hline Copilot Language
-           \end{tabular}};
-   \node[state]         (Core) [below of =Lang]          {Copilot Core};
+%\begin{figure}[ht!]
+%  \begin{tikzpicture}[->, node distance=2.5cm, auto, shorten >=1pt, bend angle=45,
+%   thick]
+%    \tikzstyle{every state}=[rectangle, rounded corners]
+%
+%    \node[state]         (Lang) 
+%         {
+%           \begin{tabular}[b]{l}
+%           Copilot Libraries\\ \hline Copilot Language
+%           \end{tabular}};
+%   \node[state]         (Core) [below of =Lang]          {Copilot Core};
    %\node[state]        (Cnub) [below of = Core]       {Cnub}; 
-   \node[state]        (TransSys) [left of=Core] {$\mathrm{Transition  Sys}$};
-   \node[state]        (IL) [right of =Core] {IL}; 
-    \node[state]       (SmtLib) [right of=IL] {SMT LIB};
- %  \node[state]        (NMTransSys)[below left of = TransSys]   {$\mathrm{Transition  Sys}^{nm}$} ;
-  % \node[state]        (MprimeTransSys)[below right of = TransSys] {$\mathrm{Transition  Sys}^{m}$} ;
-    \node[state]       (Kind2Native) [left of = TransSys]{Kind 2} ;
-    \tikzstyle{every node}=[]
-
-    \path 
-    (Lang) edge   [ anchor=west, text width=7.00cm] node {Reification and DSL-specific type-checking} (Core)
+%   \node[state]        (TransSys) [left of=Core] {$\mathrm{Transition  Sys}$};
+%   \node[state]        (IL) [right of =Core] {IL}; 
+%    \node[state]       (SmtLib) [right of=IL] {SMT LIB};
+ %  \node[state]        (NMTransSys)[below left of = TransSys]   {$\mathrm{Transition  %Sys}^{nm}$} ;
+  % \node[state]        (MprimeTransSys)[below right of = TransSys] {$\mathrm{Transition  %Sys}^{m}$} ;
+%    \node[state]       (Kind2Native) [left of = TransSys]{Kind 2} ;
+%    \tikzstyle{every node}=[]
+%
+%    \path 
+%    (Lang) edge   [ anchor=west, text width=7.00cm] node {Reification and DSL-specific %type-checking} (Core)
   % (Core) edge              node {} (Cnub)
-      (Core)   edge              node {} (TransSys)
-                  edge              node {} (IL)
+%      (Core)   edge              node {} (TransSys)
+%                  edge              node {} (IL)
   %   (TransSys)     edge             node[swap] {Inline} (NMTransSys)
   %                      edge              node {Remove Cycles}  (MprimeTransSys)
   %  (NMTransSys) edge              node {} (Kind2Native)
-    (TransSys)  edge  node  {}   (Kind2Native)   
-   (IL) edge             node{} (SmtLib) ;
-  \end{tikzpicture}
-  \caption{The Copilot verification  toolchain.}
-  \label{fig:toolchain}
-\end{figure}
+ %   (TransSys)  edge  node  {}   (Kind2Native)   
+ %  (IL) edge             node{} (SmtLib) ;
+ % \end{tikzpicture}
+%  \caption{The Copilot verification  toolchain.}
+ % \label{fig:toolchain}
+%\end{figure}
 
-\jonathan{Add a Cnub node after Copilot Core and between TS and IL}
+%\jonathan{Add a Cnub node after Copilot Core and between TS and IL}
 
 In this section, we shall outline the structure of the implementation
-of our Copilot verification system as illustrated in
-Figure~\ref{fig:toolchain}.  Copilot is deeply embedded in
+of our Copilot verification system.   Copilot is deeply embedded in
 Haskell.  A Copilot program is \emph{reified} (i.e. transformed from
 a recursive structure into explicit graphs) and then domain specific
-type checking is done. At this point, it is approximated so it can be expressed in a theory handled by most SMT solvers. Besides, any information of no use for the model checking process is thrown away. The result of this process is encoded in the {Cnub} format, which is is structurally close to the Copilot core format but basically supports less datatypes and operators. Then, it can be translated into one of two available representation formats :
+type checking is done. At this point, it is approximated so it can be expressed in a theory handled by most SMT solvers. Besides, any information of no use for the model checking process is thrown away. The result of this process is encoded in the {Cnub} format, which is is structurally close to the Copilot core format but basically supports fewer datatypes and operators. Then, it can be translated into one of two available representation formats :
 
 \begin{itemize}
 \item
@@ -80,21 +79,19 @@ Excepting the first point, the approximations made are conservative \jonathan{I'
 
 The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developper annotate the program so he can specify which bounds have to be checked automatically.
 
-\medskip
+%\medskip
+%
+%The problem of complex operators like trigonometry operators is more difficult to handle. A seemingly good solution would be to give some classical properties of these operators as additional constraints for the SMT solvers. For instance, we could add the following constraint to any specification where the sine function appears : \[ \forall x . \; -1 \leq \sin x \leq 1 \]
 
-The problem of complex operators like trigonometry operators is more difficult to handle. A seemingly good solution would be to give some classical properties of these operators as additional constraints for the SMT solvers. For instance, we could add the following constraint to any specification where the sine function appears : \[ \forall x . \; -1 \leq \sin x \leq 1 \]
-
-Unfortunately, quantifiers are not handled well by the current state
-of the art SMT solvers\footnote{As we will discuss it later, it
-  seems to us it is one of the main limitation of SMT-based techniques
-  which keeps them from scaling well.}. An alternative would be to add
-automatically a specialized version of these constraints for each
-appropriate variable. For instance, we could add the constraint $-1
-\leq y \leq 1 $ for all variables $y$ such that we have a
-constraint $ y = \sin x $ for $x$ any variable.  Further
-improvements on these techniques warrant further study.
-
-
+%Unfortunately, quantifiers are not handled well by the current state
+%of the art SMT solvers\footnote{As we will discuss it later, it
+%  seems to us it is one of the main limitation of SMT-based techniques
+ % which keeps them from scaling well.}. An alternative would be to add
+%automatically a specialized version of these constraints for each
+%appropriate variable. For instance, we could add the constraint $-1
+%\leq y \leq 1 $ for all variables $y$ such that we have a
+%constraint $ y = \sin x $ for $x$ any variable.  Further
+%improvements on these techniques warrant further study.
 
 
 

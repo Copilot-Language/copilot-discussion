@@ -6,8 +6,7 @@ homegrown prover we call ``the light prover'' built on top of
 Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker~\cite{kind2} being developed at
 the University of Iowa.
 
-Let us illustrate the use of the verification functionality with a
-very simple example.  Safety properties are simply expressed with
+Safety properties are simply expressed with
 standard boolean streams.  We bind a boolean stream to a property name
 with the \texttt{prop} construct in the specification, where the
 specification has type \texttt{Spec}.
@@ -41,30 +40,32 @@ default configuration.
 
  \texttt{Copilot-Kind} provides a general interface for
 provers. Therefore, it is really easy to add a new prover by creating a
-new object of type \texttt{Prover}. The latter is defined as follows:
-
-\begin{lstlisting}[frame=single]
-data Output = Output Status Infos
-type Infos = [String]
-data Status
-  = Valid
-  | Invalid (Maybe Cex)   -- 'Cex' is the type for counterexamples
-  | Unknown
-  | Error
-  
-data Prover = forall r. Prover 
-  { proverName     :: String
-  , hasFeature     :: Feature -> Bool
-  , startProver    :: Core.Spec -> IO r
-  , closeProver    :: r -> IO () 
-  , askProver      :: r          -- ^ The prover internal state
-                   -> [PropId]   -- ^ A list of assumptions A
-                   -> PropId     -- ^ The property to prove P
-                   -> IO Output  -- ^ Whether or not A entails P
-  }
-
-\end{lstlisting}
-
+new object of type \texttt{Prover}. 
+%
+%The latter is defined as follows:
+%
+%\begin{lstlisting}[frame=single]
+%data Output = Output Status Infos
+%type Infos = [String]
+%data Status
+%  = Valid
+%  | Invalid (Maybe Cex)   -- 'Cex' is the type for counterexamples
+%  | Unknown
+%  | Error
+%  
+%data Prover = forall r. Prover 
+%  { proverName     :: String
+%  , hasFeature     :: Feature -> Bool
+%  , startProver    :: Core.Spec -> IO r
+%  , closeProver    :: r -> IO () 
+%  , askProver      :: r          -- ^ The prover internal state
+%                   -> [PropId]   -- ^ A list of assumptions A
+%                   -> PropId     -- ^ The property to prove P
+%                   -> IO Output  -- ^ Whether or not A entails P
+%  }
+%
+%\end{lstlisting}
+%
 To interface with a particular prover, one must mostly provide an \texttt{askProver} function that
 takes as its arguments the internal state of the prover, a list of assumptions $(A_i)_i$ and a property $P$ and decides whether or not : \[ \bigwedge_i A_i \models P  \] In the case the answer is \emph{no}, a counterexample trace leading to a state where $\bigwedge_i A_i \,\wedge\, \neg P$ is true is given. Moreover, even if the prover was given no time limit, we might still get the answer \emph{unknown} as the request might not be expressible in a decidable subset of a \textsc{smt-lib} theory\footnote{For instance, even Peano arithmetic is undecidable in general.}.
 %\begin{itemize}
@@ -104,8 +105,7 @@ which uses both the light and Kind2 provers, the first being limited to 5 steps 
 
 \subsubsection{Proof Schemes.}\label{proof-schemes}
 
-Consider again the example :
-
+Consider the example :
 \begin{lstlisting}[frame=single]
 spec :: Spec
 spec = do

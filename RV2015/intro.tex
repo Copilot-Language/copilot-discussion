@@ -5,9 +5,7 @@ verification challenges facing ultra-critical
 systems~\cite{pike-rv-11}.  As RV matures it will be employed to
 verify increasingly complex properties. For instance, checking complex
 stability properties of a control system or ensuring that a critical
-system is fault-tolerant.  Strictly regulated ultra-critical areas
-such as civil aviation, systems must demonstrate highly predicable
-behavior in order to be certified. As interest grows in techniques
+system is fault-tolerant. As interest grows in techniques
 such as adaptive flight control and fully autonomous vehicles that
 utilize learning to adapt to unpredictable environments, RV may be a
 way to regain the necessary level of predictability required of
@@ -17,9 +15,7 @@ with the software itself prone to error.  Applying formal verification
 tools to the monitors to ensure they are correct can help safeguard
 that the last line of defense is actually effective.
 
-  If monitors in ultra-critical
-systems are to be the last line of defense, then we need to ensure
-they are correct. The work reported on here is part of a larger
+ The work reported on here is part of a larger
 program aimed at creating a framework for \emph{high assurance RV}. In
 order to be used in ultra-critical environments, high-assurance RV
 must: 
@@ -38,27 +34,27 @@ process was correct. Here, the focus is on the second requirement for
 high-assurance RV - making sure the monitor  correct. 
 
                                      
-This paper documents our efforts in incorporating formal verification
-of monitors into the Copilot RV framework.  Initial efforts have
-focused on verifying invariants using advanced Satisfiability Modulo
-Theories (SMT) based bounded model
-checking~\cite{ClarkeBounded01}.  
+%This paper documents our efforts in incorporating formal verification
+%of monitors into the Copilot RV framework.  Initial efforts have
+%focused on verifying invariants using advanced Satisfiability Modulo
+%Theories (SMT) based bounded model
+%checking~\cite{ClarkeBounded01}.  
 
 
 
 
-The next section provides the reader with the necessary background on
-Copilot. Section~\ref{sec:background} gives a brief introduction to
-the $k-$induction proof technique we apply to verify
-monitors.
+%The next section provides the reader with the necessary background on
+%Copilot. Section~\ref{sec:background} gives a brief introduction to
+%the $k-$induction proof technique we apply to verify
+%monitors.
 %\jonathan{To be exact, we don't limit ourselves to k-induction as Kind2 relies heavily on the IC3 algorithm. Maybe we should use the term "SMT-based model-checking" instead. That being said, as I'll try to explain, it's true IC3 didn't work significantly better than basic k-induction in all the test cases I ran.}
-Section~\ref{sec:prover} introduces the new Copilot prover
-interface. In Section~\ref{sec:example}, several examples illustrate
-the application of the tool to the Boyer-Moore majority vote
-algorithm. Section~\ref{sec:structure} provides an overview of
-implementation details. Section~\ref{sec:related} discusses related
-works. Finally, Section~\ref{sec:conclusion}
-discusses future work and concludes.
+%Section~\ref{sec:prover} introduces the new Copilot prover
+%interface. In Section~\ref{sec:example}, several examples illustrate
+%the application of the tool to the Boyer-Moore majority vote
+%algorithm. Section~\ref{sec:structure} provides an overview of
+%implementation details. Section~\ref{sec:related} discusses related
+%works. Finally, Section~\ref{sec:conclusion}
+%discusses future work and concludes.
 
 
 
