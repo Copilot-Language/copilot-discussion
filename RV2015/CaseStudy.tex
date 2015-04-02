@@ -2,7 +2,7 @@
 
 In this section,  we will present several examples of
 \texttt{copilot-kind} applied to verify properties on Copilot
-monitors. 
+monitors.
 
 
  First, let us reexamine the Copilot program from
@@ -209,11 +209,11 @@ Sometimes, the stronger entailment
 holds and the problem becomes tractable for the SMT solver, by replacing a universally quantified variable by an unconstrained one. In our current example, it is not the case. 
 
 
-Our solution to  the problem of dealing with quantifiers  is far from being perfect : we restrict ourselves
-to the case where $A$ is finite and replace each formula of the form
-$\forall x \in A \; P(x)$ by $\bigwedge_{x \in A} P(x)$. This can be
-done with the help of the \texttt{forAllCst} function provided by the
-copilot-kind standard library. It is defined as :
+Our solution to the problem of dealing with quantifiers is restricted to the
+case where $A$ is finite and replace each formula of the form $\forall x \in A
+\; P(x)$ by $\bigwedge_{x \in A} P(x)$. This can be done with the help of the
+\texttt{forAllCst} function provided by the copilot-kind standard library. It is
+defined as :
 \begin{lstlisting}[frame=single]
 forAllCst ::(Typed a) => [a] -> (Stream a -> Stream Bool) -> Stream Bool
 forAllCst l f = conj $ map (f . constant) l
