@@ -1,17 +1,19 @@
 \section{Copilot}~\label{sec:co-intro} 
-Copilot is a Domain Specific Language (DSL)  embedded in the functional
+Copilot is a domain specific language (DSL)  embedded in the functional
 programming language Haskell~\cite{Haskell98}   tailored to
 programming monitors for hard real-time, reactive systems. Given that
 Copilot is a deep embedding in Haskell, one must have a working
-knowledge of the programming language to effectively use Copilot. 
+knowledge of Haskell to effectively use Copilot. However, the benefit of an
+embedded DSL in Haskell is that the host-language serves as a type-safe,
+Turing-complete macro language, allowing arbitrary compile-time computation,
+while keeping the core DSL small.
 
- Copilot is a \emph{stream} based language, where a stream is an infinite ordered
- sequence of values that must conform to the same type.  All
- transformation of data in Copilot must be propagated through
- streams.  In this respect, Copilot is similar to 
- Lustre~\cite{CaspiPHP87}, but is specialized for RV. 
-
-
+Copilot is a \emph{stream} based language where a stream is an infinite ordered
+sequence of values that must conform to the same type.  All transformation of
+data in Copilot must be propagated through streams.  In this respect, Copilot is
+similar to Lustre~\cite{CaspiPHP87}, but is specialized for RV. Copilot
+guarantees that specifications compile to constant-time and constant-space
+implementations.
 
 \subsubsection{Copilot's expression language.}
 In the following, we briefly and informally introduce Copilot's expression
@@ -26,13 +28,10 @@ delaying streams and one for looking into the future of streams:
 drop :: Int -> Stream a -> Stream a
 \end{lstlisting}
 %
-Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
-The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
-  s}, returning the remainder of the stream.
-
-
-
- For example, the Fibonacci sequence modulo $2^{32}$ can be written in Copilot as follows:
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt
+  s}.  The expression {\tt drop k s} skips the first {\tt k} values of the
+stream {\tt s}, returning the remainder of the stream. For example, the
+Fibonacci sequence modulo $2^{32}$ can be written in Copilot as follows:
 
 \begin{lstlisting}[frame=single]
 fib :: Stream Word32
@@ -60,7 +59,7 @@ casts in which overflow cannot occur are permitted.
 \subsubsection{Sampling.}
 Copilot programs are meant to monitor arbitrary C~programs.  They do
 so by
-periodically \emph{sampling} symbol values.   Currently, Copilot can
+periodically \emph{sampling} values in the program under observation.   Currently, Copilot can
 be used to  sample variables, arrays,
 and the return values of side-effect free functions---sampling arbitrary
 structures is future work.  For a Copilot program compiled to~C, symbols become
