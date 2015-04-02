@@ -2,38 +2,60 @@
 Runtime Verification (RV), where monitors detect and respond to
 property violations at runtime, can help address several of the
 verification challenges facing ultra-critical
-systems~\cite{pike-rv-11}.  As RV matures it will be employed to
-verify increasingly complex properties. For instance, checking complex
+systems~\cite{pike-rv-11,rvRushby}.  As RV matures it will be employed to
+verify increasingly complex properties such as checking complex
 stability properties of a control system or ensuring that a critical
 system is fault-tolerant. As interest grows in techniques
 such as adaptive flight control and fully autonomous vehicles that
 utilize learning to adapt to unpredictable environments, RV may be a
 way to regain the necessary level of predictability required of
-ultra-critical systems.  As RV is applied to more complex systems the
-monitors themselves will become increasing sophisticated and just as
-with the software itself prone to error.  Applying formal verification
+ultra-critical systems.  As RV is applied to more complex systems, the
+monitors themselves will become increasing sophisticated and as prone to error
+as the system being monitored.  Applying formal verification
 tools to the monitors to ensure they are correct can help safeguard
 that the last line of defense is actually effective.
 
  The work reported on here is part of a larger
 program aimed at creating a framework for \emph{high assurance RV}. In
 order to be used in ultra-critical environments, high-assurance RV
-must: 
-\begin{itemize}
-\item Support the production of evidence needed for a safety case
-  employing RV enforce safety guarantees.
-\item Support the verification that the specification of the monitors
-  is indeed correct. 
-\item Ensure that monitor code generated implements the specification of the
-monitor. 
-\end{itemize} 
- These guiding principles are informing the continuing development of the Copilot~\cite{copilot,pike-isse-13} language and framework that is
-intended to be used in RV of ultra-critical systems.  Earlier
-work~\cite{pike-icfp-12} focused verifying that the monitor synthesis
-process was correct. Here, the focus is on the second requirement for
-high-assurance RV - making sure the monitor  correct. 
+must:
+\begin{enumerate}
+\item \label{req:a} Provide evidence for a safety case that the RV enforces safety guarantees.
+\item \label{req:b} Support verification that the specification of the monitors
+  is correct.
+\item \label{req:c} Ensure that monitor code generated implements the specification of the
+monitor.
+\end{enumerate}
 
-                                     
+\noindent
+These guiding principles are informing the continuing development of the
+Copilot~\cite{copilot,pike-isse-13} language and framework that is intended to
+be used in RV of ultra-critical systems.  Earlier work~\cite{pike-icfp-12}
+focused verifying that the monitor synthesis \emph{process} is correct
+(Requirement~\ref{req:c} above). Here, the focus
+is on the second requirement for high-assurance RV - making sure the monitor
+specification is correct. Requirement~\ref{req:a}, in the spirit of Rushby's
+proposal (\cite{rvRushby}) is future work.
+
+\paragraph{Contributions}
+In this paper we describe the theory and implementation of a $k$-induction based
+model-checker~\cite{Sheeran00,EenS03} for Copilot called
+\texttt{copilot-kind}. More precisely, \texttt{copilot-kind} is a model-checking
+framework for Copilot, with two existing backends including a lightweight
+implementation of $k$-induction using Yices~\cite{} and a backend based on
+\emph{Kind2}, implementing both $k$-induction and the IC3~algorithm~\cite{}.
+
+After providing a brief introduction to Copilot in Section~\ref{sec:co-intro}
+and to SMT-based $k$-induction in Section~\ref{sec:background}, we introduce
+\texttt{copilot-kind} in Section~\ref{sec:prover}. Illustrative examples of
+\texttt{copilot-kind} of its use are provided in Section~\ref{sec:example}, and
+implementation details are given in Section~\ref{sec:structure}. The final two
+sections discuss related work and concluding remarks, respectively.
+
+Copilot and \texttt{copilot-kind} are open-source (BSD3) and in current use at
+NASA.\footnote{Copilot: \url{http://leepike.github.io/Copilot/} and
+\text{copilot-kind}: \url{https://github.com/jonathan-laurent/copilot-kind}}
+
 %This paper documents our efforts in incorporating formal verification
 %of monitors into the Copilot RV framework.  Initial efforts have
 %focused on verifying invariants using advanced Satisfiability Modulo
