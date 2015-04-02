@@ -22,40 +22,10 @@ their languages with proof engines.
 
 Verified  monitors are by no means sufficient for achieving assured RV,
 since a safety case is far more encompassing, but it is a necessary
-<<<<<<< HEAD
 condition.  Having applied our tool to rather
 sophisticated monitors,  future extensions are planned.  Of particular
 interest is an interface to 
 MetiTarski~\cite{AkbarpourPaulson}. This would allow us to discharge
 proofs of invariants involving real-valued special functions, which
-would arise quite often in the domain of cyber-physical systems.
-
-\subsubsection{Assurance} The reported efforts have
-primarily focused on verifying invariant properties of monitors using
-$k-$induction. Our solution is not a panacea as any model checking
-solution is subject to the well known state explosion problem, but 
-the results in verifying both simple and relatively complex monitors
-are promising. 
-
-\subsubsection{Efficacy of the Embedded DSL Approach} First, we have
-demonstrated that the embedded DSL approach is powerful and flexible
-in that we were able to extend the Copilot RV framework with
-verification capabilities. Being embedded in a  higher-order functional language
-facilitated the creation of  a number of features such as our proof
-scheme capability. The fact Copilot is a Haskell based eDSL yielded
-very  concise properties. For instance, in Section~\ref{sec:mvote}
-the power of higher-order expression is well illustrated in 
-function  \texttt{forAllCst} for the
-serial Boyer-Moore example in that it  uses both a  a \texttt{fold}
-and a \texttt{map} operator to model finite conjunctions. 
-
-
-\subsubsection{Future Work} In the near term, we continue our
-collaboration with the Kind2 team as the prover gets more
-sophisticated and provides a more flexible interface. Given we already
-output SMTLib format in order to interface with Yices, we will
-investigate connecting to other provers that use that input
-format. Finally, we shall interface the verification with
-MetiTarski~\cite{AkbarpourPaulson}, which would allow us to discharge
-proofs of invariants involving real-valued special functions.
+arise quite often in the domain of cyber-physical systems.
 

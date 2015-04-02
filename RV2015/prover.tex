@@ -1,7 +1,7 @@
 \section{Copilot Prover Interface}~\label{sec:prover} 
 The \texttt{copilot-kind} model-checker is an extensible interface to multiple
 provers used to verify safety properties of Copilot
-programs. Currently, two backends for \texttt{copiot-kind have been implemented}: the first is a
+programs. Currently, two backends for \texttt{copiot-kind} have been implemented: the first is a
 homegrown prover we call ``the light prover'' built on top of
 Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker being developed at
 the University of Iowa~\cite{kind}.
@@ -110,7 +110,7 @@ $$V \leq U, \; C \leq U, \; N \leq U, \; C \leq N$$
 hold as well as reflexivity, antisymmetry, and transitivity. (Merging provers
 that handles non-termination within a bound is future work.)
 
-In practice, we used the following prover in the examples of Section~\ref{sec:example} :
+In practice, we used the following prover in the examples of Section~\ref{sec:example}:
 \begin{lstlisting}[frame=single]
 prover = lightProver def {kTimeout = 5} `combine` kind2Prover def
 \end{lstlisting}
@@ -143,7 +143,7 @@ rather than
 \end{lstlisting}
 A \emph{proof scheme} is a chain of
 primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
-operator to combine proofs, and in particular, provide lemmas. The available primitives are :
+operator to combine proofs, and in particular, provide lemmas. The available primitives are:
 
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
