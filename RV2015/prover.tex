@@ -1,18 +1,21 @@
 \section{Copilot Prover Interface}~\label{sec:prover} 
-We have modified  the Copilot framework with an extensible interface  to multiple
-provers, called \texttt{copilot-kind}, aimed at checking  safety properties on Copilot
-programs. Currently Copilot interacts with two provers: the first is a
+The \texttt{copilot-kind} model-checker is an extensible interface to multiple
+provers used to verify safety properties of Copilot
+programs. Currently, two backends for \texttt{copiot-kind have been implemented}: the first is a
 homegrown prover we call ``the light prover'' built on top of
-Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker~\cite{kind2} being developed at
-the University of Iowa.
+Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker being developed at
+the University of Iowa~\cite{kind}.
 
-Safety properties are simply expressed with
-standard boolean streams.  We bind a boolean stream to a property name
-with the \texttt{prop} construct in the specification, where the
-specification has type \texttt{Spec}.
+To begin, we describe how safety properties are specified in Copilot. Using the
+``synchronous observer'' approach~\cite{amast93}, properties \emph{about}
+Copilot programs are specified \emph{within} Copilot itself. In particular,
+properties are encoded with standard boolean streams; and Copilot streams are
+sufficient to encode past-time linear temporal logic~\cite{ptltl}. We bind a boolean stream
+to a property name with the \texttt{prop} construct in the specification, where
+the specification has type \texttt{Spec}. 
 
 For instance, here is a straightforward specification declaring one
-property :
+property:
 
 \begin{lstlisting}[frame=single]
 spec :: Spec
@@ -22,25 +25,20 @@ spec = do
     x = [1] ++ (1 + x)
 \end{lstlisting}
 
-In order  to check that \texttt{gt0} holds, we use
-the function
-
-\begin{lstlisting}[frame=single]
-    prove :: Prover -> ProofScheme -> Spec -> IO ()
-\end{lstlisting}
-
-Here, we can discharge the proof by  using the light prover using the command:
+In order  to check that property \texttt{gt0} holds, we use a \texttt{prove}
+function implemented as part of \texttt{copilot-kind}.
+%% \begin{lstlisting}[frame=single]
+%%     prove :: Prover -> ProofScheme -> Spec -> IO ()
+%% \end{lstlisting}
+Here, we can discharge the proof-obligation for the program above with the light prover using the command:
 \begin{code}
 prove (lightProver def) (check "gt0") spec
 \end{code}
 where \texttt{lightProver def} stands for the \emph{light prover} with
-default configuration.  
+default configuration.
 
-\subsubsection{The Prover Interface.}\label{the-prover-interface}
+%% \subsubsection{The Prover Interface.}\label{the-prover-interface}
 
- \texttt{Copilot-Kind} provides a general interface for
-provers. Therefore, it is really easy to add a new prover by creating a
-new object of type \texttt{Prover}. 
 %
 %The latter is defined as follows:
 %
@@ -66,19 +64,23 @@ new object of type \texttt{Prover}.
 %
 %\end{lstlisting}
 %
-To interface with a particular prover, one must mostly provide an \texttt{askProver} function that
-takes as its arguments the internal state of the prover, a list of assumptions $(A_i)_i$ and a property $P$ and decides whether or not : \[ \bigwedge_i A_i \models P  \] In the case the answer is \emph{no}, a counterexample trace leading to a state where $\bigwedge_i A_i \,\wedge\, \neg P$ is true is given. Moreover, even if the prover was given no time limit, we might still get the answer \emph{unknown} as the request might not be expressible in a decidable subset of a \textsc{smt-lib} theory\footnote{For instance, even Peano arithmetic is undecidable in general.}.
-%\begin{itemize}
-%\item \texttt{Valid} if the entailment holds.
-%\item \texttt{Invalid} if it does not, in which case.
-%\item \texttt{Unknown} if the prover can't find out. This type of answer is necessary even if the %prover has no time limit, as 
-%\item \texttt{Error} when something wrong happens.
-%\end{itemize}
-Two provers are currently supported by default :
-\begin{itemize}
-\item The homegrown \emph{light prover} which uses the Yices \textsc{smt}-solver with the \textsc{qf\_uflia} theory and which implements the basic $k$-induction algorithm.
-\item A prover based on the \emph{Kind2} model checker, which implements both $k$-induction and the more subtle IC3 algorithm.
-\end{itemize}
+
+%%  \texttt{Copilot-Kind} provides a general interface for
+%% provers. A new prover is created by implementing a
+%% new prover object.
+%% To interface with a particular prover, one must mostly provide an \texttt{askProver} function that
+%% takes as its arguments the internal state of the prover, a list of assumptions $(A_i)_i$ and a property $P$ and decides whether or not : \[ \bigwedge_i A_i \models P  \] In the case the answer is \emph{no}, a counterexample trace leading to a state where $\bigwedge_i A_i \,\wedge\, \neg P$ is true is given. Moreover, even if the prover was given no time limit, we might still get the answer \emph{unknown} as the request might not be expressible in a decidable subset of a \textsc{smt-lib} theory\footnote{For instance, even Peano arithmetic is undecidable in general.}.
+%% %\begin{itemize}
+%% %\item \texttt{Valid} if the entailment holds.
+%% %\item \texttt{Invalid} if it does not, in which case.
+%% %\item \texttt{Unknown} if the prover can't find out. This type of answer is necessary even if the %prover has no time limit, as 
+%% %\item \texttt{Error} when something wrong happens.
+%% %\end{itemize}
+%% Two provers are currently supported by default :
+%% \begin{itemize}
+%% \item The homegrown \emph{light prover} which uses the Yices \textsc{smt}-solver with the \textsc{qf\_uflia} theory and which implements the basic $k$-induction algorithm.
+%% \item A prover based on the \emph{Kind2} model checker, which implements both $k$-induction and the more subtle IC3 algorithm.
+%% \end{itemize}
 
 
 %It is provided by the \texttt{Copilot.Kind.Kind2} module, which exports
@@ -94,8 +96,19 @@ Two provers are currently supported by default :
 %of the light prover. Its default value is $0,$ which stands for infinity.
 
 \subsubsection{Combining Provers.}\label{combining-provers}
-Different provers can be combined into a single one. We provide a \texttt{combine} function whose signature is : $$\texttt{combine :: Prover -\textgreater{} Prover -\textgreater{} Prover}$$ that merge two provers $A$ and $B$ into a prover $C$ which
-launches both $A$ and $B$ and returns the most \emph{precise}\footnote{For instance, \texttt{Valid} is more {precise} than \texttt{Unknown} and one of two \texttt{Invalid} outputs might fail to hold a counterexample, in case the other is more precise.} output after they both stop. Smarter merging behaviors could be implemented, as running two provers in parallel and waiting the first one to stop.
+\texttt{Copilot-Kind} allows provers to be combined. Given provers $A$ and $B$,
+the \texttt{combine} function returns a prover $C$ which launches both $A$ and
+$B$ and returns the most \emph{precise} output of the two upon
+termination. ``Precise'' in this case means returning the result least element
+in the following partial order: for a given execution, classify prover outputs
+as valid ($V$), unknown ($U$), invalid with countexample ($C$), and invalid with
+no counterexample ($N$); the partial order is the least relation such that
+
+$$V \leq U, \; C \leq U, \; N \leq U, \; C \leq N$$
+
+\noindent
+hold as well as reflexivity, antisymmetry, and transitivity. (Merging provers
+that handles non-termination within a bound is future work.)
 
 In practice, we used the following prover in the examples of Section~\ref{sec:example} :
 \begin{lstlisting}[frame=single]
@@ -115,7 +128,7 @@ spec = do
     x = [1] ++ (1 + x)
 
 \end{lstlisting}
-and let us say we want to prove \texttt{"neq0"}. Currently, the two available solvers fail at showing this non-inductive\footnote{Non-inductive : whose induction step does not hold. See Section~\ref{sec:background}.} property. Yet, we can prove the more general
+and suppose we want to prove \texttt{"neq0"}. Currently, the two available solvers fail at showing this non-inductive property. Yet, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
 this, we use the proof scheme
 
@@ -123,14 +136,14 @@ this, we use the proof scheme
 assert "gt0" >> check "neq0"
 \end{lstlisting}
 
-
-instead of just 
+\noindent
+rather than
 \begin{lstlisting}[frame=single] 
   check "neq0" 
 \end{lstlisting}
-A proof scheme is a chain of
+A \emph{proof scheme} is a chain of
 primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
-operator. For now, the available primitives are :
+operator to combine proofs, and in particular, provide lemmas. The available primitives are :
 
 \begin{itemize}
 \itemsep1pt\parskip0pt\parsep0pt
@@ -146,11 +159,12 @@ operator. For now, the available primitives are :
 
 \texttt{assuming props scheme} assumes the list of
   properties \emph{props}, executes the proof scheme \emph{scheme} in
-  this context, and forgets the assumptions. The signature of \texttt{assuming} is  
- {\texttt{{[}PropId{]} -\textgreater{} ProofScheme -\textgreater{} ProofScheme}}.
+  this context, and forgets the assumptions.
+%% The signature of \texttt{assuming} is  
+%%  {\texttt{{[}PropId{]} -\textgreater{} ProofScheme -\textgreater{} ProofScheme}}.
 
 \item
   \texttt{msg "..."} displays a string in the standard output.
 \end{itemize}
 
-Although very simple, such a mechanism is necessary to make our model-checking approach scale up by splitting a proof in small lemmas. Some possible enhancements of it will be discussed in Section~\ref{sec:conclusion}.
+%% Although very simple, such a mechanism is necessary to make our model-checking approach scale up by splitting a proof in small lemmas. Some possible enhancements of it will be discussed in Section~\ref{sec:conclusion}.
