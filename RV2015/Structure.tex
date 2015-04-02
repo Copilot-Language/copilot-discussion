@@ -84,7 +84,7 @@ The {Cnub} format is aimed at approximating a copilot specification in a format 
 
 \end{itemize}
 
-Excepting the first point, the approximations made are sound:\jonathan{I'm almost sure there is an official word for this} they result in a superset of possible behaviors for the RV. %% In the case this approximation is too coarse to prove the RV correct or treating machine integers as unbounded integers is unacceptable, some techniques can be used to refine the Cnub model anyway. 
+Excepting the first point, the approximations made are sound: they result in a superset of possible behaviors for the RV. %% In the case this approximation is too coarse to prove the RV correct or treating machine integers as unbounded integers is unacceptable, some techniques can be used to refine the Cnub model anyway. 
 
 %% \medskip
 The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developper annotate the program so he can specify which bounds have to be checked automatically.
