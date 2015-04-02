@@ -38,45 +38,55 @@
 %\jonathan{Add a Cnub node after Copilot Core and between TS and IL}
 
 In this section, we shall outline the structure of the implementation
-of our Copilot verification system.   Copilot is deeply embedded in
-Haskell.  A Copilot program is \emph{reified} (i.e. transformed from
-a recursive structure into explicit graphs) and then domain specific
-type checking is done. At this point, it is approximated so it can be expressed in a theory handled by most SMT solvers. Besides, any information of no use for the model checking process is thrown away. The result of this process is encoded in the {Cnub} format, which is is structurally close to the Copilot core format but basically supports fewer datatypes and operators. Then, it can be translated into one of two available representation formats :
+of our Copilot verification system.   %% Copilot is deeply embedded in
+%% Haskell.  A Copilot program is \emph{reified} (i.e. transformed from
+%% a recursive structure into explicit graphs) and then domain specific
+%% type checking is done. 
+After Copilot type-checking and compilation, a Copilot program is approximated
+so it can be expressed in a theory handled by most SMT solvers, as described below. Any information
+of no use for the model checking process is thrown away. The result of this
+process is encoded in the Cnub format, which is is structurally close to the
+Copilot core format but supports fewer datatypes and operators. Then, it can be
+translated into one of two available representation formats:
 
 \begin{itemize}
 \item
-  The \textbf{IL} format : a list
+  The \textbf{IL} format: a list
   of quantifier-free equations over integer sequences, where each sequence
   roughly corresponds to a stream.   This
-format is similar to the one used in G.  Hagen's
-dissertation~\cite{HagenPhD}, but somewhat customized for Copilot.   The \emph{light prover} works with this
+format is similar to the one developed by Hagen~\cite{HagenPhD}, but customized for Copilot.   The \emph{light prover} works with this
   format.
-\item The \textbf{TransSys} format : a modular representation of a
+\item The \textbf{TransSys} format: a modular representation of a
   \emph{state transition system}. The \emph{Kind2 prover} uses this
-  format, which can be printed into Kind2's native format.
+  format, which can be printed into Kind2's native format~\cite{kind}.
 \end{itemize}
 
 \subsection{Approximating a specification}
 
 
-The complexity of the models that are built from Copilot specifications is limited by the power and expressiveness of the SMT solvers in use. For instance, most SMT solvers does not handle real functions like trigonometric functions. Moreover, bounded integer arithmetic is often to be approximated by standard integer arithmetic.
+The complexity of the models that are built from Copilot specifications is
+limited by the power and expressiveness of the SMT solvers in use. For instance,
+most SMT solvers do not handle real functions like trigonometric functions. Moreover, bounded integer arithmetic is often to be approximated by standard integer arithmetic.
 
-The {Cnub} format is aimed at approximating a copilot specification in a format relying on a simple theory including basic integer arithmetic, real arithmetic and uninterpreted functions. The stream structure is kept from the copilot core format but the following differences have to be emphasized :
+The {Cnub} format is aimed at approximating a copilot specification in a format relying on a simple theory including basic integer arithmetic, real arithmetic and uninterpreted functions. The stream structure is kept from the copilot core format but the following differences have to be emphasized:
 
 \begin{itemize}
-\item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \textsc{SmtLib} standard : \texttt{Bool}, \texttt{Integer} and \texttt{Real}. Problems related to integer overflows and floating point arithmetic are ignored\footnote{In fact, there are techniques to model these effects anyway, as we discuss below.}.
+\item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \textsc{SmtLib} standard: \texttt{Bool}, \texttt{Integer} and \texttt{Real}. Problems related to integer overflows and floating point arithmetic are ignored.\footnote{In fact, there are techniques to model these effects anyway, as we discuss below.}
 
 
-\item {Uninterpreted functions} are used to model operators that are not handled. They are abstract symbols with the property that : $$ \left( \forall i . \; x_i = y_i \right) \Longrightarrow f(x_1, \cdots, x_n) = f(y_1, \cdots, y_n). $$ and they are provided by most SMT solvers.
+\item {Uninterpreted functions} are used to model operators that are not
+  handled. They are abstract as function symbols satisfying the
+  equality: $$ \left( \forall i . \; x_i = y_i \right) \Longrightarrow f(x_1,
+  \cdots, x_n) = f(y_1, \cdots, y_n). $$ in the quantifier-free theory of
+  uninterpreted function symbols, as provided by most SMT solvers.
 
 \item Copilot extern variables are modelled by unconstrained streams. Particular precautions have to be taken to model accesses to external arrays in order to express the constraint that several requests to the same index inside a clock period must yield the same result.
 
 \end{itemize}
 
-Excepting the first point, the approximations made are conservative \jonathan{I'm almost sure there is an official word for this} in the sense that they result in a superset of possible behaviours for the RV. Therefore, an incorrect RV is never made correct by such an approximation but the reciprocal does not hold. In the case this approximation is too coarse to prove the RV correct or treating machine integers as unbounded integers is unacceptable, some techniques can be used to refine the Cnub model anyway. 
+Excepting the first point, the approximations made are sound:\jonathan{I'm almost sure there is an official word for this} they result in a superset of possible behaviors for the RV. %% In the case this approximation is too coarse to prove the RV correct or treating machine integers as unbounded integers is unacceptable, some techniques can be used to refine the Cnub model anyway. 
 
-\medskip
-
+%% \medskip
 The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developper annotate the program so he can specify which bounds have to be checked automatically.
 
 %\medskip
@@ -97,17 +107,20 @@ The problem of integer overflows can be tackled by adding automatically to the p
 
 \subsection{The Light prover and the IL format} 
 
-Our homegrown prover relies on an intermediate representation format called {IL}. An IL specification mostly consists in a list of quantifier-free equations over integer sequences. These equations contains a free variable $n$ which is implicitly universally quantified. The IL format is similar to the one used in G. Hagen's thesis~\cite{HagenPhD}.
+Our homegrown prover relies on an intermediate representation format called
+{IL}. An IL specification mostly consists in a list of quantifier-free equations
+over integer sequences. These equations contains a free variable $n$ which is
+implicitly universally quantified. The IL format is similar to the one used by Hagen~\cite{HagenPhD}.
 
 
 A stream of type $a$ is modeled by a function of type $\mathbb{N} \to a$. Each stream definition is translated into a list of constraints on such functions. For instance, the stream definition
 \begin{lstlisting}
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{lstlisting}
-is translated into the IL chunk :
+is translated into the IL chunk:
 $$
 \begin{array}{c}
-f : \mathbb{N} \to \mathbb{N} \\
+f: \mathbb{N} \to \mathbb{N} \\
 f(0) = 1 \\
 f(1) = 1 \\
 f(n + 2) = f(n + 1) + f(n)
