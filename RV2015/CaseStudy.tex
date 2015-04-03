@@ -10,9 +10,7 @@ monitors.
  sequence. A fundamental property of this program is that it produces
  a stream of values that are always positive. We express this as follows:
 \begin{lstlisting}[frame=single]
-spec = do
-  prop "pos" (fib > 0)
-
+spec = prop "pos" (fib > 0)
   where
     fib :: Stream Word64
     fib = [1, 1] ++ (fib + drop 1 fib)
@@ -53,11 +51,9 @@ true,  the \texttt{intCounter} is $0$ and \texttt{greyTick} is
 \texttt{true} when \texttt{intCounter} is $2.$ We formalize these two
 properties in our framework as follows:
 \begin{lstlisting}[frame=single]
-spec :: Spec
 spec = do
   prop "iResetOk"   (r ==> (ic == 0))
   prop "eqCounters" (it == gt)
-  
   where
     ic = intCounter r
     it = ic == 2
@@ -139,11 +135,10 @@ but the proofs involved are of different natures.
 following:
 
 \begin{lstlisting}[frame=single]
-majorityVote :: forall a.  (Typed a, Eq a) => [Stream a] -> Stream a
+majorityVote :: (Typed a, Eq a) => [Stream a] -> Stream a
 majorityVote [] = error "empty list"
 majorityVote (x : xs) = aux x 1 xs
   where
-  aux :: Stream a -> Stream Word8 -> [Stream a] -> Stream a
   aux p _s [] = p
   aux p s (l : ls) =
     local (if s == 0 then l else p) $ \ p' ->
@@ -161,24 +156,19 @@ input and returns an output $maj$ such that : \[ \forall a \in A, \;
 solvers and their use is restricted in most model-checking tools,
 including \texttt{copilot-kind}, we use a simple trick to write
 and check this property.  If $P(n)$ is a predicate of an integer $n$,
-we have $$\forall n \, . \, P(n)$$ if and only if $\neg P(n)$ is
+we have $\forall n \, . \, P(n)$ if and only if $\neg P(n)$ is
 satisfiable, where $n$ an unconstrained integer, which can be solved
 by a SMT solver. The corresponding copilot specification can be
 written as :
 \begin{lstlisting}[frame=single]
-okWith :: 
-  forall a. (Typed a, Eq a) => 
-  Stream a -> [Stream a] -> Stream a -> Stream Bool
-  
+okWith :: (Typed a, Eq a) => 
+          Stream a -> [Stream a] -> Stream a -> Stream Bool
 okWith a l maj = (a /= maj) ==> ((2 * count a l) <= length l)
   where
-  count :: Stream a -> [Stream a] -> Stream Word8
-  count _e [] = 0
-  count e (x : xs) = (if x == e then 1 else 0) + count e xs
+    count _e [] = 0
+    count e (x : xs) = (if x == e then 1 else 0) + count e xs
 
-spec :: Spec
-spec = do
-  prop "OK" (okWith (arbitraryCst "n") ss maj)
+spec = prop "OK" (okWith (arbitraryCst "n") ss maj)
   where
     ss = [ arbitrary ("s" ++ show i) | i <- [1..10]]
     maj = majorityVote
@@ -215,7 +205,8 @@ case where $A$ is finite and replace each formula of the form $\forall x \in A
 \texttt{forAllCst} function provided by the copilot-kind standard library. It is
 defined as :
 \begin{lstlisting}[frame=single]
-forAllCst ::(Typed a) => [a] -> (Stream a -> Stream Bool) -> Stream Bool
+forAllCst ::(Typed a) => 
+  [a] -> (Stream a -> Stream Bool) -> Stream Bool
 forAllCst l f = conj $ map (f . constant) l
   where conj = foldl (&&) true
 \end{lstlisting}
@@ -248,8 +239,7 @@ spec = do
     input = externW8 "in" Nothing
     (p, s, j) = majority input
 
-scheme = do
-  assuming ["inRange"] $ check "J"
+scheme = assuming ["inRange"] $ check "J"
 \end{lstlisting}
 
 As the reader can see, we make the hypothesis that all the elements
