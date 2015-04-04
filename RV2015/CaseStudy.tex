@@ -16,7 +16,8 @@ spec = prop "pos" (fib > 0)
     fib = [1, 1] ++ (fib + drop 1 fib)
 \end{lstlisting}
 This  invariant property is clearly inductive and is easily
-discharged. 
+discharged. Note that, as mentioned in Section~\ref{sec:structure}, 
+64-bits words are modelled by integers and eventual overflow problems are ignored here.
  
 The next example applies to verification engine to prove properties
 relating two different specifications. Consider the following

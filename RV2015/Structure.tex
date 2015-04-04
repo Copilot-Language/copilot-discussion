@@ -150,6 +150,18 @@ fib1 = [1] ++ (fib1 + fib0)
 
 After this, it is natural to associate a variable to each stream. Here, the variables \texttt{fib0} and \texttt{fib1} would be grouped into a single node, in order to keep some structure in the representation of the transition system\footnote{This can be important for two reasons. First, the model checker could use these structural informations to optimize its research. See \emph{structural abstraction} in \cite{HagenPhD}. Then, structured transition systems are easier to read, debug and transform. }. Such a modular transition system is almost ready to be translated into the Kind2 native format. However, we first have to merge each nodes pair whose components are mutually dependent as Kind2 requires a topological order on its nodes.
 
+\section{Relevance of the \textsc{SMT}-based approach}
+In practice, our tool turned out to be very useful for debugging purposes. Indeed, even when the property being checked is not inductive or the induction step is too hard, it is very useful to test the first entailment of the $k$-induction algorithm for small values of $k$, proving the property can't be violated in the first $k$ time steps or displaying a counterexample trace. Many subtle bugs can be captured for reasonable values of $k$. However, this does not solve our primary issue of formal verification.
+
+One limitation of our tool as a proving system is related to the $k$-induction algorithm itself, as writing $k$-inductive specifications can be long and mind-twisting. Some more subtle algorithms like the \textsc{IC}3 algorithm implemented by Kind2 are aimed at proving non-inductive properties by splitting it into concise and relevant inductive lemmas. However, our experiments showed that currently available tools fail at proving very simple properties as soon as basic arithmetic is involved.
 
 
+\bigskip
+
+
+That being said, the essential limitations of our approach unsurprinsingly result from the limitations of \textsc{smt} solvers it relies on. 
+
+First, \textsc{smt}-solvers turn to become quickly prohibitively slow as the size of their input increases, making \textsc{smt}-based techniques intrinsinctly difficult to scale. Moreover, time performance of these tools is often unpredictable and depends on opaque implementation details. For instance, the serial majority vote algorithm presented in Section~\ref{sec:example} can be checked in less than one minute with the Z3 \textsc{smt}-solver on any decent personal computer, whereas Yices does not terminate after several hours of computation.
+
+Besides, as quantifiers are not handled (at least efficiently) by \textsc{smt}-solvers, it is difficult to work with quantified lemmas which can be applied at several places, making this way proofs concise enough to be tractable. The same limitation makes it difficult to deal with general properties of complex objects which are not handled by \textsc{smt} solvers like special real-valued functions. Indeed, some proofs might rely on some facts like $\forall x. -1 \leq \sin x \leq 1$ whose \textsc{smt}-solvers can't handle unless they are hard-wired in a supported theory. A promising way to deal with both these issues would be an extension of the \textit{proof scheme} system where properties involving arbitrary streams are seen as universally quantified lemmas which can be specialized and added to the proof context by an explicit use of a new \texttt{apply} directive. 
 
