@@ -18,11 +18,9 @@ For instance, here is a straightforward specification declaring one
 property:
 
 \begin{lstlisting}[frame=single]
-spec :: Spec
-spec = do
-  prop "gt0" (x > 0)
-  where
-    x = [1] ++ (1 + x)
+spec = prop "gt0" (x > 0)
+  where 
+  x = [1] ++ (1 + x)
 \end{lstlisting}
 
 In order  to check that property \texttt{gt0} holds, we use a \texttt{prove}
@@ -120,7 +118,6 @@ which uses both the light and Kind2 provers, the first being limited to 5 steps 
 
 Consider the example :
 \begin{lstlisting}[frame=single]
-spec :: Spec
 spec = do
   prop "gt0"  (x > 0)
   prop "neq0" (x /= 0)
@@ -139,7 +136,7 @@ assert "gt0" >> check "neq0"
 \noindent
 rather than
 \begin{lstlisting}[frame=single] 
-  check "neq0" 
+check "neq0" 
 \end{lstlisting}
 A \emph{proof scheme} is a chain of
 primitives schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
