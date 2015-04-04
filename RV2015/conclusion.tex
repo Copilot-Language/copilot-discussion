@@ -41,8 +41,9 @@ Having successfully applied our tool to rather
 sophisticated monitors,  future extensions are planned.  Given we are
 focused on  cyber-physical systems,  the limitations
 of  \textsc{smt}-based provers go  beyond the fact that they become prohibitively slow as the
-size of their input increases.  \textsc{smt}-solvers do not handle 
-\textsc{smt}-solvers do not handle quantifiers well or special real-valued functions. Indeed, some
+size of their input increases.  
+\textsc{smt}-solvers do not handle quantifiers  or special real-valued
+functions well. Indeed, some
 proofs might rely on facts like $\forall x. -1 \leq \sin x \leq 1$
 that  \textsc{smt}-solvers cannot  handle unless they are hard-wired in
 a supported theory. A promising way to deal with both these issues
