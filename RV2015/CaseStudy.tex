@@ -19,7 +19,7 @@ This  invariant property is clearly inductive and is easily
 discharged. Note that, as mentioned in Section~\ref{sec:structure}, 
 64-bits words are modelled by integers and eventual overflow problems are ignored here.
  
-The next example applies to verification engine to prove properties
+The next example uses \texttt{copilot-kind} to prove properties
 relating two different specifications. Consider the following
 specification:
 \begin{lstlisting}[frame=single]
@@ -128,7 +128,7 @@ is a parallel implementation, where at each tick, the
 algorithm takes $n$ inputs from $n$ distinct streams and is fully
 executed. The second version of the algorithm  is a sequential version, where the inputs are
 delivered one by one in time and where the result is updated at each
-clock tick. Both can be checked with the basic k-induction algorithm
+clock tick. Both can be checked with the basic k-induction algorithm,
 but the proofs involved are of different natures.
 
 

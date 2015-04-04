@@ -38,19 +38,20 @@ fib :: Stream Word32
 fib = [0,1] ++ (fib + drop 1 fib)
 \end{lstlisting}
 %
-Recall, a 
-latch (flip-flop) over streams---the output is the XOR of the input stream and
-the latch's previous output.  For example, for the input stream
-$\mathtt{T, F, F, T, F, F, T, F, F,}\dots$
-{\tt latch} generates the stream
-$\mathtt{F, T, T, T, F, F, F, T, T, T,}\ldots$
-The Copliot implementaton of {\tt latch} is as follows:
+
+%Recall, a 
+%latch (flip-flop) over streams---the output is the XOR of the input stream and
+%the latch's previous output.  For example, for the input stream
+%$\mathtt{T, F, F, T, F, F, T, F, F,}\dots$
+%{\tt latch} generates the stream
+%$\mathtt{F, T, T, T, F, F, F, T, T, T,}\ldots$
+%The Copliot implementaton of {\tt latch} is as follows:
 %
-\begin{lstlisting}[frame=single]
-latch :: Stream Bool -> Stream Bool
-latch x = out
-  where out = [False] ++ x `xor` out
-\end{lstlisting}
+%\begin{lstlisting}[frame=single]
+%latch :: Stream Bool -> Stream Bool
+%latch x = out
+%  where out = [False] ++ x `xor` out
+%\end{lstlisting}
 %
 The base types of Copilot over which streams are built include Booleans, signed
 and unsigned words of 8, 16, 32, and 64 bits, floats, and doubles. Type-safe

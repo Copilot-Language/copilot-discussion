@@ -1,12 +1,27 @@
 \section{Conclusion}\label{sec:conclusion}
 
- Ultra-Critical systems are quickly evolving in complexity, and assured
- RV is a necessary complement to traditional assurance techniques.  
+ %Ultra-Critical systems are quickly evolving in complexity, and assured
+ %RV is a necessary complement to traditional assurance techniques.  
 In this paper, we have presented the development of
 \texttt{Copilot-Kind} that enhances the Copilot RV framework with an
 integrated model-checking capability for verifying monitors and
 illustrated its applicability to verify a range of monitors.
 
+In practice, our tool turned out to be very useful, indeed, even when
+the property being checked is not inductive or the induction step is
+too hard, it is very useful to test the first entailment of the
+$k$-induction algorithm for small values of $k$, proving the property
+cannot be violated in the first $k$ time steps or displaying a
+counterexample trace. Many subtle bugs can be captured for reasonable
+values of $k$. 
+
+$k$-induction does have limitations. For instance, writing $k$-inductive
+specifications can be long and mind-twisting. Newer advances like the
+\textsc{IC}3 algorithm, implemented by Kind2, are aimed at proving
+non-inductive properties by splitting it into concise and relevant
+inductive lemmas. However, our experiments showed that currently
+available tools fail at proving very simple properties as soon as
+basic arithmetic is involved.
 
 The development of \texttt{copilot-kind} has reinforced the efficacy
 of the embedded DSL approach. Being embedded in a higher-order
@@ -20,12 +35,26 @@ finite conjunctions.  Beyond our own purposes, we believe that other
 embedded DSL developers could use our designs in order to interface
 their languages with proof engines.
 
-Verified  monitors are by no means sufficient for achieving assured RV,
-since a safety case is far more encompassing, but it is a necessary
-condition.  Having applied our tool to rather
-sophisticated monitors,  future extensions are planned.  Of particular
-interest is an interface to 
-MetiTarski~\cite{AkbarpourPaulson}. This would allow us to discharge
-proofs of invariants involving real-valued special functions, which
-arise quite often in the domain of cyber-physical systems.
+%Verified  monitors are by no means sufficient for achieving assured RV,
+%since a safety case is far more encompassing, but it is a necessary
+%condition.
+
+Having successfully applied our tool to rather
+sophisticated monitors,  future extensions are planned.  Given we are
+focused on  cyber-physical systems,  the limitations
+of  \textsc{smt}-based provers go  beyond the fact that they become prohibitively slow as the
+size of their input increases.  \textsc{smt}-solvers do not handle 
+\textsc{smt}-solvers do not handle quantifiers well or special real-valued functions. Indeed, some
+proofs might rely on facts like $\forall x. -1 \leq \sin x \leq 1$
+that  \textsc{smt}-solvers cannot  handle unless they are hard-wired in
+a supported theory. A promising way to deal with both these issues
+would be an extension of the \textit{proof scheme} system where
+properties involving arbitrary streams are seen as universally
+quantified lemmas which can be specialized and added to the proof
+context by an explicit use of a new \texttt{apply} directive.  An interface to 
+MetiTarski~\cite{AkbarpourPaulson} will also allow us to automatically
+prove some of
+the mathematical properties of interest, but connecting to an
+interactive prover may also be necessary. 
+
 
