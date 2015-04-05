@@ -64,10 +64,10 @@ The complexity of the models that are built from Copilot specifications is
 limited by the power and expressiveness of the SMT solvers in use. For instance,
 most SMT solvers do not handle real functions like trigonometric functions. Moreover, bounded integer arithmetic is often to be approximated by standard integer arithmetic.
 
-The {Cnub} format is aimed at approximating a copilot specification in a format relying on a simple theory including basic integer arithmetic, real arithmetic and uninterpreted functions. The stream structure is kept from the copilot core format but the following differences have to be emphasized:
+The {Cnub} format is aimed at approximating a copilot specification in a format relying on a simple theory including basic integer arithmetic, real arithmetic, and uninterpreted functions. The stream structure is kept from the copilot core format, but the following differences have to be emphasized:
 
 \begin{itemize}
-\item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \textsc{SmtLib} standard: \texttt{Bool}, \texttt{Integer} and \texttt{Real}. Problems related to integer overflows and floating point arithmetic are ignored.
+\item In contrast to the great diversity of numeric types available in Copilot, we restrain ourselves to three basic types which are handled by the \textsc{SmtLib} standard: \texttt{Bool}, \texttt{Integer}, and \texttt{Real}. Problems related to integer overflows and floating point arithmetic are ignored.
 
 %\footnote{In fact, there are techniques to model these effects anyway, as we discuss below.}
 
@@ -85,7 +85,7 @@ The {Cnub} format is aimed at approximating a copilot specification in a format 
 Excepting the first point, the approximations made are sound: they result in a superset of possible behaviors for the RV. %% In the case this approximation is too coarse to prove the RV correct or treating machine integers as unbounded integers is unacceptable, some techniques can be used to refine the Cnub model anyway. 
 
 %% \medskip
-The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developper annotate the program so he can specify which bounds have to be checked automatically.
+The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developer annotate the program so he can specify which bounds have to be checked automatically.
 
 %\medskip
 %
@@ -121,7 +121,7 @@ $$
 f: \mathbb{N} \to \mathbb{N} \\
 f(0) = 1 \\
 f(1) = 1 \\
-f(n + 2) = f(n + 1) + f(n)
+f(n + 2) = f(n + 1) + f(n).
 \end{array}
 $$
 Suppose  we want to check the property \texttt{fib > 0} which translates into $f(n) > 0$. This can be done in two steps of the $k$-induction seen in Section~\ref{sec:background} by taking \[T[n] \;\equiv\; \left(\, f(0) = 1 \,\wedge\,

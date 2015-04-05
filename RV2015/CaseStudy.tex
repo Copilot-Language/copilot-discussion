@@ -17,7 +17,7 @@ spec = prop "pos" (fib > 0)
 \end{lstlisting}
 This  invariant property is clearly inductive and is easily
 discharged. Note that, as mentioned in Section~\ref{sec:structure}, 
-64-bits words are modelled by integers and eventual overflow problems are ignored here.
+64-bit words are modelled by integers and eventual overflow problems are ignored here.
  
 The next example uses \texttt{copilot-kind} to prove properties
 relating two different specifications. Consider the following
@@ -201,7 +201,7 @@ holds and the problem becomes tractable for the SMT solver, by replacing a unive
 
 
 Our solution to the problem of dealing with quantifiers is restricted to the
-case where $A$ is finite and replace each formula of the form $\forall x \in A
+case where $A$ is finite and we replace each formula of the form $\forall x \in A
 \; P(x)$ by $\bigwedge_{x \in A} P(x)$. This can be done with the help of the
 \texttt{forAllCst} function provided by the copilot-kind standard library. It is
 defined as :
