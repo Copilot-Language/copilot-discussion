@@ -153,13 +153,13 @@ length of a list $l$ is simply written $|l|$. The
 \texttt{majorityVote} functions takes a list of streams $l$ as its
 input and returns an output $maj$ such that : \[ \forall a \in A, \;
 \left( a \neq maj \right) \Longrightarrow \left(|l|_a \leq |l| /
-  {2}\right) \] Given that quantifiers are handled poorly by SMT
+  {2}\right) \] Given that quantifiers are handled poorly by \textsc{smt}
 solvers and their use is restricted in most model-checking tools,
 including \texttt{copilot-kind}, we use a simple trick to write
 and check this property.  If $P(n)$ is a predicate of an integer $n$,
 we have $\forall n \, . \, P(n)$ if and only if $\neg P(n)$ is
 satisfiable, where $n$ an unconstrained integer, which can be solved
-by a SMT solver. The corresponding copilot specification can be
+by a \textsc{smt}  solver. The corresponding copilot specification can be
 written as :
 \begin{lstlisting}[frame=single]
 okWith :: (Typed a, Eq a) => 
@@ -178,7 +178,7 @@ The function \texttt{arbitrary} is provided by the \texttt{copilot-kind} standar
 
 Note that we prove the algorithm for a fixed number of $N$ inputs
 (here $N=10$). Therefore no induction is needed for the proof and the
-invariant of the Boyer-Moore algorithm does not need to be made explicit. However, the size of the problem discharged to the SMT solver grows in proportion to $N$.
+invariant of the Boyer-Moore algorithm does not need to be made explicit. However, the size of the problem discharged to the \textsc{smt} solver grows in proportion to $N$.
 
 
 \subsubsection{The serial version.} Now, we discuss an implementation
@@ -197,7 +197,7 @@ where $l$ is the list of processed inputs, $p$ is the intermediary result and $s
 \[ \forall x. P(x, s) \,\wedge\, T\left(s, s' \right) \,\models\, \forall x. P(x, s') \]
 Sometimes, the stronger entailment 
 \[ P(x, s) \,\wedge\, T\left(s, s' \right) \,\models\, P(x, s') \]
-holds and the problem becomes tractable for the SMT solver, by replacing a universally quantified variable by an unconstrained one. In our current example, it is not the case. 
+holds and the problem becomes tractable for the \textsc{smt} solver, by replacing a universally quantified variable by an unconstrained one. In our current example, it is not the case. 
 
 
 Our solution to the problem of dealing with quantifiers is restricted to the
@@ -245,6 +245,6 @@ scheme = assuming ["inRange"] $ check "J"
 
 As the reader can see, we make the hypothesis that all the elements
 manipulated by the algorithm are in the set \texttt{allowed}, which is
-finite. As this set grows, the proofs discharged to the SMT solver
+finite. As this set grows, the proofs discharged to the \textsc{smt} solver
 becomes larger, which is why this solution
 is not scalable and has limited interest in practice.

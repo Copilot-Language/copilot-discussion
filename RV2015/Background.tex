@@ -3,7 +3,7 @@ The focus of our  investigation has  been on applying model checking to  prove
 invariant properties of our monitors.   We  
 employ a  technique known as $k-$induction~\cite{Sheeran00,EenS03} that has been demonstrated to be successful for verifying inductive
 properties of infinite state systems.   $k-$induction  has the
-advantage that it is well suited  to  SMT 
+advantage that it is well suited  to  \textsc{smt} 
 based bounded model checking. This section profiles the
 basic concepts of the  $k-$induction proof technique needed in the
 remainder of the paper. In practice, we use tools that implement  enhancements of the basic procedure such as path compression~\cite{dMRS03} that help the process scale, but are beyond the focus of the paper. 
@@ -32,5 +32,5 @@ Property $P$ said to be a $k$-inductive property with respect to
 $(S,I,T)$ if there exists some $k \in \mathbb{N}^{0<}$ such that $P$
 satisfies the $k$-induction principle. As $k$ increases, weaker
 invariants may be proved. If $P$ is a safety property that does not hold, then the first entailment will break for a finite $k$ and a counterexample will be provided. The trick is to find an invariant that is
-tractable by the SMT solver yet weak enough to satisfy the desired
+tractable by the \textsc{smt} solver yet weak enough to satisfy the desired
 property.  

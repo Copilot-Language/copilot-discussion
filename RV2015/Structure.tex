@@ -40,7 +40,7 @@ of our Copilot verification system.   %% Copilot is deeply embedded in
 %% a recursive structure into explicit graphs) and then domain specific
 %% type checking is done. 
 After Copilot type-checking and compilation, a Copilot program is approximated
-so it can be expressed in a theory handled by most SMT solvers, as described below. Any information
+so it can be expressed in a theory handled by most \textsc{smt} solvers, as described below. Any information
 of no use for the model checking process is thrown away. The result of this
 process is encoded in Cnub format, which is is structurally close to the
 Copilot core format, but supports fewer datatypes and operators. Then, it can be
@@ -61,8 +61,8 @@ format is similar to the one developed by Hagen~\cite{HagenPhD}, but customized 
 \subsection{Approximating a specification}
 
 The complexity of the models that are built from Copilot specifications is
-limited by the power and expressiveness of the SMT solvers in use. For instance,
-most SMT solvers do not handle real functions like trigonometric functions. Moreover, bounded integer arithmetic is often to be approximated by standard integer arithmetic.
+limited by the power and expressiveness of the \textsc{smt} solvers in use. For instance,
+most \textsc{smt} solvers do not handle real functions like trigonometric functions. Moreover, bounded integer arithmetic is often to be approximated by standard integer arithmetic.
 
 The {Cnub} format is aimed at approximating a copilot specification in a format relying on a simple theory including basic integer arithmetic, real arithmetic, and uninterpreted functions. The stream structure is kept from the copilot core format, but the following differences have to be emphasized:
 
@@ -76,7 +76,7 @@ The {Cnub} format is aimed at approximating a copilot specification in a format 
   handled. They are abstract as function symbols satisfying the
   equality: $$ \left( \forall i . \; x_i = y_i \right) \Longrightarrow f(x_1,
   \cdots, x_n) = f(y_1, \cdots, y_n). $$ in the quantifier-free theory of
-  uninterpreted function symbols, as provided by most SMT solvers.
+  uninterpreted function symbols, as provided by most \textsc{smt} solvers.
 
 \item Copilot extern variables are modelled by unconstrained streams. Particular precautions have to be taken to model accesses to external arrays in order to express the constraint that several requests to the same index inside a clock period must yield the same result.
 
