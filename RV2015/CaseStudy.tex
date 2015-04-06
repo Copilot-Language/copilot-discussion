@@ -22,7 +22,7 @@ discharged. Note that, as mentioned in Section~\ref{sec:structure},
 The next example uses \texttt{copilot-kind} to prove properties
 relating two different specifications. Consider the following
 specification:
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, deletekeywords={reset}]
 intCounter :: Stream Bool -> Stream Word64
 intCounter reset = time
   where 
@@ -32,7 +32,7 @@ intCounter reset = time
 that acts as a counter performing modulo arithmetic, but is
 reset when the \texttt{reset} stream value is true.  Now consider the
 specification
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, deletekeywords={reset}]
 greyTick :: Stream Bool -> Stream Bool
 greyTick reset = a && b
   where
@@ -51,7 +51,7 @@ conjecture that given the same input stream, when \texttt{reset} is
 true,  the \texttt{intCounter} is $0$ and \texttt{greyTick} is
 \texttt{true} when \texttt{intCounter} is $2.$ We formalize these two
 properties in our framework as follows:
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, deletekeywords={gt}]
 spec = do
   prop "iResetOk"   (r ==> (ic == 0))
   prop "eqCounters" (it == gt)
@@ -135,7 +135,7 @@ but the proofs involved are of different natures.
 \subsubsection{The parallel version.} The core of the algorithm is the
 following:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, deletekeywords={ls}]
 majorityVote :: (Typed a, Eq a) => [Stream a] -> Stream a
 majorityVote [] = error "empty list"
 majorityVote (x : xs) = aux x 1 xs
@@ -205,7 +205,7 @@ case where $A$ is finite and we replace each formula of the form $\forall x \in 
 \; P(x)$ by $\bigwedge_{x \in A} P(x)$. This can be done with the help of the
 \texttt{forAllCst} function provided by the copilot-kind standard library. It is
 defined as :
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[frame=single, deletekeywords={conj}]
 forAllCst ::(Typed a) => 
   [a] -> (Stream a -> Stream Bool) -> Stream Bool
 forAllCst l f = conj $ map (f . constant) l
