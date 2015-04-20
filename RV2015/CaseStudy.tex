@@ -39,18 +39,14 @@ greyTick reset = a && b
     a = (not reset) && ([False] ++ not b)
     b = (not reset) && ([False] ++ a)
 \end{lstlisting}
-A quick back of the envelope calculation reveals that,
+A quick back-of-the-envelope calculation reveals that,
 after a reset, \texttt{greyTick}'s output stream forms a cycle of
-boolean values with the third item in the cycle having value
+Boolean values with the third item in the cycle having value
 \texttt{true} and the rest being \texttt{false}.  Thus the two
 specifications both have a cyclic structure and with a cycle that
 begins when the \texttt{reset} stream is set to \texttt{true}.  
 
-From the above observations we 
-conjecture that given the same input stream, when \texttt{reset} is
-true,  the \texttt{intCounter} is $0$ and \texttt{greyTick} is
-\texttt{true} when \texttt{intCounter} is $2.$ We formalize these two
-properties in our framework as follows:
+\begin{figure}[ht!]
 \begin{lstlisting}[frame=single, deletekeywords={gt}]
 spec = do
   prop "iResetOk"   (r ==> (ic == 0))
@@ -61,6 +57,14 @@ spec = do
     gt = greyTick r
     r  = extern "reset" Nothing
 \end{lstlisting}
+  \caption{\texttt{Spec} listing.\label{fig:spec}}
+\end{figure}
+
+From the above observations we 
+conjecture that given the same input stream, when \texttt{reset} is
+true,  the \texttt{intCounter} is $0$ and \texttt{greyTick} is
+\texttt{true} when \texttt{intCounter} is $2.$ We formalize these two
+properties in our framework as shown in Figure~\ref{fig:spec}.
 These predicates are discharged using the proof scheme
 \begin{lstlisting}[frame=single]
 scheme :: ProofScheme
@@ -151,7 +155,7 @@ inputs for the algorithm.  Assume $l$ is a list and $a \in A$, we
 denote $|l|_a$ as the number of occurences of $a$ in $l$. The total
 length of a list $l$ is simply written $|l|$. The
 \texttt{majorityVote} functions takes a list of streams $l$ as its
-input and returns an output $maj$ such that : \[ \forall a \in A, \;
+input and returns an output $maj$ such that: \[ \forall a \in A, \;
 \left( a \neq maj \right) \Longrightarrow \left(|l|_a \leq |l| /
   {2}\right) \] Given that quantifiers are handled poorly by \textsc{smt}
 solvers and their use is restricted in most model-checking tools,
@@ -160,7 +164,7 @@ and check this property.  If $P(n)$ is a predicate of an integer $n$,
 we have $\forall n \, . \, P(n)$ if and only if $\neg P(n)$ is
 satisfiable, where $n$ an unconstrained integer, which can be solved
 by a \textsc{smt}  solver. The corresponding copilot specification can be
-written as :
+written as:
 \begin{lstlisting}[frame=single]
 okWith :: (Typed a, Eq a) => 
           Stream a -> [Stream a] -> Stream a -> Stream Bool
@@ -187,13 +191,13 @@ stream and the result is updated at each clock tick. As the number of
 inputs of the algorithm is not bounded anymore, a proof by induction
 is necessary and the invariant of the Boyer-Moore algorithm, being
 non-trivial, has to be stated explicitly. As stated in
-Hesselink~\cite{Hesselink2005}, this invariant is :
+Hesselink~\cite{Hesselink2005}, this invariant is:
 \[ \begin{array}{c}
 \forall m \in A, \;\;\; \left(m \neq p\right) \Longrightarrow \left( s + 2|l|_m \,\leq\, |l| \right) \;\; \wedge \;\; \left(m = p\right) \Longrightarrow \left( 2|l|_m \,\leq\, s + |l| \right)
 \\
 
 \end{array} \]
-where $l$ is the list of processed inputs, $p$ is the intermediary result and $s$ is an internal state of the algorithm. The problem here is that the induction invariant needs universal quantification to be expressed. Unfortunately, this quantifier cannot be removed by a similar trick like the one seen previously. Indeed, when an invariant is of the form $\forall x. P(x, s)$, $s$ denoting the current state of the world, the induction formula we have to prove is :
+where $l$ is the list of processed inputs, $p$ is the intermediary result and $s$ is an internal state of the algorithm. The problem here is that the induction invariant needs universal quantification to be expressed. Unfortunately, this quantifier cannot be removed by a similar trick like the one seen previously. Indeed, when an invariant is of the form $\forall x. P(x, s)$, $s$ denoting the current state of the world, the induction formula we have to prove is:
 \[ \forall x. P(x, s) \,\wedge\, T\left(s, s' \right) \,\models\, \forall x. P(x, s') \]
 Sometimes, the stronger entailment 
 \[ P(x, s) \,\wedge\, T\left(s, s' \right) \,\models\, P(x, s') \]
@@ -204,14 +208,14 @@ Our solution to the problem of dealing with quantifiers is restricted to the
 case where $A$ is finite and we replace each formula of the form $\forall x \in A
 \; P(x)$ by $\bigwedge_{x \in A} P(x)$. This can be done with the help of the
 \texttt{forAllCst} function provided by the copilot-kind standard library. It is
-defined as :
+defined as:
 \begin{lstlisting}[frame=single, deletekeywords={conj}]
 forAllCst ::(Typed a) => 
   [a] -> (Stream a -> Stream Bool) -> Stream Bool
 forAllCst l f = conj $ map (f . constant) l
   where conj = foldl (&&) true
 \end{lstlisting}
-The code for the serial Boyer-Moore algorithm and its specification is then :
+The code for the serial Boyer-Moore algorithm and its specification is then:
 
 \begin{lstlisting}[frame=single]
 allowed :: [Word8]
