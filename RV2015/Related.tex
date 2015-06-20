@@ -4,14 +4,15 @@ of areas including formal verification, functional programming and
 DSL design, and RV. 
 
 Copilot has many features common to other RV frameworks aimed at
- monitoring distributed or real-time systems.  
-There are few other instances of RV frameworks targeted to C code.  One exception is {\sc
- Rmor}, which generates constant-memory C monitors~\cite{havelundc}.  {\sc
-  Rmor} does not address real-time behavior or distributed system RV,
-though.    JavaMOP~\cite{javamop}  uses aspect-oriented techniques
-to allow one to write sophisticated monitors. To our knowledge no
-other RV framework has integrated monitor verification tools into
-their systems. 
+monitoring distributed or real-time systems.  There are few other
+instances of RV frameworks targeted to C code.  One exception is {\sc
+  Rmor}, which generates constant-memory C monitors~\cite{havelundc}.
+{\sc Rmor} does not address real-time behavior or distributed system
+RV, though.  To our knowledge no other RV framework has integrated
+monitor verification tools into their systems.
+
+%  JavaMOP~\cite{javamop}  uses aspect-oriented techniques
+%  to allow one to write sophisticated monitors.
 
 %Research at the University of Waterloo also investigates the use of
 % RV using  periodic sampling~\cite{sampling}.  Unlike with Copilot, the authors
@@ -26,7 +27,10 @@ programming  field programmable gate arrays,  and
 Ivory~\cite{pike-plpv14}, which is designed for writing secure autonomous
 systems, are both implemented using techniques similar to Copilot.  
 
-
+The ROSETTE extension to the Racket language~\cite{Torlak} provides a
+framework for building DSLs that integrate \textsc{smt}
+solvers. Smten~\cite{Uhler} is a DSL with embedded \textsc{smt}
+solvers that is targeted at writing satisfiability based searches.
 
 %For instance FeldSpar~\cite{feldspar} is designed for digital signal processing
 
