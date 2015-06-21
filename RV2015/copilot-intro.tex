@@ -35,7 +35,7 @@ Fibonacci sequence modulo $2^{32}$ can be written in Copilot as follows:
 
 \begin{lstlisting}[frame=single]
 fib :: Stream Word32
-fib = [0,1] ++ (fib + drop 1 fib)
+fib = [1,1] ++ (fib + drop 1 fib)
 \end{lstlisting}
 %
 

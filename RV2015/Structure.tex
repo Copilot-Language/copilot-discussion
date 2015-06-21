@@ -42,18 +42,18 @@ of our Copilot verification system.   %% Copilot is deeply embedded in
 After Copilot type-checking and compilation, a Copilot program is approximated
 so it can be expressed in a theory handled by most \textsc{smt} solvers, as described below. Any information
 of no use for the model checking process is thrown away. The result of this
-process is encoded in Cnub format, which is is structurally close to the
+process is encoded in \textit{Cnub} format, which is is structurally close to the
 Copilot core format, but supports fewer datatypes and operators. Then, it can be
 translated into one of two available representation formats:
 
 \begin{itemize}
 \item
-  The \textbf{IL} format: a list
+  The {IL} format: a list
   of quantifier-free equations over integer sequences, where each sequence
   roughly corresponds to a stream.   This
 format is similar to the one developed by Hagen~\cite{HagenPhD}, but customized for Copilot.   The \emph{light prover} works with this
   format.
-\item The \textbf{TransSys} format: a modular representation of a
+\item The {TransSys} format: a modular representation of a
   \emph{state transition system}. The \emph{Kind2 prover} uses this
   format, which can be printed into Kind2's native format~\cite{kind}.
 \end{itemize}
@@ -85,7 +85,7 @@ The {Cnub} format is aimed at approximating a copilot specification in a format 
 Excepting the first point, the approximations made are sound: they result in a superset of possible behaviors for the RV. %% In the case this approximation is too coarse to prove the RV correct or treating machine integers as unbounded integers is unacceptable, some techniques can be used to refine the Cnub model anyway. 
 
 %% \medskip
-The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developer annotate the program so he can specify which bounds have to be checked automatically.
+The problem of integer overflows can be tackled by adding automatically to the property being verified some bound-checking conditions for all integer variables. However, this solution can generate a great overhead for the proof engine. Moreover, it treats every program which causes an integer overflow as wrong, although this behaviour could be intended. An intermediate way to go would be to let the developer annotate the program so he can specify which bounds have to be checked automatically or to use the bit vector types of SmtLib, which will be implemented in a future release.
 
 %\medskip
 %
