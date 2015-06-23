@@ -133,7 +133,7 @@ algorithm takes $n$ inputs from $n$ distinct streams and is fully
 executed. The second version of the algorithm  is a sequential version, where the inputs are
 delivered one by one in time and where the result is updated at each
 clock tick. Both can be checked with the basic k-induction algorithm,
-but the proofs involved are of different natures.
+but the proofs involved are different.
 
 
 \subsubsection{The parallel version.} The core of the algorithm is the
@@ -152,9 +152,9 @@ majorityVote (x : xs) = aux x 1 xs
 \end{lstlisting} 
 Let us denote $A$ as the set of the elements that can be used as
 inputs for the algorithm.  Assume $l$ is a list and $a \in A$, we
-denote $|l|_a$ as the number of occurences of $a$ in $l$. The total
+denote $|l|_a$ as the number of occurrences of $a$ in $l$. The total
 length of a list $l$ is simply written $|l|$. The
-\texttt{majorityVote} functions takes a list of streams $l$ as its
+\texttt{majorityVote} function takes a list of streams $l$ as its
 input and returns an output $maj$ such that: \[ \forall a \in A, \;
 \left( a \neq maj \right) \Longrightarrow \left(|l|_a \leq |l| /
   {2}\right) \] Given that quantifiers are handled poorly by \textsc{smt}
@@ -250,5 +250,5 @@ scheme = assuming ["inRange"] $ check "J"
 As the reader can see, we make the hypothesis that all the elements
 manipulated by the algorithm are in the set \texttt{allowed}, which is
 finite. As this set grows, the proofs discharged to the \textsc{smt} solver
-becomes larger, which is why this solution
-is not scalable and has limited interest in practice.
+become larger, which is why this solution
+is not scalable.

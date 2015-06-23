@@ -1,7 +1,7 @@
 \section{Copilot Prover Interface}~\label{sec:prover} 
 The \texttt{copilot-kind} model-checker is an extensible interface to multiple
 provers used to verify safety properties of Copilot
-programs. Currently, two backends for \texttt{copiot-kind} have been implemented: the first is a
+programs. Currently, two backends for \texttt{copilot-kind} have been implemented: the first is a
 homegrown prover we call ``the light prover'' built on top of
 Yices~\cite{Dutertre:cav2014} and the second is the Kind2 model checker being developed at
 the University of Iowa~\cite{kind}.
@@ -106,7 +106,7 @@ $$V \leq U, \; C \leq U, \; N \leq U, \; C \leq N$$
 
 \noindent
 hold as well as reflexivity, antisymmetry, and transitivity. (Merging provers
-that handles non-termination within a bound is future work.)
+that handle non-termination within a bound is future work.)
 
 In practice, we used the following prover in the examples of Section~\ref{sec:example}:
 \begin{lstlisting}[frame=single]
@@ -127,19 +127,19 @@ spec = do
 \end{lstlisting}
 and suppose we want to prove \texttt{"neq0"}. Currently, the two available solvers fail at showing this non-inductive property. Yet, we can prove the more general
 inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
-this, we use the proof scheme
+this, we apply our \emph{proof scheme} feature as follows:
 
 \begin{lstlisting}[frame=single]
 assert "gt0" >> check "neq0"
 \end{lstlisting}
 
-\noindent
-rather than
-\begin{lstlisting}[frame=single] 
-check "neq0" 
-\end{lstlisting}
-A \emph{proof scheme} is a chain of
-primitive schemes glued by the $\texttt{\textgreater{}\textgreater{}}$
+%\noindent
+%rather than
+%\begin{lstlisting}[frame=single] 
+%check "neq0" 
+%\end{lstlisting}
+A proof scheme is a chain of
+primitive proof operations glued together by the $\texttt{\textgreater{}\textgreater{}}$
 operator to combine proofs, and in particular, provide lemmas. The available primitives are:
 
 \begin{itemize}
