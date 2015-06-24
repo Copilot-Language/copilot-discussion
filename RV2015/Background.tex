@@ -1,7 +1,7 @@
 \section{Background on SMT-based $k-$induction}~\label{sec:background} 
 The focus of our  investigation has  been on applying model checking to  prove
 invariant properties of our monitors.   We  
-employ a  technique known as $k-$induction~\cite{Sheeran00,EenS03} that has been demonstrated to be successful for verifying inductive
+employ a  technique known as $k-$induction~\cite{Sheeran00,EenS03} for verifying inductive
 properties of infinite state systems.   $k-$induction  has the
 advantage that it is well suited  to  \textsc{smt} 
 based bounded model checking. This section profiles the
@@ -11,10 +11,9 @@ remainder of the paper. In practice, we use tools that implement  enhancements o
 Consider  a state transition system  $(S,I,T),$
 where $S$ is a set of states, $I \subseteq S$ is the set of initial
 states and $T \subseteq S \times S $ is a transition relation over
-$S.$ To show $P$ holds in the transition system one must first
-show the base case holds, that  $P$ holds in all states reachable
-from an initial state in $k$ steps, and then show the induction step,
-that if $P$ holds in states $s_0,\ldots,s_{k-1}$ then it holds in
+$S.$ To show $P$ holds in the transition system one must show that (1)
+the base case holds---that $P$ holds in all states reachable
+from an initial state in $k$ steps, and (2) the induction step holds---that if $P$ holds in states $s_0,\ldots,s_{k-1}$ then it holds in
 state $s_k.$ The $k$-induction principle is formally expressed in the
 following two entailments:
 \begin{eqnarray*}
@@ -24,7 +23,7 @@ P(s_0) \tland \cdots \tland P(s_{k-1}) \tland T(s_0,s_1) \tland \cdots \tland T(
 P(s_k) 
 \end{eqnarray*} 
 If one cannot show the property to be true, the
-property is strengthened by extending the formula and
+property is strengthened by either extending the formula or
 progressively increasing the length of the reachable states
 considered.  
 

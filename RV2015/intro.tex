@@ -17,7 +17,7 @@ that the last line of defense is actually effective.
 %utilize learning to adapt to unpredictable environments. 
 
 
- The work reported on here is part of a larger
+ The work reported here is part of a larger
 program aimed at creating a framework for \emph{high assurance RV}. In
 order to be used in ultra-critical environments, high-assurance RV
 must:
@@ -30,33 +30,32 @@ monitor.
 \end{enumerate}
 
 \noindent
-These guiding principles are informing the continuing development of the
-Copilot~\cite{copilot,pike-isse-13} language and framework that is intended to
-be used in RV of ultra-critical systems.  Earlier work~\cite{pike-icfp-12}
+These guiding principles inform the continued development of the
+Copilot language and framework that is intended to
+be used in RV of ultra-critical systems~\cite{copilot,pike-isse-13}.  Earlier work
 focused on verifying that the monitor synthesis \emph{process} is correct
-(Requirement~\ref{req:c} above). Here, the focus
+(Requirement~\ref{req:c} above)~\cite{pike-icfp-12}. Here, the focus
 is on the second requirement for high-assurance RV - making sure the monitor
 specification is correct. Requirement~\ref{req:a}, in the spirit of Rushby's
-proposal (\cite{rvRushby}) is future work.
+proposal~\cite{rvRushby} is future work.
 
 \paragraph{Contributions}
 In this paper we describe the theory and implementation of a $k$-induction based
 model-checker~\cite{Sheeran00,EenS03} for Copilot called
 \texttt{copilot-kind}. More precisely, \texttt{copilot-kind} is a model-checking
-framework for Copilot, with two existing backends including a lightweight
+\emph{framework} for Copilot, with two existing backends: a lightweight
 implementation of $k$-induction using Yices~\cite{Dutertre:cav2014} and a backend based on
 \emph{Kind2}, implementing both $k$-induction and the IC3~algorithm~\cite{Somenzi-FMCAD11}.
 
 After providing a brief introduction to Copilot in Section~\ref{sec:co-intro}
 and to Satisfiability Modulo Theories (\textsc{smt})-based $k$-induction in Section~\ref{sec:background}, we introduce
 \texttt{copilot-kind} in Section~\ref{sec:prover}. Illustrative examples of
-\texttt{copilot-kind} of its use are provided in Section~\ref{sec:example}, and
+\texttt{copilot-kind} are provided in Section~\ref{sec:example}, and
 implementation details are given in Section~\ref{sec:structure}. The final two
 sections discuss related work and concluding remarks, respectively.
 
 Copilot and \texttt{copilot-kind} are open-source (BSD3) and in current use at
-NASA.\footnote{Copilot: \url{http://leepike.github.io/Copilot/} and
-\text{copilot-kind}: \url{https://github.com/jonathan-laurent/copilot-kind}}
+NASA.\footnote{\url{https://github.com/Copilot-Language}}
 
 %This paper documents our efforts in incorporating formal verification
 %of monitors into the Copilot RV framework.  Initial efforts have

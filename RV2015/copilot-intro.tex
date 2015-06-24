@@ -2,18 +2,18 @@
 Copilot is a domain specific language (DSL)  embedded in the functional
 programming language Haskell~\cite{Haskell98}   tailored to
 programming monitors for hard real-time, reactive systems. Given that
-Copilot is a deep embedding in Haskell, one must have a working
+Copilot is deeply embedded in Haskell, one must have a working
 knowledge of Haskell to effectively use Copilot. However, the benefit of an
 embedded DSL in Haskell is that the host-language serves as a type-safe,
 Turing-complete macro language, allowing arbitrary compile-time computation,
 while keeping the core DSL small.
 
 Copilot is a \emph{stream} based language where a stream is an infinite ordered
-sequence of values that must conform to the same type.  All transformation of
+sequence of values that must conform to the same type.  All transformations of
 data in Copilot must be propagated through streams.  In this respect, Copilot is
 similar to Lustre~\cite{CaspiPHP87}, but is specialized for RV. Copilot
 guarantees that specifications compile to constant-time and constant-space
-implementations.
+implementations to update stream states.
 
 \subsubsection{Copilot's expression language.}
 In the following, we briefly and informally introduce Copilot's expression

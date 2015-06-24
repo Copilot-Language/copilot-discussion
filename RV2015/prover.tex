@@ -23,6 +23,7 @@ spec = prop "gt0" (x > 0)
   x = [1] ++ (1 + x)
 \end{lstlisting}
 
+\noindent
 In order  to check that property \texttt{gt0} holds, we use a \texttt{prove}
 function implemented as part of \texttt{copilot-kind}.
 %% \begin{lstlisting}[frame=single]
@@ -35,6 +36,8 @@ prove (lightProver def) (check "gt0") spec
 where \texttt{lightProver def} stands for the \emph{light prover} with
 default configuration.
 
+While numeric types are bounded in Copilot, they are abstracted as integers in
+the prover, so we ignore overflow; see Section~\ref{sec:structure} for details.
 %% \subsubsection{The Prover Interface.}\label{the-prover-interface}
 
 %
@@ -97,22 +100,33 @@ default configuration.
 \texttt{Copilot-Kind} allows provers to be combined. Given provers $A$ and $B$,
 the \texttt{combine} function returns a prover $C$ which launches both $A$ and
 $B$ and returns the most \emph{precise} output of the two upon
-termination. ``Precise'' in this case means returning the result least element
+termination. ``Precise'' in this case means returning the least element
 in the following partial order: for a given execution, classify prover outputs
 as valid ($V$), unknown ($U$), invalid with countexample ($C$), and invalid with
 no counterexample ($N$); the partial order is the least relation such that
 
-$$V \leq U, \; C \leq U, \; N \leq U, \; C \leq N$$
+\begin{center}
+\begin{tikzpicture}[scale=.7]
+  \node (U) at (0,1) {$U$};
+  \node (V) at (-1,0) {$V$};
+  \node (N) at (1,0) {$N$};
+  \node (C) at (1,-1) {$C$};
+  \draw (U) -- (V);
+  \draw (U) -- (N) -- (C);
+    \end{tikzpicture}
+\end{center}
+
+%% $$V \leq U, \; C \leq U, \; N \leq U, \; C \leq N$$
 
 \noindent
-hold as well as reflexivity, antisymmetry, and transitivity. (Merging provers
+(Merging provers
 that handle non-termination within a bound is future work.)
 
 In practice, we used the following prover in the examples of Section~\ref{sec:example}:
 \begin{lstlisting}[frame=single]
 prover = lightProver def {kTimeout = 5} `combine` kind2Prover def
 \end{lstlisting}
-which uses both the light and Kind2 provers, the first being limited to 5 steps of the $k$-induction 
+which uses both the light and Kind2 provers, the first being limited to 5 steps of the $k$-induction.
 
 \subsubsection{Proof Schemes.}\label{proof-schemes}
 
@@ -125,9 +139,12 @@ spec = do
     x = [1] ++ (1 + x)
 
 \end{lstlisting}
-and suppose we want to prove \texttt{"neq0"}. Currently, the two available solvers fail at showing this non-inductive property. Yet, we can prove the more general
-inductive lemma \texttt{"gt0"} and deduce our main goal from this. For
-this, we apply our \emph{proof scheme} feature as follows:
+and suppose we want to prove \texttt{"neq0"}. Currently, the two available
+solvers fail at showing this non-inductive property (if at index $i$, $\texttt{x} =
+-k$, then it satisfies the induction hypothesis but fails the induction step for
+all $k$). Yet, we can prove the more general inductive lemma \texttt{"gt0"} and
+deduce our main goal from this. For this, we apply our proof scheme feature as
+follows:
 
 \begin{lstlisting}[frame=single]
 assert "gt0" >> check "neq0"
@@ -138,7 +155,7 @@ assert "gt0" >> check "neq0"
 %\begin{lstlisting}[frame=single] 
 %check "neq0" 
 %\end{lstlisting}
-A proof scheme is a chain of
+A \emph{proof scheme} is a chain of
 primitive proof operations glued together by the $\texttt{\textgreater{}\textgreater{}}$
 operator to combine proofs, and in particular, provide lemmas. The available primitives are:
 
