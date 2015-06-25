@@ -166,7 +166,7 @@ solvers and their use is restricted in most model-checking tools,
 including \texttt{copilot-kind}, we use a simple trick to write
 and check this property.  If $P(n)$ is a predicate of an integer $n$,
 we have $\forall n \, . \, P(n)$ if and only if $\neg P(n)$ is
-satisfiable, where $n$ an unconstrained integer, which can be solved
+unsatisfiable, where $n$ an unconstrained integer, which can be solved
 by a \textsc{smt} solver. The corresponding Copilot specification can be
 written as:
 \begin{lstlisting}[frame=single]
