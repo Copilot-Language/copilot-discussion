@@ -1,0 +1,129 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=2cm]{geometry}
+\begin{document}
+$$ \begin{array}{lcl}
+\langle defs \rangle & ::= & (\langle def \rangle)^* \\
+ & & \\
+\langle ctype \rangle & ::= & \texttt{Bool} \\  
+    & | & \texttt{Int8} \\
+    & | & \texttt{Int16} \\ 
+    & | & \texttt{Int32} \\
+    & | & \texttt{Int64} \\
+    & | & \texttt{Word8} \\ 
+    & | & \texttt{Word16} \\
+    & | & \texttt{Word32} \\
+    & | & \texttt{Word64} \\
+    & | & \texttt{Float} \\
+    & | & \texttt{Double} \\
+ & & \\
+\langle def \rangle & ::= & (\langle id \rangle \texttt{::} \texttt{Stream } \langle ctype \rangle)? \langle id \rangle \texttt{=}\langle spec \rangle \\
+ & & \\
+\langle id \rangle & ::= & (\texttt{a}-\texttt{z})(\texttt{a}-\texttt{z}|\texttt{A}-\texttt{Z}|\texttt{0}-\texttt{9}|\_|\texttt{-}|\texttt{'})^* \\
+ & & \\
+%\mbox{\emph{string}} & ::= & \texttt{"}(\emph{printableChar})^*\texttt{"} \\
+%    & | & \mbox{\emph{string} \texttt{++} \emph{string}} \\ 
+%    & | & \texttt{[]} \\ 
+%    & | & \mbox{\texttt{'}\emph{printableChar}\texttt{'} \texttt{:} \emph{string}} \\ 
+ & & \\
+\langle string \rangle & ::= & \texttt{"}(\texttt{a}-\texttt{z}|\texttt{A}-\texttt{Z})(\texttt{a}-\texttt{z}|\texttt{A}-\texttt{Z}|\texttt{\_}|\texttt{0}-\texttt{9})_{\leq 30}^*\texttt{"} \\
+ & & \\
+\langle stream \rangle & ::= & \langle valueList \rangle \texttt{++} \langle stream \rangle \\
+    & | & \langle funStream \rangle \\ 
+& & \\ 
+\langle valueList \rangle & ::= & [(\langle vbool \rangle)_,^*] \\
+    & | & [(\langle vint \rangle)_,^*] \\ 
+    & | & [(\langle vfloat \rangle)_,^*] \\ 
+ & & \\ 
+\langle vbool \rangle & ::= & \texttt{true} \\
+    & | & \texttt{false} \\
+ & & \\
+\langle vint \rangle & ::= & [\texttt{+}|\texttt{-}](\texttt{0}-\texttt{9})^+ \\
+ & & \\
+\langle vfloat \rangle & ::= & \langle vint \rangle .(\texttt{0}-\texttt{9})^+ \\
+ & & \\
+\langle funStream \rangle & ::= & \langle externV \rangle~ \langle string \rangle~ \langle contextV \rangle \\
+    & | & \texttt{label} ~ \langle string \rangle ~ \langle funStream \rangle \\
+    & | & \texttt{externFun} ~ \langle string \rangle ~ \langle argList \rangle ~ \langle contextF \rangle \\
+    & | & \langle externA \rangle ~ \langle string \rangle ~ \langle stream \rangle ~ \langle int \rangle ~ \langle contextA \rangle \\
+    & | & \langle op1 \rangle ~ \langle  funStream \rangle \\
+    & | & \langle funStream \rangle ~ \langle  op2Infix \rangle ~ \langle funStream \rangle \\
+    & | & \langle op3 \rangle ~ \langle funStream \rangle ~ \langle funStream \rangle ~ \langle funStream \rangle \\
+    & | & \langle dropStream \rangle \\
+ & & \\
+
+
+\end{array} $$
+$$ \begin{array}{lcl}
+ \langle externV \rangle & ::= &  \mbox{\texttt{extern}} \\
+    & | & \mbox{\texttt{externB}} \\
+    & | & \mbox{\texttt{externI8}} \\
+    & | & \mbox{\texttt{externI16}} \\
+    & | & \mbox{\texttt{externI32}} \\
+    & | & \mbox{\texttt{externI64}} \\
+    & | & \mbox{\texttt{externW8}} \\
+    & | & \mbox{\texttt{externW16}} \\
+    & | & \mbox{\texttt{externW32}} \\
+    & | & \mbox{\texttt{externW64}} \\
+    & | & \mbox{\texttt{externF}} \\
+    & | & \mbox{\texttt{externD}} \\
+ & & \\
+ \langle externA \rangle & ::= &  \mbox{\texttt{externArray}} \\
+    & | & \mbox{\texttt{externArrayB}} \\
+    & | & \mbox{\texttt{externArrayI8}} \\
+    & | & \mbox{\texttt{externArrayI16}} \\
+    & | & \mbox{\texttt{externArrayI32}} \\
+    & | & \mbox{\texttt{externArrayI64}} \\
+    & | & \mbox{\texttt{externArrayW8}} \\
+    & | & \mbox{\texttt{externArrayW16}} \\
+    & | & \mbox{\texttt{externArrayW32}} \\
+    & | & \mbox{\texttt{externArrayW64}} \\
+    & | & \mbox{\texttt{externArrayF}} \\
+    & | & \mbox{\texttt{externArrayD}} \\
+
+ & & \\
+ \langle contextV \rangle & ::= &  \mbox{\texttt{Nothing}} \\
+    & | & \mbox{\texttt{Just}} ~ \langle stream \rangle \\
+ & & \\
+ \langle contextF \rangle & ::= &  \mbox{\texttt{Nothing}} \\
+    & | & \mbox{\texttt{Just}} ~ \langle stream \rangle \\
+ & & \\
+\langle contextA \rangle & ::= &  \mbox{\texttt{Nothing}} \\
+    & | & \texttt{Just } [(\langle valueList \rangle)_,^*]  \\
+
+ & & \\
+\langle argList \rangle & ::= &  [(\mbox{\texttt{Arg }} \langle stream \rangle)_,^*]  \\
+    & | & \texttt{[]} \\
+    & | & (\texttt{Arg } \langle stream \rangle)\texttt{:} \langle argList \rangle \\
+ & & \\
+\end{array} $$
+$$ \begin{array}{lcl}
+\langle dropStream \rangle & ::= & \langle id \rangle \\
+    & | & \mbox{\texttt{constant}} ~ \langle value \rangle \\
+    & | & \mbox{\texttt{drop}} ~ \langle int \rangle~\langle stream \rangle \\
+ & & \\
+
+
+\langle op1\rangle & ::= & \texttt{not} ~|~ \texttt{abs} ~|~ \texttt{signum}~|~ \texttt{complement}\\
+&|&\texttt{recip}~|~ \texttt{exp}~|~ \texttt{sqrt}\\
+&|& \texttt{log}~|~ \texttt{sin}~|~ \texttt{cos}~|~ \texttt{tan}\\
+&|& \texttt{asin}~|~ \texttt{acos}~|~ \texttt{atan}\\
+&|& \texttt{sinh}~|~ \texttt{cosh}~|~ \texttt{tanh}\\
+&|& \texttt{asinh}~|~ \texttt{acosh}~|~ \texttt{atanh}\\
+&|& \texttt{cast}~|~ \texttt{unsafeCast}\\
+ & & \\
+\langle op2Infix \rangle & ::= &  \texttt{+}~|~\texttt{-}~|~\texttt{*}~|~ \texttt{`mod`}~|~\texttt{`div`} \\
+    & | & \texttt{/}~|~\texttt{**}~|~\texttt{`logBase`} \\
+    & | & \texttt{<}~|~\texttt{<=}~|~\texttt{==}~|~\texttt{/=}~|~\texttt{>=}~|~\texttt{>} \\
+    & | & \texttt{||}~|~ \texttt{\&\&}~|~ \texttt{`xor`}~|~ \texttt{==>} \\
+    & | & \texttt{.\&.}~|~ \texttt{.|.}~|~\texttt{.\textasciicircum.}~|~ \texttt{.>>.}~|~ \texttt{.<<.}  \\
+ & & \\
+\langle op3 \rangle & ::= & \texttt{mux} \\
+ & & \\
+%\mbox{\emph{printableChar}} & ::= & \texttt{!}|\texttt{ }|\texttt{\textbackslash "}|\texttt{\#}|\texttt{\$}|\texttt{\%}|\texttt{\&}|\texttt{'}|\texttt{(}|\texttt{)}|\texttt{*}|\texttt{+}|\texttt{,}|\texttt{-} \\
+%& | & \texttt{.}|\texttt{/}|\texttt{0}-\texttt{9}|\texttt{:}|\texttt{;}|\texttt{<}|\texttt{=}|\texttt{>}|\texttt{?}|\texttt{@}|\texttt{A}-\texttt{Z} \\
+%& | & \texttt{[}|\texttt{\textbackslash}|\texttt{]}|\texttt{\textasciicircum}|\texttt{\_}|\texttt{`}|\texttt{a}-\texttt{z}|\texttt{\{}|\texttt{|}|\texttt{\}}|\texttt{\textasciitilde} \\
+
+\end{array} $$
+
+\end{document}

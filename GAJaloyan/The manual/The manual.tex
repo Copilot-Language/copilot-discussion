@@ -1,0 +1,118 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=2cm]{geometry}
+\usepackage[cmex10]{amsmath}
+%\usepackage{amsmath}
+\usepackage{array}
+\usepackage{fixltx2e}
+\usepackage{url}
+\usepackage[english]{babel}
+\usepackage{varioref}
+\usepackage[pdfpagelabels=true]{hyperref}
+\usepackage{verbatim}
+\usepackage{pdfpages}
+
+
+\begin{document}
+\title{The manual}
+\author{Don't know yet for the authors}
+
+\maketitle
+\section{First steps of Copilot}
+Copilot is a wonderful language, the best EDSL in Haskell for writing real time monitors in C that also produce ACSL contracts and compile in CompCert, and you definitely may use it (because there is no other one that can do such things) ! We give here a grammar of the language, and you will follow its rules to write your code, or you'll get bad surprises. This is for instance the case for let local bindings. We ask you to do the $\beta$-expansion yourself, because we think you are clever and you definitely may be able to do it. If you don't do it, the program will go on strike and refuse to check the assertions on ACSL (unless you pay a lot of money to buy the latest plugin of frama-c that supports let bindings).
+
+\section{Be careful !}
+
+The convention on muxes are the following : mux cond iftrue iffalse.
+
+\section{About git}
+On our beautiful github we have a lot of different projects : here is a litte overview of them.
+https://github.com/Copilot-Language
+
+\begin{enumerate}
+\item Copilot : https://github.com/Copilot-Language/Copilot   This is the basic directory. Many branches but only two really active. Master and Struct. This repository contains all unit tests, basic documentation, and so on. Those two branches should be merged into master soon.
+\item atom\_for\_copilot : https://github.com/Copilot-Language/atom\_for\_copilot   The modified package ATOM for generating ACSL contracts with Copilot. Some headers modified so NOT BACKWARD COMPATIBLE. One branch, probably deprecated.
+\item sbv-for-copilot : https://github.com/Copilot-Language/sbv-for-copilot This used to be a modified package for SBV. Deprecated, DO NOT USE. All the changes have been merged into the official SBV version 5.0.
+\item examplesForACSL : https://github.com/Copilot-Language/examplesForACSL  Some examples and projects in it to test. Makefiles provided. One branch : master. When using it, do not forget at each example to initialize the sandbox by cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/ 
+\subitem Becareful ! Some examples are not fitted to be used with frama-c, or other tools (splint). Always check before running it, or you comnputer can crash by swapping.
+\item copilot-cbmc : https://github.com/Copilot-Language/copilot-cbmc  insert description here TODO. One branch : master
+\item copilot-c99 : https://github.com/Copilot-Language/copilot-c99  DEPRECATED : atom backend for SBV. Two branches. An original one, and an other using the atom\_for\_copilot modified package.
+\item copilot-discussion : https://github.com/Copilot-Language/copilot-discussion Some blabla TODO
+\item copilot-librairies : https://github.com/Copilot-Language/copilot-libraries  If you do not want to reinvent the wheel. 
+
+\end{enumerate}
+
+
+\section{Devlopper mode : compile it from github}
+
+
+You are a developper, and you want to compile it from source in a sandbox ? Here is the right section ! 
+
+What you need to do : 
+\begin{enumerate}
+\item First install all the useful stuff : CompCert (2.4 or later, coq needed, opam recommanded), Frama-c (version sodium or later), Z3 (at least 4.3.2), CVC4 (at least 1.4), ghc 7.10 or later (and its whole toolchain, like the haskell platform).
+\subitem Optionnaly, you could install splint, an up to date gcc (5.1 or later).
+\item Make sure that cabal is installed, and update it to the version 1.22 or later (run \texttt{cabal install cabal cabal-install } for that). 
+\item create a directory named Copilot-Language and cd into it. Then clone the following :
+\subitem https://github.com/Copilot-Language/examplesForACSL
+\subitem https://github.com/LeventErkok/sbv
+\subitem https://github.com/Copilot-Language/Copilot
+\item cd into the directory named Copilot and then do the following
+\subitem \texttt{git submodule update --init}
+\subitem go into the submodules and change the branches you want (for example lib/copilot-sbv has a branch named acsl) with the command \texttt{git checkout BRANCHNAME}. 
+\subitem In the Copilot folder (the one cded in 3) \texttt{make test}
+\item Normally, it should have failed ! Because it has installed all dependecies on their official release in a cabal sandbox located in this folder Copilot (if not, you should probably do a \texttt{cabal install --only-dependencies}). But you need at least a sbv 5.0 (which is not released yet). You have now to do the following :
+\subitem Go into Copilot-Language/sbv and do \texttt{cabal sandbox init --sandbox ../Copilot/.cabal-sandbox/} and then \texttt{cabal install}.
+\item Now go in Copilot and redo make test : it should compile everything, but the Copilot-regression should fail (which is normal because it is deprecated).
+\item It's done ! You now have the latest version of Copilot in your sandbox ! To run some test, go into the Copilot-Language/examplesForACSL
+\item choose one example randomly (choose the 29 if you have a good computer). Cd into it
+\item do \texttt{cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/} and then \texttt{make sandbox} to build it from the sandbox.
+\item It should have created you a folder named copilot-sbv-codegen. Cd into it :
+\subitem do \texttt{make fwp} to use the wp plugin of frama-c to check, \texttt{make all} to compile it with compcert (into a internal.a library), \texttt{make splint} to check it with splint, \texttt{make fval} to check it with value analysis plugin (it will unroll the infinite loop, so the analysis may never terminate).
+\item For the examples 29 and bigger, there is also a m4 preprocessing done before compilation. Do not hesitate to use it if you need it !
+\end{enumerate}
+
+\subsection{update it}
+
+You had a party on week end, and when you come it does not work anymore ? You need to update it ? Follow these instructions :
+
+\begin{enumerate}
+\item First you have to pull all the following (according to the branch you want to execute) :
+\subitem sbv
+\subitem examplesForACSL
+\subitem Copilot
+\subitem Copilot/lib/*
+\item Then, go in Copilot, and \texttt{make veryclean}, then \texttt{make test}. When it fails, go to sbv and \texttt{cabal sandbox init --sandbox ../Copilot/.cabal-sandbox/} and \texttt{cabal install}. Then go again in Copilot and \texttt{make test}. Then you can go in the examples and make them again (if they do not compile, do a \texttt{cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/})
+\end{enumerate}
+
+\section {Prover mode : prove it with ACSL}
+
+If you want to prove it with ACSL you have to follow some basic rules :
+\begin{enumerate}
+\item Forget about ATOM. It works only with sbv
+\item Never use let bindings
+\item Use labels : if the label starts with a ? character, then it will split what is labeled in an other file, which may be easier to prove (see example29 for that kind of usage). If you don't, the prover may only do timeouts, or even say unknown to everything.
+\item Caution ! You need to install gnu parallel in case of many files !
+\item If you want, you can change the prover in the file copilot-sbv-codegen/copilot.mk (default CVC4), and add other options, do it as you want. But don't forget, as soon as you will do a make sandbox in the example29 folder, it will delete all your modifications !
+\item forget about bitwise operators
+\item if-then-else does not work in the sandbox. Use a mux instead (actualy ite is a syntaxical sugar for mux) ! Same for all imports in the form Language.Copilot, yoiu have to import yourself Copilot.Language.THEMODULEYOUWANT
+\end{enumerate}
+
+\section{Board mode}
+
+Once you have compiled everything into the right architecture, you may want to try it. For it you need to have a binary file into the ARM architecture for BeagleBone/PX4,... (Arduino usage : TODO). Then upload it and run it. You can if you want program triggers that would send special signal on pins, which will allow to control via a transistor a LED or something like that. 
+
+For this you would need a cross compiler of CompCert. Or compile CompCert directly on the board (or an other that has a similar instruction set). For ARM-v7A, raspberry pi would do the affair (just as BeagleBones). For ARMv7E-M (PX4) see there : http://compcert.inria.fr/man/manual002.html
+
+TODO : put the experimental results there
+
+\section{Grammar and Typing}
+TODO : move this section up, before all the implementation details.
+
+Here you can paste a big part of the former manual. And change some details also.
+If needed, just copy paste the grammar and typing rules there and split them in the adequate sections.
+
+\includepdf[pages=-]{Grammar/BNF.pdf}
+\includepdf[pages=-]{Grammar/Typing.pdf}
+
+\end{document}
