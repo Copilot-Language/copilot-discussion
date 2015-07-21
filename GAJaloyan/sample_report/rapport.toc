@@ -13,9 +13,10 @@
 \contentsline {subsection}{\numberline {2.3}Values Analysis vs Weakest Liberal Precondition.}{6}{subsection.2.3}
 \contentsline {subsection}{\numberline {2.4}CompCert.}{7}{subsection.2.4}
 \contentsline {subsection}{\numberline {2.5}Bug finding}{7}{subsection.2.5}
+\contentsline {subsection}{\numberline {2.6}Ensuring traceability}{8}{subsection.2.6}
 \contentsline {section}{\numberline {3}Practical steps}{8}{section.3}
-\contentsline {subsection}{\numberline {3.1}First application : Self-separation criterion}{8}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Second application : Well-clear criterions}{8}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Third application : TCAS II}{8}{subsection.3.3}
-\contentsline {section}{Conclusion}{8}{section*.3}
-\contentsline {section}{Références}{9}{section*.4}
+\contentsline {subsection}{\numberline {3.1}First application : Self-separation criteria}{8}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Second application : Well-clear criterion}{9}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Third application : TCAS II}{9}{subsection.3.3}
+\contentsline {section}{Conclusion}{9}{section*.3}
+\contentsline {section}{Références}{10}{section*.4}

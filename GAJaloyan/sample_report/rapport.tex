@@ -425,13 +425,38 @@
     const SDouble s3 = s0 + s2;
     return s3;
   }  \end{lstlisting}
+  
   This was due to the fact that when we use an external function several times in one stream, the sbv backend just forgets to take into account the number of times that the external function has already been called with other arguments, so it always gets the value from the last call of the function. This was corrected by changing a key in a map\footnote{https://github.com/Copilot-Language/copilot-sbv/commit/6bc043117eac17e918ac7a6363b866058911e59f}. 
   
-  \section{Practical steps}
-  \subsection{First application : Self-separation criterion}
-  The first monitor written in Copilot is an application to the self-separation and conflict resolution criterion elaborated by Dr. César A. Muñoz  
+  \subsection{Ensuring traceability}
   
-  \subsection{Second application : Well-clear criterions}
+  As requested by the DO-178B norm regarding the safety of critical flight avionics, a traceability has to be ensured between the origin haskell source code file and the generated C code produced. For that purpose, the author implemented a labeling system, similar to the trace instruction from Debug.Trace, but instead of printing in the C source file instead of stdout. Moreover, the fact that the expressions could be huge after reification (all functions are beta expanded in expressions), it caused problems with frama-c which could not parse contracts of 500000 characters long. 
+  
+  For this purpose, the author had the idea to implement two features. The first is a prover mode, which will optimize the code in order to make it easier to prove (by splitting absolute values in half for example). The second are magic characters in labels, which can affect the generated C code when the compilation is in mode prover. The only one implemented is the character \texttt{?} which causes the backend to cut the AST at this node and create an other one. This is done by the method presented in the paragraph 2.2 about the dereferencing of pointers in a box using the identity external function which is synthesized in the Figure~\ref{fig:splitting label}. 
+  \begin{figure}
+  	\includegraphics[height=85mm]{images/label splitting.jpg}
+  	\caption{The splitting process. Each tree has its own ACSL contract. Hence, splitting a tree into smaller trees make verifying the contracts easier.}
+  	\label{fig:splitting label}
+  \end{figure}
+  
+  \section{Practical steps}
+  \subsection{First application : Self-separation criteria}
+  
+  The first monitor written in Copilot is an application to the conflict resolution and self-separation recovery criteria elaborated by Dr. César A. Muñoz. 
+  
+  The first criterion about conflict resolution guarantees that even if two planes (one called the \emph{ownship} and the other the \emph{intruder}) have different control algorithm, it is possible to guarantee that they will maintain a safe separation which usually corresponds to a 5 nm horizontal separation and 1000 ft vertically. This gives two sub-criterion, a horizontal and a vertical one. Which can then be assembled into a bigger 3 dimension criterion.
+  
+  The second criterion about self-separation recovery guarantees that when two planes are in a situation of violation of their safe-separation, the algorithms will be able to recover their safe-separation within $t$ seconds.
+  
+  The details could be found in \cite{MBNMH2010NASA}, but here are their inputs and outputs :
+  \begin{itemize}
+  	\item Inputs : Velocity, Position of the ownship and the intruder (both 3 dimensional vectors). The output given by the algorithm of the ownship. The minimum horizontal and vertical separations $D$ and $H$ (usually $D = 5nm$, $H=1000ft$). The direction parameters for horizontal and vertical resolution, which are a value that can either be + or - 1 ; the two planes share the same value. The max time for violation $t$.
+  	\item Outputs : two boolean values, corresponding each other to the violation of a criterion.
+  \end{itemize}
+  
+  The implementation is 262 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/master/example29/main.hs}, 
+  
+  \subsection{Second application : Well-clear criterion}
   \subsection{Third application : TCAS II}
   
   \section*{Conclusion}

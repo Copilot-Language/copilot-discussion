@@ -33,6 +33,13 @@ A.~Gill, ``Type-safe observable sharing in haskell,'' in \emph{Proceedings of
 A.~Miné, ``Semantics and application to program verification : Axiomatic
   semantics,'' 2015.
 
+\bibitem{MBNMH2010NASA}
+C.~Mu{\~{n}}oz, R.~Butler, A.~Narkawicz, J.~Maddalon, and G.~Hagen, ``A
+  criteria standard for conflict resolution: A vision for guaranteeing the
+  safety of self-separation in {N}ext{G}en,'' NASA, Langley Research Center,
+  Hampton VA 23681-2199, USA, Technical Memorandum NASA/TM-2010-216862, October
+  2010.
+
 \bibitem{Copilot08}
 NASA, ``The copilot manual,'' 2015.
 
