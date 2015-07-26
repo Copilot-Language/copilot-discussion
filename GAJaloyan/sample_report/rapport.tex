@@ -342,6 +342,7 @@
 	
 	This means that no prover can prove a contract with bitwise boolean operators inside. That's why the SBV library had to be modified so that when having logical operators on bool values, those would be compiled to lazy variants, given that such an approximation is safe (which is obviously not the case on non boolean values)\footnote{https://github.com/LeventErkok/sbv/issues/177}. An other interesting observation is that if we delete the guard \texttt{requires ptr\_2 < 0x000078;}, then the prover Z3 concludes that the code is clearly unsafe, which can create problems given that the functions are spread on several files and no global invariant is available. 
 	
+	\begin{minipage}{\textwidth}
 	\begin{multicols}{3}
 		Original file.
 		\begin{lstlisting}[basicstyle=\tiny]
@@ -399,7 +400,7 @@
 		----> NO TIMEOUT : unsafe
 		\end{lstlisting}
 	\end{multicols}
-	
+	\end{minipage}
 	
 	\subsection{Automatic generation of contracts by induction on the syntax.}
 	
