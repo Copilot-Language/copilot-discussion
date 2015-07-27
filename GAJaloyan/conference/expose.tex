@@ -1,49 +1,76 @@
-  \documentclass{beamer}
-  \usepackage[utf8]{inputenc}
-  \usepackage{tabularx}
-  \usetheme{Frankfurt}
-  \usepackage{listings}
-  \usepackage{mathpartir}
-  \usepackage{multicol}
-  \usepackage{graphicx}
+   \documentclass{beamer}
+   \usepackage[utf8]{inputenc}
+   \usepackage{tabularx}
+   \usetheme{Frankfurt}
+   \newcommand\TestAppExists[3]{#2}
+   \usepackage{minted}
+   \usepackage{listings}
+
+   
+\usepackage{mathpartir}
+\usepackage{multicol}
+\usepackage{graphicx}
+
   
+  \setbeamerfont{institute}{size=\fontsize{7pt}{8pt}}
   
-  
-  \title{DBpedia - A Crystallization Point for the Web of Data}
-  \author{C. Bizer, J. Lehmann, G. Kobilarov, S. Auer, C. Becker, R. Cyganiak, S. Hellmann}
+  \title{Copilot : Traceability and Verification of a Low Level Automatically Generated C Source Code}
+  \author{Georges-Axel Jaloyan}
+  \institute{\'Ecole Normale Supérieure, NASA Langley Research center, National Institute of Aerospace}
   \date{August 24, 2015}
   
   \begin{document}
-  	\begin{frame}
+\begin{frame}
   		
-  		\begin{center}
-  			\includegraphics[height=2cm]{images/NIA-logo.jpg} \text{                     } \includegraphics[height=2cm]{images/NASA.png}
-  			\includegraphics[height=2cm]{images/ENS-logo.jpg}
-  		\end{center}
   		\titlepage
-  	\end{frame}
-  	
-  	\begin{frame}
-  		
   		\begin{center}
+  			\includegraphics[height=2cm]{images/ENS-logo.jpg} \includegraphics[height=2cm]{images/NASA.png}
   			\includegraphics[height=2cm]{images/NIA-logo.jpg}
-  			\includegraphics[height=2cm]{images/ENS logo.jpg} \includegraphics[height=2cm]{images/NASA.png}
   		\end{center}
-  		\titlepage
-  	\end{frame}
+\end{frame}
   	
-  	\section{Introduction}
-  	\begin{frame}
-  		\frametitle{Introduction}
-  		\text{DBPedia is a project that :}
+\begin{frame}
+  		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+\end{frame}
+  	
+  	\section{Preliminaries}
+  	\subsection{Copilot language}
+\begin{frame}
+  		\frametitle{Copilot language}
+  		Copilot is an \emph{EDSL} (embedded domain specific language), embedded in \emph{Haskell} and used for writing \emph{runtime monitors} for hard real-time, distributed, reactive systems written in C. 
+  		\\~\\
+  		\text{A Copilot program, can either be : } 
   		\begin{itemize}
-  			\item extracts automatically information from Wikipedia pages and turns it into a knowledge base
-  			\item has more than 3.4 million entries (2010), each of them having an ID referring to a Wikipedia article
-  			\item works on 30 languages, covering individuals, places, music, films, games, companies, species (and diseases). 
-  			\item has a totaly french version developped by INRIA : fr.dbpedia.org
-  		\end{itemize}
+  			\item compiled to C using two back-ends : SBV, ATOM
+  			\item interpreted
+  			\item analyzed using static analysis tools (CBMC, Kind)
+  		\end{itemize} 
+\end{frame}
+  	
+\begin{frame}[fragile]
+  		\frametitle{Copilot syntax}
+  		A program is a list of streams that can be either external  or internal which are defined by mutually recursive stream equations.
+  		\\~\\
+  		Each stream has a type which can be \texttt{Bool}, \texttt{Int8}, \texttt{Int16}, \texttt{Int32}, \texttt{Int64}, \texttt{Word8}, \texttt{Word16}, \texttt{Word32}, \texttt{Word64}, \texttt{Float}, \texttt{Double}.
+  		
+\begin{minted}{haskell}
+x :: Stream Word16
+x = 0
+-- x = {0, 0, 0, ...}
+y :: Stream Bool
+y = x `mod` 2 == 0
+-- y = {T, T, ...}
+nats :: Stream Word64
+nats = [0] ++ (1 + nats)
+-- nats = {0,1,2, ..., 2^64-1, 0, 1, ..}  
+\end{minted}
+\end{frame}
+  	
+  	
+  	\section{Conclusion}
+  	\begin{frame}
+  		\frametitle{Questions}
+  		\text{Questions ?}
   	\end{frame}
-  	
-  	
   	
   \end{document}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  27 JUL 2015 15:24
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  27 JUL 2015 17:48
 entering extended mode
 **expose.tex
 (expose.tex
@@ -772,25 +772,125 @@ Package: beamercolorthemeorchid 2010/06/17  (rcs-revision d02a7cf4d8ae)
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\base\themes\color\beamercolorthe
 mewhale.sty"
 Package: beamercolorthemewhale 2010/06/17  (rcs-revision d02a7cf4d8ae)
-)) ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\listings.sty"
-\lst@mode=\count157
-\lst@gtempboxa=\box54
-\lst@token=\toks47
-\lst@length=\count158
-\lst@currlwidth=\dimen195
-\lst@column=\count159
-\lst@pos=\count160
-\lst@lostspace=\dimen196
-\lst@width=\dimen197
-\lst@newlines=\count161
-\lst@lineno=\count162
-\lst@maxwidth=\dimen198
+)) ("C:\Program Files\MiKTeX 2.9\tex\latex\minted\minted.sty"
+Package: minted 2015/01/31 v2.0 Yet another Pygments shim for LaTeX
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\fancyvrb\fancyvrb.sty"
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz)
+\FV@CodeLineNo=\count157
+\FV@InFile=\read2
+\FV@TabBox=\box54
+\c@FancyVerbLine=\count158
+\FV@StepNumber=\count159
+\FV@OutFile=\write5
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\float\float.sty"
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count160
+\float@exts=\toks47
+\float@box=\box55
+\@float@everytoks=\toks48
+\@floatcapt=\box56
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\base\ifthen.sty"
+Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\tools\calc.sty"
+Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
+\calc@Acount=\count161
+\calc@Bcount=\count162
+\calc@Adimen=\dimen195
+\calc@Bdimen=\dimen196
+\calc@Askip=\skip59
+\calc@Bskip=\skip60
+LaTeX Info: Redefining \setlength on input line 75.
+LaTeX Info: Redefining \addtolength on input line 76.
+\calc@Ccount=\count163
+\calc@Cskip=\skip61
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\ifplatform\ifplatform.sty"
+Package: ifplatform 2010/10/22 v0.4 Testing for the operating system
+
+("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\catchfile.sty"
+Package: catchfile 2011/03/01 v1.6 Catch the contents of a file (HO)
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\etoolbox\etoolbox.sty"
+Package: etoolbox 2015/03/10 v2.1b e-TeX tools for LaTeX (JAW)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\misc\etex.sty"
+Package: etex 2015/03/02 v2.1 eTeX basic definition package (PEB,DPC)
+\et@xins=\count164
+)
+\etb@tempcnta=\count165
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\xstring\xstring.sty"
+("C:\Program Files\MiKTeX 2.9\tex\generic\xstring\xstring.tex"
+\@xs@message=\write6
+\integerpart=\count166
+\decimalpart=\count167
+)
+Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\lineno\lineno.sty"
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+Invalid UTF-8 byte or sequence at line 296 replaced by U+FFFD.
+\linenopenalty=\count168
+\output=\toks49
+\linenoprevgraf=\count169
+\linenumbersep=\dimen197
+\linenumberwidth=\dimen198
+\c@linenumber=\count170
+\c@pagewiselinenumber=\count171
+\c@LN@truepage=\count172
+\c@internallinenumber=\count173
+\c@internallinenumbers=\count174
+\quotelinenumbersep=\dimen199
+\bframerule=\dimen200
+\bframesep=\dimen201
+\bframebox=\box57
+LaTeX Info: Redefining \\ on input line 3056.
+)
+\minted@appexistsfile=\read3
+\FV@BreakIndent=\dimen202
+\FV@BreakSymbolSepLeft=\dimen203
+\FV@BreakSymbolSepRight=\dimen204
+\FV@BreakSymbolIndentLeft=\dimen205
+Requested font "cmtt10" at 10.95pt
+\FV@BreakSymbolIndentRight=\dimen206
+\c@FancyVerbLineBreakLast=\count175
+\FV@LineBox=\box58
+\FV@LineIndentBox=\box59
+\minted@bgbox=\box60
+\minted@code=\write7
+\c@minted@FancyVerbLineTemp=\count176
+\@float@every@listing=\toks50
+\c@listing=\count177
+)
+runsystem(if not exist "_minted-expose" mkdir "_minted-expose")...executed.
+
+
+(_minted-expose/default.pygstyle)
+("C:\Program Files\MiKTeX 2.9\tex\latex\listings\listings.sty"
+\lst@mode=\count178
+\lst@gtempboxa=\box61
+\lst@token=\toks51
+\lst@length=\count179
+\lst@currlwidth=\dimen207
+\lst@column=\count180
+\lst@pos=\count181
+\lst@lostspace=\dimen208
+\lst@width=\dimen209
+\lst@newlines=\count182
+\lst@lineno=\count183
+\lst@maxwidth=\dimen210
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstmisc.sty"
 File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
-\c@lstnumber=\count163
-\lst@skipnumbers=\count164
-\lst@framebox=\box55
+\c@lstnumber=\count184
+\lst@skipnumbers=\count185
+\lst@framebox=\box62
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\listings.cfg"
 File: listings.cfg 2014/09/06 1.5e listings configuration
@@ -801,42 +901,35 @@ Package: listings 2014/09/06 1.5e (Carsten Heinz)
 Invalid UTF-8 byte or sequence at line 3 replaced by U+FFFD.
 Package: mathpartir 2005/12/20 version 1.2.0 Math Paragraph for Typesetting Inf
 erence Rules
-\mpr@andskip=\skip59
-\mpr@lista=\toks48
-\mpr@listb=\toks49
-\mpr@hlist=\box56
-\mpr@vlist=\box57
-\mpr@right=\box58
+\mpr@andskip=\skip62
+\mpr@lista=\toks52
+\mpr@listb=\toks53
+\mpr@hlist=\box63
+\mpr@vlist=\box64
+\mpr@right=\box65
 ) ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\multicol.sty"
 Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
-\c@tracingmulticols=\count165
-\mult@box=\box59
-\multicol@leftmargin=\dimen199
-\c@unbalance=\count166
-\c@collectmore=\count167
-\doublecol@number=\count168
-\multicoltolerance=\count169
-\multicolpretolerance=\count170
-\full@width=\dimen200
-\page@free=\dimen201
-\premulticols=\dimen202
-\postmulticols=\dimen203
-\multicolsep=\skip60
-\multicolbaselineskip=\skip61
-\partial@page=\box60
-\last@line=\box61
-\maxbalancingoverflow=\dimen204
-\mult@rightbox=\box62
-\mult@grightbox=\box63
-\mult@gfirstbox=\box64
-\mult@firstbox=\box65
-\@tempa=\box66
-\@tempa=\box67
-\@tempa=\box68
-\@tempa=\box69
-\@tempa=\box70
-\@tempa=\box71
-\@tempa=\box72
+\c@tracingmulticols=\count186
+\mult@box=\box66
+\multicol@leftmargin=\dimen211
+\c@unbalance=\count187
+\c@collectmore=\count188
+\doublecol@number=\count189
+\multicoltolerance=\count190
+\multicolpretolerance=\count191
+\full@width=\dimen212
+\page@free=\dimen213
+\premulticols=\dimen214
+\postmulticols=\dimen215
+\multicolsep=\skip63
+\multicolbaselineskip=\skip64
+\partial@page=\box67
+\last@line=\box68
+\maxbalancingoverflow=\dimen216
+\mult@rightbox=\box69
+\mult@grightbox=\box70
+\mult@gfirstbox=\box71
+\mult@firstbox=\box72
 \@tempa=\box73
 \@tempa=\box74
 \@tempa=\box75
@@ -847,32 +940,39 @@ Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
 \@tempa=\box80
 \@tempa=\box81
 \@tempa=\box82
-\c@columnbadness=\count171
-\c@finalcolumnbadness=\count172
-\last@try=\dimen205
-\multicolovershoot=\dimen206
-\multicolundershoot=\dimen207
-\mult@nat@firstbox=\box83
-\colbreak@box=\box84
-\mc@col@check@num=\count173
+\@tempa=\box83
+\@tempa=\box84
+\@tempa=\box85
+\@tempa=\box86
+\@tempa=\box87
+\@tempa=\box88
+\@tempa=\box89
+\c@columnbadness=\count192
+\c@finalcolumnbadness=\count193
+\last@try=\dimen217
+\multicolovershoot=\dimen218
+\multicolundershoot=\dimen219
+\mult@nat@firstbox=\box90
+\colbreak@box=\box91
+\mc@col@check@num=\count194
 )
 (expose.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 16.
-LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
 
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -908,8 +1008,8 @@ LaTeX Font Info:    ... okay on input line 16.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EveryShipout initializing macros
-\AtBeginShipoutBox=\box85
-Package hyperref Info: Link coloring OFF on input line 16.
+\AtBeginShipoutBox=\box92
+Package hyperref Info: Link coloring OFF on input line 22.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -917,66 +1017,66 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count174
+\c@section@level=\count195
 )
-LaTeX Info: Redefining \ref on input line 16.
-LaTeX Info: Redefining \pageref on input line 16.
-LaTeX Info: Redefining \nameref on input line 16.
+LaTeX Info: Redefining \ref on input line 22.
+LaTeX Info: Redefining \pageref on input line 22.
+LaTeX Info: Redefining \nameref on input line 22.
 
 (expose.out) (expose.out)
-\@outlinefile=\write5
+\@outlinefile=\write8
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 16.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 22.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 22.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 16.
+(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 16.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 22.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 16.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 16.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 22.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 16.
+(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 16.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 16.
+(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 22.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 16.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 16.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 22.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 22.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 16.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 16.
+(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 16.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 16.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 22.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 16.
-LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 16.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 22.
+LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 22.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `normal'
-(Font)                  OT1/cmss/m/it --> OT1/mathkerncmss/m/sl on input line 1
-6.
+(Font)                  OT1/cmss/m/it --> OT1/mathkerncmss/m/sl on input line 2
+2.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/cmss/bx/it --> OT1/mathkerncmss/m/sl on input line 
-16.
+22.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/mathkerncmss/m/sl --> OT1/mathkerncmss/bx/sl on inp
-ut line 16.
+ut line 22.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\translator
 -basic-dictionary\translator-basic-dictionary-English.dict"
@@ -1002,87 +1102,135 @@ Dictionary: translator-numbers-dictionary, Language: English
 -theorem-dictionary\translator-theorem-dictionary-English.dict"
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 16.
+LaTeX Info: Redefining \includegraphics on input line 22.
 Requested font "cmss8" at 6.0pt
-\c@lstlisting=\count175
+\c@lstlisting=\count196
  (expose.nav)
+Requested font "cmss12" at 14.4pt
+Requested font "cmss8" at 7.0pt
+Missing character: There is no é in font cmss8!
+File: images/ENS-logo.jpg Graphic file (type QTm)
+
+<use  "images/ENS-logo.jpg" >
+File: images/NASA.png Graphic file (type QTm)
+ <use  "images/NASA.png" >
 File: images/NIA-logo.jpg Graphic file (type QTm)
 
 <use  "images/NIA-logo.jpg" >
-File: images/NASA.png Graphic file (type QTm)
- <use  "images/NASA.png" >
-! Unable to load picture or PDF file 'images/ENS'.
-<to be read again> 
-                   l
-l.24   ^^I\end{frame}
-                     
-The requested image couldn't be read because
-it was not a recognized image format.
-
-File: images/"ENS logo".jpg Graphic file (type QTm)
-<use  "images/"ENS logo".jpg" >
-! Unable to load picture or PDF file 'images/ENS'.
-<to be read again> 
-                   l
-l.24   ^^I\end{frame}
-                     
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-Overfull \hbox (141.22366pt too wide) in paragraph at lines 24--24
- [][] 
- []
-
-Requested font "cmss12" at 14.4pt
-Requested font "cmss8" at 8.0pt
-
-Overfull \vbox (36.75598pt too high) detected at line 24
- []
-
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 24.
+(Font)              size <5> substituted on input line 30.
 
 Requested font "cmss8" at 5.0pt
 [1
 
-]
-File: images/NIA-logo.jpg Graphic file (type QTm)
- <use  "images/NIA-logo.jpg" >
-
-LaTeX Warning: File `images/ENS logo.jpg' not found on input line 33.
-
-File: images/ENS logo.jpg Graphic file (type QTm)
-<use  "images/ENS logo.jpg" >
-File: images/NASA.png Graphic file (type QTm)
- <use  "images/NASA.png" > [2
-
-] [3
+] (expose.toc
+Requested font "cmss8" at 8.0pt
+) [2
 
 ]
-\tf@nav=\write6
-\tf@toc=\write7
-\tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 49.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 49.
+Requested font "cmssi10" at 10.95pt
+ [3
+
+] (expose.vrb
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+
+! Package minted Error: Missing Pygments output; \inputminted was
+probably given a file that does not exist--otherwise, you may need 
+the outputdir package option, or may be using an incompatible build tool,
+or may be using the kpsewhich option without having PowerShell installed.
+
+See the minted package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.16 \end{minted}
+                 
+This could be caused by using -output-directory or -aux-directory 
+without setting minted's outputdir, or by using a build tool that 
+changes paths in ways minted cannot detect, or by using the 
+kpsewhich option without PowerShell.
+
+! Undefined control sequence.
+<argument> ...ile {\minted@cachedir /\minted@hash 
+                                                  .pygtex}\IfFileExists {\mi...
+l.16 \end{minted}
+                 
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+runsystem(pygmentize -l haskell -f latex -F tokenmerge -P style=default -P comm
+andprefix=PYGdefault -o "_minted-expose/.pygtex" "expose.pyg" )...executed.
+
+! Undefined control sequence.
+<argument> ...achefile \expandafter {\minted@hash 
+                                                  .pygtex}\minted@inputpyg 
+l.16 \end{minted}
+                 
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+! Package minted Error: Missing Pygments output; \inputminted was
+probably given a file that does not exist--otherwise, you may need 
+the outputdir package option, or may be using an incompatible build tool,
+or may be using the kpsewhich option without having PowerShell installed.
+
+See the minted package documentation for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.16 \end{minted}
+                 
+This could be caused by using -output-directory or -aux-directory 
+without setting minted's outputdir, or by using a build tool that 
+changes paths in ways minted cannot detect, or by using the 
+kpsewhich option without PowerShell.
+
+) [4
+
+] [5
+
+]
+\tf@nav=\write9
+\tf@toc=\write10
+\tf@snm=\write11
+runsystem(del "expose.mintedcmd")...executed.
+
+runsystem(del "expose.pyg")...executed.
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 76.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 76.
  (expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 49.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 49.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 76.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 76.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 49.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 76.
  ) 
 Here is how much of TeX's memory you used:
- 21092 strings out of 428790
- 368912 string characters out of 3164815
- 451911 words of memory out of 3000000
- 24027 multiletter control sequences out of 15000+200000
- 5812 words of font info for 21 fonts, out of 3000000 for 9000
+ 23290 strings out of 428790
+ 409383 string characters out of 3164815
+ 528653 words of memory out of 3000000
+ 26175 multiletter control sequences out of 15000+200000
+ 6636 words of font info for 24 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
- 56i,16n,57p,426b,589s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,20n,62p,936b,748s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on expose.pdf (3 pages).
+Output written on expose.pdf (5 pages).
