@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  27 JUL 2015 14:50
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  27 JUL 2015 14:54
 entering extended mode
 **expose.tex
 (expose.tex
@@ -946,79 +946,12 @@ LaTeX Info: Redefining \includegraphics on input line 13.
 Requested font "cmss8" at 6.0pt
 \c@lstlisting=\count166
  (expose.nav)
-
-LaTeX Warning: File `DBlogo.png' not found on input line 21.
-
-! Unable to load picture or PDF file 'DBlogo.png'.
-<to be read again> 
-                   }
-l.21   ^^I\end{frame}
-                     
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.21   ^^I\end{frame}
-                     
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: DBlogo.png Graphic file (type QTm)
-<use  "DBlogo.png" >
-! Unable to load picture or PDF file 'DBlogo.png'.
-<to be read again> 
-                   \GXT@clipend 
-l.21   ^^I\end{frame}
-                     
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-LaTeX Warning: File `Wikipedia-logo-fr-big.png' not found on input line 21.
-
-! Unable to load picture or PDF file 'Wikipedia-logo-fr-big.png'.
-<to be read again> 
-                   }
-l.21   ^^I\end{frame}
-                     
-The requested image couldn't be read because
-it was not a recognized image format.
-
-
-! Package graphics Error: Division by 0.
-
-See the graphics package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.21   ^^I\end{frame}
-                     
-Your command was ignored.
-Type  I <command> <return>  to replace it with another command,
-or  <return>  to continue without it.
-
-File: Wikipedia-logo-fr-big.png Graphic file (type QTm)
-<use  "Wikipedia-logo-fr-big.png" >
-! Unable to load picture or PDF file 'Wikipedia-logo-fr-big.png'.
-<to be read again> 
-                   \GXT@clipend 
-l.21   ^^I\end{frame}
-                     
-The requested image couldn't be read because
-it was not a recognized image format.
-
 Requested font "cmss12" at 14.4pt
 Requested font "cmss8" at 8.0pt
 
+
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 21.
+(Font)              size <5> substituted on input line 18.
 
 Requested font "cmss8" at 5.0pt
 [1
@@ -1031,23 +964,23 @@ Requested font "cmss8" at 5.0pt
 \tf@nav=\write6
 \tf@toc=\write7
 \tf@snm=\write8
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 43.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 43.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 40.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 40.
  (expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 43.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 43.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 40.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 40.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 43.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 40.
  ) 
 Here is how much of TeX's memory you used:
- 20818 strings out of 428790
- 365187 string characters out of 3164815
- 445276 words of memory out of 3000000
- 23763 multiletter control sequences out of 15000+200000
+ 20812 strings out of 428790
+ 365110 string characters out of 3164815
+ 443842 words of memory out of 3000000
+ 23761 multiletter control sequences out of 15000+200000
  5812 words of font info for 21 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
  56i,16n,57p,426b,589s stack positions out of 5000i,500n,10000p,200000b,50000s
