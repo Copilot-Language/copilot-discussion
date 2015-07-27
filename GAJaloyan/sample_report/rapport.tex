@@ -556,10 +556,10 @@
 		%% edge node {0,1,R} (Libs)
 		%% (SBV) edge [bend left] node {1,0,R} ();
 		\end{tikzpicture}
-		\caption{The new Copilot toolchain. The red arrows are the one to implement in the future. The blue ones are the ones created by the author.}
+		\caption{The new Copilot toolchain. The red arrows are the one to implement in the future. The blue ones are the ones implemented by the author.}
 		\label{fig:New toolchain}
 	\end{figure}
-	
+	\pagebreak
 	\section{Practical steps}
 	\subsection{First application : Self-separation criteria}
 	
@@ -569,16 +569,21 @@
 	
 	The second criterion about self-separation recovery guarantees that when two planes are in a situation of violation of their safe-separation, the algorithms will be able to recover their safe-separation within $t$ seconds.
 	
-	The details could be found in \cite{MBNMH2010NASA}, but here are their inputs and outputs :
+	The details could be found in \cite{MBNMH2010NASA} and \cite{NM2011NASA}, and here are their inputs and outputs :
 	\begin{itemize}
 		\item Inputs : Velocity, Position of the ownship and the intruder (both 3 dimensional vectors). The output given by the algorithm of the ownship. The minimum horizontal and vertical separations $D$ and $H$ (usually $D = 5nm$, $H=1000ft$). The direction parameters for horizontal and vertical resolution, which are a value that can either be + or - 1 ; the two planes share the same value. The max time for violation $t$.
 		\item Outputs : two boolean values, corresponding each other to the violation of a criterion.
 	\end{itemize}
 	
-	The implementation is 262 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/master/example29/main.hs}, 
+	The implementation is 262 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/master/example29/main.hs}. The proof mode generates 433 C source files, which are then verified by frama-c in 2 minutes min and 39 sec on an intel i5-4200U\footnote{http://ark.intel.com/fr/products/75459/Intel-Core-i5-4200U-Processor-3M-Cache-up-to-2\_60-GHz}\footnote{The whole process is logged in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwp \\ and a compact log better suited for readability is in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwpcompact} using the following bash command (which uses GNU parallel).
+	\begin{lstlisting}
+	parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split {} ::: *.c | tee >logfwp >(grep 'Proved\|Unknown\|Timeout\|Failed\|Qed:\s\|CVC4:\s\|Parsing .*\.c' > logfwpcompact) >(grep 'Proved\|Qed:\s\|CVC4:\s\|Unknown\|Timeout\|Failed\|Parsing .*\.c')
+	\end{lstlisting}
 	
-	\subsection{Second application : Well-clear criterion}
-	\subsection{Third application : TCAS II}
+	In compiling mode, the copilot toolchain generates only 19 C source files, which are compiled in less than a second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/db0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-sbv-codegen}.
+	
+	\subsection{Second application : TCAS II}
+	\subsection{Third application : Well-clear criterion}
 	
 	\section*{Conclusion}
 	\addcontentsline{toc}{section}{Conclusion}
