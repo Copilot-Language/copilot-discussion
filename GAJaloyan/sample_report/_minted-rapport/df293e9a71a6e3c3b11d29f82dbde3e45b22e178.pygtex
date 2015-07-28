@@ -1,0 +1,17 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kr}{import} \PYGdefault{n+nn}{Copilot.Language.Reify}
+\PYGdefault{k+kr}{import} \PYGdefault{n+nn}{Copilot.Language}
+\PYGdefault{k+kr}{import} \PYGdefault{k}{qualified} \PYGdefault{n+nn}{Copilot.Compile.SBV} \PYGdefault{k}{as} \PYGdefault{n}{S}
+
+\PYGdefault{n+nf}{logic} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Bool}
+\PYGdefault{n+nf}{logic} \PYGdefault{o+ow}{=} \PYGdefault{p}{[}\PYGdefault{k+kt}{True}\PYGdefault{p}{,} \PYGdefault{k+kt}{False}\PYGdefault{p}{]} \PYGdefault{o}{++} \PYGdefault{n}{logic} \PYGdefault{o}{\PYGdefaultZam{}\PYGdefaultZam{}} \PYGdefault{n}{drop} \PYGdefault{l+m+mi}{1} \PYGdefault{n}{logic}
+
+\PYGdefault{n+nf}{spec} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Spec}
+\PYGdefault{n+nf}{spec} \PYGdefault{o+ow}{=} \PYGdefault{k+kr}{do}
+\PYGdefault{n+nf}{observer} \PYGdefault{l+s}{\PYGdefaultZdq{}obs1\PYGdefaultZdq{}} \PYGdefault{n}{logic}
+\PYGdefault{p}{]}
+
+\PYGdefault{n+nf}{main} \PYGdefault{o+ow}{=} \PYGdefault{k+kr}{do}
+\PYGdefault{n+nf}{interpret} \PYGdefault{l+m+mi}{10} \PYGdefault{n}{spec}
+\PYGdefault{n+nf}{reify} \PYGdefault{n}{spec} \PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}=} \PYGdefault{k+kt}{S}\PYGdefault{o}{.}\PYGdefault{n}{compile} \PYGdefault{k+kt}{S}\PYGdefault{o}{.}\PYGdefault{n}{defaultParams} \PYGdefault{c+c1}{\PYGdefaultZhy{}\PYGdefaultZhy{}SBV Backend}
+\end{Verbatim}

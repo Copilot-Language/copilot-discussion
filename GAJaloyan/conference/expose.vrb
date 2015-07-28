@@ -1,2 +1,14 @@
 \frametitle{Interaction}
 
+^^IActuators :
+  ^^I\begin{itemize}
+^^I^^I\item Triggers :
+\begin{minted}{haskell}
+trigger ::
+  String -> Stream Bool -> [TriggerArg] -> Spec
+\end{minted}
+^^I^^I\item Observers :
+\begin{minted}{haskell}
+observer :: Typed a => String -> Stream a -> Spec
+\end{minted}
+^^I\end{itemize}

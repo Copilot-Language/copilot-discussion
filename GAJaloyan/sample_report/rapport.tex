@@ -18,6 +18,7 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{tikz-cd}
+\usetikzlibrary{positioning}
 %\usepackage{lmodern} % Il est méchant avec moi
 \usepackage{microtype}
 \usepackage{enumerate}
@@ -77,6 +78,9 @@
 	pdfsubject={\reportsubject},%
 	pdfkeywords={rapport} {vos} {mots} {clés}
 }
+
+\newcommand\TestAppExists[3]{#2}
+\usepackage{minted}
 
 \begin{document}
 	% Inspiré de http://en.wikibooks.org/wiki/LaTeX/Title_Creation
@@ -149,64 +153,69 @@
 	\subsubsection{Syntax}
 	Copilot Language uses streams (infinite lazy lists in Haskell) that can be either external streams (obtained by sampling an external variable periodically), or internal streams defined by mutually recursive stream equations. Each stream has a type which can be \texttt{Bool}, \texttt{Int8}, \texttt{Int16}, \texttt{Int32}, \texttt{Int64}, \texttt{Word8}, \texttt{Word16}, \texttt{Word32}, \texttt{Word64}, \texttt{Float}, \texttt{Double}.
 	
-	\begin{lstlisting}[language=Haskell]
-	x :: Stream Word16
-	x = 0
-	-- x = {0, 0, 0, ...}
-	y :: Stream Bool
-	y = x `mod` 2 == 0
-	-- y = {T, T, ...}
-	nats :: Stream Word64
-	nats = [0] ++ (1 + nats)
-	-- nats = {0,1,2, ..., 2^64-1, 0, 1, ..}  \end{lstlisting}
+\begin{minted}{haskell}
+x :: Stream Word16
+x = 0
+-- x = {0, 0, 0, ...}
+y :: Stream Bool
+y = x `mod` 2 == 0
+-- y = {T, T, ...}
+nats :: Stream Word64
+nats = [0] ++ (1 + nats)
+-- nats = {0,1,2, ..., 2^64-1, 0, 1, ..}  
+\end{minted}
 	
 	Each operator and constant has been lifted to Streams (working pointwise), so that it is possible to simply do \texttt{1 + nats} instead of \texttt{zipWith (+) (repeat 1) nats}, which simplifies the writing of such monitors. 
 	
 	There are two more operators working on Streams : (++) which prepends a finite list to a Stream, and drop, which drops a finite number of elements at the beginning of a Stream. Given that a monitor cannot predict the future, it is impossible to drop elements from a Stream that has no elements prepended using (++).
 	
-	\begin{lstlisting}[language=Haskell]
-	(++) :: [a] -> Stream a -> Stream a
-	drop :: Int -> Stream a -> Stream a  \end{lstlisting}
+\begin{minted}{haskell}
+(++) :: [a] -> Stream a -> Stream a
+drop :: Int -> Stream a -> Stream a  
+\end{minted}
 	
 	Here is a classical example of the Fibonacci sequence.
 	
-	\begin{lstlisting}[language=Haskell]
-	fib :: Stream Word64
-	fib = [1,1] ++ (fib + drop 1 fib)  \end{lstlisting}
+\begin{minted}{haskell}
+fib :: Stream Word64
+fib = [1,1] ++ (fib + drop 1 fib)  
+\end{minted}
 	
-	It is also possible to cast one Stream to another. For this purpose, two different operators are provided. The \texttt{cast} operator can cast safely from one stream to another (in which there is no risk of overflow). The \texttt{unsafeCast} operator is used to do almost all casts (including unsafe).
-	\begin{lstlisting}[language=Haskell]
-	cast :: (Typed a, Typed b) => Stream a -> Stream b
-	unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
-	\end{lstlisting}
+	It is also possible to cast one Stream to another. For this purpose, two different operators are provided. The \texttt{cast} operator can cast safely from one stream to another (in which there is no risk of overflow). The \texttt{unsafeCast} operator is used to do almost all casts (except from float to int).
+\begin{minted}{haskell}
+cast :: (Typed a, Typed b) => Stream a -> Stream b
+unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
+\end{minted}
 	
 	\subsubsection{Interaction}
 	A copilot monitor can interact with the target program in two ways. First, it can sample external variables, which become Streams. For example, a variable named "x", defined in the target program using \texttt{unsigned char x;} can be sampled in a Copilot program by the keyword \texttt{extern a b}, where a is the name of the variable, and b is a context for the interpreter (which can be Nothing).
-	\begin{lstlisting}[language=Haskell]
-	extern :: Typed a => String -> Maybe [a] -> Stream a
-	\end{lstlisting}
+\begin{minted}{haskell}
+extern :: Typed a => String -> Maybe [a] -> Stream a
+\end{minted}
 	
 	Which gives something like (the types have to written explicitly, given that it is not possible to infer the type a an extern) :
 	
-	\begin{lstlisting}[language=Haskell]
-	x :: Stream Word8
-	x = extern "x" (Just [0,0..])
-	
-	x2 = externW8 "x" Nothing
-	\end{lstlisting}
+\begin{minted}{haskell}
+x :: Stream Word8
+x = extern "x" (Just [0,0..])
+
+x2 = externW8 "x" Nothing
+\end{minted}
 	
 	Similarly, it is possible to sample arrays (only one value at a time on fixed size array, using a Stream of indexes), functions (Stream of arguments), and structures.
 	
-	\begin{lstlisting}[language=Haskell]
-	externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Int -> Maybe [[a]] -> Stream b
-	externFun :: Typed a => String -> [FunArg] -> Maybe [a] -> Stream a
-	\end{lstlisting}
+	\begin{minted}{haskell}
+externArray :: (Typed a, Typed b, Integral a) => 
+               String -> Stream a -> Int -> Maybe [[a]] -> Stream b
+externFun :: Typed a => String -> [FunArg] -> Maybe [a] -> Stream a
+\end{minted}
 	
-	Finally, a Copilot program can have effects on the target program, using triggers, which can be called by the trigger operator :
+	Finally, a Copilot program can have effects on the target program, using triggers or observers, which can be called by the corresponding operators :
 	
-	\begin{lstlisting}[language=Haskell]
-	trigger :: String -> Stream Bool -> [TriggerArg] -> Spec
-	\end{lstlisting}
+\begin{minted}{haskell}
+trigger :: String -> Stream Bool -> [TriggerArg] -> Spec
+observer :: Typed a => String -> Stream a -> Spec
+\end{minted}
 	
 	A more detailed example named \texttt{over\_temp\_rise} is given in the Copilot manual\cite{Copilot07}. 
 	
@@ -292,24 +301,24 @@
 	
 	To get acquainted with ACSL and the code generated, the author first wrote some ACSL contracts for C files in order to look at what subset of the ACSL language would be needed, and what part of ACSL was implemented in the plugins.
 	
-	\begin{lstlisting}[language=Haskell]
-	import Copilot.Language.Reify
-	import Copilot.Language
-	import qualified Copilot.Compile.SBV as S
-	
-	logic :: Stream Bool
-	logic = [True, False] ++ logic && drop 1 logic
-	
-	spec :: Spec
-	spec = do
-	observer "obs1" logic
-	]
-	
-	main = do
-	interpret 10 spec
-	reify spec >>= S.compile S.defaultParams --SBV Backend
-	
-	\end{lstlisting}
+\begin{minted}{haskell}
+import Copilot.Language.Reify
+import Copilot.Language
+import qualified Copilot.Compile.SBV as S
+
+logic :: Stream Bool
+logic = [True, False] ++ logic && drop 1 logic
+
+spec :: Spec
+spec = do
+observer "obs1" logic
+]
+
+main = do
+interpret 10 spec
+reify spec >>= S.compile S.defaultParams --SBV Backend
+
+\end{minted}
 	
 	After compiling using the SBV backend, we generate several files, one of which is called \texttt{update\_state2.c}. We manually write an ACSL contract for the function present in it, and we run several tests, playing with some parameters.
 	
@@ -451,12 +460,12 @@
 	const SDouble s27 = s13 / s11;
 	}  \end{lstlisting}
 	This similar bug can be generated with the following haskell code :
-	\begin{lstlisting}[language=Haskell]
-	x = externFun "f" [arg 0]
-	y = externFun "f" [arg 1]
-	s :: Stream Double
-	s = x + (y + x)
-	\end{lstlisting}
+\begin{minted}{haskell}
+x = externFun "f" [arg 0]
+y = externFun "f" [arg 1]
+s :: Stream Double
+s = x + (y + x)
+\end{minted}
 	Which will generate that following C code.
 	\begin{lstlisting}[language=C, keywordstyle=\color{blue}]
 	/*@
@@ -478,19 +487,19 @@
 	As requested by the DO-178B norm regarding the safety of critical flight avionics, a traceability has to be ensured between the origin haskell source code file and the generated C code produced. For that purpose, the author implemented a labeling system, similar to the trace instruction from Debug.Trace, but instead of printing in the C source file instead of stdout. Moreover, the fact that the expressions could be huge after reification (all functions are beta expanded in expressions), it caused problems with frama-c which could not parse contracts of 500000 characters long. 
 	
 	For this purpose, the author had the idea to implement three features. The first is a prover mode, which will optimize the code in order to make it easier to prove (by splitting absolute values in half for example). The second is a pretty printer of the AST into a dot file, which then generates a graph of what a C file is supposed to do (this graph is equivalent to the ACSL contract, so it is easier to see a problem in the contract by looking at the AST graph). The last are magic characters in labels, which can affect the generated C code when the compilation is in mode prover. The only one implemented is the character \texttt{?} which causes the backend to cut the AST at this node and create an other one. This is done by the method presented in the paragraph 2.2 about the dereferencing of pointers in a box using the identity external function which is shown in the Figure~\ref{fig:splitting label} for the following simple Copilot code :
-	\begin{lstlisting}[language=Haskell]
-		import qualified Copilot.Compile.SBV as S
-		
-		alt :: Stream Bool
-		alt = (label "?splitting" $ not $ externB "externvar" Nothing)
-		
-		spec :: Spec
-		spec = do
-		trigger "trigger" (alt) []
-		
-		main = do
-		reify spec >>= S.proofACSL S.defaultParams
-	\end{lstlisting}
+\begin{minted}{haskell}
+import qualified Copilot.Compile.SBV as S
+
+alt :: Stream Bool
+alt = (label "?splitting" $ not $ externB "externvar" Nothing)
+
+spec :: Spec
+spec = do
+trigger "trigger" (alt) []
+	
+main = do
+reify spec >>= S.proofACSL S.defaultParams
+\end{minted}
 	\begin{figure}
 		\includegraphics[width=45mm]{images/label/main.ps}
 		\centering
@@ -515,22 +524,25 @@
 			\begin{tabular}[b]{l}
 			Copilot Libraries\\ \hline Copilot Language
 			\end{tabular}};
+		
+		\node[state] (M4) [left=3cm of Lang] {M4};
 		\node[state] (Core) [below right of=Lang] {Copilot Core};
 		\node[state] (PP) [right of=Core] {Pretty Printer};
 		
 		
 		\node[state] (ACSL) [below of=PP] {\begin{tabular}[b]{l}
-			ACSL\\ contracts
+			ACSL\\ generator
 			\end{tabular}};
 		\node[state] (DOTc) [right of=ACSL] {\begin{tabular}[b]{l}
-			DOT\\ source code
+			DOT\\ generator
 			\end{tabular}};
 		\node[state] (SBV) [below of=Core] {SBV Back-End};
 		\node[state] (C99S) [below of=SBV] {\begin{tabular}[b]{l}
 			DOT\\ \hline ACSL\\ \hline C99
 			\end{tabular}};
-		\node[state] (DOT) [below right of=C99S] {DOT graph};
-		\node[state] (ASM) [below left of=C99S] {Assembly code};
+		\node[state] (DOT) [below right of=C99S] {DOT/graphviz};
+		\node[state] (CCOMP) [below left=0.3cm and 0.3cm of C99S] {CompCert};
+		\node[state] (ASM) [below=1cm of CCOMP] {Assembly code};
 		
 		
 		\tikzstyle{every node}=[]
@@ -540,6 +552,7 @@
 		%% edge node {1,1,R} (C)
 		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
 		%% edge node {0,1,L} (C)
+		(M4) edge [text width=2.5cm] node {Preprocessing} (Lang)
 		(Core) edge [anchor=east] node {Translation} (SBV)
 		edge node {} (PP)
 		edge node [swap] {Evaluation} (Int)
@@ -548,7 +561,8 @@
 		(Int) edge [<->,red, bend right, anchor=east] node {QuickCheck} (SBV)
 		(PP) edge [->,blue, anchor=east, text width=2cm] node {ACSL generation} (ACSL)
 		(PP) edge [->,blue, anchor=west] node {DOT generation} (DOTc)
-		(C99S) edge [->,blue, anchor=east] node {Compilation with CompCert} (ASM)
+		(C99S) edge [->,blue, anchor=north west] node {make} (CCOMP)
+		(CCOMP) edge [->,blue, anchor=east] node {Cross-compilation} (ASM)
 		(C99S) edge [loop left, ->,blue, anchor=east] node {Verification with frama-c WP plugin} (C99S)
 		(C99S) edge [->,blue, anchor=west] node {Extraction and graph generation} (DOT)
 		(SBV) edge [->,anchor=east] node {Compilation} (C99S);

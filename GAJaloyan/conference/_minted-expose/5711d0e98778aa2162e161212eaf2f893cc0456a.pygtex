@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nf}{trigger} \PYGdefault{o+ow}{::}
+  \PYGdefault{k+kt}{String} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Bool} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{p}{[}\PYGdefault{k+kt}{TriggerArg}\PYGdefault{p}{]} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Spec}
+\end{Verbatim}

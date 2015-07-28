@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nf}{x} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Double}
+\PYGdefault{n+nf}{x} \PYGdefault{o+ow}{=} \PYGdefault{n}{externDouble} \PYGdefault{l+s}{\PYGdefaultZdq{}x\PYGdefaultZdq{}} \PYGdefault{k+kt}{Nothing}
+
+\PYGdefault{n+nf}{sinx} \PYGdefault{o+ow}{=} \PYGdefault{n}{externFun} \PYGdefault{l+s}{\PYGdefaultZdq{}sin\PYGdefaultZdq{}} \PYGdefault{p}{[}\PYGdefault{n}{arg} \PYGdefault{n}{x}\PYGdefault{p}{]} \PYGdefault{k+kt}{Nothing}
+\end{Verbatim}

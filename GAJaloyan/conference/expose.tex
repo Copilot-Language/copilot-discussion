@@ -31,11 +31,11 @@
   	
   	
   	\section{Preliminaries}
+  	\subsection{Copilot language}
 \begin{frame}
   		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
 \end{frame}
   	
-  	\subsection{Copilot language}
 \begin{frame}
   		\frametitle{Copilot language}
   		Copilot is an \emph{EDSL} (embedded domain specific language), embedded in \emph{Haskell} and used for writing \emph{runtime monitors} for hard real-time, distributed, reactive systems written in C. 
@@ -97,15 +97,92 @@ unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
 fib :: Stream Word64
 fib = [1,1] ++ (fib + drop 1 fib) 
 -- fib = {1,1,2,3,5,8,13,...,
---       7540113804746346429,-6246583658587674878,...}
+--       12200160415121876738,
+--   /!\ 1293530146158671551,...}
 \end{minted}
 
 \end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Interaction}
+	Sensors :
+	\begin{itemize}
+		\item<1|only@1> Sample external variables. 
+\begin{minted}{haskell}
+extern :: Typed a => String -> Maybe [a] -> Stream a
+\end{minted}
+Example : 
+\begin{lstlisting}[language=C]
+unsigned long long int x;
+\end{lstlisting}
+\begin{minted}{haskell}
+x :: Stream Word64
+x = extern "x" (Just [0,0..])
+
+x2 = externW64 "x" Nothing
+\end{minted}
+
+		\item<2-4> Sample external variables. 
+		\item<2|only@2> Sample external arrays. 
+\begin{minted}{haskell}
+externArray :: (Typed a, Typed b, Integral a) => 
+String -> Stream a -> Int -> Maybe [[a]] -> Stream b
+\end{minted}
+Example : 
+\begin{lstlisting}[language=C]
+unsigned long long int tab[1000];
+\end{lstlisting}
+\begin{minted}{haskell}
+-- nat = [0] ++ (nats + 1)
+x :: Stream Word64
+x = externArray "tab" nats 1000 Nothing
+
+x2 = externArrayW64 "tab" nats 1000 Nothing
+\end{minted}
 	
+		\item<3-4> Sample external arrays. 
+		\item<3|only@3> Sample external functions. 
+
+\begin{minted}{haskell}
+externFun :: Typed a => 
+String -> [FunArg] -> Maybe [a] -> Stream a
+\end{minted}
+Example :
+\begin{lstlisting}[language=C]
+double sin(double a); //from math.h
+\end{lstlisting}
+\begin{minted}{haskell}
+x :: Stream Double
+x = externDouble "x" Nothing
+
+sinx = externFun "sin" [arg x] Nothing
+\end{minted}
+		
+		\item<4> Sample external functions. 
+	\end{itemize}
 \end{frame}
+  	
+\begin{frame}[fragile]
+  		\frametitle{Interaction}
+  		
+	Actuators :
+  	\begin{itemize}
+		\item Triggers : 
+\begin{minted}{haskell}
+trigger :: 
+  String -> Stream Bool -> [TriggerArg] -> Spec
+\end{minted}
+		\item Observers :
+\begin{minted}{haskell}
+observer :: Typed a => String -> Stream a -> Spec
+\end{minted}
+	\end{itemize}
+\end{frame}
+  	
+  	\subsection{ACSL}
+  	\begin{frame}
+  		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+  	\end{frame}
   	
   	\section{Conclusion}
   	\begin{frame}

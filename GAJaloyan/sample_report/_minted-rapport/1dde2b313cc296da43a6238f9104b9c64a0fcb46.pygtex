@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nf}{x} \PYGdefault{o+ow}{=} \PYGdefault{n}{externFun} \PYGdefault{l+s}{\PYGdefaultZdq{}f\PYGdefaultZdq{}} \PYGdefault{p}{[}\PYGdefault{n}{arg} \PYGdefault{l+m+mi}{0}\PYGdefault{p}{]}
+\PYGdefault{n+nf}{y} \PYGdefault{o+ow}{=} \PYGdefault{n}{externFun} \PYGdefault{l+s}{\PYGdefaultZdq{}f\PYGdefaultZdq{}} \PYGdefault{p}{[}\PYGdefault{n}{arg} \PYGdefault{l+m+mi}{1}\PYGdefault{p}{]}
+\PYGdefault{n+nf}{s} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Double}
+\PYGdefault{n+nf}{s} \PYGdefault{o+ow}{=} \PYGdefault{n}{x} \PYGdefault{o}{+} \PYGdefault{p}{(}\PYGdefault{n}{y} \PYGdefault{o}{+} \PYGdefault{n}{x}\PYGdefault{p}{)}
+\end{Verbatim}

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  28 JUL 2015 09:02
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  28 JUL 2015 10:08
 entering extended mode
 **expose.tex
 (expose.tex
@@ -1189,18 +1189,300 @@ g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
 \"); f.close();")...executed.
 
  (expose.mintedmd5)
-(_minted-expose/d51d26d2be366d6872f45e79939e61a922d0efa2.pygtex)) [6
+(_minted-expose/f4779f40d4f6c8611995d867e0d3aec7de1d737d.pygtex)) [6
 
 ]
-(expose.vrb) [7
+(expose.vrb
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
 
-] [8
+ (expose.mintedmd5)
+(_minted-expose/3209adbec3552456c525fe1b65d2c4bee01b9680.pygtex)
+("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
+File: lstlang1.sty 2014/09/06 1.5e listings language file
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstmisc.sty"
+File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
+)
+Requested font "cmssbx10" at 10.95pt
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/3551e7b51f5fa168b6d95f89622bd5fe1dc6f1c9.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/b4e9e0f124beb33e480c80cbe4555410bee5e582.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/f1a9f38b06a041c1307acbd6d3c29f2aa4dccb8c.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/803ec2fa3319077ac5e864dc93d01f5326da88f4.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/d04da801c0e6c66e657bcf7bc0028701cae623a6.pygtex)) [7
+
+]
+(expose.vrb
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+ (expose.mintedmd5)
+(_minted-expose/3209adbec3552456c525fe1b65d2c4bee01b9680.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/3551e7b51f5fa168b6d95f89622bd5fe1dc6f1c9.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/b4e9e0f124beb33e480c80cbe4555410bee5e582.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/f1a9f38b06a041c1307acbd6d3c29f2aa4dccb8c.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/803ec2fa3319077ac5e864dc93d01f5326da88f4.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/d04da801c0e6c66e657bcf7bc0028701cae623a6.pygtex)) [8
+
+]
+(expose.vrb
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+ (expose.mintedmd5)
+(_minted-expose/3209adbec3552456c525fe1b65d2c4bee01b9680.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/3551e7b51f5fa168b6d95f89622bd5fe1dc6f1c9.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/b4e9e0f124beb33e480c80cbe4555410bee5e582.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/f1a9f38b06a041c1307acbd6d3c29f2aa4dccb8c.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/803ec2fa3319077ac5e864dc93d01f5326da88f4.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/d04da801c0e6c66e657bcf7bc0028701cae623a6.pygtex)) [9
+
+]
+(expose.vrb
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+ (expose.mintedmd5)
+(_minted-expose/3209adbec3552456c525fe1b65d2c4bee01b9680.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/3551e7b51f5fa168b6d95f89622bd5fe1dc6f1c9.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/b4e9e0f124beb33e480c80cbe4555410bee5e582.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/f1a9f38b06a041c1307acbd6d3c29f2aa4dccb8c.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/803ec2fa3319077ac5e864dc93d01f5326da88f4.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/d04da801c0e6c66e657bcf7bc0028701cae623a6.pygtex)) [10
+
+]
+(expose.vrb
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+ (expose.mintedmd5)
+runsystem(pygmentize -l haskell -f latex -F tokenmerge -P style=default -P comm
+andprefix=PYGdefault -o "_minted-expose/5711d0e98778aa2162e161212eaf2f893cc0456
+a.pygtex" "expose.pyg" )...executed.
+
+
+(_minted-expose/5711d0e98778aa2162e161212eaf2f893cc0456a.pygtex)
+runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"expose
+.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.py
+g\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"expose.mintedmd5\"
+, \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + chr
+(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput\n 
+\"); f.close();")...executed.
+
+
+(expose.mintedmd5)
+(_minted-expose/3ebefe3cfb723c9a1c1457b6281f828719c1f5c7.pygtex)) [11
+
+]
+(expose.toc) [12
+
+] [13
 
 ]
 \tf@nav=\write9
 \tf@toc=\write10
 \tf@snm=\write11
-runsystem(del "_minted-expose\3c08c30cd56cb8ea0a5fa5807ca910993fd781a7.pygtex")
+runsystem(del "_minted-expose\b4b3b5d63475df27766d95cb5ac6be26fe408a74.pygtex")
 ...executed.
 
 runsystem(del "expose.mintedcmd")...executed.
@@ -1209,25 +1491,25 @@ runsystem(del "expose.mintedmd5")...executed.
 
 runsystem(del "expose.pyg")...executed.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 116.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 116.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 193.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 193.
  (expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 116.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 116.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 193.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 193.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 116.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 193.
  ) 
 Here is how much of TeX's memory you used:
- 23462 strings out of 428790
- 413481 string characters out of 3164815
- 535633 words of memory out of 3000000
- 26314 multiletter control sequences out of 15000+200000
- 6804 words of font info for 25 fonts, out of 3000000 for 9000
+ 23734 strings out of 428790
+ 420262 string characters out of 3164815
+ 545856 words of memory out of 3000000
+ 26457 multiletter control sequences out of 15000+200000
+ 7098 words of font info for 26 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
- 56i,20n,63p,936b,748s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,20n,63p,936b,1221s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on expose.pdf (8 pages).
+Output written on expose.pdf (13 pages).

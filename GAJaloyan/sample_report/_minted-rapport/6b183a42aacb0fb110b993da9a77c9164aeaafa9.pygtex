@@ -1,0 +1,13 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{k+kr}{import} \PYGdefault{k}{qualified} \PYGdefault{n+nn}{Copilot.Compile.SBV} \PYGdefault{k}{as} \PYGdefault{n}{S}
+
+\PYGdefault{n+nf}{alt} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Bool}
+\PYGdefault{n+nf}{alt} \PYGdefault{o+ow}{=} \PYGdefault{p}{(}\PYGdefault{n}{label} \PYGdefault{l+s}{\PYGdefaultZdq{}?splitting\PYGdefaultZdq{}} \PYGdefault{o}{\PYGdefaultZdl{}} \PYGdefault{n}{not} \PYGdefault{o}{\PYGdefaultZdl{}} \PYGdefault{n}{externB} \PYGdefault{l+s}{\PYGdefaultZdq{}externvar\PYGdefaultZdq{}} \PYGdefault{k+kt}{Nothing}\PYGdefault{p}{)}
+
+\PYGdefault{n+nf}{spec} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Spec}
+\PYGdefault{n+nf}{spec} \PYGdefault{o+ow}{=} \PYGdefault{k+kr}{do}
+\PYGdefault{n+nf}{trigger} \PYGdefault{l+s}{\PYGdefaultZdq{}trigger\PYGdefaultZdq{}} \PYGdefault{p}{(}\PYGdefault{n}{alt}\PYGdefault{p}{)} \PYGdefault{k+kt}{[]}
+
+\PYGdefault{n+nf}{main} \PYGdefault{o+ow}{=} \PYGdefault{k+kr}{do}
+\PYGdefault{n+nf}{reify} \PYGdefault{n}{spec} \PYGdefault{o}{\PYGdefaultZgt{}\PYGdefaultZgt{}=} \PYGdefault{k+kt}{S}\PYGdefault{o}{.}\PYGdefault{n}{proofACSL} \PYGdefault{k+kt}{S}\PYGdefault{o}{.}\PYGdefault{n}{defaultParams}
+\end{Verbatim}
