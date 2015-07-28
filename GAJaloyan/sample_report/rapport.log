@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  27 JUL 2015 15:51
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  28 JUL 2015 08:49
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1417,6 +1417,7 @@ Requested font "[lmmono8-regular]" at 8.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
 Requested font "[lmmono8-regular]" at 6.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
+ [3]
 Requested font "[lmroman9-regular]:mapping=tex-text" at 9.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman9-regular.otf
 Requested font "[lmroman5-regular]:mapping=tex-text" at 5.0pt
@@ -1424,19 +1425,18 @@ Requested font "[lmroman5-regular]:mapping=tex-text" at 5.0pt
 Requested font "cmmi9" at 9.0pt
 Requested font "cmsy9" at 9.0pt
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 238.
+(Font)              <9> on input line 239.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 238.
+(Font)              <5> on input line 239.
 Requested font "cmr9" at 9.0pt
- [3] [4]
-Overfull \hbox (17.0pt too wide) in paragraph at lines 345--404
+ [4] [5]
+Overfull \hbox (17.0pt too wide) in paragraph at lines 346--405
 []$[]$ 
  []
 
-[5]
 Requested font "[lmmono9-regular]" at 9.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono9-regular.otf
- [6] [7]
+[6] [7]
 File: images/label/main.ps Graphic file (type eps)
  <images/label/main.ps>
 File: images/label/splitted.ps Graphic file (type eps)
@@ -1444,7 +1444,7 @@ File: images/label/splitted.ps Graphic file (type eps)
 File: images/label/splitted2.ps Graphic file (type eps)
 
 <images/label/splitted2.ps> [8] [9]
-Overfull \hbox (28.57039pt too wide) in paragraph at lines 583--583
+Overfull \hbox (28.57039pt too wide) in paragraph at lines 584--584
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/d
 b0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-
  []
@@ -1459,20 +1459,20 @@ b0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-
 ) [11
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 606.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 606.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 607.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 607.
  (rapport.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 606.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 606.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 606.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 607.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 607.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 607.
  ) 
 Here is how much of TeX's memory you used:
- 40321 strings out of 428790
- 777899 string characters out of 3164815
- 1272585 words of memory out of 3000000
- 43124 multiletter control sequences out of 15000+200000
+ 40322 strings out of 428790
+ 777914 string characters out of 3164815
+ 1209378 words of memory out of 3000000
+ 43125 multiletter control sequences out of 15000+200000
  7875 words of font info for 55 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
- 56i,36n,97p,10385b,1845s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,36n,97p,10385b,1849s stack positions out of 5000i,500n,10000p,200000b,50000s
 
 Output written on rapport.pdf (12 pages).

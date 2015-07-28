@@ -1,4 +1,4 @@
 \beamer@endinputifotherversion {3.36pt}
-\beamer@sectionintoc {1}{Preliminaries}{3}{0}{1}
+\beamer@sectionintoc {1}{Preliminaries}{2}{0}{1}
 \beamer@subsectionintoc {1}{1}{Copilot language}{3}{0}{1}
-\beamer@sectionintoc {2}{Conclusion}{5}{0}{2}
+\beamer@sectionintoc {2}{Conclusion}{8}{0}{2}

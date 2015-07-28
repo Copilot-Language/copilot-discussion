@@ -1,16 +1,2 @@
-\frametitle{Copilot syntax}
-  ^^I^^IA program is a list of streams that can be either external  or internal which are defined by mutually recursive stream equations.
-  ^^I^^I\\~\\
-  ^^I^^IEach stream has a type which can be \texttt{Bool}, \texttt{Int8}, \texttt{Int16}, \texttt{Int32}, \texttt{Int64}, \texttt{Word8}, \texttt{Word16}, \texttt{Word32}, \texttt{Word64}, \texttt{Float}, \texttt{Double}.
+\frametitle{Interaction}
 
-\begin{minted}{haskell}
-x :: Stream Word16
-x = 0
--- x = {0, 0, 0, ...}
-y :: Stream Bool
-y = x `mod` 2 == 0
--- y = {T, T, ...}
-nats :: Stream Word64
-nats = [0] ++ (1 + nats)
--- nats = {0,1,2, ..., 2^64-1, 0, 1, ..}
-\end{minted}

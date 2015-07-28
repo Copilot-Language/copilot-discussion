@@ -74,7 +74,8 @@ L.~Pike, N.~Wegmann, S.~Niller, and A.~Goodloe, ``Experience report: A
 ------, ``Copilot: Monitoring embedded systems,'' in \emph{Innovations in
   Systems and Software Engineering: Special Issue on Software Health
   Management}, vol.~9, no.~4.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
-  2013, pp. 235--255.
+  2013, pp. 235--255, preprint available at
+  \url{http://www.cs.indiana.edu/~lepike/pub_pages/isse.html}.
 
 \bibitem{bugC}
 \BIBentryALTinterwordspacing

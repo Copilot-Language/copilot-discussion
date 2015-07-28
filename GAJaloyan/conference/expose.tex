@@ -29,11 +29,12 @@
   		\end{center}
 \end{frame}
   	
+  	
+  	\section{Preliminaries}
 \begin{frame}
   		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
 \end{frame}
   	
-  	\section{Preliminaries}
   	\subsection{Copilot language}
 \begin{frame}
   		\frametitle{Copilot language}
@@ -66,6 +67,45 @@ nats = [0] ++ (1 + nats)
 \end{minted}
 \end{frame}
   	
+\begin{frame}[fragile]
+	\frametitle{Operators}
+  		Each operator and constant has been lifted to Streams (working pointwise). \\~\\
+  		Two temporal operations working on Streams : 
+  		\begin{itemize}
+  			\item ++ : which prepends a finite list to a Stream
+
+\begin{minted}{haskell}
+(++) :: [a] -> Stream a -> Stream a
+\end{minted}
+  			\item drop : which drops a finite number of elements at the beginning of a Stream
+\begin{minted}{haskell}
+drop :: Int -> Stream a -> Stream a  
+\end{minted}
+  		\end{itemize}
+  		
+Casts and unsafe casts are also provided :
+\begin{minted}{haskell}
+cast :: (Typed a, Typed b) => Stream a -> Stream b
+unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
+\end{minted}
+\end{frame}
+  	
+\begin{frame}[fragile]
+  		\frametitle{Examples}
+	Fibonacci sequence :
+\begin{minted}{haskell}
+fib :: Stream Word64
+fib = [1,1] ++ (fib + drop 1 fib) 
+-- fib = {1,1,2,3,5,8,13,...,
+--       7540113804746346429,-6246583658587674878,...}
+\end{minted}
+
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Interaction}
+	
+\end{frame}
   	
   	\section{Conclusion}
   	\begin{frame}

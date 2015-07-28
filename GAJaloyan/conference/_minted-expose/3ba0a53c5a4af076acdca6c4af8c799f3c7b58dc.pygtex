@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nf}{cast} \PYGdefault{o+ow}{::} \PYGdefault{p}{(}\PYGdefault{k+kt}{Typed} \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{k+kt}{Typed} \PYGdefault{n}{b}\PYGdefault{p}{)} \PYGdefault{o+ow}{=\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{n}{a} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{n}{b}
+\PYGdefault{n+nf}{unsafeCast} \PYGdefault{o+ow}{::} \PYGdefault{p}{(}\PYGdefault{k+kt}{Typed} \PYGdefault{n}{a}\PYGdefault{p}{,} \PYGdefault{k+kt}{Typed} \PYGdefault{n}{b}\PYGdefault{p}{)} \PYGdefault{o+ow}{=\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{n}{a} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{n}{b}
+\end{Verbatim}

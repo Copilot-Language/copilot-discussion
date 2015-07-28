@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYGdefault{n+nf}{fib} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Word64}
+\PYGdefault{n+nf}{fib} \PYGdefault{o+ow}{=} \PYGdefault{p}{[}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{1}\PYGdefault{p}{]} \PYGdefault{o}{++} \PYGdefault{p}{(}\PYGdefault{n}{fib} \PYGdefault{o}{+} \PYGdefault{n}{drop} \PYGdefault{l+m+mi}{1} \PYGdefault{n}{fib}\PYGdefault{p}{)}
+\PYGdefault{c+c1}{\PYGdefaultZhy{}\PYGdefaultZhy{} fib = \PYGdefaultZob{}1,1,2,3,5,8,13,...,}
+\PYGdefault{c+c1}{\PYGdefaultZhy{}\PYGdefaultZhy{}       7540113804746346429,\PYGdefaultZhy{}6246583658587674878,...\PYGdefaultZcb{}}
+\end{Verbatim}

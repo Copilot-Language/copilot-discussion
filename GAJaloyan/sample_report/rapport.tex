@@ -174,9 +174,10 @@
 	fib :: Stream Word64
 	fib = [1,1] ++ (fib + drop 1 fib)  \end{lstlisting}
 	
-	It is also possible to cast one Stream to another, but only in a safe way (in which there is no risk of overflow), with the operator \texttt{cast}.
+	It is also possible to cast one Stream to another. For this purpose, two different operators are provided. The \texttt{cast} operator can cast safely from one stream to another (in which there is no risk of overflow). The \texttt{unsafeCast} operator is used to do almost all casts (including unsafe).
 	\begin{lstlisting}[language=Haskell]
 	cast :: (Typed a, Typed b) => Stream a -> Stream b
+	unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
 	\end{lstlisting}
 	
 	\subsubsection{Interaction}
