@@ -35,12 +35,6 @@
 \usepackage{graphicx}
 \usepackage{cludein}
 
-\lstdefinelanguage
-[aarch64]{Assembler}     
-[x86masm]{Assembler}
-{morekeywords={ADDS,TBNZ,LDRB,STRB,SUBS,TBZ,ANDS,ADR,EON,lsr, bics, ldr},
-	morecomment=[s]{/*}{*/}}
-
 \lstset{ %
 	basicstyle=\small\ttfamily,
 	breakatwhitespace=true,  
@@ -52,8 +46,7 @@
 	showspaces=false,               
 	showstringspaces=false,         
 	showtabs=false,                  
-	tabsize=2,                   
-	language=[aarch64]Assembler
+	tabsize=2
 }
 
 \lstset{breaklines=true}

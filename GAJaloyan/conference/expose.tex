@@ -1,16 +1,37 @@
-   \documentclass{beamer}
-   \usepackage[utf8]{inputenc}
-   \usepackage{tabularx}
-   \usetheme{Frankfurt}
-   \newcommand\TestAppExists[3]{#2}
-   \usepackage{minted}
-   \usepackage{listings}
+\documentclass{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usetheme{Frankfurt}
+\newcommand\TestAppExists[3]{#2}
+\usepackage{minted}
+\usepackage{listings}
+
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\usepackage{tikz-cd}
+\usetikzlibrary{positioning}
 
    
 \usepackage{mathpartir}
 \usepackage{multicol}
 \usepackage{graphicx}
 
+
+
+\lstset{ %
+	basicstyle=\small\ttfamily,
+	breakatwhitespace=true,  
+	breaklines=false,        
+	commentstyle=\color{green!40!black},   
+	extendedchars=true,             
+	keepspaces=true,                
+	keywordstyle=\color{blue},      
+	showspaces=false,               
+	showstringspaces=false,         
+	showtabs=false,                  
+	tabsize=2
+}
   
   \setbeamerfont{institute}{size=\fontsize{7pt}{8pt}}
   
@@ -183,6 +204,151 @@ observer :: Typed a => String -> Stream a -> Spec
   	\begin{frame}
   		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
   	\end{frame}
+  	
+\begin{frame}[fragile]
+	\frametitle{ACSL syntax}
+	ACSL is a specification language for C programs. Those contracts are written according to the following example :
+\begin{lstlisting}[language=C]
+/*@ requires true
+assigns \nothing
+ensures \result >= x && \result >= y;
+ensures \result == x || \result == y;
+*/
+int max (int x, int y) { return (x > y) ? x : y; }
+\end{lstlisting}
+	
+\end{frame}
+  	
+\begin{frame}[fragile]
+	\frametitle{Floyd-Hoare logic}
+	A Floyd-Hoare triple is : \\
+	$\lbrace P \rbrace~ prog ~\lbrace Q \rbrace$ \\
+	\begin{itemize}
+		\item $prog$ is a program fragment
+		\item $P$ and $Q$ are logical assertions over program variables 
+		\item $P$ is the precondition
+		\item $Q$ the postcondition
+	\end{itemize}
+	
+	$\lbrace P \rbrace~ prog ~\lbrace Q \rbrace$ holds iff
+	\begin{itemize}
+		\item $P$ holds before the execution of $prog$
+		\item $Q$ holds after the execution of $prog$\footnote{Unless $prog$ does not terminate or encounters an error.}
+	\end{itemize}
+
+\end{frame}
+	
+\begin{frame}[fragile]
+	\frametitle{Floyd-Hoare logic}
+	Here is an example of a proof tree of a program\footnote{A. Min\'e, \textit{“Semantics and application to program verification : Axiomatic semantics”}, 2015.}:
+	\[
+	\inferrule* []
+	{\inferrule* [] {\inferrule* [] {\inferrule* [] { }
+				{\lbrace true \rbrace~ I \leftarrow I - 1 \ ~\lbrace true\rbrace}}
+			{\lbrace I \ne 0 \rbrace~ I \leftarrow I - 1 \ ~\lbrace true \rbrace}}
+		{\lbrace true \rbrace~  \texttt{while} ~ I \ne 0 ~ \texttt{do} ~ I \leftarrow I - 1 \ ~\lbrace true \wedge \neg (I \ne 0) \rbrace}
+	}
+	{\lbrace true \rbrace~  \texttt{while} ~ I \ne 0 ~ \texttt{do} ~ I \leftarrow I - 1 \ ~\lbrace I = 0 \rbrace}
+	\]
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Floyd-Hoare logic}
+	The Floyd-Hoare logic does not take into account program termination:
+	\[
+	\inferrule* []
+	{\inferrule* [] {\inferrule* [] {\inferrule* [] { }
+				{\lbrace true \rbrace~ I \leftarrow I \ ~\lbrace true\rbrace}}
+			{\lbrace I \ne 0 \rbrace~ I \leftarrow I \ ~\lbrace true \rbrace}}
+		{\lbrace true \rbrace~  \texttt{while} ~ I \ne 0 ~ \texttt{do} ~ I \leftarrow I \ ~\lbrace true \wedge \neg (I \ne 0) \rbrace}
+	}
+	{\lbrace true \rbrace~  \texttt{while} ~ I \ne 0 ~ \texttt{do} ~ I \leftarrow I ~\lbrace I = 0 \rbrace}
+	\]
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Floyd-Hoare logic}
+	Or even safety against runtime errors (we speak about partial correctness):
+	\[
+	\inferrule* []
+	{\inferrule* [] {\inferrule* [] {\inferrule* [] { }
+				{\lbrace true \rbrace~ \textbf{fail} \ ~\lbrace true\rbrace}}
+			{\lbrace I \ne 0 \rbrace~ \textbf{fail} \ ~\lbrace true \rbrace}}
+		{\lbrace true \rbrace~  \texttt{while} ~ I \ne 0 ~ \texttt{do} ~ \textbf{fail} \ ~\lbrace true \wedge \neg (I \ne 0) \rbrace}
+	}
+	{\lbrace true \rbrace~  \texttt{while} ~ I \ne 0 ~ \texttt{do} ~ \textbf{fail} ~\lbrace I = 0 \rbrace}
+	\]
+	
+	More generally, any property is true after fail :
+	\[
+	\inferrule* [] { }
+	{\lbrace P \rbrace~ \textbf{fail} ~\lbrace Q \rbrace}
+	\]
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Floyd-Hoare logic}
+	It is nevertheless possible to prove total correctness by the following proof tree (ranking functions have to be provided):
+	\[
+	\inferrule* []
+	{\lbrace P \rbrace~  prog ~\lbrace Q \rbrace \\ \lbrack P \rbrack~  prog ~\lbrack true \rbrack
+	}
+	{\lbrack P \rbrack~  prog~ \lbrack Q \rbrack}
+	\]
+\end{frame}
+
+  	\subsection{Copilot toolchain}
+  	\begin{frame}
+  		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+  	\end{frame}
+
+\begin{frame}[fragile]
+\begin{figure}[ht!]
+	\centering
+	\footnotesize
+\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
+\tikzstyle{every state}=[rectangle, rounded corners]
+	
+	
+\node[state] (Int) {Interpreter};
+\node[state] (Lang) [above right of=Int]
+{
+	\begin{tabular}[b]{l}
+	Copilot Libraries\\ \hline Copilot Language
+	\end{tabular}};
+\node[state] (Core) [below right of=Lang] {Copilot Core};
+\node[state] (PP) [right of=Core] {Pretty Printer};
+		
+		
+\node[state] (Atom) [below left of=Core] {Atom Back-End};
+\node[state] (SBV) [below right of=Core] {SBV Back-End};
+\node[state] (C99A) [below of=Atom] {C99};
+\node[state] (C99S) [below of=SBV] {C99};
+		
+		
+\tikzstyle{every node}=[]
+		
+		
+\path %% (Libs) edge node {0,1,L} (Lang);
+%% edge node {1,1,R} (C)
+(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+%% edge node {0,1,L} (C)
+(Core) edge node {Translation} (Atom)
+edge node {} (SBV)
+edge node {} (PP)
+edge node [swap] {Evaluation} (Int)
+(Int) edge [<->, bend right] node {QuickCheck} (Atom)
+(Atom) edge node {Compilation} (C99A)
+(SBV) edge node {Compilation} (C99S)
+(C99A) edge [<->] node {Model checking} (C99S);
+%% edge [bend left] node {Translation} (SBV)
+%% (Atom) edge [loop below] node {1,1,R} (D)
+%% edge node {0,1,R} (Libs)
+%% (SBV) edge [bend left] node {1,0,R} ();
+\end{tikzpicture}
+\caption{The Copilot toolchain\footnote{L. Pike, N. Wegmann, S. Niller, and A. Goodloe, \textit{Experience report: A do-it-yourself high-assurance compiler}, 2012.}}
+	\end{figure}
+\end{frame}
   	
   	\section{Conclusion}
   	\begin{frame}

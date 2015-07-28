@@ -1,14 +1,45 @@
-\frametitle{Interaction}
+\begin{figure}[ht!]
+^^I\centering
+^^I\footnotesize
+\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
+\tikzstyle{every state}=[rectangle, rounded corners]
 
-^^IActuators :
-  ^^I\begin{itemize}
-^^I^^I\item Triggers :
-\begin{minted}{haskell}
-trigger ::
-  String -> Stream Bool -> [TriggerArg] -> Spec
-\end{minted}
-^^I^^I\item Observers :
-\begin{minted}{haskell}
-observer :: Typed a => String -> Stream a -> Spec
-\end{minted}
-^^I\end{itemize}
+
+\node[state] (Int) {Interpreter};
+\node[state] (Lang) [above right of=Int]
+{
+^^I\begin{tabular}[b]{l}
+^^ICopilot Libraries\\ \hline Copilot Language
+^^I\end{tabular}};
+\node[state] (Core) [below right of=Lang] {Copilot Core};
+\node[state] (PP) [right of=Core] {Pretty Printer};
+
+
+\node[state] (Atom) [below left of=Core] {Atom Back-End};
+\node[state] (SBV) [below right of=Core] {SBV Back-End};
+\node[state] (C99A) [below of=Atom] {C99};
+\node[state] (C99S) [below of=SBV] {C99};
+
+
+\tikzstyle{every node}=[]
+
+
+\path %% (Libs) edge node {0,1,L} (Lang);
+%% edge node {1,1,R} (C)
+(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+%% edge node {0,1,L} (C)
+(Core) edge node {Translation} (Atom)
+edge node {} (SBV)
+edge node {} (PP)
+edge node [swap] {Evaluation} (Int)
+(Int) edge [<->, bend right] node {QuickCheck} (Atom)
+(Atom) edge node {Compilation} (C99A)
+(SBV) edge node {Compilation} (C99S)
+(C99A) edge [<->] node {Model checking} (C99S);
+%% edge [bend left] node {Translation} (SBV)
+%% (Atom) edge [loop below] node {1,1,R} (D)
+%% edge node {0,1,R} (Libs)
+%% (SBV) edge [bend left] node {1,0,R} ();
+\end{tikzpicture}
+\caption{The Copilot toolchain\footnote{L. Pike, N. Wegmann, S. Niller, and A. Goodloe, \textit{Experience report: A do-it-yourself high-assurance compiler}, 2012.}}
+^^I\end{figure}

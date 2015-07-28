@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  28 JUL 2015 09:32
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  28 JUL 2015 11:03
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1188,16 +1188,7 @@ File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 Package: cludein 2011/01/17 v0.1 direct inclusion of various file formats
 
 -> cludein.sty <- by Mark Edgington, 2011
-) ("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
-File: lstlang1.sty 2014/09/06 1.5e listings language file
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang2.sty"
-File: lstlang2.sty 2014/09/06 1.5e listings language file
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang3.sty"
-File: lstlang3.sty 2014/09/06 1.5e listings language file
-)
-("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\se-ascii-print.def"
+) ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\se-ascii-print.def"
 File: se-ascii-print.def 2011/12/02 v1.10 stringenc: Printable ASCII characters
 
 )
@@ -1281,31 +1272,31 @@ runsystem(if not exist "_minted-rapport" mkdir "_minted-rapport")...executed.
 
 
 (_minted-rapport/default.pygstyle) (rapport.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 85.
-LaTeX Font Info:    Try loading font information for T3+cmr on input line 85.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for EU1/lmr/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for T3/cmr/m/n on input line 78.
+LaTeX Font Info:    Try loading font information for T3+cmr on input line 78.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tipa\t3cmr.fd"
 File: t3cmr.fd 2001/12/31 TIPA font definitions
 )
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 85.
-LaTeX Font Info:    ... okay on input line 85.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 78.
+LaTeX Font Info:    ... okay on input line 78.
 Requested font "[lmroman10-regular]:mapping=tex-text" at 10.95pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman10-regular.otf
 
@@ -1317,57 +1308,57 @@ ABD: EveryShipout initializing macros
 .................................................
 \symlegacymaths=\mathgroup4
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 85.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 85.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 85.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 85.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 85.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 85.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 85.
-LaTeX Font Info:    Redeclaring math accent \check on input line 85.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 85.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 85.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 85.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 85.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 85.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 78.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 78.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 78.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 78.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 78.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 78.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 78.
+LaTeX Font Info:    Redeclaring math accent \check on input line 78.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 78.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 78.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 78.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 78.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 78.
 LaTeX Font Info:    Encoding `OT1' has changed to `EU1' for symbol font
-(Font)              `operators' in the math version `normal' on input line 85.
+(Font)              `operators' in the math version `normal' on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> EU1/lmr/m/n on input line 85.
+(Font)                  OT1/cmr/m/n --> EU1/lmr/m/n on input line 78.
 LaTeX Font Info:    Encoding `OT1' has changed to `EU1' for symbol font
-(Font)              `operators' in the math version `bold' on input line 85.
+(Font)              `operators' in the math version `bold' on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> EU1/lmr/m/n on input line 85.
+(Font)                  OT1/cmr/bx/n --> EU1/lmr/m/n on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  EU1/lmr/m/n --> EU1/lmr/m/n on input line 85.
+(Font)                  EU1/lmr/m/n --> EU1/lmr/m/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> EU1/lmr/m/it on input line 85.
+(Font)                  OT1/cmr/m/it --> EU1/lmr/m/it on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> EU1/lmr/bx/n on input line 85.
+(Font)                  OT1/cmr/bx/n --> EU1/lmr/bx/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> EU1/lmss/m/n on input line 85.
+(Font)                  OT1/cmss/m/n --> EU1/lmss/m/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> EU1/lmtt/m/n on input line 85.
+(Font)                  OT1/cmtt/m/n --> EU1/lmtt/m/n on input line 78.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  EU1/lmr/m/n --> EU1/lmr/bx/n on input line 85.
+(Font)                  EU1/lmr/m/n --> EU1/lmr/bx/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> EU1/lmr/bx/it on input line 85.
+(Font)                  OT1/cmr/bx/it --> EU1/lmr/bx/it on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> EU1/lmss/bx/n on input line 85.
+(Font)                  OT1/cmss/bx/n --> EU1/lmss/bx/n on input line 78.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> EU1/lmtt/bx/n on input line 85.
-LaTeX Info: Redefining \microtypecontext on input line 85.
+(Font)                  OT1/cmtt/m/n --> EU1/lmtt/bx/n on input line 78.
+LaTeX Info: Redefining \microtypecontext on input line 78.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using default protrusion set `alltext'.
 Package microtype Info: No adjustment of tracking.
@@ -1379,7 +1370,7 @@ File: mt-LatinModernRoman.cfg 2013/03/13 v1.0 microtype config. file: Latin Mod
 ern Roman (RS)
 )
 \AtBeginShipoutBox=\box117
-Package hyperref Info: Link coloring OFF on input line 85.
+Package hyperref Info: Link coloring OFF on input line 78.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -1390,13 +1381,13 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 \c@section@level=\count293
 LaTeX Info: Redefining \Ref on input line 513.
 )
-LaTeX Info: Redefining \ref on input line 85.
-LaTeX Info: Redefining \pageref on input line 85.
-LaTeX Info: Redefining \nameref on input line 85.
+LaTeX Info: Redefining \ref on input line 78.
+LaTeX Info: Redefining \pageref on input line 78.
+LaTeX Info: Redefining \nameref on input line 78.
 
 (rapport.out) (rapport.out)
 \@outlinefile=\write7
-LaTeX Info: Redefining \Ref on input line 85.
+LaTeX Info: Redefining \Ref on input line 78.
 \c@lstlisting=\count294
 Requested font "[lmromancaps10-regular]:mapping=tex-text" at 10.95pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmromancaps10-regular.
@@ -1461,210 +1452,3 @@ Requested font "cmr6" at 6.0pt
 \tf@toc=\write8
  [1
 
-]
-Requested font "[lmroman10-italic]:mapping=tex-text" at 10.95pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman10-italic.otf
-Requested font "[lmroman12-bold]:mapping=tex-text" at 12.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman12-bold.otf
-Requested font "[lmmono10-regular]" at 10.95pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono10-regular.otf
-Package microtype Info: Loading generic settings for font family
-(microtype)             `lmtt' (encoding: EU1).
-(microtype)             For optimal results, create family-specific settings.
-(microtype)             See the microtype manual for details.
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/10972494cb0721ee09206c8d28cc3384f05fe342.pygtex
-LaTeX Font Info:    Font shape `EU1/lmtt/bx/n' in size <10.95> not available
-(Font)              Font shape `EU1/lmtt/b/n' tried instead on input line 2.
-Requested font "[lmmonolt10-bold]" at 10.95pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmonolt10-bold.otf
-Requested font "[lmmono10-italic]" at 10.95pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono10-italic.otf
-)
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/ea3a31386d4188e3f3974b7eb33cab0786919188.pygtex)
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/0e60e1b650de432f69b9d64fb57e43cba8e44bc5.pygtex)
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/627ff0d689ad0c582feaf49c82a3845fa2b7465e.pygtex)
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/745967bb48c40237126fdac7378f1bb9fd21a419.pygtex [2
-
-
-])
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/e25295cca12eb115297e8c7d3e81097b9070e60c.pygtex)
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/a33c79b0d5934938d9eb69d8fa3a91432b69b91d.pygtex)
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/4b88e014dc65071180a87a7172ee5704c4cf2745.pygtex)
-("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstlang1.sty"
-File: lstlang1.sty 2014/09/06 1.5e listings language file
-)
-("C:\Program Files\MiKTeX 2.9\tex\latex\listings\lstmisc.sty"
-File: lstmisc.sty 2014/09/06 1.5e (Carsten Heinz)
-)
-Requested font "[lmmono8-regular]" at 8.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
-Requested font "[lmmono8-regular]" at 6.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
- [3]
-Requested font "[lmroman9-regular]:mapping=tex-text" at 9.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman9-regular.otf
-Requested font "[lmroman5-regular]:mapping=tex-text" at 5.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman5-regular.otf
-Requested font "cmmi9" at 9.0pt
-Requested font "cmsy9" at 9.0pt
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 248.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 248.
-Requested font "cmr9" at 9.0pt
- [4]
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/df293e9a71a6e3c3b11d29f82dbde3e45b22e178.pygtex) [5]
-Overfull \hbox (17.0pt too wide) in paragraph at lines 355--414
-[]$[]$ 
- []
-
-Requested font "[lmmono9-regular]" at 9.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono9-regular.otf
-[6]
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
- (rapport.mintedmd5)
-(_minted-rapport/1dde2b313cc296da43a6238f9104b9c64a0fcb46.pygtex [7])
-runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
-t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
-pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
-5\", \"w\"); macro = \"\\edef\\minted@hash\" + chr(123) + hasher.hexdigest() + 
-chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
-\n \"); f.close();")...executed.
-
-
-(rapport.mintedmd5)
-(_minted-rapport/6b183a42aacb0fb110b993da9a77c9164aeaafa9.pygtex)
-File: images/label/main.ps Graphic file (type eps)
-
-<images/label/main.ps>
-File: images/label/splitted.ps Graphic file (type eps)
- <images/label/splitted.ps>
-File: images/label/splitted2.ps Graphic file (type eps)
- <images/label/splitted2.ps>
-[8] [9]
-Overfull \hbox (28.57039pt too wide) in paragraph at lines 598--598
-[][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/d
-b0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-
- []
-
-[10] (rapport.bbl
-** WARNING: IEEEtranS.bst: No hyphenation pattern has been
-** loaded for the language `English'. Using the pattern for
-** the default language instead.
-** WARNING: IEEEtranS.bst: No hyphenation pattern has been
-** loaded for the language `English'. Using the pattern for
-** the default language instead.
-)
-runsystem(del "rapport.mintedcmd")...executed.
-
-runsystem(del "rapport.mintedmd5")...executed.
-
-runsystem(del "rapport.pyg")...executed.
-
- [11
-
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 621.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 621.
- (rapport.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 621.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 621.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 621.
- ) 
-Here is how much of TeX's memory you used:
- 41905 strings out of 428790
- 813243 string characters out of 3164815
- 1260715 words of memory out of 3000000
- 44618 multiletter control sequences out of 15000+200000
- 7891 words of font info for 57 fonts, out of 3000000 for 9000
- 1096 hyphenation exceptions out of 8191
- 56i,36n,97p,10385b,1746s stack positions out of 5000i,500n,10000p,200000b,50000s
-
-Output written on rapport.pdf (12 pages).
