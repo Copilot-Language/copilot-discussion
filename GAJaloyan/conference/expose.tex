@@ -297,6 +297,20 @@ int max (int x, int y) { return (x > y) ? x : y; }
 	\]
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{Dijkstra's Weakest Liberal Precondition}
+	We define the weakest liberal precondition : $wlp(prog,Q)$  which is defined as the most general condition such that $\lbrace wlp(prog,Q) \rbrace~  prog~ \lbrace Q \rbrace$ holds.\\~\\
+	We can automate the computation of the precondition by induction on the syntax. 
+	\begin{itemize}
+		\item $wlp(skip, P) = P$
+		\item $wlp(fail, P) = true$
+		\item $wlp(s;t, P) = wlp(s, wlp(t, P))$
+		\item $wlp(X \leftarrow e, P) = P[e/X]$
+		\item $wlp(\texttt{if}~e~\texttt{then}~s~\texttt{else}~t,P) = (e \Rightarrow wlp(s, P)) \wedge (\neg e \Rightarrow wlp(t, P))$ 
+	\end{itemize}
+	
+\end{frame}
+
   	\subsection{Copilot toolchain}
   	\begin{frame}
   		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
@@ -347,6 +361,256 @@ edge node [swap] {Evaluation} (Int)
 %% (SBV) edge [bend left] node {1,0,R} ();
 \end{tikzpicture}
 \caption{The Copilot toolchain\footnote{L. Pike, N. Wegmann, S. Niller, and A. Goodloe, \textit{Experience report: A do-it-yourself high-assurance compiler}, 2012.}}
+	\end{figure}
+\end{frame}
+  	
+  	  	\section{Working on the backend}
+  	  	\subsection{Hand-written ACSL}
+  	  	\begin{frame}
+  	  		\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+  	  	\end{frame}
+  	
+  	
+\begin{frame}[fragile]
+\frametitle{Hand written ACSL}
+
+\begin{minted}{haskell}
+import Copilot.Language.Reify
+import Copilot.Language
+import qualified Copilot.Compile.SBV as S
+  	
+logic :: Stream Bool
+logic = [True, False] ++ logic && drop 1 logic
+  	
+spec :: Spec
+spec = do
+observer "obs1" logic
+  	
+main = do
+interpret 10 spec
+reify spec >>= S.compile S.defaultParams --SBV Backend
+  	
+\end{minted}
+  	
+\end{frame}
+\begin{frame}[fragile]
+	\scriptsize 
+\begin{lstlisting}[language=C, keywordstyle=\color{blue}]
+/*@
+requires ptr_2 < 0x0078;
+requires \valid(queue_2 + (0..0x02U-1));
+assigns \nothing;
+ensures \result == ( queue_2[ptr_2 % 0x02U] 
+                && queue_2[(ptr_2 + 0x01U) % 0x02U]);
+*/
+SBool update_state_2(const SBool *queue_2
+                    , const SWord16 ptr_2)
+{
+  const SWord16 s2 = ptr_2;
+  const SWord16 s4 = (0x02U == 0)?s2:(s2%0x02U);
+  const SBool   s5 = queue_2[s4];
+  const SWord16 s7 = s2 + 0x0001U;
+  const SWord16 s8 = (0x02U == 0)?s7:(s7%0x02U);
+  const SBool   s9 = queue_2[s8];
+  const SBool   s10 = s5 && s9;
+  	
+  return s10;
+}
+\end{lstlisting}
+
+
+\end{frame}
+\begin{frame}[fragile]
+  	\texttt{frama-c -wp -wp-out . -wp-prover PROVER}
+  	
+\begin{lstlisting}[]
+[wp] Proved goals:   19 / 19
+Qed:            18  (4ms-4ms)
+cvc4:            1  (150ms-150ms)
+
+[wp] Proved goals:   19 / 19
+Qed:            18  (4ms-4ms)
+cvc3:            1  (90ms-90ms)
+	
+[wp] Proved goals:   19 / 19
+Qed:            18  (4ms-8ms)
+Alt-Ergo:        1  (3.5s-3.5s) (248)
+
+[wp] Proved goals:   19 / 19
+Qed:            18  (4ms-4ms)
+z3:              1  (20ms-20ms)
+\end{lstlisting}
+  	
+\end{frame}
+
+\begin{frame}[fragile]
+	\scriptsize 
+	Bitwise version : 
+\begin{lstlisting}[language=C]
+/*@
+requires ptr_2 < 0x0078;
+requires \valid(queue_2 + (0..0x02U-1));
+assigns \nothing;
+ensures \result == ( queue_2[ptr_2 % 0x02U] 
+& queue_2[(ptr_2 + 0x01U) % 0x02U]);
+*/
+SBool update_state_2(const SBool *queue_2
+, const SWord16 ptr_2)
+{
+const SWord16 s2 = ptr_2;
+const SWord16 s4 = (0x02U == 0)?s2:(s2%0x02U);
+const SBool   s5 = queue_2[s4];
+const SWord16 s7 = s2 + 0x0001U;
+const SWord16 s8 = (0x02U == 0)?s7:(s7%0x02U);
+const SBool   s9 = queue_2[s8];
+const SBool   s10 = s5 & s9;
+
+return s10;
+}
+\end{lstlisting}
+	
+	
+\end{frame}
+\begin{frame}[fragile]
+	\texttt{frama-c -wp -wp-out . -wp-prover PROVER}
+	
+\begin{lstlisting}[]
+[wp] Proved goals:   15 / 16
+Qed:            15  (4ms-4ms)
+cvc4:            0  (interrupted: 1)
+
+[wp] Proved goals:   15 / 16
+Qed:            15  (4ms-4ms)
+cvc3:            0  (unknown: 1)
+
+[wp] Proved goals:   15 / 16
+Qed:            15  (4ms-4ms)
+Alt-Ergo:        0  (interrupted: 1)
+
+[wp] Proved goals:   15 / 16
+Qed:            15  (4ms-4ms)
+z3:              0  (interrupted: 1)    
+----> Timeout after 30 seconds
+
+\end{lstlisting}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\scriptsize 
+	Unsafe version : 
+\begin{lstlisting}[language=C]
+/*@
+requires \valid(queue_2 + (0..0x02U-1));
+assigns \nothing;
+ensures \result == ( queue_2[ptr_2 % 0x02U] 
+&& queue_2[(ptr_2 + 0x01U) % 0x02U]);
+*/
+SBool update_state_2(const SBool *queue_2
+, const SWord16 ptr_2)
+{
+const SWord16 s2 = ptr_2;
+const SWord16 s4 = (0x02U == 0)?s2:(s2%0x02U);
+const SBool   s5 = queue_2[s4];
+const SWord16 s7 = s2 + 0x0001U;
+const SWord16 s8 = (0x02U == 0)?s7:(s7%0x02U);
+const SBool   s9 = queue_2[s8];
+const SBool   s10 = s5 && s9;
+
+return s10;
+}
+\end{lstlisting}
+
+	
+	
+\end{frame}
+\begin{frame}[fragile]
+	\texttt{frama-c -wp -wp-out . -wp-prover PROVER}
+	
+\begin{lstlisting}[]
+[wp] Proved goals:   18 / 19
+Qed:            18  (4ms-4ms)
+cvc4:            0  (interrupted: 1)
+
+[wp] Proved goals:   18 / 19
+Qed:            18  (4ms-4ms)
+Alt-Ergo:        0  (interrupted: 1)
+
+[wp] Proved goals:   18 / 19
+Qed:            18  (4ms-4ms)
+z3:              0  (unknown: 1)   
+----> NO TIMEOUT : unsafe
+\end{lstlisting}
+	
+\end{frame}
+
+\subsection{ACSL generation}
+\begin{frame}
+	\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+\end{frame}
+
+
+\begin{frame}[fragile]
+\frametitle{ACSL generation}
+The easiest way to do it is by induction on the syntax, when compiling the expression. Here is how the function ppACSL is constructed :
+\begin{itemize}
+	\item $\texttt{Const~type~value} \rightarrow show~\texttt{value}$
+	\item $\texttt{Drop~type~i~id} \rightarrow queue\_\texttt{id} \lbrack ptr\_\texttt{id} + \texttt{i} ~ mod ~ (length~\texttt{id}) \rbrack$
+	\item $\texttt{ExternVar~t~name~b} \rightarrow ext\_\texttt{name}$
+	\item $\texttt{Var type name} \rightarrow \texttt{name}$
+	\item $\texttt{Op2 op e1 e2} \rightarrow (ppACSL~\texttt{e1})~show~\texttt{op}~(ppACSL~\texttt{e2})$
+	\item $\texttt{Label~t~s~e} \rightarrow ppACSL~\texttt{e}$
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+yyu
+\end{frame}
+
+\begin{frame}[fragile]
+	\begin{figure}[ht!]
+		\centering
+		\footnotesize
+		\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
+		\tikzstyle{every state}=[rectangle, rounded corners]
+		
+		
+		\node[state] (Int) {Interpreter};
+		\node[state] (Lang) [above right of=Int]
+		{
+			\begin{tabular}[b]{l}
+			Copilot Libraries\\ \hline Copilot Language
+			\end{tabular}};
+		\node[state] (Core) [below right of=Lang] {Copilot Core};
+		\node[state] (PP) [right of=Core] {Pretty Printer};
+		
+		
+		\node[state] (Atom) [below left of=Core] {Atom Back-End};
+		\node[state] (SBV) [below right of=Core] {SBV Back-End};
+		\node[state] (C99A) [below of=Atom] {C99};
+		\node[state] (C99S) [below of=SBV] {C99};
+		
+		
+		\tikzstyle{every node}=[]
+		
+		
+		\path %% (Libs) edge node {0,1,L} (Lang);
+		%% edge node {1,1,R} (C)
+		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+		%% edge node {0,1,L} (C)
+		(Core) edge node {Translation} (Atom)
+		edge node {} (SBV)
+		edge node {} (PP)
+		edge node [swap] {Evaluation} (Int)
+		(Int) edge [<->, bend right] node {QuickCheck} (Atom)
+		(Atom) edge node {Compilation} (C99A)
+		(SBV) edge node {Compilation} (C99S)
+		(C99A) edge [<->] node {Model checking} (C99S);
+		%% edge [bend left] node {Translation} (SBV)
+		%% (Atom) edge [loop below] node {1,1,R} (D)
+		%% edge node {0,1,R} (Libs)
+		%% (SBV) edge [bend left] node {1,0,R} ();
+		\end{tikzpicture}
 	\end{figure}
 \end{frame}
   	
