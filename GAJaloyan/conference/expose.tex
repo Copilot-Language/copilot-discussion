@@ -564,7 +564,221 @@ The easiest way to do it is by induction on the syntax, when compiling the expre
 \end{frame}
 
 \begin{frame}[fragile]
-yyu
+\frametitle{ACSL generation}
+Nevertheless, some hacks :
+
+\begin{itemize}
+	\item Let bindings have been deprecated.
+	\item Abs are converted to $\backslash a \rightarrow sign~a \times a$
+	\item Sign to $\backslash x \rightarrow ((x > 0)~?~1 : ((x < 0) ? -1 : 0))$
+	\item Mux where branches have type Bool to $Mux~e1~e2~e3 = ( e2 \wedge e1) \vee (e3 \wedge \neg e1)$
+	\item No bitwise operator are supported.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{ACSL generation}
+	Still some problems with frama-c :
+	
+	\begin{itemize}
+		\item No global invariant : we have to split the dereferencing of the pointer into a black box that only do this.
+		\item No math functions (such as sin, cos, exp, log, ...) : we have to do the same.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{WP vs VA}
+	How effective value analysis is ?
+	\begin{itemize}
+		\item Global invariants supported
+		\item No lemma supported
+		\item Safe ... for only one iteration of the main loop
+		\item Does not really go well with external variables
+		\item Requires access to all C source files of the project to say anything about one contract.
+	\end{itemize}
+	(Very bad) solution : unroll the infinite loop ! \\
+	\texttt{frama-c -val -main testing -slevel 10000000 *.h *.c}
+	(Better) solution : forget about value analysis for the monitor.
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Other changes}
+	\begin{itemize}
+		\item Added m4 preprocessing
+		\item Added CompCert for compiling the C source file generated
+		\item Deprecated ATOM
+		\item Added a dot graph generation for each source file.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Dot File: "ext\_ident\_bool\_1789\_arg0.c"}
+	\footnotesize 
+\begin{lstlisting}[language=C]
+/*@
+assigns \nothing;
+ensures \result == 
+      ((((((0.0) <= (ext_ident_double_1778))) 
+      && (((ext_ident_double_1788) <= (0.0))))));
+*/
+SBool ext_ident_bool_1789_arg0
+(const SDouble ext_ident_double_1778,
+const SDouble ext_ident_double_1788)
+{
+  const SDouble s0 = ext_ident_double_1778;
+  const SDouble s14 = ext_ident_double_1788;
+  const SBool   s25 = 0.0 <= s0;
+  const SBool   s26 = s14 <= 0.0;
+  const SBool   s27 = s25 && s26;
+  const SBool   s28 = s27 /* vertical_RA */;
+  return s28;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Dot File: "ext\_ident\_bool\_1789\_arg0.c"}
+	\begin{tikzpicture}[>=latex',line join=bevel,scale=0.6, every node/.style={scale=0.6}]
+	  \pgfsetlinewidth{1bp}
+	  %%
+	  \pgfsetcolor{black}
+	  % Edge: 2 -> 3
+	  \draw [->] (220.98bp,143.7bp) .. controls (210.87bp,134.97bp) and
+	  (198.46bp,124.24bp)  .. (179.79bp,108.1bp);
+	  % Edge: 326 -> 648
+	  \draw [->] (352.58bp,71.876bp) .. controls (369.07bp,62.639bp) and
+	  (389.62bp,51.131bp)  .. (416.3bp,36.19bp);
+	  % Edge: 326 -> 327
+	  \draw [->] (322.0bp,71.697bp) .. controls (322.0bp,63.983bp) and
+	  (322.0bp,54.712bp)  .. (322.0bp,36.104bp);
+	  % Edge: 1 -> 2
+	  \draw [->] (241.0bp,215.7bp) .. controls (241.0bp,207.98bp) and (241.0bp,198.71bp)
+	  .. (241.0bp,180.1bp);
+	  % Edge: 3 -> 4
+	  \draw [->] (129.42bp,71.876bp) .. controls (112.93bp,62.639bp) and
+	  (92.376bp,51.131bp)  .. (65.696bp,36.19bp);
+	  % Edge: 0 -> 1
+	  \draw [->] (241.0bp,287.72bp) .. controls (241.0bp,279.97bp) and
+	  (241.0bp,270.79bp)  .. (241.0bp,252.0bp);
+	  % Edge: 2 -> 326
+	  \draw [->] (261.02bp,143.7bp) .. controls (271.13bp,134.97bp) and
+	  (283.54bp,124.24bp)  .. (302.21bp,108.1bp);
+	  % Edge: 3 -> 5
+	  \draw [->] (160.0bp,71.697bp) .. controls (160.0bp,63.983bp) and
+	  (160.0bp,54.712bp)  .. (160.0bp,36.104bp);
+	  % Node: 1
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{0.87,0.63,0.87};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{0.87,0.63,0.87};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (299.0bp,252.0bp) -- (183.0bp,252.0bp) -- (183.0bp,216.0bp) --
+	  (299.0bp,216.0bp) -- cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (241.0bp,234.0bp) node {label: vertical\_RA};
+	  \end{scope}
+	  % Node: 0
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{1.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{1.0,0.0,0.0};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (327.0bp,326.0bp) -- (155.0bp,326.0bp) -- (155.0bp,288.0bp) --
+	  (327.0bp,288.0bp) -- cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (241.0bp,310.8bp) node {file: };
+	  \draw (241.0bp,295.8bp) node {ext\_ident\_bool\_1789\_arg0.c};
+	  \end{scope}
+	  % Node: 3
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{0.0,0.55,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{0.0,0.55,0.0};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (200.0bp,108.0bp) -- (123.0bp,108.0bp) -- (123.0bp,73.0bp) -- (200.0bp,73.0bp) --
+	  cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (160.0bp,90.0bp) node {op2: \texttt{<=}};
+	  \end{scope}
+	  % Node: 2
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{0.0,0.55,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{0.0,0.55,0.0};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (281.0bp,180.0bp) -- (204.0bp,180.0bp) -- (204.0bp,145.0bp) -- (281.0bp,145.0bp) --
+	  cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (241.0bp,162.0bp) node {op2: \texttt{\&\&}};
+	  \end{scope}
+	  % Node: 326
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{0.0,0.55,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{0.0,0.55,0.0};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (362.0bp,108.0bp) -- (285.0bp,108.0bp) -- (285.0bp,73.0bp) -- (362.0bp,73.0bp) --
+	  cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (322.0bp,90.0bp) node {op2: \texttt{<=}};
+	  \end{scope}
+	  % Node: 4
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{1.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{1.0,0.0,0.0};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (70.0bp,36.0bp) -- (0.0bp,36.0bp) -- (0.0bp,0.0bp) -- (70.0bp,0.0bp) --
+	  cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (35.0bp,18.0bp) node {const: 0.0};
+	  \end{scope}
+	  % Node: 648
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{1.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{1.0,0.0,0.0};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (482.0bp,36.0bp) -- (412.0bp,36.0bp) -- (412.0bp,0.0bp) --
+	  (482.0bp,0.0bp) -- cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (447.0bp,18.0bp) node {const: 0.0};
+	  \end{scope}
+	  % Node: 5
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{0.0,0.55,0.55};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{0.0,0.55,0.55};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (232.0bp,36.0bp) -- (88.0bp,36.0bp) -- (88.0bp,0.0bp) -- (232.0bp,0.0bp)
+	  -- cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (160.0bp,18.0bp) node {ext\_ident\_double\_1778};
+	  \end{scope}
+	  % Node: 327
+	  \begin{scope}
+	  \definecolor{strokecol}{rgb}{0.0,0.55,0.55};
+	  \pgfsetstrokecolor{strokecol}
+	  \definecolor{fillcol}{rgb}{0.0,0.55,0.55};
+	  \pgfsetfillcolor{fillcol}
+	  \filldraw (394.0bp,36.0bp) -- (250.0bp,36.0bp) -- (250.0bp,0.0bp) --
+	  (394.0bp,0.0bp) -- cycle;
+	  \definecolor{strokecol}{rgb}{0.0,0.0,0.0};
+	  \pgfsetstrokecolor{strokecol}
+	  \draw (322.0bp,18.0bp) node {ext\_ident\_double\_1788};
+	  \end{scope}
+	  %
+	  \end{tikzpicture}
+	  % End of code
+	
 \end{frame}
 
 \begin{frame}[fragile]
