@@ -1,6 +1,6 @@
 \frametitle{Well-Clear : Making it work}
 
-^^IThere remains the main.c file, and producing a complete executable, for testing it.
+^^IThe main.c file, producing a complete executable, was written and is effective.
 ^^I\begin{itemize}
 ^^I^^I\item OS : Windows 7, 64 bits (without any additional feature).
 ^^I^^I\item Input : on stdin, an integer (0 for new plane entering the control area, 1 for leaving, 2 for updates) and an identification number (ICAO24 ideally). If it is an update, we have to add on stdin the latitude, longitude, altitude, x, y and z velocity (x east, y north, z up).
