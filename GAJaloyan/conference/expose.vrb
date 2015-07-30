@@ -1,4 +1,7 @@
 \frametitle{Well-Clear}
 
-^^ILast implementation : Well-Clear criterion defined in \textit{A Family of Well-Clear Boundary Models for the Integration of UAS in the NAS} by C\'esar A. Mu\~{n}oz, Anthony J. Narkawicz and James Chamberlain, Mar\'ia Consiglio and Jason Upchurch.
+
+^^I\begin{figure}
+^^I^^I\includegraphics[height=75mm]{images/WCV/graph.pdf}\\
+^^I\end{figure}
 
