@@ -461,9 +461,9 @@ s = x + (y + x)
 	Which will generate that following C code.
 	\begin{lstlisting}[language=C, keywordstyle=\color{blue}]
 	/*@
-	ensure result == ((ext_sqrt_0) + ((ext_sqrt_1) + (ext_sqrt_0)));
+	ensure \result == ((ext_f_0) + ((ext_f_1) + (ext_f_0)));
 	*/
-	bool trigger(...)
+	SBool trigger(...)
 	{
 	const SDouble s0 = ext_f_0;
 	const SDouble s1 = ext_f_1;
@@ -493,10 +493,10 @@ main = do
 reify spec >>= S.proofACSL S.defaultParams
 \end{minted}
 	\begin{figure}
-		\includegraphics[width=45mm]{images/label/main.ps}
+		\includegraphics[width=42mm]{images/label/main.ps}
 		\centering
-		\includegraphics[width=45mm]{images/label/splitted.ps}
-		\includegraphics[width=45mm]{images/label/splitted2.ps}
+		\includegraphics[width=42mm]{images/label/splitted.ps}
+		\includegraphics[width=42mm]{images/label/splitted2.ps}
 		\caption{The splitting process. The AST on the left is split into two smaller ASTs, that then generate two separate functions into two separate files, making it easier to prove the contracts for them.}
 		\label{fig:splitting label}
 	\end{figure}
@@ -582,7 +582,7 @@ reify spec >>= S.proofACSL S.defaultParams
 		\item Outputs : two boolean values, corresponding each other to the violation of a criterion.
 	\end{itemize}
 	
-	The implementation is 262 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/master/example29/main.hs}. The proof mode generates 433 C source files, which are then verified by frama-c in 2 minutes min and 39 sec on an intel i5-4200U\footnote{http://ark.intel.com/fr/products/75459/Intel-Core-i5-4200U-Processor-3M-Cache-up-to-2\_60-GHz}\footnote{The whole process is logged in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwp \\ and a compact log better suited for readability is in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwpcompact} using the following bash command (which uses GNU parallel).
+	The implementation is 262 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/master/example29/main.hs}. The proof mode generates 433 C source files, which are then verified by frama-c in 2 minutes and 39 sec on an intel i5-4200U\footnote{http://ark.intel.com/fr/products/75459/Intel-Core-i5-4200U-Processor-3M-Cache-up-to-2\_60-GHz}\footnote{The whole process is logged in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwp \\ and a compact log better suited for readability is in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwpcompact} using the following bash command (which uses GNU parallel).
 	\begin{lstlisting}
 	parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split {} ::: *.c | tee >logfwp >(grep 'Proved\|Unknown\|Timeout\|Failed\|Qed:\s\|CVC4:\s\|Parsing .*\.c' > logfwpcompact) >(grep 'Proved\|Qed:\s\|CVC4:\s\|Unknown\|Timeout\|Failed\|Parsing .*\.c')
 	\end{lstlisting}
