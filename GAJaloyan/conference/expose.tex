@@ -971,6 +971,29 @@ $d_{cpa} (\textbf{s},\textbf{v}) = \parallel \textbf{s} + t_{cpa}(\textbf{s}, \t
 	
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{Well-Clear}
+	
+	
+	\begin{itemize}
+		\item Prover mode : xxx files verified in xxx
+		\item Compiler mode : xxx files compiled in xxx
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Well-Clear : Making it work}
+	
+	There remains the main.c file, and producing a complete executable, for testing it.
+	\begin{itemize}
+		\item OS : Windows 7, 64 bits (without any additional feature).
+		\item Input : on stdin, an integer (0 for new plane entering the control area, 1 for leaving, 2 for updates) and an identification number (ICAO24 ideally). If it is an update, we have to add on stdin the latitude, longitude, altitude, x, y and z velocity (x east, y north, z up).
+		\item Output : some debug information and a matrix on which a cross appears if a Well Clear Violation occurs (the shape of the cross depends on the type of violation, according to different time variables).
+	\end{itemize}
+	
+\end{frame}
+
 \begin{frame}
 	\frametitle{Questions}
 	\text{Questions ?}

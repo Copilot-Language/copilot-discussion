@@ -1,7 +1,9 @@
-\frametitle{Well-Clear}
+\frametitle{Well-Clear : Making it work}
 
-
-^^I\begin{figure}
-^^I^^I\includegraphics[height=75mm]{images/WCV/graph.pdf}\\
-^^I\end{figure}
+^^IThere remains the main.c file, and producing a complete executable, for testing it.
+^^I\begin{itemize}
+^^I^^I\item OS : Windows 7, 64 bits (without any additional feature).
+^^I^^I\item Input : on stdin, an integer (0 for new plane entering the control area, 1 for leaving, 2 for updates) and an identification number (ICAO24 ideally). If it is an update, we have to add on stdin the latitude, longitude, altitude, x, y and z velocity (x east, y north, z up).
+^^I^^I\item Output : some debug information and a matrix on which a cross appears if a Well Clear Violation occurs (the shape of the cross depends on the type of violation, according to different time variables).
+^^I\end{itemize}
 
