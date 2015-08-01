@@ -1,0 +1,242 @@
+\section{Tools} \label{sec:tools}
+
+Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
+two compilers targeting C, and a verifier front-end. In the following section, we will
+demonstrate some of these tools and their usage.
+
+\subsection{Pretty-Printing} \label{sec:pretty-printing}
+Pretty-printing is straightforward.  For some specification {\tt spec},
+%
+\begin{code}
+prettyPrint spec
+\end{code}
+%
+\noindent
+returns the specification after static macro expansion.  Pretty-printing can
+provide some indication about the complexity of the specification to be
+evaluated.  Specifications that are built by recursive Haskell programs (e.g.,
+the majority voting example in Section~\ref{subsec:boyer_moore}) can generate
+expressions that are large.  Large expressions can take significant
+time to interpret or compile.
+
+
+\subsection{Proofs of Monitors}~\label{sec:proof} 
+
+\todo{Chris, please add an intro to using the Copilot Model Checking
+  capabilities} 
+
+
+\subsection{Interpreting Copilot}
+
+The copilot interpreter is invoked as follows (e.g. within GHCI, the GHC compiler's
+interpreter for Haskell):
+%
+\begin{code}
+GHCI> interpret 10 propTempRiseShutOff
+\end{code}
+%
+The first argument to the function \emph{interpret} is the number of iterations that we want to evaluate.
+The third argument is the specification (of type {\tt Spec}) that we wish to interpret.
+
+The interpreter outputs the values of the arguments passed to the trigger, if
+its guard is true, and {\tt --} otherwise.  For example, consider the following
+Copilot program:
+%
+\begin{code}
+spec = do 
+  trigger "trigger1" (even nats) [arg nats, arg $ odd nats]
+  trigger "trigger2" (odd nats) [arg nats]
+\end{code}
+% $
+where {\tt nats} is the stream of natural numbers, and {\tt even} and {\tt odd}
+are functions that take a stream and return whether the point-wise values are
+even or odd, respectively.  The output of 
+%
+\begin{code}
+interpret 10 spec
+\end{code}
+%
+is as follows:
+%
+\begin{code}
+trigger:   trigger2: 
+(0,false)  --        
+--         (1)       
+(2,false)  --        
+--         (3)       
+(4,false)  --        
+--         (5)       
+(6,false)  --        
+--         (7)       
+(8,false)  --        
+--         (9)     
+\end{code}
+%
+
+Sometimes it is convenient to observe the behavior of a stream without defining
+a trigger.  We can do so declaring an \emph{observer}.  For example:
+%
+\begin{code}
+spec :: Spec
+spec = observer ``obs'' nats  
+\end{code}
+%
+can be interpreted using
+%
+\begin{code}
+interpret 5 spec  
+\end{code}
+%
+as usual.  Observers can be combined in larger Copilot programs.  For example,
+consider the following:
+%
+\begin{code}
+spec :: Spec
+spec = do
+  let x = externW8 "x" (Just [0..])
+  trigger "trigger" true [arg $ x < 3]
+  observer "debug_x" x
+\end{code}
+% $
+Interpreting {\tt spec} as follows
+%
+\begin{code}
+interpret 10 spec
+\end{code}
+%
+yields
+%
+\begin{code}
+trigger:  debug_x: 
+(true)    0        
+(true)    1        
+(true)    2        
+(false)   3        
+(false)   4        
+(false)   5        
+(false)   6        
+(false)   7        
+(false)   8        
+(false)   9        
+\end{code}
+
+\subsection{Compiling Copilot}  \label{sec:compiling}
+
+Compiling the engine controller from Example \ref{exm:engine} is
+straightforward.  First, we pick a back-end to compile to.  Currently, two
+back-ends are implemented, both of which generate constant-time and
+constant-space C code.  One back-end is called \emph{copilot-c99} and targets
+the Atom language,\footnote{\url{http://hackage.haskell.org/package/atom}}
+originally developed by Tom Hawkins at Eaton Corp. for developing control
+systems.  The second back-end is called \emph{copilot-sbv} and targets the SBV
+language\footnote{\url{http://hackage.haskell.org/package/sbv}}, originally
+developed by Levent Erk\"{o}k.  SBV is primarily used as an interface to SMT
+solvers~\cite{smt} and also contains a C-code generator.  Both
+languages are open-source.
+
+The two back-ends are installed with Copilot, and they can be imported,
+respectively, as
+
+\begin{code}
+import Copilot.Compile.C99
+\end{code}
+\noindent
+and
+\begin{code}
+import Copilot.Compile.SBV
+\end{code}
+
+After importing a back-end, the interface for compiling is as
+follows:\footnote{Two explanations are in order: (1) {\tt reify} allows sharing in the expressions to be compiled~\cite{DSLExtract}, and {\tt >>=} is a higher-order
+  operator that takes the result of reification and ``feeds'' it to the compile
+  function.}
+%
+\begin{code}
+reify spec >>= compile defaultParams
+\end{code}
+%
+\noindent
+(The compile function takes a parameter to rename the generated C files; {\tt
+  defaultParams} is the default, in which there is no renaming.)
+
+The compiler now generates two files:
+
+\begin{itemize}
+\item ``copilot.c'' --- 
+\item ``copilot.h'' --- 
+\end{itemize}
+
+The file named ``copilot.h'' contains prototypes for all external variables, functions, and arrays,
+and contains a prototype for the ``step''-functions which evaluates a single iteration.
+
+\begin{code}
+/* Generated by Copilot Core v. 0.1 */
+
+#include <stdint.h>
+#include <stdbool.h>
+
+/* Triggers (must be defined by user): */
+
+void over_temp_rise();
+
+/* External variables (must be defined by user): */
+
+extern float temp;
+extern bool running;
+
+/* Step function: */
+
+void step();
+\end{code}
+
+Using the prototypes in ``copilot.h'' we can build a driver as follows:
+
+\begin{code}
+/* driver.c */
+#include <stdio.h>
+#include "copilot.h"
+
+bool running = true;
+float temp = 1.1;
+
+void over_temp_rise()
+{
+  printf("The trigger has been evoked!\n");
+}
+
+int main (int argc, char const *argv[])
+{
+  int i;
+
+  for (i = 0; i < 10; i++)
+  {
+    printf("iteration: %d\n", i);
+    temp = temp * 1.3;
+    step();
+  }
+
+  return 0;
+}
+\end{code}
+
+Running ``gcc copilot.c driver.c -o prop'' gives a program ``prop'', which when executed
+yields the following output:
+%
+\begin{code}
+iteration: 0
+iteration: 1
+iteration: 2
+iteration: 3
+iteration: 4
+iteration: 5
+iteration: 6
+iteration: 7
+The trigger has been evoked!
+iteration: 8
+The trigger has been evoked!
+iteration: 9
+The trigger has been evoked!
+\end{code}
+%
+
+\todo{George-Axel} describe what must be done to invoke the provers. 

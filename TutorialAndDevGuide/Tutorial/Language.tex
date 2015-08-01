@@ -1,0 +1,569 @@
+
+\section{Language}~\label{sec:language}
+
+Copilot is embedded into the functional programming language Haskell
+\cite{PeytonJones02}, and a working knowledge of Haskell is necessary to use
+Copilot effectively. Copilot is a pure declarative language; i.e., expressions
+are free of side-effects and satisfies referential transparency.  A program
+written in Copilot, which from now on will be referred to as a
+\emph{specification}, has a cyclic behavior, where each cycle consists of a
+fixed series of steps:
+
+\begin{itemize}
+\item Sample external variables, arrays, and functions.
+\item Update internal variables.
+\item Fire external triggers. (In case the specification is violated.)
+\end{itemize}
+
+\noindent We refer to a single cycle as an \emph{iteration}.
+
+All transformation of data in Copilot is propagated through streams.
+A stream is an infinite, ordered sequence of values which must conform to the same type.
+E.g., we have the stream of Fibonacci numbers:
+
+\begin{center}
+$s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
+\end{center}
+
+\noindent We denote the $n$th value of the stream $s$ as $s(n)$, and the first
+value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{fib}(0) = 0$,
+$s_{fib}(1) = 1$, $s_{fib}(2) = 1$, and so forth.
+
+Constants as well as arithmetic, boolean, and relational operators are
+lifted to work pointwise on streams:
+
+\noindent
+%\begin{minipage}{0.3\textwidth}
+\begin{code}
+x :: Stream Int32
+x = 5 + 5
+
+y :: Stream Int32
+y = x * x
+
+z :: Stream Bool
+z = x == 10 && y < 200
+\end{code}
+%\end{minipage}
+
+
+\noindent Here the streams {\tt x}, {\tt y}, and {\tt z} are simply
+\emph{constant streams}:
+
+\begin{center}
+$\mathtt{x} \leadsto \{10, 10, 10, \dots \}$,
+$\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
+$\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
+\end{center}
+
+Two types of \emph{temporal} operators are provided, one for delaying streams and one for
+looking into the future of streams:
+%
+\begin{code}
+(++) :: [a] -> Stream a -> Stream a
+drop :: Int -> Stream a -> Stream a
+\end{code}
+%
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
+For example the stream {\tt w} defined as follows, given our previous definition
+of {\tt x}:
+%
+\begin{code}
+w = [5,6,7] ++ x
+\end{code}
+%
+evaluates to the sequence
+$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
+The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
+  s}, returning the remainder of the stream.  
+For example we can skip the first two values of {\tt w}:
+%
+\begin{code}
+u = drop 2 w
+\end{code}
+%
+which yields the sequence
+$\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
+
+\subsection{Streams as Lazy-Lists} \label{sec:stream}
+
+A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
+In Haskell, the lazy-list of natural numbers can be programmed like this:
+%
+\begin{code}
+nats_ll :: [Int32]
+nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
+\end{code}
+%
+As both constants and arithmetic operators are lifted to work pointwise on
+streams in Copilot, there is no need for {\tt zipWith} and {\tt repeat} when
+specifying the stream of natural numbers:
+%
+\begin{code}
+nats :: Stream Int32
+nats = [0] ++ (1 + nats)
+\end{code}
+%
+In the same manner, the lazy-list of Fibonacci numbers can be specified as follows:
+%
+\begin{code}
+fib_ll :: [Int32]
+fib_ll = [1, 1] ++ zipWith (+) fib_ll (drop 1 fib_ll)
+\end{code}
+%
+In Copilot we simply throw away {\tt zipWith}:
+\begin{code}
+fib :: Stream Int32
+fib = [1, 1] ++ (fib + drop 1 fib)
+\end{code}
+
+Copilot specifications must be \emph{causal}, informally meaning that
+stream values cannot depend on future values.  For example, the following stream
+definition is allowed:
+%
+\begin{code}
+f :: Stream Word64
+f = [0,1,2] ++ f
+
+g :: Stream Word64
+g = drop 2 f
+\end{code}
+%
+
+But if instead {\tt g} is defined as {\tt g = drop 4 f}, then the definition is
+disallowed.  While an analogous stream is definable in a lazy language, we bar
+it in Copilot, since it requires future values of {\tt f} to be
+generated before producing values for {\tt g}.  This is not possible since
+Copilot programs may take inputs in real-time from the environment (see
+Section~\ref{sec:interacting}).
+
+\subsection{Functions on Streams} \label{sec:FnOnStreams}
+
+Given that constants and operators work pointwise on streams, we can use Haskell
+as a macro-language for defining functions on streams.  The idea of using
+Haskell as a macro language is powerful since Haskell is a
+general-purpose higher-order functional language.
+
+\begin{example}
+We define the function, {\tt even}, which given a stream of
+integers returns a boolean stream which is true whenever the input stream
+contains an even number, as follows:
+%
+\begin{code}
+even :: Stream Int32 -> Stream Bool
+even x = x `mod` 2 == 0
+\end{code}
+%
+Applying {\tt even} on {\tt nats} (defined above) yields the sequence
+$\{T, F, T, F, T, F, \dots\}$.
+\end{example}
+
+If a function is required to return multiple results, we simply use plain
+Haskell tuples:
+
+\begin{example}
+We define complex multiplication as follows:
+%
+\begin{code}
+mul_comp
+  :: (Stream Double, Stream Double)
+  -> (Stream Double, Stream Double)
+  -> (Stream Double, Stream Double)
+(a, b) `mul_comp` (c, d) = (a * c - b * d, a * d + b * c)
+\end{code}
+%
+Here {\tt a} and {\tt b} represent the real and imaginary part of the left
+operand, and {\tt c} and {\tt d} represent the real and imaginary part
+of the right operand.
+\end{example}
+
+\subsection{Stateful Functions} \label{sec:stateful}
+
+In addition to pure functions, such as {\tt even} and {\tt mul\_comp},
+Copilot also facilitates \emph{stateful} functions. A \emph{stateful} function
+is a function which has an internal state, e.g. as a latch (as in electronic
+circuits) or a low/high-pass filter (as in a DSP).
+
+\begin{figure*}
+\begin{minipage}{0.4\linewidth}
+\begin{tabular}{c|c||c}
+$\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
+\hline
+$F$ & $F$ & $F$ \\
+\hline
+$F$ & $T$ & $T$ \\
+\hline
+$T$ & $F$ & $T$ \\
+\hline
+$T$ & $T$ & $F$
+\end{tabular}
+\end{minipage}
+\hspace{1cm}
+\begin{minipage}{0.6\linewidth}
+\begin{code}
+latch :: Stream Bool -> Stream Bool
+latch x = y
+  where
+  y = if x then not z else z
+  z = [False] ++ y
+\end{code}
+\end{minipage}
+\caption{A latch. The specification is provided at the left and the
+implementation is provided at the right.}
+\label{fig:jk_latch}
+\end{figure*}
+
+\begin{example}
+We consider a simple latch, as described in \cite{Farhat2004}, with a single
+input and a boolean state. Whenever the input is true the internal state is reversed.
+The operational behavior and the implementation of the latch is shown in Figure
+\ref{fig:jk_latch}.\footnote
+{In order
+to use conditionals (if-then-else's) in Copilot specifications,
+as in Figures~\ref{fig:jk_latch} and~\ref{fig:counter}, the GHC
+language extension {\tt RebindableSyntax} must be set on.}
+\end{example}
+
+\begin{figure*}
+\begin{minipage}{0.4\linewidth}
+\begin{tabular}{c|c||c}
+$\mathtt{inc}_i$: & $\mathtt{reset}_i$: & $\mathtt{cnt}_i$: \\
+\hline
+$F$ & $F$ & $\mathtt{cnt}_{i-1}$ \\
+\hline
+* & $T$ & $0$ \\
+\hline
+$T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
+\hline
+\end{tabular}
+\end{minipage}
+\hspace{1cm}
+\begin{minipage}{0.6\linewidth}
+\begin{code}
+counter :: Stream Bool -> Stream Bool 
+        -> Stream Int32
+counter inc reset = cnt
+  where 
+  cnt = if reset then 0
+          else if inc then z + 1
+                 else z
+  z = [0] ++ cnt
+\end{code}
+\end{minipage}
+\caption{A resettable counter. The specification is provided at the left and the
+implementation is provided at the right.
+}
+\label{fig:counter}
+\end{figure*}
+
+\begin{example}
+We consider a resettable counter with two inputs, {\tt inc} and {\tt reset}.
+The input {\tt inc} increments the counter and the input {\tt reset} resets the
+counter. The internal state of the counter, {\tt cnt}, represents the value of the
+counter and is initially set to zero. At each cycle, $i$, the value of
+$\mathtt{cnt}_i$ is determined as shown in the left table in Figure
+\ref{fig:counter}.
+\end{example}
+
+%\begin{figure}
+%\begin{code}
+%fir2pole :: Double -> Double -> Double -> Double
+%  -> Double -> Sig Double -> Sig Double
+%fir2pole a1 a2 b0 b1 b2 x0 = y0
+%  where
+%    y0 = - (constant a1)*y1 - (constant a2)*y2
+%         + (constant b0)*x0 + (constant b1)*x1 + (constant b2)*x2
+%    x2 = [0, 0] ++ x0 ; x1 = drop 1 x2
+%    y2 = [0, 0] ++ y0 ; y1 = drop 1 y2
+%\end{code}
+%\caption{A $2$-pole IIR filter.}
+%\label{fig:2_pole_iir_filter}
+%\end{figure}
+
+\subsection{Types} \label{sec:types}
+
+Copilot is a typed language, where types are enforced by the Haskell type system
+to ensure generated C programs are well-typed.  Copilot is \emph{strongly typed}
+(i.e., type-incorrect function application is not possible) and \emph{statically
+  typed} (i.e., type-checking is done at compile-time).  The base types are
+Booleans, unsigned and signed words of width 8, 16, 32, and 64, floats, and
+doubles.  All elements of a stream must belong to the same base
+type.  These types have instances for the class {\tt Typed a}, used to constrain
+Copilot programs.
+
+We provide a {\tt cast} operator
+%
+\begin{code}
+cast :: (Typed a, Typed b) => Stream a -> Stream b  
+\end{code}
+%
+that casts from one type to another.  The cast operator is only defined for
+casts that do not lose information, so an unsigned word type {\tt a} can only be cast to another unsigned  type at least as large as {\tt a} or to a signed word type
+strictly larger than {\tt a}.  Signed types cannot be cast to unsigned types but
+can be cast to signed types at least as large.
+
+\subsection{Interacting With the Target Program}
+\label{sec:interacting}
+
+All interaction with the outside world is done by sampling \emph{external
+  symbols} and by evoking \emph{triggers}.  External symbols are symbols that
+are defined outside Copilot and which reflect the visible state of the target
+program that we are monitoring.  They include variables, arrays, and functions
+(with a non-void return type).  Analogously, triggers are functions that are
+defined outside Copilot and which are evoked when Copilot needs to report that
+the target program has violated a specification constraint.
+
+\paragraph{Sampling.}
+A Copilot specification is \emph{open} if defined with external symbols in the
+sense that values must be provided externally at runtime.  To simplify writing
+Copilot specifications that can be interpreted and tested, constructs for
+external symbols take an optional environment for interpretation.
+
+External variables are defined by using the {\tt extern} construct:
+%
+\begin{code}
+extern :: Typed a => String -> Maybe [a] -> Stream a
+\end{code}
+%
+\noindent
+It takes the name of an external variable, a possible Haskell list to serve as
+the environment for the interpreter, and generates a stream by sampling the
+variable at each clock cycle.  For example,
+%
+\begin{code}
+sumExterns :: Stream Word64
+sumExterns = let ex1 = extern "e1" (Just [0..])
+                 ex2 = extern "e2" Nothing
+             in  ex1 + ex2
+\end{code}
+%
+is a stream that takes two external variables {\tt e1} and {\tt e2} and adds
+them.  The first external variable contains the infinite list {\tt [0,1,2,...]}
+of values for use when interpreting a Copilot specification containing the
+stream.  The other variable contains no environment ({\tt sumExterns} must have
+an environment for both of its variables to be interpreted).
+
+Sometimes, type inference cannot infer the type of an external variable.  For
+example, in the stream definition
+%
+\begin{code}
+extEven :: Stream Bool
+extEven = e0 `mod` 2 == 0
+  where e0 = externW8 "x" Nothing 
+\end{code}
+%
+\noindent
+the type of {\tt extern "x"} is ambiguous, since it cannot be inferred from a
+Boolean stream and we have not given an explicit type signature.  For
+convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
+{\tt externI64} denoting an external unsigned 8-bit word or signed 64-bit word,
+respectively.  In general it is best practice to define external symbols with
+top-level definitions, e.g.,
+%
+\begin{code}
+e0 :: Stream Word8
+e0 = extern  "e0" (Just [2,4..])
+\end{code}
+
+\noindent
+so that the symbol name and its environment can be shared between streams.
+
+Besides variables, external arrays and arbitrary functions can be sampled.  The
+external array construct has the type
+%
+\begin{code}
+externArray :: (Typed a, Typed b, Integral a) 
+            => String -> Stream a -> Int 
+            -> Maybe [[a]] -> Stream b  
+\end{code}
+%
+The construct takes (1) the name of an array, (2) a stream that generates indexes for
+the array (of integral type), (3) the fixed size of the array, and (4) possibly a list of lists that is the
+environment for the external array, representing the sequence of array values.  For example,
+%
+\begin{code}
+
+extArr :: Stream Word32
+extArr = externArray "arr1" arrIdx size 
+           (Just $ repeat (permutations [0,1,2]))
+  where 
+  arrIdx :: Stream Word8
+  arrIdx = [0] ++ (arrIdx + 1) `mod` size
+
+  size = 3
+\end{code} 
+% $
+{\tt extArr} is a stream of values drawn from an external array containing
+32-bit unsigned words.  The array is indexed by an 8-bit variable.  The index
+is ensured to be less than three by using modulo arithmetic.  The environment
+provided produces an infinite list of all the permutations of the list {\tt
+  [0,1,2]}.\footnote{The function {\tt permutations} comes from the Haskell
+    standard library {\tt Data.list}.}
+
+
+%% %
+%% \begin{code}
+%% externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
+%% externFun :: Typed a => String -> [FunArg] -> Stream a
+%% arg :: Typed a => Stream a -> FunArg
+%% \end{code}
+%% % 
+%% The constructor \texttt{externArray} takes two arguments: the name of array and
+%% an index into the array.  The index is given by a Copilot stream (of integral
+%% type) that is used as an index into the table.
+
+%
+\begin{example}
+\label{exm:e}
+Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
+within Copilot:
+%
+\begin{code}
+double someTable[42] = { 3.5, 3.7, 4.5, ... };
+\end{code}
+%
+We can use the table in a Copilot specification as follows:
+%
+\begin{code}
+lookupSomeTable :: Stream Word16 -> Stream Double
+lookupSomeTable idx = 
+  externArray "someTable" idx 42 Nothing
+\end{code}
+%
+Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the output of 
+\texttt{lookupSomeTable idx} would be $$\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$$
+\end{example}
+
+Finally, the constructor \texttt{externFun} takes (1) a function name, (2) a
+list of arguments, and (3) a possible list of values to provide its environment.
+%
+\begin{code}
+externFun :: Typed a => String -> [FunArg] 
+          -> Maybe [a] -> Stream a
+\end{code}
+%
+Each argument to an external function is given by a Copilot stream.  For
+example,
+%
+\begin{code}
+func :: Stream Word16
+func = externFun "f" [arg e0, arg nats] Nothing
+  where
+  e0 = externW8 "x" Nothing
+  nats :: Stream Word8
+  nats = [0] ++ nats + 1
+\end{code} 
+% $
+samples a function in C that has the prototype
+%
+\begin{code}
+uint16_t f(uint8_t x, uint8_t nats);
+\end{code}
+% 
+
+Both external arrays and functions must, like external variables, be defined
+in the target program that is monitored. Additionally, external functions must be
+without side effects, so that the monitor does not cause undesired side-effects when
+sampling functions.  Finally, to ensure Copilot sampling is not
+order-dependent, external functions cannot contain streams containing other
+external functions or external arrays in their arguments, and external arrays
+cannot contain streams containing external functions or external arrays in their
+indexes.  They can both take external variables, however.
+
+\paragraph{Triggers.}
+Triggers, the only mechanism for Copilot streams to effect the outside world,
+are defined by using the {\tt trigger construct}:
+%
+\begin{code}
+trigger :: String -> Stream Bool -> [TriggerArg] -> Spec
+\end{code}
+%
+The first parameter is the name of the external function, the second parameter is the
+guard which determines when the trigger should be evoked, and the third parameter
+is a list of arguments which is passed to the trigger when evoked.
+Triggers can be combined into a specification by using the \emph{do}-notation:
+%
+\begin{code}
+spec :: Spec
+spec = do
+  trigger "f" (even nats) [arg fib, arg (nats * nats)]
+  trigger "g" (fib > 10) []
+  let x = externW32 "x" Nothing
+  trigger "h" (x < 10) [arg x]
+\end{code}
+%
+The order in which the triggers are defined is irrelevant.
+
+\begin{example}
+\label{exm:engine}
+We consider an engine controller with the following property: If the temperature
+rises more than 2.3 degrees within 0.2 seconds, then the fuel injector should
+not be running.  Assuming that the global sample rate is 0.1 seconds, we can
+define a monitor that surveys the above property:
+%
+\begin{code}
+propTempRiseShutOff :: Spec
+propTempRiseShutOff = 
+  trigger "over_temp_rise" 
+    (overTempRise && running) []
+
+  where
+  max = 500 -- maximum engine temperature
+
+  temps :: Stream Float
+  temps = [max, max, max] ++ temp
+
+  temp = extern "temp" Nothing
+
+  overTempRise :: Stream Bool
+  overTempRise = drop 2 temps > (2.3 + temps) 
+ 
+  running :: Stream Bool
+  running = extern "running" Nothing
+\end{code}
+%
+
+Here, we assume that the external variable {\tt temp} denotes the temperature of
+the engine and the external variable {\tt running} indicates whether the fuel
+injector is running.  The external function {\tt over\_temp\_rise} is called
+without any arguments if the temperature rises more than 2.3 degrees within 0.2
+seconds and the engine is not shut off.  Notice there is a latency of one tick between when the property is violated and when the guard becomes true.
+\end{example}
+
+\subsection{Explicit Sharing}
+\label{sec:explicit_sharing}
+
+\begin{figure}[ht]
+\begin{minipage}{0.5\textwidth}
+\begin{code}
+s1 = let x = nats + nats
+     in x * x
+\end{code}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+\begin{code}
+s2 = local (nats + nats) $
+    \ x -> x * x
+\end{code} 
+% $
+\end{minipage}
+\caption{Implicit sharing (s1) versus explicit sharing (s2).}
+\label{fig:explicit_sharing}
+\end{figure}
+\noindent Copilot facilitates sharing in expressions by the \emph{local}-construct:
+%
+\begin{code}
+local
+  :: (Typed a, Typed b)
+  => Stream a
+  -> (Stream a -> Stream b)
+  -> Stream b
+\end{code}
+%
+The local construct works similar to \emph{let}-bindings in ordinary Haskell.
+From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
+\ref{fig:explicit_sharing} are identical.
+As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
+Copilot programs may force the compiler to build syntax trees that blow up exponentially.
+In such cases, using explicit sharing helps to avoid this problem.
+

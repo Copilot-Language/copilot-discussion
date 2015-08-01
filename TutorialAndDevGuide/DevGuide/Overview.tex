@@ -1,0 +1,55 @@
+\section{Overview}~\label{sec:overview}
+
+
+\todo{Give overview of the toolchain}
+
+\todo{Update Diagram}
+
+The Figure~\ref{fig:Copilot backend} shows a global view of the different tools used in Copilot.
+	\begin{figure}[ht!]
+		\centering
+		\begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
+		thick]
+		\tikzstyle{every state}=[rectangle, rounded corners]
+		
+		
+		\node[state] (Int) {Interpreter};
+		\node[state] (Lang) [above right of=Int]
+		{
+			\begin{tabular}[b]{l}
+			Copilot Libraries\\ \hline Copilot Language
+			\end{tabular}};
+		\node[state] (Core) [below right of=Lang] {Copilot Core};
+		\node[state] (PP) [right of=Core] {Pretty Printer};
+		
+		
+		\node[state] (Atom) [below left of=Core] {Atom Back-End};
+		\node[state] (SBV) [below right of=Core] {SBV Back-End};
+		\node[state] (C99A) [below of=Atom] {C99};
+		\node[state] (C99S) [below of=SBV] {C99};
+		
+		
+		\tikzstyle{every node}=[]
+		
+		
+		\path %% (Libs) edge node {0,1,L} (Lang);
+		%% edge node {1,1,R} (C)
+		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+		%% edge node {0,1,L} (C)
+		(Core) edge node {Translation} (Atom)
+		edge node {} (SBV)
+		edge node {} (PP)
+		edge node [swap] {Evaluation} (Int)
+		(Int) edge [<->, bend right] node {QuickCheck} (Atom)
+		(Atom) edge node {Compilation} (C99A)
+		(SBV) edge node {Compilation} (C99S)
+		(C99A) edge [<->] node {Model checking} (C99S);
+		%% edge [bend left] node {Translation} (SBV)
+		%% (Atom) edge [loop below] node {1,1,R} (D)
+		%% edge node {0,1,R} (Libs)
+		%% (SBV) edge [bend left] node {1,0,R} ();
+		\end{tikzpicture}
+		\caption{The Copilot toolchain\cite{Copilot03}}
+		\label{fig:Copilot backend}
+	\end{figure}
+

@@ -1,0 +1,108 @@
+\section{Extended Example: The Boyer-Moore Majority-Vote Algorithm}
+\label{subsec:boyer_moore}
+
+In this section we demonstrate how to use Haskell as an advanced macro language
+on top of Copilot by implementing an algorithm for solving the voting problem
+in Copilot.
+
+\begin{figure*}
+\begin{code}
+majorityPure :: Eq a => [a] -> a
+majorityPure []     = error "majorityPure: empty list!"
+majorityPure (x:xs) = majorityPure' xs x 1
+
+majorityPure' []     can _   = can
+majorityPure' (x:xs) can cnt =
+  let
+    can' = if cnt == 0 then x else can
+    cnt' = if cnt == 0 || x == can then succ cnt else pred cnt
+  in
+    majorityPure' xs can' cnt'
+\end{code}
+\caption{The first pass of the majority vote algorithm in Haskell.}
+\label{fig:majority_pure}
+\end{figure*}
+
+\begin{figure*}
+\begin{code}
+aMajorityPure :: Eq a => [a] -> a -> Bool
+aMajorityPure xs can = aMajorityPure' 0 xs can > length xs `div` 2
+
+aMajorityPure' cnt []     _   = cnt
+aMajorityPure' cnt (x:xs) can =
+  let
+    cnt' = if x == can then cnt+1 else cnt
+  in
+    aMajorityPure' cnt' xs can
+\end{code}
+\caption{The second pass of the majority vote algorithm in Haskell.}
+\label{fig:amajority_pure}
+\end{figure*}
+
+Reliability in mission critical software is often improved by replicating
+the same computations on separate hardware and by doing a vote in the end
+based on the output of each system. The majority vote problem consists of
+determining if in a given list of votes there is a candidate that has more
+than half of the votes, and if so, of finding this candidate.
+
+The Boyer-Moore Majority Vote Algorithm \cite{MooreBoyer82,Hesselink2005} solves
+the problem in linear time and constant memory. It does so in two passes: The
+first pass chooses a candidate; and the second pass asserts that the
+found candidate indeed holds a majority.
+
+Without going into details of the algorithm, the first pass can be implemented
+in Haskell as shown in Figure \ref{fig:majority_pure}. The second pass, which
+simply checks that a candidate has more than half of the votes, is
+straightforward to implement and is shown in Figure \ref{fig:amajority_pure}.
+E.g. applying {\tt majorityPure} on the string {\tt AAACCBBCCCBCC} yields {\tt
+  C}, which {\tt aMajorityPure} can confirm is in fact a majority.
+
+\begin{figure*}[ht]
+\begin{code}
+majority :: (Eq a, Typed a) => [Stream a] -> Stream a
+majority []     = error "majority: empty list!"
+majority (x:xs) = majority' xs x 1
+
+majority' []     can _   = can
+majority' (x:xs) can cnt =
+  local
+    (if cnt == 0 then x else can) $
+      \ can' ->
+        local (if cnt == 0 || x == can then cnt+1 else cnt-1) $
+          \ cnt' ->
+            majority' xs can' cnt'
+\end{code}
+\caption{The first pass of the majority vote algorithm in Copilot.}
+\label{fig:majority}
+\end{figure*}
+
+\begin{figure*}[ht]
+\begin{code}
+aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
+aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
+
+aMajority' cnt []     _   = cnt
+aMajority' cnt (x:xs) can =
+  local
+    (if x == can then cnt+1 else cnt) $
+      \ cnt' ->
+        aMajority' cnt' xs can
+\end{code}
+\caption{The second pass of the majority vote algorithm in Copilot.}
+\label{fig:amajority}
+\end{figure*}
+% $
+
+When implementing the majority vote algorithm for Copilot, we can use reuse
+almost all of the code from the Haskell implementation. However, as functions
+in Copilot are macros that are expanded at compile time, care must
+be taken in order to avoid an explosion in the code size. Hence, instead of
+using Haskell's built-in \emph{let}-blocks, we use explicit sharing, as
+described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
+of the first and the second pass are given in Figure \ref{fig:majority} and
+Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
+with the Copilot implementation, we see that the code is almost identical,
+except for the type signatures and the explicit sharing annotations.
+
+
+

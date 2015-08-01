@@ -1,0 +1,176 @@
+\documentclass[12pt]{article}
+
+%\usepackage[top=4cm, bottom=4cm, left=4cm, right=4cm]{geometry}
+%\usepackage{2in1}
+%\usepackage{a4wide}
+%\setlength{\columnsep}{1cm}
+
+\newcommand{\todo}[1]{{\bf \Huge !!!!! #1 !!!!!}}
+%\usepackage[british]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{setspace}
+\onehalfspacing
+\usepackage{framed}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage[titles]{tocloft}
+\setlength{\cftbeforesecskip}{0.1ex}
+\renewcommand{\cftsecfont}{\rm}
+\renewcommand{\cftsubsecfont}{\rm}
+\renewcommand{\cftdot}{\ensuremath{\dots}}
+\renewcommand{\cftsecdotsep}{3}
+\renewcommand{\cftsubsecdotsep}{3}
+\renewcommand{\cftsecpagefont}{\sl}
+\renewcommand{\cftsubsecpagefont}{\sl}
+\usepackage{sectsty}
+\sectionfont{\large\it\centering}
+\subsectionfont{\normalsize\it\centering}
+\usepackage{listings}
+%\usepackage{natbib}
+\usepackage{fancyvrb}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+\usepackage[margin=2cm]{geometry}
+\usepackage[titletoc]{appendix}
+\usepackage{bcprules}
+% boxes around figs
+\usepackage{float}
+\floatstyle{boxed}
+\restylefloat{figure}
+
+
+\DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\footnotesize}
+
+\lstset{basicstyle=\tt\footnotesize}
+
+\lstdefinelanguage{Haskell}
+        {
+                morekeywords={as, case, of, class, data, data, family, data, instance,
+                default, deriving, do, forall, foreign, hiding, if, then, else, import,
+                infix, infixl, infixr, let, in, mdo, module, newtype, proc, qualified,
+                rec, type, where},
+        morecomment=[l]{--},
+        morecomment=[s]{{\{-}{-\}}},
+        morestring=[b]",
+        keywordstyle=\color{blue}\bf,
+        commentstyle=\it\color{ForestGreen},
+        stringstyle=\color{red},
+        literate= {<-}{{$\leftarrow$}}1 {->}{{$\rightarrow$}}1 {-<}{{$\prec$}}1
+        {=>}{{$\Rightarrow$}}1 {>>>}{{$\ggg$}}2 {<<<}{{$\lll$}}2 {***}{{$\times$}}1
+        {&&&}{{$\otimes$}}1  {'a}{{$\alpha$}}1 {'b}{{$\beta$}}1 {'c}{{$\gamma$}}1
+        {'d}{{$\delta$}}1 {'e}{{$\eta$}}1
+    }
+
+\newtheoremstyle{example}{\topsep}{\topsep}
+     {\normalsize\sl} % Body font.
+     {}               % Indent amount (empty = no indent, \parindent = para indent).
+     {\small\it}      % Thm head font.
+     {:}              % Punctuation after thm head.
+     {\newline}       % Space after thm head (\newline = linebreak).
+     {\thmname{#1} \thmnumber{#2}\thmnote{#3}} % Thm head spec.
+\theoremstyle{example}
+\newtheorem{example}{Example}
+
+\newcommand{\hlinepage}{\rule{\textwidth}{0.25pt}}
+\newcommand{\HRule}{\rule{\linewidth}{0.25pt}}
+\newcommand{\fixme}[1]{\emph{\color{Red}\{!~#1~!\}}}
+
+\begin{document}
+i\vspace{0.1cm}
+
+\HRule
+
+\vspace{0.6cm}
+
+{\Huge \bfseries
+Copilot Developer Guide
+}
+
+
+\HRule
+
+\vspace{0.6cm}
+
+\begin{minipage}{0.4\textwidth}
+\large
+\begin{center}
+Nis N. Wegmann\\
+\small{
+niswegmann@gmail.com\\
+}
+
+\end{center}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\large
+\begin{center}
+Lee Pike\\
+\small{
+leepike@galois.com\\
+}
+\end{center}
+\end{minipage}
+\vspace{1cm}
+
+
+
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+Chris Hathhorn \\
+\small{
+hathhorn@gmail.com\\
+}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+Sebastian Niller\\
+\small{
+sebastian.niller@gmail.com\\
+}
+\end{center}
+\end{minipage}
+
+\vspace{1cm}
+
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+Lauren Pick\\
+\small{
+lmpick@zoho.com\\
+}
+\end{center}
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+George-Axel Jaloyan \\
+\small{
+georges-axel.jaloyan@ens.fr\\
+}
+\end{center}
+\end{minipage}
+
+\vspace{1cm}
+
+\input{GITdirs}
+\input{CompileCopilot}
+\input{Overview}
+\input{Language}
+\input{PrettyPrinter}
+\input{Core}
+\input{Interpreter}
+\input{Kind}
+\input{SBV}
+\input{ACSL}
+
+
+\end{document}
+

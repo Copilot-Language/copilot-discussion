@@ -1,0 +1,23 @@
+\contentsline {section}{Acknowledgement}{3}
+\contentsline {section}{\numberline {1}Preliminaries}{3}
+\contentsline {section}{\numberline {2}Domain}{4}
+\contentsline {section}{\numberline {3}Language}{4}
+\contentsline {subsection}{\numberline {3.1}Streams as Lazy-Lists}{6}
+\contentsline {subsection}{\numberline {3.2}Functions on Streams}{6}
+\contentsline {subsection}{\numberline {3.3}Stateful Functions}{7}
+\contentsline {subsection}{\numberline {3.4}Types}{8}
+\contentsline {subsection}{\numberline {3.5}Interacting With the Target Program}{8}
+\contentsline {paragraph}{Sampling.}{8}
+\contentsline {paragraph}{Triggers.}{11}
+\contentsline {subsection}{\numberline {3.6}Explicit Sharing}{12}
+\contentsline {section}{\numberline {4}Tools}{12}
+\contentsline {subsection}{\numberline {4.1}Pretty-Printing}{12}
+\contentsline {subsection}{\numberline {4.2}Proofs of Monitors}{13}
+\contentsline {subsection}{\numberline {4.3}Interpreting Copilot}{13}
+\contentsline {subsection}{\numberline {4.4}Compiling Copilot}{14}
+\contentsline {section}{\numberline {5}Extended Example: The Boyer-Moore Majority-Vote Algorithm}{17}
+\contentsline {section}{\numberline {6}Logic Libraries}{18}
+\contentsline {section}{\numberline {7}Well Clear Example}{18}
+\contentsline {section}{References}{19}
+\contentsline {section}{Appendix \numberline {A}BNF Grammar}{20}
+\contentsline {section}{Appendix \numberline {B}Typing Rules}{23}
