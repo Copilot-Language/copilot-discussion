@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.24)  3 AUG 2015 09:54
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.24)  3 AUG 2015 10:10
 entering extended mode
 **expose.tex
 (expose.tex
@@ -1896,17 +1896,17 @@ runsystem(del "expose.mintedmd5")...executed.
 
 runsystem(del "expose.pyg")...executed.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1018.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1018.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1019.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1019.
  (expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1018.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1018.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1019.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1019.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1018.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1019.
  ) 
 Here is how much of TeX's memory you used:
  29317 strings out of 428790
