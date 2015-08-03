@@ -34,7 +34,7 @@ lifted to work pointwise on streams:
 
 \noindent
 %\begin{minipage}{0.3\textwidth}
-\begin{code}
+\begin{lstlisting}
 x :: Stream Int32
 x = 5 + 5
 
@@ -43,7 +43,7 @@ y = x * x
 
 z :: Stream Bool
 z = x == 10 && y < 200
-\end{code}
+\end{lstlisting}
 %\end{minipage}
 
 
@@ -59,18 +59,18 @@ $\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
 looking into the future of streams:
 %
-\begin{code}
-(++) :: [a] -> Stream a -> Stream a
+\begin{lstlisting}]frame=single]
+la(++) :: [a] -> Stream a -> Stream a
 drop :: Int -> Stream a -> Stream a
-\end{code}
+\end{lstlisting}
 %
 Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
 For example the stream {\tt w} defined as follows, given our previous definition
 of {\tt x}:
 %
-\begin{code}
+\begin{lstlisting}
 w = [5,6,7] ++ x
-\end{code}
+\end{lstlisting}
 %
 evaluates to the sequence
 $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
@@ -78,9 +78,9 @@ The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
   s}, returning the remainder of the stream.  
 For example we can skip the first two values of {\tt w}:
 %
-\begin{code}
+\begin{lstlisting}
 u = drop 2 w
-\end{code}
+\end{lstlisting}
 %
 which yields the sequence
 $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
@@ -90,44 +90,44 @@ $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
 In Haskell, the lazy-list of natural numbers can be programmed like this:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 nats_ll :: [Int32]
 nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
-\end{code}
+\end{lstlisting}
 %
 As both constants and arithmetic operators are lifted to work pointwise on
 streams in Copilot, there is no need for {\tt zipWith} and {\tt repeat} when
 specifying the stream of natural numbers:
 %
-\begin{code}
+\begin{lstlisting}]frame=single]
 nats :: Stream Int32
 nats = [0] ++ (1 + nats)
-\end{code}
+\end{lstlisting}
 %
 In the same manner, the lazy-list of Fibonacci numbers can be specified as follows:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 fib_ll :: [Int32]
 fib_ll = [1, 1] ++ zipWith (+) fib_ll (drop 1 fib_ll)
-\end{code}
+\end{lstlisting}
 %
 In Copilot we simply throw away {\tt zipWith}:
-\begin{code}
+\begin{lstlisting}
 fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
-\end{code}
+\end{lstlisting}
 
 Copilot specifications must be \emph{causal}, informally meaning that
 stream values cannot depend on future values.  For example, the following stream
 definition is allowed:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 f :: Stream Word64
 f = [0,1,2] ++ f
 
 g :: Stream Word64
 g = drop 2 f
-\end{code}
+\end{lstlisting}
 %
 
 But if instead {\tt g} is defined as {\tt g = drop 4 f}, then the definition is
@@ -149,10 +149,10 @@ We define the function, {\tt even}, which given a stream of
 integers returns a boolean stream which is true whenever the input stream
 contains an even number, as follows:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 even :: Stream Int32 -> Stream Bool
 even x = x `mod` 2 == 0
-\end{code}
+\end{lstlisting}
 %
 Applying {\tt even} on {\tt nats} (defined above) yields the sequence
 $\{T, F, T, F, T, F, \dots\}$.
@@ -164,13 +164,13 @@ Haskell tuples:
 \begin{example}
 We define complex multiplication as follows:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 mul_comp
   :: (Stream Double, Stream Double)
   -> (Stream Double, Stream Double)
   -> (Stream Double, Stream Double)
 (a, b) `mul_comp` (c, d) = (a * c - b * d, a * d + b * c)
-\end{code}
+\end{lstlisting}
 %
 Here {\tt a} and {\tt b} represent the real and imaginary part of the left
 operand, and {\tt c} and {\tt d} represent the real and imaginary part
@@ -200,13 +200,13 @@ $T$ & $T$ & $F$
 \end{minipage}
 \hspace{1cm}
 \begin{minipage}{0.6\linewidth}
-\begin{code}
+\begin{lstlisting}[frame=none]
 latch :: Stream Bool -> Stream Bool
 latch x = y
   where
   y = if x then not z else z
   z = [False] ++ y
-\end{code}
+\end{lstlisting}
 \end{minipage}
 \caption{A latch. The specification is provided at the left and the
 implementation is provided at the right.}
@@ -239,8 +239,8 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
 \end{minipage}
 \hspace{1cm}
 \begin{minipage}{0.6\linewidth}
-\begin{code}
-counter :: Stream Bool -> Stream Bool 
+\begin{lstlisting}[frame=none]
+Counter Bool -> Stream Bool 
         -> Stream Int32
 counter inc reset = cnt
   where 
@@ -248,7 +248,7 @@ counter inc reset = cnt
           else if inc then z + 1
                  else z
   z = [0] ++ cnt
-\end{code}
+\end{lstlisting}
 \end{minipage}
 \caption{A resettable counter. The specification is provided at the left and the
 implementation is provided at the right.
@@ -293,9 +293,9 @@ Copilot programs.
 
 We provide a {\tt cast} operator
 %
-\begin{code}
+\begin{lstlisting}
 cast :: (Typed a, Typed b) => Stream a -> Stream b  
-\end{code}
+\end{lstlisting}
 %
 that casts from one type to another.  The cast operator is only defined for
 casts that do not lose information, so an unsigned word type {\tt a} can only be cast to another unsigned  type at least as large as {\tt a} or to a signed word type
@@ -321,21 +321,21 @@ external symbols take an optional environment for interpretation.
 
 External variables are defined by using the {\tt extern} construct:
 %
-\begin{code}
+\begin{lstlisting}
 extern :: Typed a => String -> Maybe [a] -> Stream a
-\end{code}
+\end{lstlisting}
 %
 \noindent
 It takes the name of an external variable, a possible Haskell list to serve as
 the environment for the interpreter, and generates a stream by sampling the
 variable at each clock cycle.  For example,
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 sumExterns :: Stream Word64
 sumExterns = let ex1 = extern "e1" (Just [0..])
                  ex2 = extern "e2" Nothing
              in  ex1 + ex2
-\end{code}
+\end{lstlisting}
 %
 is a stream that takes two external variables {\tt e1} and {\tt e2} and adds
 them.  The first external variable contains the infinite list {\tt [0,1,2,...]}
@@ -346,11 +346,11 @@ an environment for both of its variables to be interpreted).
 Sometimes, type inference cannot infer the type of an external variable.  For
 example, in the stream definition
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 extEven :: Stream Bool
 extEven = e0 `mod` 2 == 0
   where e0 = externW8 "x" Nothing 
-\end{code}
+\end{lstlisting}
 %
 \noindent
 the type of {\tt extern "x"} is ambiguous, since it cannot be inferred from a
@@ -360,10 +360,10 @@ convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
 respectively.  In general it is best practice to define external symbols with
 top-level definitions, e.g.,
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 e0 :: Stream Word8
 e0 = extern  "e0" (Just [2,4..])
-\end{code}
+\end{lstlisting}
 
 \noindent
 so that the symbol name and its environment can be shared between streams.
@@ -371,17 +371,17 @@ so that the symbol name and its environment can be shared between streams.
 Besides variables, external arrays and arbitrary functions can be sampled.  The
 external array construct has the type
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 externArray :: (Typed a, Typed b, Integral a) 
             => String -> Stream a -> Int 
             -> Maybe [[a]] -> Stream b  
-\end{code}
+\end{lstlisting}
 %
 The construct takes (1) the name of an array, (2) a stream that generates indexes for
 the array (of integral type), (3) the fixed size of the array, and (4) possibly a list of lists that is the
 environment for the external array, representing the sequence of array values.  For example,
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 
 extArr :: Stream Word32
 extArr = externArray "arr1" arrIdx size 
@@ -391,7 +391,7 @@ extArr = externArray "arr1" arrIdx size
   arrIdx = [0] ++ (arrIdx + 1) `mod` size
 
   size = 3
-\end{code} 
+\end{lstlisting} 
 % $
 {\tt extArr} is a stream of values drawn from an external array containing
 32-bit unsigned words.  The array is indexed by an 8-bit variable.  The index
@@ -418,17 +418,17 @@ provided produces an infinite list of all the permutations of the list {\tt
 Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
 within Copilot:
 %
-\begin{code}
+\begin{lstlisting}
 double someTable[42] = { 3.5, 3.7, 4.5, ... };
-\end{code}
+\end{lstlisting}
 %
 We can use the table in a Copilot specification as follows:
 %
-\begin{code}
+\begin{lstlisting}
 lookupSomeTable :: Stream Word16 -> Stream Double
 lookupSomeTable idx = 
   externArray "someTable" idx 42 Nothing
-\end{code}
+\end{lstlisting}
 %
 Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the output of 
 \texttt{lookupSomeTable idx} would be $$\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$$
@@ -437,28 +437,28 @@ Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the ou
 Finally, the constructor \texttt{externFun} takes (1) a function name, (2) a
 list of arguments, and (3) a possible list of values to provide its environment.
 %
-\begin{code}
+\begin{lstlisting}
 externFun :: Typed a => String -> [FunArg] 
           -> Maybe [a] -> Stream a
-\end{code}
+\end{lstlisting}
 %
 Each argument to an external function is given by a Copilot stream.  For
 example,
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 func :: Stream Word16
 func = externFun "f" [arg e0, arg nats] Nothing
   where
   e0 = externW8 "x" Nothing
   nats :: Stream Word8
   nats = [0] ++ nats + 1
-\end{code} 
+\end{lstlisting} 
 % $
 samples a function in C that has the prototype
 %
-\begin{code}
+\begin{lstlisting}
 uint16_t f(uint8_t x, uint8_t nats);
-\end{code}
+\end{lstlisting}
 % 
 
 Both external arrays and functions must, like external variables, be defined
@@ -474,23 +474,23 @@ indexes.  They can both take external variables, however.
 Triggers, the only mechanism for Copilot streams to effect the outside world,
 are defined by using the {\tt trigger construct}:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 trigger :: String -> Stream Bool -> [TriggerArg] -> Spec
-\end{code}
+\end{lstlisting}
 %
 The first parameter is the name of the external function, the second parameter is the
 guard which determines when the trigger should be evoked, and the third parameter
 is a list of arguments which is passed to the trigger when evoked.
 Triggers can be combined into a specification by using the \emph{do}-notation:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 spec :: Spec
 spec = do
   trigger "f" (even nats) [arg fib, arg (nats * nats)]
   trigger "g" (fib > 10) []
   let x = externW32 "x" Nothing
   trigger "h" (x < 10) [arg x]
-\end{code}
+\end{lstlisting}
 %
 The order in which the triggers are defined is irrelevant.
 
@@ -501,7 +501,7 @@ rises more than 2.3 degrees within 0.2 seconds, then the fuel injector should
 not be running.  Assuming that the global sample rate is 0.1 seconds, we can
 define a monitor that surveys the above property:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 propTempRiseShutOff :: Spec
 propTempRiseShutOff = 
   trigger "over_temp_rise" 
@@ -520,7 +520,7 @@ propTempRiseShutOff =
  
   running :: Stream Bool
   running = extern "running" Nothing
-\end{code}
+\end{lstlisting}
 %
 
 Here, we assume that the external variable {\tt temp} denotes the temperature of
@@ -535,16 +535,16 @@ seconds and the engine is not shut off.  Notice there is a latency of one tick b
 
 \begin{figure}[ht]
 \begin{minipage}{0.5\textwidth}
-\begin{code}
+\begin{lstlisting}[frame=none]
 s1 = let x = nats + nats
      in x * x
-\end{code}
+\end{lstlisting}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-\begin{code}
+\begin{lstlisting}[frame=none]
 s2 = local (nats + nats) $
     \ x -> x * x
-\end{code} 
+\end{lstlisting} 
 % $
 \end{minipage}
 \caption{Implicit sharing (s1) versus explicit sharing (s2).}
@@ -552,13 +552,13 @@ s2 = local (nats + nats) $
 \end{figure}
 \noindent Copilot facilitates sharing in expressions by the \emph{local}-construct:
 %
-\begin{code}
+\begin{lstlisting}[frame=single]
 local
   :: (Typed a, Typed b)
   => Stream a
   -> (Stream a -> Stream b)
   -> Stream b
-\end{code}
+\end{lstlisting}
 %
 The local construct works similar to \emph{let}-bindings in ordinary Haskell.
 From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure

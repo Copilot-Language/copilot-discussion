@@ -6,7 +6,7 @@ on top of Copilot by implementing an algorithm for solving the voting problem
 in Copilot.
 
 \begin{figure*}
-\begin{code}
+\begin{lstlisting}[frame=none]
 majorityPure :: Eq a => [a] -> a
 majorityPure []     = error "majorityPure: empty list!"
 majorityPure (x:xs) = majorityPure' xs x 1
@@ -18,13 +18,13 @@ majorityPure' (x:xs) can cnt =
     cnt' = if cnt == 0 || x == can then succ cnt else pred cnt
   in
     majorityPure' xs can' cnt'
-\end{code}
+\end{lstlisting}
 \caption{The first pass of the majority vote algorithm in Haskell.}
 \label{fig:majority_pure}
 \end{figure*}
 
 \begin{figure*}
-\begin{code}
+\begin{lstlisting}[frame=none]
 aMajorityPure :: Eq a => [a] -> a -> Bool
 aMajorityPure xs can = aMajorityPure' 0 xs can > length xs `div` 2
 
@@ -34,7 +34,7 @@ aMajorityPure' cnt (x:xs) can =
     cnt' = if x == can then cnt+1 else cnt
   in
     aMajorityPure' cnt' xs can
-\end{code}
+\end{lstlisting}
 \caption{The second pass of the majority vote algorithm in Haskell.}
 \label{fig:amajority_pure}
 \end{figure*}
@@ -58,7 +58,7 @@ E.g. applying {\tt majorityPure} on the string {\tt AAACCBBCCCBCC} yields {\tt
   C}, which {\tt aMajorityPure} can confirm is in fact a majority.
 
 \begin{figure*}[ht]
-\begin{code}
+\begin{lstlisting}[frame=none]
 majority :: (Eq a, Typed a) => [Stream a] -> Stream a
 majority []     = error "majority: empty list!"
 majority (x:xs) = majority' xs x 1
@@ -71,13 +71,13 @@ majority' (x:xs) can cnt =
         local (if cnt == 0 || x == can then cnt+1 else cnt-1) $
           \ cnt' ->
             majority' xs can' cnt'
-\end{code}
+\end{lstlisting}
 \caption{The first pass of the majority vote algorithm in Copilot.}
 \label{fig:majority}
 \end{figure*}
 
 \begin{figure*}[ht]
-\begin{code}
+\begin{lstlisting}[frame=none]
 aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
 aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
 
@@ -87,7 +87,7 @@ aMajority' cnt (x:xs) can =
     (if x == can then cnt+1 else cnt) $
       \ cnt' ->
         aMajority' cnt' xs can
-\end{code}
+\end{lstlisting}
 \caption{The second pass of the majority vote algorithm in Copilot.}
 \label{fig:amajority}
 \end{figure*}
