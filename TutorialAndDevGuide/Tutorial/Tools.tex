@@ -252,7 +252,20 @@ For this, make sure the following is installed:
 \end{itemize}
 
 You can generate C code optimized for frama-c by using the \texttt{proofACSL} function from SBV.Compile (instead of \texttt{compile} as shown in \ref{sec:compiling}). 
-Then, generate the C source code (which should be in the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run \texttt{make fwp} to use frama-c with the WP plugin. This should generate two log files : a first exhaustive one called \texttt{logfwp}, and an other which summaries the former which is called \texttt{logfwpcompact}. 
+Then, generate the C source code (which should be in the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run \texttt{make fwp} to use frama-c with the WP plugin. This should generate two log files : a first exhaustive one called \texttt{logfwp}, and an other which summaries the former which is called \texttt{logfwpcompact}. The command make fwp is detailed in Figure~\ref{fig:fwp}.
+
+\begin{figure*}[!htb]
+	\begin{lstlisting}[frame=none]
+parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split \
+{} ::: *.c | tee >logfwp \
+>(grep 'Proved\|Unknown\|Timeout\|Failed\|Qed:\s\|CVC4:\s\|Parsing .*\.c' \
+> logfwpcompact) \
+>(grep 'Proved\|Qed:\s\|CVC4:\s\|Unknown\|Timeout\|Failed\|Parsing .*\.c')
+
+	\end{lstlisting}
+	\caption{The bash command.}
+	\label{fig:fwp}
+\end{figure*} 
 
 It is also possible to run frama-c with the value analysis plugin by running \texttt{make fval}. Be careful, the value analysis plugin requires to preload all the C sources files together, which requires a lot of RAM memory for big projects.
 
