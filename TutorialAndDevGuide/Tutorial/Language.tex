@@ -567,3 +567,25 @@ As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
 Copilot programs may force the compiler to build syntax trees that blow up exponentially.
 In such cases, using explicit sharing helps to avoid this problem.
 
+\subsection{Magic labels}
+\label{sec:magiclabels}
+
+It is possible to add labels in a copilot program. Labels are essentially working the same way as the \texttt{trace} function from \texttt{Debug.Trace}, but instead of outputting on stdout, they print their string in the C source file.
+
+\begin{lstlisting}[frame=single]
+label
+:: (Typed a)
+=> String
+-> Stream a
+-> Stream a
+\end{lstlisting}
+
+
+The term \emph{magic label} refers to the possibility to add special characters in labels, which would modify the code generation. Up to now, only one has been implemented, which does a beta expansion where it is put. To invoke the splitting character, simply do:
+
+\begin{lstlisting}[frame=single]
+label "?blabla" expr
+\end{lstlisting}
+
+where \texttt{expr} is any stream. This would result in splitting the AST generated into two smaller ASTs, hence this is equivalent to the transformation : $ e \rightarrow_{\beta} (\lambda x . x) e $ where $(\lambda x . x)$ is a called as an external function (given that there is no polymorphism in Copilot, one identity function per type has been written, which explains why the expression labeled has to be typable). 
+This fundamentally does not change the big-step semantics of the generated program, however it splits a big expression into smaller expressions which can then be more easily read or verified with \texttt{frama-c}.
