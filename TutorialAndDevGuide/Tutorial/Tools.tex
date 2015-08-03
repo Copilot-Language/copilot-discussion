@@ -246,19 +246,21 @@ For this, make sure the following is installed:
 
 \begin{itemize}
 	\item GNU parallel
-	\item frama-c
+	\item frama-c (version at least sodium)
 	\item why3 
 	\item cvc4 prover
 \end{itemize}
 
 You can generate C code optimized for frama-c by using the \texttt{proofACSL} function from SBV.Compile (instead of \texttt{compile} as shown in \ref{sec:compiling}). 
-Then, compile and generate the C source code (which should be in the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run \texttt{make fwp} to use frama-c with the WP plugin. This should generate two log files : a first exhaustive one called \texttt{logfwp}, and an other which summaries the former which is called \texttt{logfwpcompact}. 
+Then, generate the C source code (which should be in the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run \texttt{make fwp} to use frama-c with the WP plugin. This should generate two log files : a first exhaustive one called \texttt{logfwp}, and an other which summaries the former which is called \texttt{logfwpcompact}. 
 
 It is also possible to run frama-c with the value analysis plugin by running \texttt{make fval}. Be careful, the value analysis plugin requires to preload all the C sources files together, which requires a lot of RAM memory for big projects.
 
+It is recommended to refactor your code before trying to use frama-c on it, for example by splitting non trivial expressions using magic labels, deleting all local variables (use functions), or bitwise operators. If this step is neglected, it may happen that frama-c would start swapping all your memory resulting in a system crash.
+
 \subsubsection{Splint}~\label{subsec:splint} 
 
-If you have splint installer on your computer, you can also try running splint (with the command \texttt{make splint}), which will be a good starting point for manual code optimization or refactoring.
+If you have splint installed on your computer, you can also try running splint (with the command \texttt{make splint}), which will be a good starting point for manual code optimization or refactoring. The same problem as for frama-c may occur if you are working on a very big project (system crash).
 
 \subsubsection{Dot}~\label{subsec:dot} 
 
@@ -268,4 +270,4 @@ Extract the dot code from a C source file, and then just run \texttt{dot -Tps co
 
 \subsection{Cross compiling}~\label{sec:cross} 
 
-If you go in the \texttt{copilot-sbv-codegen} folder, and run make all inside it, it should generate a archive file named \texttt{internal.a}, using the compiler defined in the file \texttt{copilot.mk} (default is compcert). This can create some problems during the linking process if you change the compiler for the final compilation (typically \texttt{gcc -m32 -lm main.c internal.a} where \texttt{main.c} is where your controller code is). For this purpose, we recommend installing first the cross compiler (example \texttt{arm-none-eabi-gcc}), and compile the \textbf{whole} project using that very same compiler. 
+If you go in the \texttt{copilot-sbv-codegen} folder, and run make all inside it, it should generate a archive file named \texttt{internal.a}, using the compiler defined in the file \texttt{copilot.mk} (default is compcert, you have to install it with its standard library). This can create some problems during the linking process if you change the compiler for the final compilation (typically \texttt{gcc -m32 -lm main.c internal.a} where \texttt{main.c} is where your controller code is). For this purpose, we recommend installing first the cross compiler (example \texttt{arm-none-eabi-gcc}), and compile the \textbf{whole} project using that very same compiler. 
