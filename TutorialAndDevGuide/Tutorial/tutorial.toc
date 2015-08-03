@@ -15,9 +15,14 @@
 \contentsline {subsection}{\numberline {4.2}Proofs of Monitors}{13}
 \contentsline {subsection}{\numberline {4.3}Interpreting Copilot}{13}
 \contentsline {subsection}{\numberline {4.4}Compiling Copilot}{14}
-\contentsline {section}{\numberline {5}Extended Example: The Boyer-Moore Majority-Vote Algorithm}{17}
-\contentsline {section}{\numberline {6}Logic Libraries}{18}
-\contentsline {section}{\numberline {7}Well Clear Example}{18}
-\contentsline {section}{References}{19}
-\contentsline {section}{Appendix \numberline {A}BNF Grammar}{20}
-\contentsline {section}{Appendix \numberline {B}Typing Rules}{23}
+\contentsline {subsection}{\numberline {4.5}Correctness of the generated code}{16}
+\contentsline {subsubsection}{\numberline {4.5.1}Frama-c}{17}
+\contentsline {subsubsection}{\numberline {4.5.2}Splint}{17}
+\contentsline {subsubsection}{\numberline {4.5.3}Dot}{17}
+\contentsline {subsection}{\numberline {4.6}Cross compiling}{17}
+\contentsline {section}{\numberline {5}Extended Example: The Boyer-Moore Majority-Vote Algorithm}{18}
+\contentsline {section}{\numberline {6}Logic Libraries}{19}
+\contentsline {section}{\numberline {7}Well Clear Example}{20}
+\contentsline {section}{References}{20}
+\contentsline {section}{Appendix \numberline {A}BNF Grammar}{21}
+\contentsline {section}{Appendix \numberline {B}Typing Rules}{24}
