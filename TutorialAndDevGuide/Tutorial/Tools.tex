@@ -1,8 +1,9 @@
 \section{Tools} \label{sec:tools}
 
-Copilot comes with a variety of tools, including a pretty-printer, an interpreter,
-a compiler targeting C, and a verifier front-end. In the following section, we will
-demonstrate some of these tools and their usage. All the tools are shown in the Figure~\ref{fig:New toolchain}.
+Copilot comes with a variety of tools, including a pretty-printer, an
+interpreter, a compiler targeting C, and a verifier front-end. In the following
+section, we will demonstrate some of these tools and their usage. All the tools
+are shown in the Figure~\ref{fig:New toolchain}.
 
 \begin{figure}[ht!]
 	\centering
@@ -12,8 +13,7 @@ thick]
 		
 		
 \node[state] (Int) {Interpreter};
-\node[state] (Lang) [above right of=Int]
-	{
+\node[state] (Lang) [above right of=Int] {%
 		\begin{tabular}[b]{l}
 		Copilot Libraries\\ \hline Copilot Language
 		\end{tabular}};
@@ -65,56 +65,54 @@ thick]
 	%% (SBV) edge [bend left] node {1,0,R} ();
 	\end{tikzpicture}
 	\caption{The new Copilot toolchain. The red arrows are the one to implement in the future.}
-	\label{fig:New toolchain}
+	\label{fig:new-toolchain}
 	\end{figure}
 
 \subsection{Pretty-Printing} \label{sec:pretty-printing}
-Pretty-printing is straightforward.  For some specification {\tt spec},
+Pretty-printing is straightforward. For some specification {\tt spec},
 %
 \begin{code}
 prettyPrint spec
 \end{code}
 %
 \noindent
-returns the specification after static macro expansion.  Pretty-printing can
+returns the specification after static macro expansion. Pretty-printing can
 provide some indication about the complexity of the specification to be
-evaluated.  Specifications that are built by recursive Haskell programs (e.g.,
+evaluated. Specifications that are built by recursive Haskell programs (e.g.,
 the majority voting example in Section~\ref{subsec:boyer_moore}) can generate
-expressions that are large.  Large expressions can take significant
+expressions that are large. Large expressions can take significant
 time to interpret or compile.
 
+\subsection{Proofs of Monitors}~\label{sec:proof}
 
-\subsection{Proofs of Monitors}~\label{sec:proof} 
-
-\todo{Chris, please add an intro to using the Copilot Model Checking
-  capabilities} 
-
+\todo[inline]{Chris, please add an intro to using the Copilot Model Checking
+capabilities}
 
 \subsection{Interpreting Copilot}
-
-The copilot interpreter is invoked as follows (e.g. within GHCI, the GHC compiler's
-interpreter for Haskell):
+The copilot interpreter is invoked as follows (e.g.\ within GHCI, the GHC
+compiler's interpreter for Haskell):
 %
 \begin{code}
 GHCI> interpret 10 propTempRiseShutOff
 \end{code}
 %
-The first argument to the function \emph{interpret} is the number of iterations that we want to evaluate.
-The third argument is the specification (of type {\tt Spec}) that we wish to interpret.
+The first argument to the function \emph{interpret} is the number of iterations
+that we want to evaluate. The third argument is the specification (of type {\tt
+Spec}) that we wish to interpret.
 
 The interpreter outputs the values of the arguments passed to the trigger, if
-its guard is true, and {\tt --} otherwise.  For example, consider the following
+its guard is true, and {\tt --} otherwise. For example, consider the following
 Copilot program:
 %
 \begin{code}
-spec = do 
+spec = do
   trigger "trigger1" (even nats) [arg nats, arg $ odd nats]
   trigger "trigger2" (odd nats) [arg nats]
 \end{code}
 % $
 where {\tt nats} is the stream of natural numbers, and {\tt even} and {\tt odd}
 are functions that take a stream and return whether the point-wise values are
-even or odd, respectively.  The output of 
+even or odd, respectively. The output of
 %
 \begin{code}
 interpret 10 spec
@@ -123,35 +121,35 @@ interpret 10 spec
 is as follows:
 %
 \begin{code}
-trigger:   trigger2: 
-(0,false)  --        
---         (1)       
-(2,false)  --        
---         (3)       
-(4,false)  --        
---         (5)       
-(6,false)  --        
---         (7)       
-(8,false)  --        
---         (9)     
+trigger:   trigger2:
+(0,false)  --
+--         (1)
+(2,false)  --
+--         (3)
+(4,false)  --
+--         (5)
+(6,false)  --
+--         (7)
+(8,false)  --
+--         (9)
 \end{code}
 %
 
 Sometimes it is convenient to observe the behavior of a stream without defining
-a trigger.  We can do so declaring an \emph{observer}.  For example:
+a trigger. We can do so declaring an \emph{observer}. For example:
 %
 \begin{code}
 spec :: Spec
-spec = observer ``obs'' nats  
+spec = observer "obs" nats
 \end{code}
 %
 can be interpreted using
 %
 \begin{code}
-interpret 5 spec  
+interpret 5 spec
 \end{code}
 %
-as usual.  Observers can be combined in larger Copilot programs.  For example,
+as usual. Observers can be combined in larger Copilot programs. For example,
 consider the following:
 %
 \begin{code}
@@ -171,32 +169,32 @@ interpret 10 spec
 yields
 %
 \begin{code}
-trigger:  debug_x: 
-(true)    0        
-(true)    1        
-(true)    2        
-(false)   3        
-(false)   4        
-(false)   5        
-(false)   6        
-(false)   7        
-(false)   8        
-(false)   9        
+trigger:  debug_x:
+(true)    0
+(true)    1
+(true)    2
+(false)   3
+(false)   4
+(false)   5
+(false)   6
+(false)   7
+(false)   8
+(false)   9
 \end{code}
 
-\subsection{Compiling Copilot}  \label{sec:compiling}
+\subsection{Compiling Copilot} \label{sec:compiling}
 
-Compiling the engine controller from Example \ref{exm:engine} is
-straightforward.  First, we pick a back-end to compile to.  Currently, two
+Compiling the engine controller from Example~\ref{exm:engine} is
+straightforward. First, we pick a back-end to compile to. Currently, two
 back-ends are implemented, both of which generate constant-time and
-constant-space C code.  One back-end is called \emph{copilot-c99} and targets
+constant-space C code. One back-end is called \emph{copilot-c99} and targets
 the Atom language,\footnote{\url{http://hackage.haskell.org/package/atom}}
-originally developed by Tom Hawkins at Eaton Corp. for developing control
-systems.  The second back-end is called \emph{copilot-sbv} and targets the SBV
-language\footnote{\url{http://hackage.haskell.org/package/sbv}}, originally
-developed by Levent Erk\"{o}k.  SBV is primarily used as an interface to SMT
-solvers~\cite{smt} and also contains a C-code generator.  Both
-languages are open-source.
+originally developed by Tom Hawkins at Eaton Corp.\ for developing control
+systems. The second back-end is called \emph{copilot-sbv} and targets the SBV
+language,\footnote{\url{http://hackage.haskell.org/package/sbv}} originally
+developed by Levent Erk\"{o}k. SBV is primarily used as an interface to SMT
+solvers~\cite{smt} and also contains a C-code generator. Both languages are
+open-source.
 
 The two back-ends are installed with Copilot, and they can be imported,
 respectively, as
@@ -211,9 +209,12 @@ import Copilot.Compile.SBV
 \end{code}
 
 After importing a back-end, the interface for compiling is as
-follows:\footnote{Two explanations are in order: (1) {\tt reify} allows sharing in the expressions to be compiled~\cite{DSLExtract}, and {\tt >>=} is a higher-order
-  operator that takes the result of reification and ``feeds'' it to the compile
-  function.}
+follows:
+%
+\footnote{Two explanations are in order: (1) {\tt reify} allows sharing in the
+expressions to be compiled~\cite{DSLExtract}, and {\tt >>=} is a higher-order
+operator that takes the result of reification and ``feeds'' it to the compile
+function.}
 %
 \begin{code}
 reify spec >>= compile defaultParams
@@ -221,17 +222,18 @@ reify spec >>= compile defaultParams
 %
 \noindent
 (The compile function takes a parameter to rename the generated C files; {\tt
-  defaultParams} is the default, in which there is no renaming.)
+defaultParams} is the default, in which there is no renaming.)
 
 The compiler now generates two files:
 
 \begin{itemize}
-\item ``copilot.c'' --- 
-\item ``copilot.h'' --- 
+\item ``copilot.c'' ---
+\item ``copilot.h'' ---
 \end{itemize}
 
-The file named ``copilot.h'' contains prototypes for all external variables, functions, and arrays,
-and contains a prototype for the ``step''-functions which evaluates a single iteration.
+The file named ``copilot.h'' contains prototypes for all external variables,
+functions, and arrays, and contains a prototype for the ``step''-function,
+which evaluates a single iteration.
 
 \begin{code}
 /* Generated by Copilot Core v. 0.1 */
@@ -283,8 +285,8 @@ int main (int argc, char const *argv[])
 }
 \end{code}
 
-Running ``gcc copilot.c driver.c -o prop'' gives a program ``prop'', which when executed
-yields the following output:
+Running {\tt gcc copilot.c driver.c -o prop} gives a program {\tt prop}, which,
+when executed, yields the following output:
 %
 \begin{code}
 iteration: 0
@@ -303,20 +305,26 @@ The trigger has been evoked!
 \end{code}
 %
 
-\subsection{Correctness of the generated code}~\label{sec:correctness} 
+\subsection{Correctness of the generated code}~\label{sec:correctness}
 
-\subsubsection{Frama-c}~\label{subsec:frama-c} 
+\subsubsection{Frama-c}~\label{subsec:frama-c}
 For this, make sure the following is installed:
 
 \begin{itemize}
 	\item GNU parallel
 	\item frama-c (version at least sodium)
-	\item why3 
+	\item why3
 	\item cvc4 prover
 \end{itemize}
 
-You can generate C code optimized for frama-c by using the \texttt{proofACSL} function from SBV.Compile (instead of \texttt{compile} as shown in \ref{sec:compiling}). 
-Then, generate the C source code (which should be in the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run \texttt{make fwp} to use frama-c with the WP plugin. This should generate two log files : a first exhaustive one called \texttt{logfwp}, and an other which summaries the former which is called \texttt{logfwpcompact}. The command make fwp is detailed in Figure~\ref{fig:fwp}.
+You can generate C code optimized for frama-c by using the \texttt{proofACSL}
+function from SBV.Compile (instead of \texttt{compile} as shown
+in~\ref{sec:compiling}). Then, generate the C source code (which should be in
+the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run
+\texttt{make fwp} to use frama-c with the WP plugin. This should generate two
+log files: a first exhaustive one called \texttt{logfwp}, and another which
+summaries the former which is called \texttt{logfwpcompact}. The command make
+fwp is detailed in Figure~\ref{fig:fwp}.
 
 \begin{figure*}[!htb]
 	\begin{lstlisting}[frame=none]
@@ -329,22 +337,44 @@ parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split \
 	\end{lstlisting}
 	\caption{The bash command.}
 	\label{fig:fwp}
-\end{figure*} 
+\end{figure*}
 
-It is also possible to run frama-c with the value analysis plugin by running \texttt{make fval}. Be careful, the value analysis plugin requires to preload all the C sources files together, which requires a lot of RAM memory for big projects.
+It is also possible to run frama-c with the value analysis plugin by running
+\texttt{make fval}. Be careful, the value analysis plugin requires to preload
+all the C sources files together, which requires a lot of RAM memory for big
+projects.
 
-It is recommended to refactor your code before trying to use frama-c on it, for example by splitting non trivial expressions using magic labels, deleting all local variables (use functions), or bitwise operators. If this step is neglected, it may happen that frama-c would start swapping all your memory resulting in a system crash.
+It is recommended to refactor your code before trying to use frama-c on it, for
+example by splitting non-trivial expressions using magic labels, deleting all
+local variables (use functions) and bitwise operators. If this step is
+neglected, it may happen that frama-c would start swapping all your memory
+resulting in a system crash.
 
-\subsubsection{Splint}~\label{subsec:splint} 
+\subsubsection{Splint}~\label{subsec:splint}
 
-If you have splint installed on your computer, you can also try running splint (with the command \texttt{make splint}), which will be a good starting point for manual code optimization or refactoring. The same problem as for frama-c may occur if you are working on a very big project (system crash).
+If you have splint installed on your computer, you can also try running splint
+(with the command \texttt{make splint}), which will be a good starting point
+for manual code optimization or refactoring. The same problem as for frama-c
+may occur if you are working on a very big project (system crash).
 
-\subsubsection{Dot}~\label{subsec:dot} 
+\subsubsection{Dot}~\label{subsec:dot}
 
-It is also possible to generate dot graphs for each C source file generated, in order to make the files more understandable. For this, you should check that you have dot installed.
-Extract the dot code from a C source file, and then just run \texttt{dot -Tps code.gv -o code.ps} \footnote{A script doing that automatically is provided here https://raw.githubusercontent.com/Copilot-Language/examplesForACSL/master/WCV/scriptdot.cpp}.
+It is also possible to generate dot graphs for each C source file generated, in
+order to make the files more understandable. For this, you should check that
+you have dot installed. Extract the dot code from a C source file, and then
+just run \texttt{dot -Tps code.gv -o code.ps}
+%
+\footnote{A script doing that automatically is provided here
+\url{https://raw.githubusercontent.com/Copilot-Language/examplesForACSL/master/WCV/scriptdot.cpp}}.
 
+\subsection{Cross compiling}~\label{sec:cross}
 
-\subsection{Cross compiling}~\label{sec:cross} 
-
-If you go in the \texttt{copilot-sbv-codegen} folder, and run make all inside it, it should generate a archive file named \texttt{internal.a}, using the compiler defined in the file \texttt{copilot.mk} (default is compcert, you have to install it with its standard library). This can create some problems during the linking process if you change the compiler for the final compilation (typically \texttt{gcc -m32 -lm main.c internal.a} where \texttt{main.c} is where your controller code is). For this purpose, we recommend installing first the cross compiler (example \texttt{arm-none-eabi-gcc}), and compile the \textbf{whole} project using that very same compiler. 
+If you go in the \texttt{copilot-sbv-codegen} folder, and run {\tt make all}
+inside it, it should generate an archive file named \texttt{internal.a}, using
+the compiler defined in the file \texttt{copilot.mk} (default is compcert, you
+have to install it with its standard library). This can create some problems
+during the linking process if you change the compiler for the final compilation
+(typically \texttt{gcc -m32 -lm main.c internal.a} where \texttt{main.c} is
+where your controller code is). For this purpose, we recommend installing first
+the cross compiler (example \texttt{arm-none-eabi-gcc}), and compile the
+\emph{whole} project using that very same compiler.
