@@ -217,3 +217,15 @@ pip-log.txt
 
 GAJaloyan/conference/Papiers/*
 GAJaloyan/sample_report/Papiers/*
+*.aux
+TutorialAndDevGuide/Tutorial/tutorial.bbl
+*.blg
+TutorialAndDevGuide/Tutorial/tutorial.pdf
+*.toc
+TutorialAndDevGuide/Tutorial/tutorial.synctex.gz
+*.toc
+TutorialAndDevGuide/Tutorial/tutorial.toc
+*.toc
+*.toc
+TutorialAndDevGuide/Tutorial/tutorial.toc
+*.toc
