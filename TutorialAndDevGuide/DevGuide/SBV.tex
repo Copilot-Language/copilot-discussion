@@ -23,7 +23,7 @@ The SBV backend has a lot of files, some of which are useful, other are useless 
 	\item \texttt{Metatable.hs}: the metatable, what else ? (TODO, insert a real description for this one)
 	\item \texttt{Params.hs}: its description is a empty as the file.
 	\item \texttt{Queue.hs}: I don't know
-	\item \texttt{Witness.hs}: A collection of hacks to make everything work with SBV (because ou Floats are Core floats, and SBV is using SBV Floats, so you have to convert everything from to the other). Do not open this file unless you are obliged to.
+	\item \texttt{Witness.hs}: A collection of hacks to make everything work with SBV (because our Floats are Core floats, and SBV is using SBV Floats, so you have to convert everything from to the other). Do not open this file unless you are obliged to.
 \end{itemize}
 
 Everything is centralized in a file named \texttt{SBV.hs} whose only function is to call functions from the other files, in the right order, so that it produces you a non aberrant output.
