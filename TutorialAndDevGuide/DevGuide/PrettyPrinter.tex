@@ -2,4 +2,13 @@
 
 \todo{Discuss Pretty printer Implementation}
 
+There are several prettyPrinter.
+\begin{itemize}
+	\item One in copilot-sbv that prettyprints and expression to an ACSL conbtract
+	\item One in copilore-core that prettyprints an expression to an Dot graph
+	\item One in core that prettyprints (and hence it is a text version of the Dot one).
+\end{itemize}
 
+The prettyPrinting technology, specially developed for Copilot by Interns, Supervisors and Associates Inc.$\circledR$, consists in an induction on the syntax of the language, or by induction on the AST. If the node of the AST is an addition, it prints "+", if it is a multiplication, it prints "*", and the same for all kind of nodes. This unique technology allows us to prettyPrint efficiently an expression originally in the form of (sin a + cos b * ln 3) into (sin a + cos b * ln 3).
+
+A more evolved version of it, adds a unique tag to all nodes, in order to print a dot graph of it. This could have been written using a monad, but why using monads, when gore ways exist for doing this (cf prettyDot, which is not so pretty). Actually, we take one parameter, which is an integer (the current tag) and an other integer parameter, which is the parent node to which we should create an edge. Whenever we create a new node, make an edge to the father, and we increment the tag. Now the new node is a father for all of its sons. Colors for each node are added, according to the type of the node (unary, binary operation, label, function call, ...), and those colors were chosen randomly by a Drunken Sailor. 
