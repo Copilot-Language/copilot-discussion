@@ -1,10 +1,10 @@
 \section{Compiling Copilot}~\label{sec:compile}
 
-This section describes hot to compile the Copilot code in a Cabal sandbox.
+This section describes how to compile the Copilot code in a Cabal sandbox.
 
 What you need to do : 
 \begin{enumerate}
-\item First install all the useful stuff : CompCert (2.4 or later, coq needed, opam recommanded), Frama-c (version sodium or later), Z3 (at least 4.3.2), CVC4 (at least 1.4), ghc 7.10 or later (and its whole toolchain, like the haskell platform).
+\item First install all the useful stuff : CompCert (2.4 or later, coq needed, opam recommanded), Frama-c (version sodium or later), Z3 (at least 4.3.2), CVC4 (at least 1.4), ghc 7.10 or later (and its whole toolchain, like the haskell platform), GNU parallel, GNU m4.
 \subitem Optionnaly, you could install splint, an up to date gcc (5.1 or later).
 \item Make sure that cabal is installed, and update it to the version 1.22 or later (run \texttt{cabal install cabal cabal-install } for that). 
 \item create a directory named Copilot-Language and cd into it. Then clone the following :
@@ -37,7 +37,7 @@ When you need to update your build here are the steps.
 \subitem Copilot
 \subitem Copilot/lib/*
 \item Then, go in Copilot, and \texttt{make veryclean}, then \texttt{make test}. When it fails, go to sbv and \texttt{cabal sandbox init --sandbox ../Copilot/.cabal-sandbox/} and \texttt{cabal install}. Then go again in Copilot and \texttt{make test}. Then you can go in the examples and make them again (if they do not compile, do a \texttt{cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/})
-\end{enumerate}a
+\end{enumerate}
 
 
 
