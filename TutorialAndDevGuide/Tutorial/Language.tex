@@ -533,7 +533,7 @@ seconds and the engine is not shut off.  Notice there is a latency of one tick b
 \subsection{Explicit Sharing}
 \label{sec:explicit_sharing}
 
-\begin{figure}[ht]
+\begin{figure}[!htb]
 \begin{minipage}{0.5\textwidth}
 \begin{lstlisting}[frame=none]
 s1 = let x = nats + nats
@@ -552,13 +552,15 @@ s2 = local (nats + nats) $
 \end{figure}
 \noindent Copilot facilitates sharing in expressions by the \emph{local}-construct:
 %
-\begin{lstlisting}[frame=single]
+\begin{figure}[!htb]
+\begin{lstlisting}[frame=none]
 local
   :: (Typed a, Typed b)
   => Stream a
   -> (Stream a -> Stream b)
   -> Stream b
 \end{lstlisting}
+\end{figure}
 %
 The local construct works similar to \emph{let}-bindings in ordinary Haskell.
 From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
