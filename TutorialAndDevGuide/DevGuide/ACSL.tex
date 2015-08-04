@@ -45,5 +45,51 @@ For this purpose, three features were implemented.
 	\label{fig:splitting label}
 \end{figure}
 
+\subsection{How to create beautiful dot graphs}
+Dot code is generated automatically in each C source file. You just have to extract it and then generate the graph usit dot.
+The best thing to do, is to use the following C script in \ref{fig:scriptdot} :
+\begin{figure}[!htb]
+\begin{lstlisting}[language=C]
+#include <cstdio>
+#include <cstdlib>
+#include <string.h>
+#include <ctype.h>
 
-TODO : explain how to prove anything.
+#define taille 1000000
+
+char s[taille+1];
+
+int main(int argc, char ** argv)
+{
+   if (argc <= 1) printf("error not enough arguments\n");
+   else if (argc == 2) 
+   {
+      int state = 0;
+      FILE* f = fopen(argv[1],"r+");
+      if (f == NULL) {printf ("Error opening file"); exit(-1);}
+      while(fgets(s,taille, f) != NULL)
+      {
+         if(strstr(s, "DotEnd*/") != NULL) state = 2;
+         if(state == 1) 
+         {
+            if(strstr(s,"?????") != NULL)
+            {   
+               strtok(argv[1],"/");
+               printf("%s%s",strtok (NULL, "/"),s+5);
+            }
+            else printf("%s",s);
+         }
+         if(strstr(s, "/*DotBegin") != NULL) state = 1;
+      }
+      fclose(f);
+      f = NULL;
+   }
+   else if (argc > 2) printf("error too many arguments\n"); 
+
+   return 0;
+}
+
+\end{lstlisting}
+\caption{The C script that does everything}
+\label{fig:scriptdot}
+\end{figure}
