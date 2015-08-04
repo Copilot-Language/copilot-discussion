@@ -2,4 +2,28 @@
 
 \todo{Give an overview of SBV backend}
 
+The SBV backend has a lot of files, some of which are useful, other are useless (and if you have time you should factor all the useless code), and others are AST transformers which are located here because we do not know how to put them elsewhere. 
 
+\subsection{AST transformmers}
+
+\begin{itemize}
+	\item \texttt{Transform.hs}: The one that transforms all math functions to external functions.
+	\item \texttt{ACSLproof.hs}: The one that does the same thing, but for ACSL (splitting abs functions for example using magic labels). (This is a useless code as defined in Section~\ref{sec:sbv})
+	\item \texttt{ACSLexpr.hs}: The one that makes you think that it's a AST transformer, but it is actually a pretty printer (for \texttt{ACSLexpr.hs}).
+	\item \texttt{Copilot2SBV.hs}: The one that is technically one, but is not an official one because it transforms the AST too much to be a transformer (\texttt{Copilot2SBV.hs} which transforms a reified AST from the Core to an SBV AST for an expression). We will call this one a translator.
+\end{itemize}
+
+\subsection{Other useful functions}
+
+\begin{itemize}
+	\item \texttt{Code.hs}: As said previously, Copilot2SBV only transforms the expressions, the rest of the AST is transformed by Code.hs
+	\item \texttt{Common.hs}: Some (almost) useful functions to prepend "ext\_" to strings, or append a number to a string.
+	\item \texttt{Driver.hs}:This create a file called driver.c that contains all the function calls to the ones that you created using the code.hs file.
+	\item \texttt{Makefile.hs}: The most important file, without this one, you would not be able to make the C code generated, or even use splint on it !
+	\item \texttt{Metatable.hs}: the metatable, what else ? (TODO, insert a real description for this one)
+	\item \texttt{Params.hs}: its description is a empty as the file.
+	\item \texttt{Queue.hs}: I don't know
+	\item \texttt{Witness.hs}: A collection of hacks to make everything work with SBV (because ou Floats are Core floats, and SBV is using SBV Floats, so you have to convert everything from to the other). Do not open this file unless you are obliged to.
+\end{itemize}
+
+Everything is centralized in a file named \texttt{SBV.hs} whose only function is to call functions from the other files, in the right order, so that it produces you a non aberrant output.
