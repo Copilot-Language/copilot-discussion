@@ -328,11 +328,7 @@ fwp is detailed in Figure~\ref{fig:fwp}.
 
 \begin{figure*}[!htb]
 	\begin{lstlisting}[frame=none, language=bash]
-parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split \
-{} ::: *.c | tee >logfwp \
->(grep 'Proved\|Unknown\|Timeout\|Failed\|Qed:\s\|CVC4:\s\|Parsing .*\.c' \
-> logfwpcompact) \
->(grep 'Proved\|Qed:\s\|CVC4:\s\|Unknown\|Timeout\|Failed\|Parsing .*\.c')
+parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split {} ::: *.c | tee >logfwp >(grep 'Proved\|Unknown\|Timeout\|Failed\|Qed:\s\|CVC4:\s\|Parsing .*\.c' > logfwpcompact) >(grep 'Proved\|Qed:\s\|CVC4:\s\|Unknown\|Timeout\|Failed\|Parsing .*\.c')
 
 	\end{lstlisting}
 	\caption{The bash command.}
