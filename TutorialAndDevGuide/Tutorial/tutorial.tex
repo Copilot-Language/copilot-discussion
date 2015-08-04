@@ -74,21 +74,25 @@
 %    {\lstset{}%
 %      \csname lst@SetFirstLabel\endcsname}
 %   {\csname lst@SaveFirstLabel\endcsname}
-    \lstset{
-      basicstyle=\small\ttfamily,
-      flexiblecolumns=false,
-     basewidth={0.5em,0.45em},
-      literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
-               {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{${\color{blue}\lambda}$}}1
-               {\\\\}{{\char`\\\char`\\}}1
-               {->}{{${\color{blue}\rightarrow}$}}2 {>=}{{$\geq$}}2 {<-}{{$\leftarrow$}}2
-               {<=}{{$\leq$}}2 {=>}{{$\Rightarrow$}}2
-               {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
-               {>>}{{>>}}2 {>>=}{{>>=}}2
-               {++}{{${\color{blue}++}$}}2
-               {|}{{$\mid$}}1
-   }
-
+\lstnewenvironment{Haskell}
+{
+\lstset{
+    language=Haskell,
+    basicstyle=\small\ttfamily,
+    flexiblecolumns=false,
+    basewidth={0.5em,0.45em},
+    literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
+             {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{${\color{blue}\lambda}$}}1
+             {\\\\}{{\char`\\\char`\\}}1
+             {->}{{${\color{blue}\rightarrow}$}}2 {>=}{{$\geq$}}2 {<-}{{$\leftarrow$}}2
+             {<=}{{$\leq$}}2 {=>}{{$\Rightarrow$}}2
+             {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
+             {>>}{{>>}}2 {>>=}{{>>=}}2
+             {++}{{${\color{blue}++}$}}2
+             {|}{{$\mid$}}1
+}
+}
+{}
 
 
 \definecolor{mygreen}{rgb}{0,0.6,0}

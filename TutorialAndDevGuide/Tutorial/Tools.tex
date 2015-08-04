@@ -327,7 +327,7 @@ summaries the former which is called \texttt{logfwpcompact}. The command make
 fwp is detailed in Figure~\ref{fig:fwp}.
 
 \begin{figure*}[!htb]
-	\begin{lstlisting}[frame=none]
+	\begin{lstlisting}[frame=none, language=bash]
 parallel frama-c -wp -wp-out . -wp-timeout 20 -wp-prover CVC4 -wp-split \
 {} ::: *.c | tee >logfwp \
 >(grep 'Proved\|Unknown\|Timeout\|Failed\|Qed:\s\|CVC4:\s\|Parsing .*\.c' \
