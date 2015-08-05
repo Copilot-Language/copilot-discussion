@@ -1019,11 +1019,53 @@ $d_{cpa} (\textbf{s},\textbf{v}) = \parallel \textbf{s} + t_{cpa}(\textbf{s}, \t
 	
 	Some little problems :
 	\begin{itemize}
-		\item The criterion work on 
+		\item The criterion works on x, y, z, vx, vy, vz coordinates of the state space.
+		\item This space is defined by the following : z is kept the same for all planes, x and y are obtained by projecting the ownship and the intruder on a plane tangent to the earth on the middle point of the great circle that connects the two vertical projection.
+		\item But other systems exist : Mercator projection, euclidean projection, Mercator with Tissot correction...
 	\end{itemize}
 	
 \end{frame}
 
+\begin{frame}[fragile]
+	\begin{figure}[ht!]
+		\centering
+		\footnotesize
+		\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
+		\tikzstyle{every state}=[rectangle, rounded corners]
+		
+		
+		\node[state] (Int) {Interpreter};
+		\node[state] (Lang) [above right of=Int]
+		{
+			\begin{tabular}[b]{l}
+			Copilot Libraries\\ \hline Copilot Language
+			\end{tabular}};
+		\node[state] (Core) [below right of=Lang] {Copilot Core};
+		\node[state] (PP) [right of=Core] {Pretty Printer};
+		
+		
+		\node[state] (Atom) [below left of=Core] {Atom Back-End};
+		\node[state] (SBV) [below right of=Core] {SBV Back-End};
+		\node[state] (C99A) [below of=Atom] {C99};
+		\node[state] (C99S) [below of=SBV] {C99};
+		
+		
+		\tikzstyle{every node}=[]
+		
+		
+		\path 
+		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+		(Core) edge node {Translation} (Atom)
+		edge node {} (SBV)
+		edge node {} (PP)
+		edge node [swap] {Evaluation} (Int)
+		(Int) edge [<->, bend right] node {QuickCheck} (Atom)
+		(Atom) edge node {Compilation} (C99A)
+		(SBV) edge node {Compilation} (C99S)
+		(C99A) edge [<->] node {Model checking} (C99S);
+		\end{tikzpicture}
+	\end{figure}
+\end{frame}
 
 \begin{frame}
 	\frametitle{What's next ?}

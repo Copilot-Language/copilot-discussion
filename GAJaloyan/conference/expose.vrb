@@ -1,7 +1,38 @@
-\frametitle{Well-Clear : Making it work}
+\begin{figure}[ht!]
+^^I^^I\centering
+^^I^^I\footnotesize
+^^I^^I\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
+^^I^^I\tikzstyle{every state}=[rectangle, rounded corners]
 
-^^ISome little problems :
-^^I\begin{itemize}
-^^I^^I\item The criterion work on
-^^I\end{itemize}
 
+^^I^^I\node[state] (Int) {Interpreter};
+^^I^^I\node[state] (Lang) [above right of=Int]
+^^I^^I{
+^^I^^I^^I\begin{tabular}[b]{l}
+^^I^^I^^ICopilot Libraries\\ \hline Copilot Language
+^^I^^I^^I\end{tabular}};
+^^I^^I\node[state] (Core) [below right of=Lang] {Copilot Core};
+^^I^^I\node[state] (PP) [right of=Core] {Pretty Printer};
+
+
+^^I^^I\node[state] (Atom) [below left of=Core] {Atom Back-End};
+^^I^^I\node[state] (SBV) [below right of=Core] {SBV Back-End};
+^^I^^I\node[state] (C99A) [below of=Atom] {C99};
+^^I^^I\node[state] (C99S) [below of=SBV] {C99};
+
+
+^^I^^I\tikzstyle{every node}=[]
+
+
+^^I^^I\path
+^^I^^I(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+^^I^^I(Core) edge node {Translation} (Atom)
+^^I^^Iedge node {} (SBV)
+^^I^^Iedge node {} (PP)
+^^I^^Iedge node [swap] {Evaluation} (Int)
+^^I^^I(Int) edge [<->, bend right] node {QuickCheck} (Atom)
+^^I^^I(Atom) edge node {Compilation} (C99A)
+^^I^^I(SBV) edge node {Compilation} (C99S)
+^^I^^I(C99A) edge [<->] node {Model checking} (C99S);
+^^I^^I\end{tikzpicture}
+^^I\end{figure}

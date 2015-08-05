@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 10:45
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 11:22
 entering extended mode
 **expose.tex
 (expose.tex
@@ -1399,10 +1399,6 @@ LaTeX Info: Redefining \nameref on input line 43.
 
 (expose.out) (expose.out)
 \@outlinefile=\write8
-
-
-Package hyperref Warning: Rerun to get /PageLabels entry.
-
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 43.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
@@ -2156,90 +2152,44 @@ File: images/WCV/graph.pdf Graphic file (type QTm)
 
 ] (expose.vrb) [60
 
-] [61
+] (expose.vrb)
+[61
+
+] [62
 
 ]
-Package atenddvi Info: Last page = 62.
- [62
+Package atenddvi Info: Last page = 63.
+ [63
 
 ]
 \tf@nav=\write9
 \tf@toc=\write10
 \tf@snm=\write11
-runsystem(del "_minted-expose\85A76BD267824D23F52CAF6D66231ACA46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\01B137AC906ACEF66C2D7AAEF9B9583646ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\0408B421A6BFB85C1B6E797087D3C78B46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\0EB6C3A4EDCB056963C21A03EF4F7A4A46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\00E784D8B83A123AB4296371B8B0B03446ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\C28D5F3F010785086908B2FF4CB12C6046ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\B2668A253DD4FBF02B3B18DEE93B491C46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\C8BF16F01E253A03795662A1ADEC2D3746ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\D0476DF5E3F946DD200FE7820D385F3746ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\B4508CC0E65C106120CD3ED1C728C5A946ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\2A259779F278E30C1E0CA5882B41F49E46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\0354E6F7D232806F6C1079F72347AD7546ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\6E7FFB43DBCA2549813CD88D4772DC4E46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\182A91F258AF71F8CE79346FD0FF611746ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\02623AF96689991E160E383318E3893246ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
-runsystem(del "_minted-expose\538FEFE070E77AE26EEE3FAA1C17DC0B46ED800F6AA1892C4
-7506F70ABEDA21D.pygtex")...executed.
-
 runsystem(del "expose.mintedcmd")...executed.
 
 runsystem(del "expose.mintedmd5")...executed.
 
 runsystem(del "expose.pyg")...executed.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1047.
-Package atveryend Info: Executing hook `AfterLastShipout' on input line 1047.
-
-(expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1047.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1047.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1089.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 1089.
+ (expose.aux)
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1089.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1089.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1047.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1089.
  ) 
 Here is how much of TeX's memory you used:
- 37203 strings out of 428790
- 733039 string characters out of 3164815
- 939527 words of memory out of 3000000
+ 37189 strings out of 428790
+ 732007 string characters out of 3164815
+ 941529 words of memory out of 3000000
  39624 multiletter control sequences out of 15000+200000
  18632 words of font info for 69 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
  58i,41n,84p,10347b,1273s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on expose.pdf (62 pages).
+Output written on expose.pdf (63 pages).
