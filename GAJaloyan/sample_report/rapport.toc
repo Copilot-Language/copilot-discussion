@@ -16,7 +16,7 @@
 \contentsline {subsection}{\numberline {2.6}Ensuring traceability}{8}{subsection.2.6}
 \contentsline {section}{\numberline {3}Practical steps}{10}{section.3}
 \contentsline {subsection}{\numberline {3.1}First application : Self-separation criteria}{10}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Second application : TCAS II}{10}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Third application : Well-clear criterion}{11}{subsection.3.3}
-\contentsline {section}{Conclusion}{11}{section*.3}
-\contentsline {section}{Références}{12}{section*.4}
+\contentsline {subsection}{\numberline {3.2}Second application : TCAS II}{11}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Third application : Well-clear criterion}{12}{subsection.3.3}
+\contentsline {section}{Conclusion}{12}{section*.3}
+\contentsline {section}{Références}{13}{section*.4}

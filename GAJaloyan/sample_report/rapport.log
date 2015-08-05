@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 08:55
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 10:01
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1624,13 +1624,27 @@ File: images/label/splitted2.ps Graphic file (type eps)
 LaTeX Warning: Text page 9 contains only floats.
 
 [9]
-Overfull \hbox (28.57039pt too wide) in paragraph at lines 590--590
+File: images/CAMsep.jpg Graphic file (type QTm)
+ <use  "images/CAMsep.jpg" > [10]
+Overfull \hbox (28.57039pt too wide) in paragraph at lines 597--597
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/d
 b0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-
  []
 
 File: images/TCASRA1.jpg Graphic file (type QTm)
-<use  "images/TCASRA1.jpg" > [10] [11] (rapport.bbl
+<use  "images/TCASRA1.jpg" > [11]
+Overfull \hbox (20.38042pt too wide) in paragraph at lines 616--616
+[][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/blob/4
+3beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs| 
+ []
+
+
+Overfull \hbox (18.04042pt too wide) in paragraph at lines 616--616
+[][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/3
+9c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-
+ []
+
+[12] (rapport.bbl
 ** WARNING: IEEEtranS.bst: No hyphenation pattern has been
 ** loaded for the language `English'. Using the pattern for
 ** the default language instead.
@@ -1644,23 +1658,23 @@ runsystem(del "rapport.mintedmd5")...executed.
 
 runsystem(del "rapport.pyg")...executed.
 
- [12
+ [13
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 629.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 629.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 638.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 638.
  (rapport.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 629.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 629.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 629.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 638.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 638.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 638.
  ) 
 Here is how much of TeX's memory you used:
- 41378 strings out of 428790
- 807752 string characters out of 3164815
- 1254660 words of memory out of 3000000
- 44098 multiletter control sequences out of 15000+200000
+ 41383 strings out of 428790
+ 807819 string characters out of 3164815
+ 1254916 words of memory out of 3000000
+ 44102 multiletter control sequences out of 15000+200000
  7891 words of font info for 57 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
  56i,36n,82p,10385b,1209s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on rapport.pdf (13 pages).
+Output written on rapport.pdf (14 pages).

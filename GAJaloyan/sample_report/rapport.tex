@@ -572,7 +572,14 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	The first monitor written in Copilot is an application to the conflict resolution and self-separation recovery criteria elaborated by Dr. César A. Muñoz. 
 	
-	The first criterion about conflict resolution guarantees that even if two planes (one called the \emph{ownship} and the other the \emph{intruder}) have different control algorithm, it is possible to guarantee that they will maintain a safe separation which usually corresponds to a 5 nm horizontal separation and 1000 ft vertically. This gives two sub-criterion, a horizontal and a vertical one. Which can then be assembled into a bigger 3 dimension criterion.
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[width=100mm]{images/CAMsep.jpg}
+		\caption{Visualization of Horizontal Criterion for Conflict Avoidance from \cite{NMH14ATIO}.}
+		\label{fig:CAMsep}
+	\end{figure}
+	
+	The first criterion about conflict resolution (or avoidance) guarantees that even if two planes (one called the \emph{ownship} and the other the \emph{intruder}) have different control algorithm, it is possible to guarantee that they will maintain a safe separation which usually corresponds to a 5 nm horizontal separation and 1000 ft vertically. This gives two sub-criterion, a horizontal (shown in Figure~\ref{fig:CAMsep}) and a vertical one. Which can then be assembled into a bigger 3 dimension criterion.
 	
 	The second criterion about self-separation recovery guarantees that when two planes are in a situation of violation of their safe-separation, the algorithms will be able to recover their safe-separation within $t$ seconds.
 	
@@ -590,21 +597,23 @@ reify spec >>= S.proofACSL S.defaultParams
 	In compiling mode, the copilot toolchain generates only 19 C source files, which are compiled in less than a second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/db0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-sbv-codegen}.
 	
 	\subsection{Second application : TCAS II}
+	
 	The second monitor written in Copilot is an implementation of a simplified TA for TCAS II (Traffic alert and Collision Avoidance System). The TCAS II is a system present on all civilian planes that is composed of two parts : the \emph{Traffic Advisory} (TA) which triggers an audible alert if two planes are too close from each other, and a \emph{Resolution Advisory} (RA) which sends instructions to the pilot in order to avoid collision and recover a safe separation between the two planes. 
 	
 	The TA starts emitting alerts if the intruder plane enters in a safe cylinder (called the TA region) of typically 3.3 nautical miles (nm), which corresponds to 40 seconds before collision. The RA is triggered if the conflicts occurs in the RA region, which typically corresponds to 2.1 nm (or 25 sec). The RA is only giving advice about vertical speeds, and not on heading, as shown in the Figure~\ref{fig:TCASRA1}. 
 	
-	\begin{figure}
+	\begin{figure}[!htb]
 		\centering
 		\includegraphics[width=80mm]{images/TCASRA1.jpg}
-		\caption{The TCAS II resolution advice about vertical speed. The orange zone corresponds to the set of unsafe vertical speeds. The pilot has to maneuver so that its vertical speed gets out of this area. The intruder traffic is shown by the orange square, and the RA given to the other plane is represented by the arrow next to it (here the other traffic also has to descend, as the ownship).}
+		\caption{The TCAS II resolution advice about vertical speed. The orange zone corresponds to the set of unsafe vertical speeds. The pilot has to maneuver so that its vertical speed gets out of this area. The intruder traffic is shown by the orange square, and the RA given to the other plane is represented by the arrow next to it (here the other traffic also has to descend, as the ownship). The two digit number shown is the intruder's altitude relative to the ownship (in hundreds of feet).}
 		\label{fig:TCASRA1}
 	\end{figure}
 	
 	A typical violation starts with an intruder plane entering the TA region, which triggers the audible alert "traffic, traffic". If the violation continues until the RA region, this time the system will evaluate if the resolution advice will be corrective or preventive. The preventive resolution advice, consist in giving indications to maintain altitude or vertical speed to the pilot, so that the collision will not happen. The corrective (and hence the most dangerous), gives indication that have to be followed in order to avoid an imminent collision. In this case an other audible alert is emitted, which either asks to "descend, descend", or "climb, climb NOW", or to "Adjust Vertical Speed, Adjust". When the conflict is definitely avoided, the TCAS sends a message saying  that the situation is "clear of conflict" \footnote{https://www.youtube.com/watch?v=z-6zF9PEtdU} \footnote{https://www.youtube.com/watch?v=OrYqIU0NxHQ}.
 	
-	More specifically, the author implemented two of these features : the TCAS II RA alert, and the discrimination function between the preventive and corrective advice. Those were extracted from the PVS model of the NASA library \footnote{https://github.com/nasa/pvslib/tree/master/TCASII}, which can also be found in \cite{MNC13GNC}.
+	More specifically, the author implemented two of these features : the TCAS II RA alert, and the discrimination function between the preventive and corrective advice. Those were extracted from the PVS model of the NASA library \footnote{https://github.com/nasa/pvslib/tree/master/TCASII}, which can also be found in \cite{MNC13GNC}. 
 	
+	The implementation is 447 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/43beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs}. The proof mode generates 1790 C source files, which are then verified by frama-c in 4 hours and 38 min on an intel i5-4200U\footnote{The whole process is logged in  TODO \\ and a compact log better suited for readability is in  TODO}. In compiling mode, the copilot toolchain generates only 5 C source files, which are compiled in less than two second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/39c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-sbv-codegen}.
 	
 	\subsection{Third application : Well-clear criterion}
 	

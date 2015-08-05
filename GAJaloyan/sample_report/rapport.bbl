@@ -51,6 +51,15 @@ A.~Narkawicz and C.~Mu{\~{n}}oz, ``State-based implicit coordination and
   applications,'' NASA, Langley Research Center, Hampton VA 23681-2199, USA,
   Technical Publication NASA/TP-2011-217067, March 2011.
 
+\bibitem{NMH14ATIO}
+\BIBentryALTinterwordspacing
+A.~Narkawicz, C.~Mu{\~{n}}oz, and G.~Hagen, ``An independent and coordinated
+  criterion for kinematic aircraft maneuvers,'' in \emph{Proceedings of the
+  14th AIAA Aviation Technology, Integration, and Operations (ATIO)
+  Conference}, no. AIAA-2014-2859, Georgia, Atlanta, USA, June 2014. [Online].
+  Available: \url{http://arc.aiaa.org/doi/abs/10.2514/6.2014-2859}
+\BIBentrySTDinterwordspacing
+
 \bibitem{Copilot08}
 NASA, ``The copilot manual,'' 2015.
 

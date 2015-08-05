@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.24)  3 AUG 2015 14:55
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 10:10
 entering extended mode
 **expose.tex
 (expose.tex
@@ -897,26 +897,234 @@ File: listings.cfg 2014/09/06 1.5e listings configuration
 ))
 Package: listings 2014/09/06 1.5e (Carsten Heinz)
 
+("C:\Program Files\MiKTeX 2.9\tex\latex\media9\media9.sty"
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3kernel\expl3.sty"
+Package: expl3 2015/03/01 v5547 L3 programming layer (loader) 
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3kernel\expl3-code.tex"
+Package: expl3 2015/03/01 v5547 L3 programming layer (code) 
+L3 Module: l3bootstrap 2015/02/28 v5542 L3 Bootstrap code
+L3 Module: l3names 2015/02/24 v5535 L3 Namespace for primitives
+L3 Module: l3basics 2015/01/27 v5500 L3 Basic definitions
+L3 Module: l3expan 2014/11/27 v5472 L3 Argument expansion
+L3 Module: l3tl 2015/01/27 v5500 L3 Token lists
+L3 Module: l3str 2015/03/01 v5545 L3 Strings
+L3 Module: l3seq 2014/08/23 v5354 L3 Sequences and stacks
+L3 Module: l3int 2015/02/21 v5529 L3 Integers
+\c_max_int=\count186
+\l_tmpa_int=\count187
+\l_tmpb_int=\count188
+\g_tmpa_int=\count189
+\g_tmpb_int=\count190
+L3 Module: l3quark 2014/08/23 v5354 L3 Quarks
+L3 Module: l3prg 2014/08/23 v5354 L3 Control structures
+\g__prg_map_int=\count191
+L3 Module: l3clist 2014/08/23 v5354 L3 Comma separated lists
+L3 Module: l3token 2014/09/15 v5422 L3 Experimental token manipulation
+L3 Module: l3prop 2014/08/23 v5354 L3 Property lists
+L3 Module: l3msg 2015/02/26 v5537 L3 Messages
+L3 Module: l3file 2014/08/24 v5369 L3 File and I/O operations
+\l_iow_line_count_int=\count192
+\l__iow_target_count_int=\count193
+\l__iow_current_line_int=\count194
+\l__iow_current_word_int=\count195
+\l__iow_current_indentation_int=\count196
+L3 Module: l3skip 2014/08/23 v5354 L3 Dimensions and skips
+Normal \dimen register pool exhausted, switching to extended pool.
+\c_zero_dim=\dimen256
+\c_max_dim=\dimen257
+\l_tmpa_dim=\dimen258
+\l_tmpb_dim=\dimen259
+\g_tmpa_dim=\dimen260
+\g_tmpb_dim=\dimen261
+\c_zero_skip=\skip62
+\c_max_skip=\skip63
+\l_tmpa_skip=\skip64
+\l_tmpb_skip=\skip65
+\g_tmpa_skip=\skip66
+\g_tmpb_skip=\skip67
+\c_zero_muskip=\muskip12
+\c_max_muskip=\muskip13
+\l_tmpa_muskip=\muskip14
+\l_tmpb_muskip=\muskip15
+\g_tmpa_muskip=\muskip16
+\g_tmpb_muskip=\muskip17
+L3 Module: l3keys 2015/01/27 v5500 L3 Key-value interfaces
+\g__keyval_level_int=\count197
+\l_keys_choice_int=\count198
+L3 Module: l3fp 2014/08/22 v5336 L3 Floating points
+\c__fp_leading_shift_int=\count199
+\c__fp_middle_shift_int=\count200
+\c__fp_trailing_shift_int=\count201
+Normal \count register pool exhausted, switching to extended pool.
+\c__fp_big_leading_shift_int=\count277
+\c__fp_big_middle_shift_int=\count278
+\c__fp_big_trailing_shift_int=\count279
+\c__fp_Bigg_leading_shift_int=\count280
+\c__fp_Bigg_middle_shift_int=\count281
+\c__fp_Bigg_trailing_shift_int=\count282
+L3 Module: l3box 2014/08/23 v5354 L3 Experimental boxes
+\c_empty_box=\box63
+\l_tmpa_box=\box64
+\l_tmpb_box=\box65
+\g_tmpa_box=\box66
+\g_tmpb_box=\box67
+L3 Module: l3coffins 2014/08/23 v5354 L3 Coffin code layer
+\l__coffin_internal_box=\box68
+\l__coffin_internal_dim=\dimen262
+\l__coffin_offset_x_dim=\dimen263
+\l__coffin_offset_y_dim=\dimen264
+\l__coffin_x_dim=\dimen265
+\l__coffin_y_dim=\dimen266
+\l__coffin_x_prime_dim=\dimen267
+\l__coffin_y_prime_dim=\dimen268
+\c_empty_coffin=\box69
+\l__coffin_aligned_coffin=\box70
+\l__coffin_aligned_internal_coffin=\box71
+\l_tmpa_coffin=\box72
+\l_tmpb_coffin=\box73
+\l__coffin_display_coffin=\box74
+\l__coffin_display_coord_coffin=\box75
+\l__coffin_display_pole_coffin=\box76
+\l__coffin_display_offset_dim=\dimen269
+\l__coffin_display_x_dim=\dimen270
+\l__coffin_display_y_dim=\dimen271
+L3 Module: l3color 2014/08/23 v5354 L3 Experimental color support
+L3 Module: l3candidates 2015/03/01 v5544 L3 Experimental additions to l3kernel
+\l__box_top_dim=\dimen272
+\l__box_bottom_dim=\dimen273
+\l__box_left_dim=\dimen274
+\l__box_right_dim=\dimen275
+\l__box_top_new_dim=\dimen276
+\l__box_bottom_new_dim=\dimen277
+\l__box_left_new_dim=\dimen278
+\l__box_right_new_dim=\dimen279
+\l__box_internal_box=\box77
+\l__coffin_bounding_shift_dim=\dimen280
+\l__coffin_left_corner_dim=\dimen281
+\l__coffin_right_corner_dim=\dimen282
+\l__coffin_bottom_corner_dim=\dimen283
+\l__coffin_top_corner_dim=\dimen284
+\l__coffin_scaled_total_height_dim=\dimen285
+\l__coffin_scaled_width_dim=\dimen286
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3kernel\l3unicode-data.def"
+File: l3unicode-data.def 2015/03/01 v5544 L3 Unicode data
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3kernel\l3xdvipdfmx.def"
+File: l3xdvidpfmx.def 2015/03/01 v5544 L3 Experimental driver: xdvipdfmx
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3experimental\l3str\l3regex.sty"
+Package: l3regex 2014/11/25 v5471 L3 Experimental regular expressions
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3experimental\l3str\l3tl-build.sty"
+Package: l3tl-build 2014/08/25 v5378 L3 Experimental token list construction
+\l__tl_build_start_index_int=\count283
+\l__tl_build_index_int=\count284
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3experimental\l3str\l3tl-analysis.sty"
+Package: l3tl-analysis 2014/05/06 v4745 L3 Experimental token lists analysis
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3experimental\l3str\l3str.sty"
+Package: l3str 2014/11/25 v5471 L3 Experimental strings
+)
+\l__tl_analysis_normal_int=\count285
+\l__tl_analysis_index_int=\count286
+\l__tl_analysis_nesting_int=\count287
+\l__tl_analysis_type_int=\count288
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3experimental\l3str\l3flag.sty"
+Package: l3flag 2014/11/25 v5471 L3 Experimental flags
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3experimental\l3str\l3str-convert.sty"
+Package: l3str-convert 2014/06/03 v5028 L3 Experimental string encoding convers
+ions
+\l__str_internal_int=\count289
+)
+\l__regex_internal_a_int=\count290
+\l__regex_internal_b_int=\count291
+\l__regex_internal_c_int=\count292
+\l__regex_balance_int=\count293
+\l__regex_group_level_int=\count294
+\l__regex_mode_int=\count295
+\l__regex_catcodes_int=\count296
+\l__regex_default_catcodes_int=\count297
+\c__regex_catcode_L_int=\count298
+\c__regex_catcode_O_int=\count299
+\c__regex_catcode_A_int=\count300
+\c__regex_all_catcodes_int=\count301
+\l__regex_show_lines_int=\count302
+\l__regex_min_state_int=\count303
+\l__regex_max_state_int=\count304
+\l__regex_left_state_int=\count305
+\l__regex_right_state_int=\count306
+\l__regex_capturing_group_int=\count307
+\l__regex_min_pos_int=\count308
+\l__regex_max_pos_int=\count309
+\l__regex_current_pos_int=\count310
+\l__regex_start_pos_int=\count311
+\l__regex_success_pos_int=\count312
+\l__regex_current_char_int=\count313
+\l__regex_current_catcode_int=\count314
+\l__regex_last_char_int=\count315
+\l__regex_case_changed_char_int=\count316
+\l__regex_current_state_int=\count317
+\l__regex_step_int=\count318
+\l__regex_min_active_int=\count319
+\l__regex_max_active_int=\count320
+\l__regex_replacement_csnames_int=\count321
+\l__regex_match_count_int=\count322
+\l__regex_submatch_int=\count323
+\l__regex_zeroth_submatch_int=\count324
+) ("C:\Program Files\MiKTeX 2.9\tex\latex\l3packages\l3keys2e\l3keys2e.sty"
+Package: l3keys2e 2014/11/25 v5471 LaTeX2e option processing using LaTeX3 keys
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\l3packages\xparse\xparse.sty"
+Package: xparse 2014/11/25 v5471 L3 Experimental document command parser
+\l__xparse_current_arg_int=\count325
+\l__xparse_m_args_int=\count326
+\l__xparse_mandatory_args_int=\count327
+\l__xparse_processor_int=\count328
+\l__xparse_v_nesting_int=\count329
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\atenddvi.sty"
+Package: atenddvi 2007/04/17 v1.1 At end DVI hook (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\zref-abspage.sty"
+Package: zref-abspage 2012/04/04 v2.24 Module abspage for zref (HO)
+
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\zref-base.sty"
+Package: zref-base 2012/04/04 v2.24 Module base for zref (HO)
+Package zref Info: New property list: main on input line 759.
+Package zref Info: New property: default on input line 760.
+Package zref Info: New property: page on input line 761.
+)
+\c@abspage=\count330
+Package zref Info: New property: abspage on input line 62.
+)
+("C:\Program Files\MiKTeX 2.9\tex\latex\oberdiek\zref-lastpage.sty"
+Package: zref-lastpage 2012/04/04 v2.24 Module lastpage for zref (HO)
+Package zref Info: New property list: LastPage on input line 55.
+))
+("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\frontendlayer\tikz.sty"
 ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\basiclayer\pgf.sty"
 Package: pgf 2013/12/18 v3.0.0 (rcs-revision 1.14)
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\modules\pgfmoduleshapes.code.tex"
 File: pgfmoduleshapes.code.tex 2013/10/31  (rcs-revision 1.34)
-\pgfnodeparttextbox=\box63
+\pgfnodeparttextbox=\box78
 ) ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\modules\pgfmoduleplot.code.tex"
 File: pgfmoduleplot.code.tex 2013/07/31  (rcs-revision 1.12)
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\compatibility\pgfcomp-version-0-65.
 sty"
 Package: pgfcomp-version-0-65 2007/07/03 v3.0.0 (rcs-revision 1.7)
-\pgf@nodesepstart=\dimen211
-\pgf@nodesepend=\dimen212
+\pgf@nodesepstart=\dimen287
+\pgf@nodesepend=\dimen288
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\compatibility\pgfcomp-version-1-18.
 sty"
 Package: pgfcomp-version-1-18 2007/07/23 v3.0.0 (rcs-revision 1.1)
-)) ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\frontendlayer\tikz.sty"
-("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgffor.sty"
+)) ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgffor.sty"
 ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\utilities\pgfkeys.sty"
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\utilities\pgfkeys.code.tex"))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\pgf\math\pgfmath.sty"
@@ -925,8 +1133,8 @@ Package: pgfcomp-version-1-18 2007/07/23 v3.0.0 (rcs-revision 1.1)
 Package: pgffor 2013/12/13 v3.0.0 (rcs-revision 1.25)
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\math\pgfmath.code.tex")
-\pgffor@iter=\dimen213
-\pgffor@skip=\dimen214
+\pgffor@iter=\dimen289
+\pgffor@skip=\dimen290
 \pgffor@stack=\toks52
 \pgffor@toks=\toks53
 ))
@@ -936,36 +1144,68 @@ Package: tikz 2013/12/13 v3.0.0 (rcs-revision 1.142)
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\libraries\pgflibraryplothandlers.
 code.tex"
 File: pgflibraryplothandlers.code.tex 2013/08/31 v3.0.0 (rcs-revision 1.20)
-\pgf@plot@mark@count=\count186
-\pgfplotmarksize=\dimen215
+\pgf@plot@mark@count=\count331
+\pgfplotmarksize=\dimen291
 )
-\tikz@lastx=\dimen216
-\tikz@lasty=\dimen217
-\tikz@lastxsaved=\dimen218
-\tikz@lastysaved=\dimen219
-\tikzleveldistance=\dimen220
-\tikzsiblingdistance=\dimen221
-\tikz@figbox=\box64
-\tikz@figbox@bg=\box65
-\tikz@tempbox=\box66
-\tikz@tempbox@bg=\box67
-\tikztreelevel=\count187
-\tikznumberofchildren=\count188
-\tikznumberofcurrentchild=\count189
-\tikz@fig@count=\count190
+\tikz@lastx=\dimen292
+\tikz@lasty=\dimen293
+\tikz@lastxsaved=\dimen294
+\tikz@lastysaved=\dimen295
+\tikzleveldistance=\dimen296
+\tikzsiblingdistance=\dimen297
+\tikz@figbox=\box79
+\tikz@figbox@bg=\box80
+\tikz@tempbox=\box81
+\tikz@tempbox@bg=\box82
+\tikztreelevel=\count332
+\tikznumberofchildren=\count333
+\tikznumberofcurrentchild=\count334
+\tikz@fig@count=\count335
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\modules\pgfmodulematrix.code.tex"
 File: pgfmodulematrix.code.tex 2013/09/17  (rcs-revision 1.8)
-\pgfmatrixcurrentrow=\count191
-\pgfmatrixcurrentcolumn=\count192
-\pgf@matrix@numberofcolumns=\count193
+\pgfmatrixcurrentrow=\count336
+\pgfmatrixcurrentcolumn=\count337
+\pgf@matrix@numberofcolumns=\count338
 )
-\tikz@expandcount=\count194
+\tikz@expandcount=\count339
 
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikz
 librarytopaths.code.tex"
 File: tikzlibrarytopaths.code.tex 2008/06/17 v3.0.0 (rcs-revision 1.2)
 )))
+Package: media9 2015/03/11 v0.51 acrobat-9/X compatible media
+\g_mix_pkgresizeflag_int=\count340
+\l_mix_poster_box=\box83
+\g_mix_wd_dim=\dimen298
+\g_mix_ht_dim=\dimen299
+\g_mix_dp_dim=\dimen300
+\g_mix_rmcnt_int=\count341
+\l_mix_viewcnt_int=\count342
+\g@mix@page@int=\count343
+\g_mix_obj_int=\count344
+\g_mix_oc_int=\count345
+\g_mix_resizeflag_int=\count346
+\l_mix_lineno_int=\count347
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \addmediapath with sig. 'm' on line 1322.
+.................................................
+\l_mix_pbtn_box=\box84
+\mix@btn@dim=\dimen301
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \includemedia with sig. 'O{}mm' on line 1680.
+.................................................
+\g_mix_mbtncnt_int=\count348
+.................................................
+. LaTeX info: "xparse/define-command"
+. 
+. Defining command \mediabutton with sig. 'O{}m' on line 2886.
+.................................................
+)
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikz
 libraryarrows.code.tex"
 File: tikzlibraryarrows.code.tex 2008/01/09 v3.0.0 (rcs-revision 1.1)
@@ -973,7 +1213,7 @@ File: tikzlibraryarrows.code.tex 2008/01/09 v3.0.0 (rcs-revision 1.1)
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\libraries\pgflibraryarrows.code.t
 ex"
 File: pgflibraryarrows.code.tex 2013/09/23 v3.0.0 (rcs-revision 1.16)
-\arrowsize=\dimen222
+\arrowsize=\dimen302
 ))
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikz
 libraryautomata.code.tex"
@@ -987,26 +1227,26 @@ File: tikzlibraryshapes.multipart.code.tex 2008/01/09 v3.0.0 (rcs-revision 1.1)
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\libraries\shapes\pgflibraryshapes
 .multipart.code.tex"
 File: pgflibraryshapes.multipart.code.tex 2010/01/07 v3.0.0 (rcs-revision 1.2)
-\pgfnodepartlowerbox=\box68
-\pgfnodeparttwobox=\box69
-\pgfnodepartthreebox=\box70
-\pgfnodepartfourbox=\box71
-\pgfnodeparttwentybox=\box72
-\pgfnodepartnineteenbox=\box73
-\pgfnodeparteighteenbox=\box74
-\pgfnodepartseventeenbox=\box75
-\pgfnodepartsixteenbox=\box76
-\pgfnodepartfifteenbox=\box77
-\pgfnodepartfourteenbox=\box78
-\pgfnodepartthirteenbox=\box79
-\pgfnodeparttwelvebox=\box80
-\pgfnodepartelevenbox=\box81
-\pgfnodeparttenbox=\box82
-\pgfnodepartninebox=\box83
-\pgfnodeparteightbox=\box84
-\pgfnodepartsevenbox=\box85
-\pgfnodepartsixbox=\box86
-\pgfnodepartfivebox=\box87
+\pgfnodepartlowerbox=\box85
+\pgfnodeparttwobox=\box86
+\pgfnodepartthreebox=\box87
+\pgfnodepartfourbox=\box88
+\pgfnodeparttwentybox=\box89
+\pgfnodepartnineteenbox=\box90
+\pgfnodeparteighteenbox=\box91
+\pgfnodepartseventeenbox=\box92
+\pgfnodepartsixteenbox=\box93
+\pgfnodepartfifteenbox=\box94
+\pgfnodepartfourteenbox=\box95
+\pgfnodepartthirteenbox=\box96
+\pgfnodeparttwelvebox=\box97
+\pgfnodepartelevenbox=\box98
+\pgfnodeparttenbox=\box99
+\pgfnodepartninebox=\box100
+\pgfnodeparteightbox=\box101
+\pgfnodepartsevenbox=\box102
+\pgfnodepartsixbox=\box103
+\pgfnodepartfivebox=\box104
 )))
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tikz-cd\tikz-cd.sty"
 Package: tikz-cd 2014/10/30 v0.9e Commutative diagrams with tikz
@@ -1023,10 +1263,10 @@ File: tikzlibraryquotes.code.tex 2013/08/28 v3.0.0 (rcs-revision 1.3)
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\libraries\pgflibraryarrows.meta.c
 ode.tex"
 File: pgflibraryarrows.meta.code.tex 2013/12/13 v3.0.0 (rcs-revision 1.12)
-\pgfarrowinset=\dimen223
-\pgfarrowlength=\dimen224
-\pgfarrowwidth=\dimen225
-\pgfarrowlinewidth=\dimen226
+\pgfarrowinset=\dimen303
+\pgfarrowlength=\dimen304
+\pgfarrowwidth=\dimen305
+\pgfarrowlinewidth=\dimen306
 )))
 ("C:\Program Files\MiKTeX 2.9\tex\generic\pgf\frontendlayer\tikz\libraries\tikz
 librarypositioning.code.tex"
@@ -1035,79 +1275,78 @@ File: tikzlibrarypositioning.code.tex 2008/10/06 v3.0.0 (rcs-revision 1.7)
 Invalid UTF-8 byte or sequence at line 3 replaced by U+FFFD.
 Package: mathpartir 2005/12/20 version 1.2.0 Math Paragraph for Typesetting Inf
 erence Rules
-\mpr@andskip=\skip62
+\mpr@andskip=\skip68
 \mpr@lista=\toks54
 \mpr@listb=\toks55
-\mpr@hlist=\box88
-\mpr@vlist=\box89
-\mpr@right=\box90
+\mpr@hlist=\box105
+\mpr@vlist=\box106
+\mpr@right=\box107
 )
 ("C:\Program Files\MiKTeX 2.9\tex\latex\tools\multicol.sty"
 Package: multicol 2014/10/28 v1.8i multicolumn formatting (FMi)
-\c@tracingmulticols=\count195
-\mult@box=\box91
-\multicol@leftmargin=\dimen227
-\c@unbalance=\count196
-\c@collectmore=\count197
-\doublecol@number=\count198
-\multicoltolerance=\count199
-\multicolpretolerance=\count200
-\full@width=\dimen228
-\page@free=\dimen229
-\premulticols=\dimen230
-\postmulticols=\dimen231
-\multicolsep=\skip63
-\multicolbaselineskip=\skip64
-\partial@page=\box92
-\last@line=\box93
-\maxbalancingoverflow=\dimen232
-\mult@rightbox=\box94
-\mult@grightbox=\box95
-\mult@gfirstbox=\box96
-\mult@firstbox=\box97
-\@tempa=\box98
-\@tempa=\box99
-\@tempa=\box100
-\@tempa=\box101
-\@tempa=\box102
-\@tempa=\box103
-\@tempa=\box104
-\@tempa=\box105
-\@tempa=\box106
-\@tempa=\box107
-\@tempa=\box108
-\@tempa=\box109
-\@tempa=\box110
-\@tempa=\box111
-\@tempa=\box112
-\@tempa=\box113
-\@tempa=\box114
-\c@columnbadness=\count201
-\c@finalcolumnbadness=\count202
-\last@try=\dimen233
-Normal \dimen register pool exhausted, switching to extended pool.
-\multicolovershoot=\dimen256
-\multicolundershoot=\dimen257
-\mult@nat@firstbox=\box115
-\colbreak@box=\box116
-\mc@col@check@num=\count203
+\c@tracingmulticols=\count349
+\mult@box=\box108
+\multicol@leftmargin=\dimen307
+\c@unbalance=\count350
+\c@collectmore=\count351
+\doublecol@number=\count352
+\multicoltolerance=\count353
+\multicolpretolerance=\count354
+\full@width=\dimen308
+\page@free=\dimen309
+\premulticols=\dimen310
+\postmulticols=\dimen311
+\multicolsep=\skip69
+\multicolbaselineskip=\skip70
+\partial@page=\box109
+\last@line=\box110
+\maxbalancingoverflow=\dimen312
+\mult@rightbox=\box111
+\mult@grightbox=\box112
+\mult@gfirstbox=\box113
+\mult@firstbox=\box114
+\@tempa=\box115
+\@tempa=\box116
+\@tempa=\box117
+\@tempa=\box118
+\@tempa=\box119
+\@tempa=\box120
+\@tempa=\box121
+\@tempa=\box122
+\@tempa=\box123
+\@tempa=\box124
+\@tempa=\box125
+\@tempa=\box126
+\@tempa=\box127
+\@tempa=\box128
+\@tempa=\box129
+\@tempa=\box130
+\@tempa=\box131
+\c@columnbadness=\count355
+\c@finalcolumnbadness=\count356
+\last@try=\dimen313
+\multicolovershoot=\dimen314
+\multicolundershoot=\dimen315
+\mult@nat@firstbox=\box132
+\colbreak@box=\box133
+\mc@col@check@num=\count357
 ) (expose.aux)
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
 
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -1143,8 +1382,8 @@ LaTeX Font Info:    ... okay on input line 42.
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 ABD: EveryShipout initializing macros
-\AtBeginShipoutBox=\box117
-Package hyperref Info: Link coloring OFF on input line 42.
+\AtBeginShipoutBox=\box134
+Package hyperref Info: Link coloring OFF on input line 43.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\hyperref\nameref.sty"
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -1152,66 +1391,66 @@ Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
 ("C:\Program Files\MiKTeX 2.9\tex\generic\oberdiek\gettitlestring.sty"
 Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
-\c@section@level=\count204
+\c@section@level=\count358
 )
-LaTeX Info: Redefining \ref on input line 42.
-LaTeX Info: Redefining \pageref on input line 42.
-LaTeX Info: Redefining \nameref on input line 42.
+LaTeX Info: Redefining \ref on input line 43.
+LaTeX Info: Redefining \pageref on input line 43.
+LaTeX Info: Redefining \nameref on input line 43.
 
 (expose.out) (expose.out)
 \@outlinefile=\write8
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 42.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 43.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 42.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 43.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 42.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 42.
+(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 42.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 42.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 42.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 43.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 42.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 42.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 42.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 43.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 42.
+(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 42.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 42.
+(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 43.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 42.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 42.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 43.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 42.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 43.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 42.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 42.
+(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 42.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 42.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 42.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 43.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 42.
-LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 42.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 43.
+LaTeX Font Info:    Redeclaring symbol font `pureletters' on input line 43.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `normal'
 (Font)                  OT1/cmss/m/it --> OT1/mathkerncmss/m/sl on input line 4
-2.
+3.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/cmss/bx/it --> OT1/mathkerncmss/m/sl on input line 
-42.
+43.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
 (Font)                  OT1/mathkerncmss/m/sl --> OT1/mathkerncmss/bx/sl on inp
-ut line 42.
+ut line 43.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\beamer\base\translator\dicts\translator
 -basic-dictionary\translator-basic-dictionary-English.dict"
@@ -1237,9 +1476,9 @@ Dictionary: translator-numbers-dictionary, Language: English
 -theorem-dictionary\translator-theorem-dictionary-English.dict"
 Dictionary: translator-theorem-dictionary, Language: English 
 )
-LaTeX Info: Redefining \includegraphics on input line 42.
+LaTeX Info: Redefining \includegraphics on input line 43.
 Requested font "cmss8" at 6.0pt
-\c@lstlisting=\count205
+\c@lstlisting=\count359
  (expose.nav)
 Requested font "cmss12" at 14.4pt
 Requested font "cmss8" at 7.0pt
@@ -1253,7 +1492,7 @@ File: images/NIA-logo.jpg Graphic file (type QTm)
 <use  "images/NIA-logo.jpg" >
 
 LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 50.
+(Font)              size <5> substituted on input line 51.
 
 Requested font "cmss8" at 5.0pt
 [1
@@ -1721,7 +1960,7 @@ Overfull \hbox (26.60948pt too wide) in paragraph at lines 8--9
 ] (expose.vrb) [25
 
 ] (expose.vrb)
-Overfull \vbox (7.95334pt too high) detected at line 472
+Overfull \vbox (7.95334pt too high) detected at line 473
  []
 
 [26
@@ -1753,7 +1992,7 @@ Overfull \hbox (1.40953pt too wide) in paragraph at lines 8--9
  []
 
 )
-Overfull \vbox (0.52415pt too high) detected at line 636
+Overfull \vbox (0.52415pt too high) detected at line 637
  []
 
 [36
@@ -1761,7 +2000,7 @@ Overfull \vbox (0.52415pt too high) detected at line 636
 ] (expose.vrb
 File: images/graph.ps Graphic file (type eps)
  <images/graph.ps>)
-Overfull \vbox (7.07498pt too high) detected at line 645
+Overfull \vbox (7.07498pt too high) detected at line 646
  []
 
 [37
@@ -1845,7 +2084,36 @@ Overfull \hbox (1.40953pt too wide) in paragraph at lines 11--12
 
 ] (expose.vrb) [50
 
-] (expose.toc) [51
+] (expose.vrb
+\g__file_internal_ior=\read4
+ <VPlayer.swf>
+<images/TCAS.mp4>
+Missing character: There is no ( in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no , in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no i in font nullfont!
+Missing character: There is no r in font nullfont!
+Missing character: There is no c in font nullfont!
+Missing character: There is no l in font nullfont!
+Missing character: There is no e in font nullfont!
+Missing character: There is no ( in font nullfont!
+Missing character: There is no 0 in font nullfont!
+Missing character: There is no . in font nullfont!
+Missing character: There is no 4 in font nullfont!
+Missing character: There is no ) in font nullfont!
+Missing character: There is no ; in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no p in font nullfont!
+Missing character: There is no b in font nullfont!
+Missing character: There is no p in font nullfont!
+) [51
+
+] (expose.vrb) [52
+
+] (expose.toc) [53
 
 ] (expose.vrb
 File: images/WCV/tau.pdf Graphic file (type QTm)
@@ -1855,14 +2123,14 @@ File: images/WCV/tcpa.pdf Graphic file (type QTm)
  <use  "images/WCV/tcpa.pdf" >
 File: images/WCV/taumod.pdf Graphic file (type QTm)
 
-<use  "images/WCV/taumod.pdf" >) [52
+<use  "images/WCV/taumod.pdf" >) [54
 
 ] (expose.vrb
 File: images/WCV/tep.pdf Graphic file (type QTm)
  <use  "images/WCV/tep.pdf" >
 File: images/WCV/theta.pdf Graphic file (type QTm)
 
-<use  "images/WCV/theta.pdf" >) [53
+<use  "images/WCV/theta.pdf" >) [55
 
 ] (expose.vrb
 File: images/WCV/wcv.pdf Graphic file (type QTm)
@@ -1872,19 +2140,21 @@ Overfull \hbox (19.48447pt too wide) in paragraph at lines 5--5
  []
 
 File: images/WCV/tcoa.pdf Graphic file (type QTm)
-<use  "images/WCV/tcoa.pdf" >) [54
+<use  "images/WCV/tcoa.pdf" >) [56
 
 ] (expose.vrb
 File: images/WCV/graph.pdf Graphic file (type QTm)
- <use  "images/WCV/graph.pdf" >) [55
+ <use  "images/WCV/graph.pdf" >) [57
 
-] (expose.vrb) [56
+] (expose.vrb) [58
 
-] (expose.vrb) [57
+] (expose.vrb) [59
 
-] [58
+] [60
 
-] [59
+]
+Package atenddvi Info: Last page = 61.
+ [61
 
 ]
 \tf@nav=\write9
@@ -1896,25 +2166,25 @@ runsystem(del "expose.mintedmd5")...executed.
 
 runsystem(del "expose.pyg")...executed.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1019.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1019.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1037.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 1037.
  (expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1019.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1019.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1037.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1037.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1019.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1037.
  ) 
 Here is how much of TeX's memory you used:
- 29317 strings out of 428790
- 560845 string characters out of 3164815
- 780756 words of memory out of 3000000
- 31815 multiletter control sequences out of 15000+200000
+ 37181 strings out of 428790
+ 731931 string characters out of 3164815
+ 938278 words of memory out of 3000000
+ 39620 multiletter control sequences out of 15000+200000
  18632 words of font info for 69 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
- 58i,41n,84p,933b,1273s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 58i,41n,84p,10347b,1273s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on expose.pdf (59 pages).
+Output written on expose.pdf (61 pages).

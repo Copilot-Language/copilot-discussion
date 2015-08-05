@@ -5,6 +5,7 @@
 \newcommand\TestAppExists[3]{#2}
 \usepackage{minted}
 \usepackage{listings}
+\usepackage{media9}
 
 \usepackage{pgf}
 \usepackage{tikz}
@@ -39,7 +40,7 @@
   \institute{\'Ecole Normale Sup\'erieure, NASA Langley Research center, National Institute of Aerospace}
   \date{August 12, 2015}
   
-  \begin{document}
+\begin{document}
 \begin{frame}
   		
   		\titlepage
@@ -891,6 +892,23 @@ parallel frama-c -wp -wp-out . -wp-timeout 20
 \subsection{TCAS II}
 \begin{frame}
 	\tableofcontents[currentsubsection,sectionstyle=show/shaded,subsectionstyle=show/shaded/hide]
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{TCAS II}
+	TCAS II (Traffic alert and Collision Avoidance System). Two parts 
+	\begin{itemize}
+		\item \emph{Traffic Advisory} (TA) which triggers an audible alert if two planes are too close from each other.
+		\item \emph{Resolution Advisory} (RA) which sends instructions to the pilot in order to avoid collision and recover a safe separation between the two planes. Only instructions about vertical speeds and positions are sent.
+	\end{itemize}
+	
+	The TA starts emitting alerts if the intruder plane enters in a safe cylinder (called the TA region) of typically 3.3 nautical miles (nm), which corresponds to 40 seconds before collision. 
+	
+	The RA is triggered if the conflicts occurs in the RA region, which typically corresponds to 2.1 nm (or 25 sec).  
+\end{frame}
+
+\begin{frame}[fragile]
+\includemedia[activate=pageopen,width=300pt,height=200pt,addresource=images/TCAS.mp4, flashvars={source=images/TCAS.mp4}]{}{VPlayer.swf}
 \end{frame}
 
 \begin{frame}[fragile]
