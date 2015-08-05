@@ -603,6 +603,9 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	A typical violation starts with an intruder plane entering the TA region, which triggers the audible alert "traffic, traffic". If the violation continues until the RA region, this time the system will evaluate if the resolution advice will be corrective or preventive. The preventive resolution advice, consist in giving indications to maintain altitude or vertical speed to the pilot, so that the collision will not happen. The corrective (and hence the most dangerous), gives indication that have to be followed in order to avoid an imminent collision. In this case an other audible alert is emitted, which either asks to "descend, descend", or "climb, climb NOW", or to "Adjust Vertical Speed, Adjust". When the conflict is definitely avoided, the TCAS sends a message saying  that the situation is "clear of conflict" \footnote{https://www.youtube.com/watch?v=z-6zF9PEtdU} \footnote{https://www.youtube.com/watch?v=OrYqIU0NxHQ}.
 	
+	More specifically, the author implemented two of these features : the TCAS II RA alert, and the discrimination function between the preventive and corrective advice. Those were extracted from the PVS model of the NASA library \footnote{https://github.com/nasa/pvslib/tree/master/TCASII}, which can also be found in \cite{MNC13GNC}.
+	
+	
 	\subsection{Third application : Well-clear criterion}
 	
 	\section*{Conclusion}
