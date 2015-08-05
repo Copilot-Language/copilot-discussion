@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 11:22
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 13:44
 entering extended mode
 **expose.tex
 (expose.tex
@@ -2171,23 +2171,23 @@ runsystem(del "expose.mintedmd5")...executed.
 
 runsystem(del "expose.pyg")...executed.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1089.
-Package atveryend Info: Executing hook `AfterLastShipout' on input line 1089.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1083.
+Package atveryend Info: Executing hook `AfterLastShipout' on input line 1083.
  (expose.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1089.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1089.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 1083.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 1083.
 
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1089.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1083.
  ) 
 Here is how much of TeX's memory you used:
- 37189 strings out of 428790
- 732007 string characters out of 3164815
+ 37232 strings out of 428790
+ 732562 string characters out of 3164815
  941529 words of memory out of 3000000
- 39624 multiletter control sequences out of 15000+200000
+ 39667 multiletter control sequences out of 15000+200000
  18632 words of font info for 69 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
  58i,41n,84p,10347b,1273s stack positions out of 5000i,500n,10000p,200000b,50000s

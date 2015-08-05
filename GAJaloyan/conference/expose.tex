@@ -1027,42 +1027,36 @@ $d_{cpa} (\textbf{s},\textbf{v}) = \parallel \textbf{s} + t_{cpa}(\textbf{s}, \t
 \end{frame}
 
 \begin{frame}[fragile]
+	\frametitle{Well-Clear : Global structure}
 	\begin{figure}[ht!]
 		\centering
 		\footnotesize
 		\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
 		\tikzstyle{every state}=[rectangle, rounded corners]
 		
-		
-		\node[state] (Int) {Interpreter};
-		\node[state] (Lang) [above right of=Int]
-		{
-			\begin{tabular}[b]{l}
-			Copilot Libraries\\ \hline Copilot Language
-			\end{tabular}};
-		\node[state] (Core) [below right of=Lang] {Copilot Core};
-		\node[state] (PP) [right of=Core] {Pretty Printer};
+		\node[state] (Plane) {Plane};
+		\node[state] (GUI) [right of=Plane] {GUI};
+		\node[state] (Mon) [right=2cm of GUI] {monitor.c};
+		\node[state] (dr) [right of=Mon] {driver.c};
+		\node[state] (ex) [above right of=Mon] {external};
 		
 		
-		\node[state] (Atom) [below left of=Core] {Atom Back-End};
-		\node[state] (SBV) [below right of=Core] {SBV Back-End};
-		\node[state] (C99A) [below of=Atom] {C99};
-		\node[state] (C99S) [below of=SBV] {C99};
+		\node[state] (AL) [below of=GUI] {ALERT};
+		\node[state] (Co) [below of=Mon] {Converter};
 		
 		
 		\tikzstyle{every node}=[]
 		
 		
-		\path 
-		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
-		(Core) edge node {Translation} (Atom)
-		edge node {} (SBV)
-		edge node {} (PP)
-		edge node [swap] {Evaluation} (Int)
-		(Int) edge [<->, bend right] node {QuickCheck} (Atom)
-		(Atom) edge node {Compilation} (C99A)
-		(SBV) edge node {Compilation} (C99S)
-		(C99A) edge [<->] node {Model checking} (C99S);
+		\path
+		(Plane) edge node {UDP} (GUI)
+		(GUI) edge [bend right] node {stdin} (Mon)
+		(Mon) edge [bend right] node {stdout} (GUI)
+		(Mon) edge [bend left, anchor=west] node {lat-long} (Co)
+		(Co) edge [bend left, anchor=west] node[left] {x,y,z} (Mon)
+		(Mon) edge [anchor=west] node {assign} (ex)
+		(Mon) edge [anchor=south] node {call} (dr)
+		(GUI) edge node {} (AL);
 		\end{tikzpicture}
 	\end{figure}
 \end{frame}

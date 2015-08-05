@@ -1,38 +1,32 @@
-\begin{figure}[ht!]
+\frametitle{Well-Clear : Global structure}
+^^I\begin{figure}[ht!]
 ^^I^^I\centering
 ^^I^^I\footnotesize
 ^^I^^I\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
 ^^I^^I\tikzstyle{every state}=[rectangle, rounded corners]
 
-
-^^I^^I\node[state] (Int) {Interpreter};
-^^I^^I\node[state] (Lang) [above right of=Int]
-^^I^^I{
-^^I^^I^^I\begin{tabular}[b]{l}
-^^I^^I^^ICopilot Libraries\\ \hline Copilot Language
-^^I^^I^^I\end{tabular}};
-^^I^^I\node[state] (Core) [below right of=Lang] {Copilot Core};
-^^I^^I\node[state] (PP) [right of=Core] {Pretty Printer};
+^^I^^I\node[state] (Plane) {Plane};
+^^I^^I\node[state] (GUI) [right of=Plane] {GUI};
+^^I^^I\node[state] (Mon) [right=2cm of GUI] {monitor.c};
+^^I^^I\node[state] (dr) [right of=Mon] {driver.c};
+^^I^^I\node[state] (ex) [above right of=Mon] {external};
 
 
-^^I^^I\node[state] (Atom) [below left of=Core] {Atom Back-End};
-^^I^^I\node[state] (SBV) [below right of=Core] {SBV Back-End};
-^^I^^I\node[state] (C99A) [below of=Atom] {C99};
-^^I^^I\node[state] (C99S) [below of=SBV] {C99};
+^^I^^I\node[state] (AL) [below of=GUI] {ALERT};
+^^I^^I\node[state] (Co) [below of=Mon] {Converter};
 
 
 ^^I^^I\tikzstyle{every node}=[]
 
 
 ^^I^^I\path
-^^I^^I(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
-^^I^^I(Core) edge node {Translation} (Atom)
-^^I^^Iedge node {} (SBV)
-^^I^^Iedge node {} (PP)
-^^I^^Iedge node [swap] {Evaluation} (Int)
-^^I^^I(Int) edge [<->, bend right] node {QuickCheck} (Atom)
-^^I^^I(Atom) edge node {Compilation} (C99A)
-^^I^^I(SBV) edge node {Compilation} (C99S)
-^^I^^I(C99A) edge [<->] node {Model checking} (C99S);
+^^I^^I(Plane) edge node {UDP} (GUI)
+^^I^^I(GUI) edge [bend right] node {stdin} (Mon)
+^^I^^I(Mon) edge [bend right] node {stdout} (GUI)
+^^I^^I(Mon) edge [bend left, anchor=west] node {lat-long} (Co)
+^^I^^I(Co) edge [bend left, anchor=west] node[left] {x,y,z} (Mon)
+^^I^^I(Mon) edge [anchor=west] node {assign} (ex)
+^^I^^I(Mon) edge [anchor=south] node {call} (dr)
+^^I^^I(GUI) edge node {} (AL);
 ^^I^^I\end{tikzpicture}
 ^^I\end{figure}
