@@ -93,3 +93,52 @@ int main(int argc, char ** argv)
 \caption{The C script that does everything}
 \label{fig:scriptdot}
 \end{figure}
+
+
+To prove anything with ACSL, you should do the following :
+\begin{enumerate}
+	\item First compile with SBV with the function proofACSL (this will generate C source code in copilot-sbv-codegen).
+	\item Go in the directory copilot-sbv-codegen and then do make fwp. This will create two log files, one called logfwp, and another compact one named logfwpcompact.
+	\item You can automatize the whole process with the make file, by looking at the examples for ACSL.
+\end{enumerate}
+
+\begin{figure}[!htb]
+	\begin{lstlisting}[language=C]	
+sandbox:
+	m4 main.hs > tmp.hs
+	cabal exec -- ghc tmp.hs -o main
+	./main
+	
+sindent:
+	m4 main.hs > tmp.hs
+	cabal exec -- ghc -fno-code -ddump-parsed tmp.hs
+
+clean:
+	rm *~
+	rm tmp.hi
+	rm tmp.o
+	rm -rf copilot-c99-codegen
+	rm main
+		
+dot:
+	gcc scriptdot.cpp -o a
+	for i in copilot-sbv-codegen/*; do if [ "$${i}" != "$${i%.c}" ]; \
+	then ./a $$i > $$i.gv; dot -Tps $$i.gv -o $$i.ps; fi; done
+
+acsl:
+	m4 main.hs > tmp.hs
+	cabal exec -- ghc tmp.hs -o main
+	./main
+	make dot
+	make fwp -C copilot-sbv-codegen
+
+compile:
+	m4 -DproofACSL=compile main.hs > tmp.hs
+	cabal exec -- ghc tmp.hs -o main
+	./main
+	make all -C copilot-sbv-codegen
+
+\end{lstlisting}
+	\caption{The makefile that does everything.}
+	\label{fig:makefile}
+\end{figure}
