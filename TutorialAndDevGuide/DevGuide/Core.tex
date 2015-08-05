@@ -6,3 +6,48 @@
 
 
 \todo{Discuss issues we found impedded our implemenation of structs} 
+
+\begin{itemize}
+	\item \texttt{Core.hs} : The main file. Is used for exporting prototypes only.
+\end{itemize}
+
+Folder : Core
+\begin{itemize}
+	\item \texttt{Error.hs} : The file for crashing everything with the functions \texttt{badUsage} and \texttt{impossible}. Use those functions with parsimony (especially impossible, because it will ask the user to send a mail to Lee).
+	\item \texttt{Expr.hs} : The place where the Expressions of the Core AST is defined. 
+	\item \texttt{External.hs} :
+	\item \texttt{Interpret.hs} :
+	\item \texttt{Locals.hs} :
+	\item \texttt{MakeTags.hs} : The file in which you MakeTags. A tag is a unique identifier (a tag), which is added to some nodes of the AST so that it is possible to distinguish them in a map (external variables call, etc ...).
+	\item \texttt{Operators.hs} : The place where all the operators of the Core AST are defined.
+	\item \texttt{PrettyDot.hs} : The dot pretty printer. Cf the section \ref{sec:pretty}
+	\item \texttt{PrettyPrint.hs} : The text pretty printer. Cf the section \ref{sec:pretty}
+	\item \texttt{Random.hs} :
+	\item \texttt{Spec.hs} : The place where the Core AST is defined. This AST is not the same as the Reified AST from the Language module (confusion may occur).
+	\item \texttt{StructMarshal.hs} : Ask ELI TODO.
+	\item \texttt{Type.hs} : 
+\end{itemize}
+
+Subfolder : Type
+\begin{itemize}
+	\item \texttt{Dynamic.hs} :
+	\item \texttt{Eq.hs} : 
+	\item \texttt{Equality.hs} : 
+	\item \texttt{Read.hs} : 
+	\item \texttt{Show.hs} : 
+	\item \texttt{Uninitialized.hs} : 
+\end{itemize}
+
+
+Subfolder : Random
+\begin{itemize}
+	\item \texttt{Gen.hs} :
+	\item \texttt{Weight.hs} : 
+\end{itemize}
+
+
+Subfolder : Interpret
+\begin{itemize}
+	\item \texttt{Eval.hs} :
+	\item \texttt{Render.hs} : 
+\end{itemize}
