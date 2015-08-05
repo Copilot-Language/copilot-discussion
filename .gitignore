@@ -243,3 +243,7 @@ TutorialAndDevGuide/Tutorial/tutorial.pdf
 *.out
 *.synctex.gz
 *.pdf
+*.gz
+GAJaloyan/sample_report/rapport.log
+*.aux
+GAJaloyan/sample_report/rapport.toc

@@ -590,6 +590,12 @@ reify spec >>= S.proofACSL S.defaultParams
 	In compiling mode, the copilot toolchain generates only 19 C source files, which are compiled in less than a second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/db0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-sbv-codegen}.
 	
 	\subsection{Second application : TCAS II}
+	The second monitor written in Copilot is an implementation of a simplified TA for TCAS II (Traffic alert and Collision Avoidance System). The TCAS II is a system present on all civilian planes that is composed of two parts : the \emph{Traffic Advisory} (TA) which triggers an audible alert if two planes are too close from each other, and a \emph{Resolution Advisory} (RA) which sends instructions to the pilot in order to avoid collision and recover a safe separation between the two planes. 
+	
+	The TA starts emitting alerts if the intruder plane enters in a safe cylinder (called the TA region) of typically 3.3 nautical miles (nm), which corresponds to 40 seconds before collision. The RA is triggered if the conflicts occurs in the RA region, which typically corresponds to 2.1 nm (or 25 sec). 
+	
+	A typical violation starts with an intruder plane entering the TA region, which triggers the audible alert "traffic, traffic". If the violation continues until the RA region, this time the system will evaluate if the resolution advice will be corrective or preventive. The preventive resolution advice, consist in giving indications to maintain altitude or vertical speed to the pilot, so that the collision will not happen. The corrective (and hence the most dangerous), gives indication that have to be followed in order to avoid an imminent collision. In this case an other audible alert is emitted, which either asks to "descend, descend", or "climb, climb NOW", or to "Adjust Vertical Speed, Adjust". When the conflict is definitely avoided, the TCAS sends a message saying  that the situation is "clear of conflict" \footnote{https://www.youtube.com/watch?v=-5sA4vPA\_6Q} \footnote{https://www.youtube.com/watch?v=OrYqIU0NxHQ}.
+	
 	\subsection{Third application : Well-clear criterion}
 	
 	\section*{Conclusion}

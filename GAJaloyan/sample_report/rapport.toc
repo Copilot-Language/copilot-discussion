@@ -14,9 +14,9 @@
 \contentsline {subsection}{\numberline {2.4}CompCert.}{7}{subsection.2.4}
 \contentsline {subsection}{\numberline {2.5}Bug finding}{7}{subsection.2.5}
 \contentsline {subsection}{\numberline {2.6}Ensuring traceability}{8}{subsection.2.6}
-\contentsline {section}{\numberline {3}Practical steps}{9}{section.3}
-\contentsline {subsection}{\numberline {3.1}First application : Self-separation criteria}{9}{subsection.3.1}
+\contentsline {section}{\numberline {3}Practical steps}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}First application : Self-separation criteria}{10}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Second application : TCAS II}{10}{subsection.3.2}
-\contentsline {subsection}{\numberline {3.3}Third application : Well-clear criterion}{10}{subsection.3.3}
-\contentsline {section}{Conclusion}{10}{section*.3}
-\contentsline {section}{Références}{11}{section*.4}
+\contentsline {subsection}{\numberline {3.3}Third application : Well-clear criterion}{11}{subsection.3.3}
+\contentsline {section}{Conclusion}{11}{section*.3}
+\contentsline {section}{Références}{12}{section*.4}
