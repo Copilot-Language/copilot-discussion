@@ -247,3 +247,7 @@ TutorialAndDevGuide/Tutorial/tutorial.pdf
 GAJaloyan/sample_report/rapport.log
 *.aux
 GAJaloyan/sample_report/rapport.toc
+GAJaloyan/sample_report/rapport.log
+*.log
+*.mp4
+*.gz
