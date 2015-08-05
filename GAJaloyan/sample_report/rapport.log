@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 10:01
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 14:58
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1636,6 +1636,19 @@ File: images/TCASRA1.jpg Graphic file (type QTm)
 Overfull \hbox (20.38042pt too wide) in paragraph at lines 616--616
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/blob/4
 3beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs| 
+ []
+
+
+Overfull \hbox (142.59149pt too wide) in paragraph at lines 616--616
+[][][]\EU1/lmr/m/n/9 The whole process is logged in https://github.com/Copilot-
+Language/examplesForACSL/blob/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example3
+6/copilot-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 616--616
+\EU1/lmr/m/n/9 and a compact log better suited for readability is in https://ra
+w.githubusercontent.com/Copilot-
  []
 
 
