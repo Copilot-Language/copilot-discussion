@@ -1,0 +1,361 @@
+% $Header$
+
+\documentclass[xcolor={dvipsnames}]{beamer}
+\usepackage{alltt}
+
+\mode<presentation>
+{
+  \usetheme{Warsaw}
+  % or ...
+
+  \setbeamercovered{transparent}
+  % or whatever (possibly just delete it)
+}
+
+
+\usepackage[english]{babel}
+% or whatever
+
+\usepackage[latin1]{inputenc}
+% or whatever
+
+\usepackage{times}
+\usepackage[T1]{fontenc}
+% Or whatever. Note that the encoding and the font should match. If T1
+% does not look nice, try deleting the line with the fontenc.
+
+
+\title[Implementing Structs \& Copilot Insights] % (optional, use only with long paper titles)
+{Structuring Copilot Code}
+
+\subtitle
+{Implementing Structs and Other Insights in Copilot} % (optional)
+
+\author[Mendelson] % (optional, use only with lots of authors)
+{Eli~Mendelson}
+% - Use the \inst{?} command only if the authors have different
+%   affiliation.
+
+\institute[NASA Langley Research Center] % (optional, but mostly needed)
+{
+  Safety-Critical Avionics: Systems Branch\\
+  NASA Langley Research Center}
+% - Use the \inst command only if there are several affiliations.
+% - Keep it simple, no one is interested in your street address.
+
+\date[Intern Presentation] % (optional)
+{August 6, 2015 / Intern Presentation}
+
+\subject{Intern Presentation}
+% This is only inserted into the PDF information catalog. Can be left
+% out. 
+
+
+
+% If you have a file called "university-logo-filename.xxx", where xxx
+% is a graphic format that can be processed by latex or pdflatex,
+% resp., then you can add a logo as follows:
+
+% \pgfdeclareimage[height=0.5cm]{university-logo}{university-logo-filename}
+% \logo{\pgfuseimage{university-logo}}
+\pgfdeclareimage[height=1.25cm]{nasa-logo}{NASA_logo}
+\logo{\pgfuseimage{nasa-logo}}
+
+% Delete this, if you do not want the table of contents to pop up at
+% the beginning of each subsection:
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+
+% If you wish to uncover everything in a step-wise fashion, uncomment
+% the following command: 
+
+%\beamerdefaultoverlayspecification{<+->}
+
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents[pausesections]
+\end{frame}
+
+
+% Since this a solution template for a generic talk, very little can
+% be said about how it should be structured. However, the talk length
+% of between 15min and 45min and the theme suggest that you stick to
+% the following rules:  
+
+% - Exactly two or three sections (other than the summary).
+% - At *most* three subsections per section.
+% - Talk about 30s to 2min per frame. So there should be between about
+%   15 and 30 frames, all told.
+
+\section{Copilot Overview}
+
+\subsection[Haskell eDSL]{High-Assurance Compilation}
+
+\begin{frame}{Copilot Pipeline}{New Back Ends are Available (CompCert, Frama-C)}
+\centering\includegraphics[width=7.0cm, height=6.0cm]{Copilot_architecture}
+\end{frame}
+
+\begin{frame}{Copilot Back Ends}
+  \begin{itemize}
+  \item
+    All back ends compile to C99 - \alert{hard real-time} systems
+    \begin{itemize}
+    \item
+      Atom
+      \begin{itemize}
+        \item
+        Heavily relies on arbitrary changes of state
+      \end{itemize}
+    \item
+      SBV
+      \begin{itemize}
+        \item
+        Modular
+        \item
+        Used to \alert{implement structs}
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection[High-Assurance Monitors]{High-Assurance Meets Avionics}
+
+\begin{frame}{Homer Got It Right}{Converting Sensory Input to Safety}
+  \centering\includegraphics[width=7.5cm, height=6.0cm]{Homer_Simpson}
+\end{frame}
+\begin{frame}{New Back Ends}{CompCert, Frama-C}
+  New back ends \alert{verify correctness} of \textbf{monitor code}
+  \begin{itemize}
+  \item
+    CompCert
+    
+    \includegraphics[width=9.0cm, height=1.65cm]{CompCert_Pipeline}
+  \item
+    \includegraphics[width=3.75cm, height=1.5cm]{FramaC_logo}
+  \end{itemize}
+\end{frame}
+
+\section{Implementing Structs}
+\subsection{Coding with Structs}
+\begin{frame}{What is a Struct (in C)?}
+  A struct is\dots
+  \begin{itemize}
+  \item
+    Collection of values (no singular \emph{field type})
+  \item
+    \alert{Contiguous block} of memory
+  \item
+    Type-less
+  \item
+    Portable
+  \end{itemize}
+\end{frame}
+\subsection{Monitors in Avionics}
+\begin{frame}{Monitors}{How Can They Be Applied to Structs?}
+  We need monitors to\dots
+  \begin{itemize}
+  \item
+    Keep track of sensory input
+  \item
+    Embedded systems \alert{use structs} to keep track of sensory values in a specification
+  \item
+    Ensure that a flight system abides by a \alert{specification}
+  \end{itemize}
+\end{frame}
+\begin{frame}{Structs in Monitor Code}{Structuring Sensor Values}
+    \begin{alltt}
+    \begin{columns}
+      \begin{column}{0.25\textwidth}
+        \scriptsize\par{\textcolor{Peach}{uint32\_t count;\\
+        float    sum;\\
+        float    average;\\
+        float    correction;\\
+        float    algo\_erro\_check;\\
+        float    min;\\
+        float    max;\\
+        bool     start\_sampling;\\
+        bool     have\_correction;}}
+      \end{column}
+      \makebox[1in]{\rightarrowfill}
+      \begin{column}{0.5\textwidth}
+        \setlength{\parindent}{10pt}
+        \scriptsize\par{\noindent{\textcolor{Emerald}{struct NeutralThrustEstimation} \{ \\}
+        \textcolor{Peach}{uint32\_t count;\\
+        float    sum;\\
+        float    average;\\
+        float    correction;\\
+        float    algo\_erro\_check;\\
+        float    min;\\
+        float    max;\\
+        bool     start\_sampling;\\
+        bool     have\_correction;}\\
+        \};\\
+        \noindent{static \textcolor{Emerald}{struct NeutralThrustEstimation} neutralThrustEst;}}
+      \end{column}
+    \end{columns}
+    \end{alltt}
+\end{frame}
+
+\section{Discoveries}
+\subsection[(In)Compatibility]{Language (In)Compatibility \& Portability}
+\begin{frame}{Haskell Meets Embedded-C}
+  \begin{itemize}
+  \item
+    Haskell
+    \begin{itemize}
+    \item
+      Functional language
+    \item
+      Easy to implement \alert{formal methods}
+      \begin{itemize}
+      \item
+        Verification
+      \item
+        Model Checking
+      \end{itemize}
+  \end{itemize}
+  \item[]
+    vs.
+  \item
+    Embedded C
+    \begin{itemize}
+    \item
+      \alert{Constant} time/memory
+    \item
+      Output C99 code similar to MISRA
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\begin{frame}{(Dis)Advantages}
+  \begin{itemize}
+  \item
+    Goals/Uses of Haskell and Embedded-C are \alert{not aligned}
+    \begin{itemize}
+    \item
+      Leverage the features of both languages
+    \item
+      Two sets of limitations
+    \end{itemize}
+  \item
+    Compiler produces monitor code
+    \begin{itemize}
+    \item
+      Avionics programmer \alert{must know Haskell}
+    \end{itemize}
+  \item
+    New back ends only support subset of C99
+    \begin{itemize}
+    \item
+      CompCert does not support long doubles
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+\subsection[Struct Limitations]{Limitations of Copilot Structs}
+\begin{frame}{Examples in Copilot}{Haskell Code}
+  \begin{alltt}
+    \small{
+    \setlength{\parindent}{-10pt}
+    
+    
+    simple :: Stream \textbf{Bool} \\
+    simple = \alert{externStruct} "simple" [(\textcolor{Plum}{"example"}, arg \textcolor{Green}{example})] \\
+    \setlength{\parindent}{0pt}
+    where \\
+    \setlength{\parindent}{10pt}
+    \textcolor{Green}{example} :: Stream Word32 \\
+    \textcolor{Green}{example} = 1 \\
+    \setlength{\parindent}{-15pt}
+    \dots\\
+    \dots\\
+    \dots\\
+    \setlength{\parindent}{-10pt}
+    run :: Stream Word32 \\
+    run = simple\#\textcolor{Plum}{"example"}
+    }
+  \end{alltt}
+\end{frame}
+\begin{frame}{Examples in Copilot}{C Code (for monitor)}
+  \begin{alltt}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \scriptsize\par{\textbf{.h File}\\
+        \textcolor{Emerald}{struct simple} \{ \\}
+        \setlength{\parindent}{10pt}
+        \textcolor{Peach}{uint\_32t example;}\\
+        \noindent{\};}
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \setlength{\parindent}{10pt}
+        \scriptsize\par{\noindent{\textbf{.c File}\\
+        \dots\\
+        \dots\\
+        \textcolor{Peach}{.. simple.example ..}\\
+        \dots\\
+        \dots}}
+      \end{column}
+    \end{columns}
+
+  \end{alltt}
+\end{frame}
+\begin{frame}{Semantic Problems}
+  \begin{itemize}
+  \item
+    Structs need to be of \alert{type Bool}
+  \item
+    Redundant way of implementing structs in Haskell specification
+    \begin{itemize}
+    \item
+      All fields must be declared as \texttt{Extern} variables, including structs
+    \end{itemize}
+  \item
+    Complications surrounding \alert{typing structs} in Haskell
+    \begin{itemize}
+    \item
+      Difficult to \alert{nest} structs
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section*{Summary}
+
+\begin{frame}{Summary}
+
+  % Keep the summary *very short*.
+  \begin{itemize}
+  \item
+    Haskell and C serve vastly \alert{different purposes} as languages
+  \item
+    Structs are necessary for monitors, but suffer from the disparity of Haskell and C
+  \item
+    Structs are not done being implemented, but \alert{significant progress} has been achieved
+  \end{itemize}
+  
+  % The following outlook is optional.
+  \vskip0pt plus.5fill
+  \begin{itemize}
+  \item
+    Outlook
+    \begin{itemize}
+    \item
+      \textbf{Copilot} will be very powerful as it becomes more robust.
+    \item
+      Extending Copilot's use to other UAV software
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
+
+
