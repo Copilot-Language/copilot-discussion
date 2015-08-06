@@ -4,10 +4,11 @@
 
 There are several prettyPrinter.
 \begin{itemize}
-	\item One in copilot-sbv that prettyprints and expression to an ACSL conbtract
-	\item One in copilore-core that prettyprints an expression to an Dot graph
+	\item One in copilot-sbv that prettyprints and expression to an ACSL contract
+	\item One in copilore-core that prettyprints an expression to an Dot graph. This prettyPrinter has two entry points : prettyPrintDot, which prints the whole spec, and prettyExprDot which has a boolean value as a parameter which tells if the prettyPrinter has to go through the external functions (print parameters recursively, ..., True for yes, False for no). When generating the dot source for each C source file, we do not go through the external functions, because SBV does not do so. But if you want a more global view, you should go through. In this case, it is better to use the prettyPrintDot function, which sets this parameter as True directly.
 	\item One in core that prettyprints (and hence it is a text version of the Dot one).
 \end{itemize}
+
 
 The prettyPrinting technology, specially developed for Copilot by Interns, Supervisors and Associates Inc.$\circledR$, consists in an induction on the syntax of the language, or by induction on the AST. If the node of the AST is an addition, it prints "+", if it is a multiplication, it prints "*", and the same for all kind of nodes. This unique technology allows us to prettyPrint efficiently an expression originally in the form of (sin a + cos b * ln 3) into (sin a + cos b * ln 3).
 
