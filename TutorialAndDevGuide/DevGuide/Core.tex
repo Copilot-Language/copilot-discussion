@@ -5,7 +5,18 @@
 \todo{Discuss the issues surroudning GADT} 
 
 
-\todo{Discuss issues we found impedded our implemenation of structs} 
+There are a few key issues when implementing structs:
+\begin{itemize}
+	\item
+	While structs are \emph{type-less}, there is currently no easy way to use records in Copilot. Therefore, a type of \texttt{Bool} is attached to structs in Copilot.
+	\item
+	Fields are currently passed through Core as Externs using tags that prepend the name of the struct.
+	\item
+	Using a struct in a Copilot specification is not syntactically pleasant and done in a roundabout manner.
+	\item
+	It is still difficult to nest structs in Haskell.
+\end{itemize}
+To improve structs in Copilot, they need to be mapped more appropriately in Core, beginning with switching their implementation to that of either a record or a tuple.
 
 \begin{itemize}
 	\item \texttt{Core.hs} : The main file. Is used for exporting prototypes only.
@@ -15,7 +26,7 @@ Folder : Core
 \begin{itemize}
 	\item \texttt{Error.hs} : The file for crashing everything with the functions \texttt{badUsage} and \texttt{impossible}. Use those functions with parsimony (especially impossible, because it will ask the user to send a mail to Lee).
 	\item \texttt{Expr.hs} : The place where the Expressions of the Core AST is defined. 
-	\item \texttt{External.hs} :
+	\item \texttt{External.hs} : The file where External variables, functions, arrays, structs, and struct fields are gathered from the specification (for use by the back end).
 	\item \texttt{Interpret.hs} :
 	\item \texttt{Locals.hs} :
 	\item \texttt{MakeTags.hs} : The file in which you MakeTags. A tag is a unique identifier (a tag), which is added to some nodes of the AST so that it is possible to distinguish them in a map (external variables call, etc ...).
@@ -24,15 +35,15 @@ Folder : Core
 	\item \texttt{PrettyPrint.hs} : The text pretty printer. Cf the section \ref{sec:pretty}
 	\item \texttt{Random.hs} :
 	\item \texttt{Spec.hs} : The place where the Core AST is defined. This AST is not the same as the Reified AST from the Language module (confusion may occur).
-	\item \texttt{StructMarshal.hs} : Ask ELI TODO.
-	\item \texttt{Type.hs} : 
+	\item \texttt{StructMarshal.hs} : DEPRECATED - Eli
+	\item \texttt{Type.hs} : The place defining typing for Core, but not for the back end.
 \end{itemize}
 
 Subfolder : Type
 \begin{itemize}
-	\item \texttt{Dynamic.hs} :
+	\item \texttt{Dynamic.hs} : 
 	\item \texttt{Eq.hs} : 
-	\item \texttt{Equality.hs} : 
+	\item \texttt{Equality.hs} : The file where different instances of Core types can be compared.
 	\item \texttt{Read.hs} : 
 	\item \texttt{Show.hs} : 
 	\item \texttt{Uninitialized.hs} : 
