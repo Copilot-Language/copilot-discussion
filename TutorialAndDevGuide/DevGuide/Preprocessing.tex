@@ -1,0 +1,49 @@
+\section{Preprocessing}~\label{sec:preprocessing}
+
+In order to allow us writing constants in capital letters (like PI, DEG, RAD). We decided to use preprocessing that will just expand the values into their real ones (PI into 3.14159265358979323846264338327950). The best language to use for that is m4, given that it is a very powerful preprocessor (Turing complete), in which it is possible to write further features (using an other preprocessor like the C's one would limit a lot the further developments in this field). The detailed manual can be found here : http://www.gnu.org/software/m4/manual/m4.html
+
+
+A basic utilization example can also be found in the WCV stuff https://github.com/Copilot-Language/examplesForACSL/blob/master/WCV/main.hs : 
+
+\begin{figure}[!htb]
+\begin{lstlisting}
+divert(-1)
+changequote({,})
+define({LQ},{changequote(`,'){dnl}
+changequote({,})})
+define({RQ},{changequote(`,')dnl{
+}changequote({,})})
+changecom({--})
+
+
+--some basic stuff : everything in SI
+define({PI}, {(label "?pi" $ 3.14159265358979323846264338327950)})
+define({E}, {(label "?e" $ 2.718281828459045235360287471352)})
+define({REARTH}, {6371000}) --in meters
+
+define({RAD},{1})
+define({DEG}, {(label "?deg" $ PI/180)})
+define({NM}, {(label "?nm" $ 1852)})
+define({FT},{0.3048})
+
+define({SEC},{1})
+define({MIN},{60})
+define({HOUR},{3600})
+
+define({KTS},{(label "?kts" $ NM/HOUR)})
+define({FPM},{(label "?fpm" $ FT/MIN)})
+
+
+
+define({ZTHR}, {(475*FT)}) -- altitude threshold
+define({DTHR}, {(1*NM)}) -- horizontal distance threshold
+define({TTHR}, {(30.0*SEC)}) -- time threshold
+define({TCOA}, {(30.0*SEC)}) -- vertical time threshold
+
+
+divert(0)dnl
+\end{lstlisting}
+\end{figure}
+
+
+
