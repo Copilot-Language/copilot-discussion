@@ -1,5 +1,48 @@
 \section{Proofs of Monitors}~\label{sec:proof}
 
-\todo[inline]{Chris, please add an intro to using the Copilot Model Checking
-capabilities}
+In addition to proofs on the soundness of the Copilot compilation process, we
+also support some automated proving of theorems about Copilot specifications
+themselves. A proposition is a Copilot stream of type \lstinline{Stream Bool}
+and can be added to a specification using the \lstinline{prop} and
+\lstinline{theorem} functions.
 
+Consider this Copilot monitor specification for a version of the fibonacci
+sequence:
+
+\begin{lstlisting}
+fib :: Spec
+fib = do
+  theorem "fibn_gre_n"    (fib >= ns) induction
+  theorem "fibn_not_zero" (fib /= 0)  induction
+
+  where
+    fib :: Stream Word32
+    fib = [1, 1] ++ (fib + drop 1 fib)
+    ns :: Stream Word32
+    ns = [0] ++ (ns + 1)
+
+    induction = kInduction def z3
+\end{lstlisting}
+
+In the above, \lstinline{fibn_gre_n} and \lstinline{fibn_not_zero} name
+theorems, each provable automatically with induction using the Z3 SMT solver.
+
+Overview of supported SMT solvers:
+
+\newcommand{\Yes}{\checkmark}
+\newcommand{\No}{\textsf{X}}
+\newcommand{\Kinda}{\textsf{Some}}
+
+\begin{tabular}{lllccc} 
+Tool       & Version & Interface & NRA    & Trig.\ funs.\ & Quantifiers \\
+\hline
+Z3         & 4.4.0   & SMTLib2   & \Yes   & \No           & \Yes \\
+DReal      & 2.15.01 & SMTLib2   & \Yes   & \Yes          & \No  \\
+Yices      & 2.4.0   & SMTLib2   & \Kinda & \No           & \No  \\
+CVC4       & 1.4     & SMTLib2   & \Kinda & \No           & \Yes \\
+MathSAT    & 5.3.7   & SMTLib2   & \Kinda & \No           & \No  \\
+Alt-Ergo   & 0.99.1  & SMTLib2   & \Yes   & \No           & \Yes \\
+MetiTarski & 2.5     & TPTP      & \Yes   & \Yes          & \Yes \\
+\end{tabular}
+
+Also, the Kind2 model checker.
