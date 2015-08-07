@@ -50,26 +50,43 @@ You are a developper, and you want to compile it from source in a sandbox ? Here
 
 What you need to do : 
 \begin{enumerate}
-\item First install all the useful stuff : CompCert (2.4 or later, coq needed, opam recommanded), Frama-c (version sodium or later), Z3 (at least 4.3.2), CVC4 (at least 1.4), ghc 7.10 or later (and its whole toolchain, like the haskell platform).
-\subitem Optionnaly, you could install splint, an up to date gcc (5.1 or later).
-\item Make sure that cabal is installed, and update it to the version 1.22 or later (run \texttt{cabal install cabal cabal-install } for that). 
-\item create a directory named Copilot-Language and cd into it. Then clone the following :
-\subitem https://github.com/Copilot-Language/examplesForACSL
-\subitem https://github.com/LeventErkok/sbv
-\subitem https://github.com/Copilot-Language/Copilot
-\item cd into the directory named Copilot and then do the following
-\subitem \texttt{git submodule update --init}
-\subitem go into the submodules and change the branches you want (for example lib/copilot-sbv has a branch named acsl) with the command \texttt{git checkout BRANCHNAME}. 
-\subitem In the Copilot folder (the one cded in 3) \texttt{make test}
-\item Normally, it should have failed ! Because it has installed all dependecies on their official release in a cabal sandbox located in this folder Copilot (if not, you should probably do a \texttt{cabal install --only-dependencies}). But you need at least a sbv 5.0 (which is not released yet). You have now to do the following :
-\subitem Go into Copilot-Language/sbv and do \texttt{cabal sandbox init --sandbox ../Copilot/.cabal-sandbox/} and then \texttt{cabal install}.
-\item Now go in Copilot and redo make test : it should compile everything, but the Copilot-regression should fail (which is normal because it is deprecated).
-\item It's done ! You now have the latest version of Copilot in your sandbox ! To run some test, go into the Copilot-Language/examplesForACSL
-\item choose one example randomly (choose the 29 if you have a good computer). Cd into it
-\item do \texttt{cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/} and then \texttt{make sandbox} to build it from the sandbox.
-\item It should have created you a folder named copilot-sbv-codegen. Cd into it :
-\subitem do \texttt{make fwp} to use the wp plugin of frama-c to check, \texttt{make all} to compile it with compcert (into a internal.a library), \texttt{make splint} to check it with splint, \texttt{make fval} to check it with value analysis plugin (it will unroll the infinite loop, so the analysis may never terminate).
-\item For the examples 29 and bigger, there is also a m4 preprocessing done before compilation. Do not hesitate to use it if you need it !
+	\item First install all the useful stuff : CompCert (2.4 or later, coq needed, opam recommanded), Frama-c (version sodium or later), Z3 (at least 4.3.2), CVC4 (at least 1.4), ghc 7.10 or later (and its whole toolchain, like the haskell platform).
+	\subitem Optionnaly, you could install splint, an up to date gcc (5.1 or later). 
+	\subitem First install the haskell platform
+	\subitem Then install the right version of ghc (>= 7.10)
+	\item Make sure that cabal is installed, and update it to the version 1.22 or later (run \texttt{cabal install cabal cabal-install } for that). 
+	\item create a directory named Copilot-Language and cd into it. Then clone the following :
+	\subitem https://github.com/Copilot-Language/examplesForACSL
+	\subitem https://github.com/LeventErkok/sbv
+	\subitem https://github.com/Copilot-Language/Copilot
+	\item cd into the directory named Copilot and then do the following
+	\subitem \texttt{git submodule update --init}
+	\subitem go into the submodules and change the branches you want (for example lib/copilot-sbv has a branch named acsl) with the command \texttt{git checkout BRANCHNAME}. 
+	\subitem In the Copilot folder (the one cded in 3) \texttt{make test}
+	\item Normally, it should have failed ! Because it has installed all dependecies on their official release in a cabal sandbox located in this folder Copilot (if not, you should probably do a \texttt{cabal install --only-dependencies}). But you need at least a sbv 5.0 (which is not released yet). You have now to do the following :
+	\subitem Go into Copilot-Language/sbv and do \texttt{cabal sandbox init --sandbox ../Copilot/.cabal-sandbox/} and then \texttt{cabal install}.
+	\item Now go in Copilot and redo make test : it should compile everything, but the Copilot-regression should fail (which is normal because it is deprecated).
+	\item It's done ! You now have the latest version of Copilot in your sandbox ! To run some test, go into the Copilot-Language/examplesForACSL
+\end{enumerate}
+
+\subsection{And after getting all the stuff from git}
+
+\begin{enumerate}
+	\item Install opam
+	\item Install coq, menhir with opam
+	\item Install dot (graphviz package), GNU parallel, m4 (apt-get)
+	\item Install CompCert from source
+	\item Install gtksourceview, gnomecanvas (libgtksoureview-2.0-dev and libgnomecanvas2-dev on debian)
+	\item Install with opam frama-c, why3
+	\item Install CVC4 (if from source, you will need antlr3 and boost)
+	\item Do \texttt{why3 config --detect} . It's done !
+	\item Choose one example randomly (choose the WCV if you want to try our most famous example) from examplesForACSL. Cd into it
+	\item do \texttt{cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/}
+	\item Do \texttt{make compile} to compile it with ccomp, and \texttt{make acsl} to prove everything with frama-c 
+	\item If you want to control the whole process, you can look at the makefile, especially \texttt{make sandbox} to build it from the sandbox.
+	\item It should have created you a folder named copilot-sbv-codegen. Cd into it :
+	\subitem do \texttt{make fwp} to use the wp plugin of frama-c to check, \texttt{make all} to compile it with compcert (into a internal.a library), \texttt{make splint} to check it with splint, \texttt{make fval} to check it with value analysis plugin (it will unroll the infinite loop, so the analysis may never terminate).
+	\item For the examples 29 and bigger, there is also a m4 preprocessing done before compilation. Do not hesitate to use it if you need it !
 \end{enumerate}
 
 \subsection{update it}
