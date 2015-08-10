@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  9 AUG 2015 21:03
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.24)  10 AUG 2015 13:07
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1250,7 +1250,7 @@ LaTeX Info: Redefining \\ on input line 3056.
 \FV@BreakSymbolSepLeft=\dimen298
 \FV@BreakSymbolSepRight=\dimen299
 \FV@BreakSymbolIndentLeft=\dimen300
-LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 653
+LaTeX Font Info:    Try loading font information for EU1+lmtt on input line 652
 .
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\euenc\eu1lmtt.fd"
@@ -1627,7 +1627,7 @@ b0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-
  []
 
 File: images/TCASRA1.jpg Graphic file (type QTm)
-<use  "images/TCASRA1.jpg" > [11]
+<use  "images/TCASRA1.jpg" >
 Overfull \hbox (20.38042pt too wide) in paragraph at lines 620--620
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/blob/4
 3beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs| 
@@ -1645,62 +1645,158 @@ Overfull \hbox (18.04042pt too wide) in paragraph at lines 620--620
 9c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-
  []
 
+[11]
 File: images/WCV/wcv.pdf Graphic file (type QTm)
-<use  "images/WCV/wcv.pdf" >
+ <use  "images/WCV/wcv.pdf" >
 Requested font "[lmroman8-bold]:mapping=tex-text" at 8.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman8-bold.otf
 Requested font "[lmroman6-bold]:mapping=tex-text" at 6.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman6-bold.otf
 File: images/WCV/tcoa.pdf Graphic file (type QTm)
  <use  "images/WCV/tcoa.pdf" >
-Overfull \hbox (8.28441pt too wide) in paragraph at lines 637--637
+Overfull \hbox (8.28441pt too wide) in paragraph at lines 635--635
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/blob/9
 b58e239284368c4e5665231f53b209658cf62b3/WCV/main.hs| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 637--637
+Underfull \hbox (badness 10000) in paragraph at lines 635--635
 \EU1/lmr/m/n/9 and a compact log better suited for readability is in https://ra
 w.githubusercontent.com/Copilot-
  []
 
 
-Overfull \hbox (24.97939pt too wide) in paragraph at lines 637--637
+Overfull \hbox (24.97939pt too wide) in paragraph at lines 635--635
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/5
 6e35879cfb21286e924227dd61a770c05a43930/example38/copilot-
  []
 
 File: images/WCV/graph.pdf Graphic file (type QTm)
 <use  "images/WCV/graph.pdf" > [12] [13] (rapport.bbl
+Requested font "[lmroman9-italic]:mapping=tex-text" at 9.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman9-italic.otf
+
 ** WARNING: IEEEtranS.bst: No hyphenation pattern has been
 ** loaded for the language `English'. Using the pattern for
 ** the default language instead.
 ** WARNING: IEEEtranS.bst: No hyphenation pattern has been
 ** loaded for the language `English'. Using the pattern for
 ** the default language instead.
-) [14
+)
+Overfull \hbox (17.0pt too wide) in paragraph at lines 688--693
+[]$[]$ 
+ []
+
+[14
 
 ]
+Requested font "[lmmono8-regular]" at 5.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
+Requested font "[lmromancaps10-regular]:mapping=tex-text" at 6.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmromancaps10-regular.
+otf
+
+Overfull \hbox (1.668pt too wide) detected at line 813
+[]  
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 816
+[]  
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 821
+[]  
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 826
+[]  
+ []
+
+
+Overfull \hbox (38.4292pt too wide) detected at line 831
+ [] 
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 831
+[]  
+ []
+
+
+Overfull \hbox (19.01407pt too wide) detected at line 840
+ [] 
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 840
+[]  
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 853
+[]  
+ []
+
+
+Overfull \hbox (24.80716pt too wide) detected at line 859
+ [] 
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 859
+[]  
+ []
+
+
+Overfull \hbox (11.69363pt too wide) detected at line 865
+ [] 
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 865
+[]  
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 869
+[]  
+ []
+
+
+Overfull \hbox (1.668pt too wide) detected at line 877
+[]  
+ []
+
 runsystem(del "rapport.mintedcmd")...executed.
 
 runsystem(del "rapport.mintedmd5")...executed.
 
 runsystem(del "rapport.pyg")...executed.
 
- [15]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 706.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 706.
+
+Underfull \hbox (badness 10000) in paragraph at lines 701--884
+
+ []
+
+[15
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 884.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 884.
  (rapport.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 706.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 706.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 706.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 884.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 884.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 884.
  ) 
 Here is how much of TeX's memory you used:
- 41450 strings out of 428790
- 808825 string characters out of 3164815
+ 41460 strings out of 428790
+ 809050 string characters out of 3164815
  1295146 words of memory out of 3000000
- 44162 multiletter control sequences out of 15000+200000
- 7907 words of font info for 59 fonts, out of 3000000 for 9000
+ 44168 multiletter control sequences out of 15000+200000
+ 7931 words of font info for 62 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
  56i,36n,82p,10385b,1820s stack positions out of 5000i,500n,10000p,200000b,50000s
 
