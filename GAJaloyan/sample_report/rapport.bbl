@@ -46,6 +46,16 @@ C.~Mu{\~{n}}oz, A.~Narkawicz, and J.~Chamberlain, ``A {TCAS-II} resolution
   Navigation, and Control Conference and Exhibit 2013}, no. AIAA-2013-4622,
   Boston, Massachusetts, August 2013.
 
+\bibitem{WCV2}
+\BIBentryALTinterwordspacing
+C.~Mu{\~{n}}oz, A.~Narkawicz, J.~Chamberlain, M.~Consiglio, and J.~Upchurch,
+  ``A family of well-clear boundary models for the integration of {UAS} in the
+  {NAS},'' in \emph{Proceedings of the 14th AIAA Aviation Technology,
+  Integration, and Operations (ATIO) Conference}, no. AIAA-2014-2412, Georgia,
+  Atlanta, USA, June 2014. [Online]. Available:
+  \url{http://arc.aiaa.org/doi/abs/10.2514/6.2014-2412}
+\BIBentrySTDinterwordspacing
+
 \bibitem{NM2011NASA}
 A.~Narkawicz and C.~Mu{\~{n}}oz, ``State-based implicit coordination and
   applications,'' NASA, Langley Research Center, Hampton VA 23681-2199, USA,
@@ -59,6 +69,12 @@ A.~Narkawicz, C.~Mu{\~{n}}oz, and G.~Hagen, ``An independent and coordinated
   Conference}, no. AIAA-2014-2859, Georgia, Atlanta, USA, June 2014. [Online].
   Available: \url{http://arc.aiaa.org/doi/abs/10.2514/6.2014-2859}
 \BIBentrySTDinterwordspacing
+
+\bibitem{WCV3}
+A.~J. Narkawicz, C.~A. Mu{\~{n}}oz, J.~M. Upchurch, J.~P. Chamberlain, and
+  M.~C. Consiglio, ``A well-clear volume based on time to entry point,'' NASA,
+  Langley Research Center, Hampton VA 23681-2199, USA, Technical Memorandum
+  NASA/TM-2014-218155, January 2014.
 
 \bibitem{Copilot08}
 NASA, ``The copilot manual,'' 2015.
@@ -91,6 +107,12 @@ L.~Pike, N.~Wegmann, S.~Niller, and A.~Goodloe, ``Experience report: A
   Management}, vol.~9, no.~4.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
   2013, pp. 235--255, preprint available at
   \url{http://www.cs.indiana.edu/~lepike/pub_pages/isse.html}.
+
+\bibitem{WCV1}
+J.~M. Upchurch, C.~A. Mu{\~{n}}oz, A.~J. Narkawicz, J.~P. Chamberlain, and
+  M.~C. Consiglio, ``Analysis of well-clear boundary models for the integration
+  of {UAS} in the {NAS},'' NASA, Langley Research Center, Hampton VA
+  23681-2199, USA, Technical Memorandum NASA/TM-2014-218280, June 2014.
 
 \bibitem{bugC}
 \BIBentryALTinterwordspacing

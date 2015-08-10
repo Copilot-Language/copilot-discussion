@@ -21,38 +21,38 @@
 \@writefile{lof}{\select@language{english}}
 \@writefile{lot}{\select@language{english}}
 \HyPL@Entry{1<</S/D>>}
+\@writefile{toc}{\contentsline {section}{Introduction}{1}{section*.1}}
 \citation{Copilot01}
-\@writefile{toc}{\contentsline {section}{Introduction}{2}{section*.2}}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Preliminaries}{2}{section.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Copilot language}{2}{subsection.1.1}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.1}Syntax}{2}{subsubsection.1.1.1}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2}Interaction}{2}{subsubsection.1.1.2}}
 \citation{Copilot07}
 \citation{Copilot08}
 \citation{SemVerif7}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2}Interaction}{3}{subsubsection.1.1.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Introduction to ACSL and frama-c}{3}{subsection.1.2}}
 \citation{Copilot06}
 \citation{Copilot03}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Introduction to ACSL and frama-c}{3}{subsection.1.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Copilot toolchain}{4}{subsection.1.3}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The Copilot toolchain\cite  {Copilot03}}}{4}{figure.1}}
 \newlabel{fig:Copilot backend}{{1}{4}{The Copilot toolchain\cite {Copilot03}}{figure.1}{}}
 \newlabel{fig:Copilot backend@cref}{{[figure][1][]1}{4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Main objective and first modifications}{4}{subsection.1.4}}
-\@writefile{toc}{\contentsline {section}{\numberline {2}First attempt}{5}{section.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Hand-written ACSL}{5}{subsection.2.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}First attempt}{4}{section.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Hand-written ACSL}{4}{subsection.2.1}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Automatic generation of contracts by induction on the syntax.}{6}{subsection.2.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Values Analysis vs Weakest Liberal Precondition.}{6}{subsection.2.3}}
 \citation{bugC}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}CompCert.}{7}{subsection.2.4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Bug finding}{7}{subsection.2.5}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Ensuring traceability}{8}{subsection.2.6}}
+\citation{NMH14ATIO}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The splitting process. The AST on the left is split into two smaller ASTs, that then generate two separate functions into two separate files, making it easier to prove the contracts for them.}}{9}{figure.2}}
 \newlabel{fig:splitting label}{{2}{9}{The splitting process. The AST on the left is split into two smaller ASTs, that then generate two separate functions into two separate files, making it easier to prove the contracts for them}{figure.2}{}}
 \newlabel{fig:splitting label@cref}{{[figure][2][]2}{9}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces The new Copilot toolchain. The red arrows are the one to implement in the future. The blue ones are the ones implemented by the author.}}{9}{figure.3}}
 \newlabel{fig:New toolchain}{{3}{9}{The new Copilot toolchain. The red arrows are the one to implement in the future. The blue ones are the ones implemented by the author}{figure.3}{}}
 \newlabel{fig:New toolchain@cref}{{[figure][3][]3}{9}}
-\citation{NMH14ATIO}
 \citation{MBNMH2010NASA}
 \citation{NM2011NASA}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Practical steps}{10}{section.3}}
@@ -65,21 +65,36 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces The TCAS II resolution advice about vertical speed. The orange zone corresponds to the set of unsafe vertical speeds. The pilot has to maneuver so that its vertical speed gets out of this area. The intruder traffic is shown by the orange square, and the RA given to the other plane is represented by the arrow next to it (here the other traffic also has to descend, as the ownship). The two digit number shown is the intruder's altitude relative to the ownship (in hundreds of feet).}}{11}{figure.5}}
 \newlabel{fig:TCASRA1}{{5}{11}{The TCAS II resolution advice about vertical speed. The orange zone corresponds to the set of unsafe vertical speeds. The pilot has to maneuver so that its vertical speed gets out of this area. The intruder traffic is shown by the orange square, and the RA given to the other plane is represented by the arrow next to it (here the other traffic also has to descend, as the ownship). The two digit number shown is the intruder's altitude relative to the ownship (in hundreds of feet)}{figure.5}{}}
 \newlabel{fig:TCASRA1@cref}{{[figure][5][]5}{11}}
+\citation{WCV1}
+\citation{WCV2}
+\citation{WCV3}
+\citation{WCV1}
+\citation{WCV1}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Third application : Well-clear criterion}{12}{subsection.3.3}}
-\@writefile{toc}{\contentsline {section}{Conclusion}{12}{section*.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces We clearly see here $WCV_{\tau } \Rightarrow WCV_{tcpa} \Rightarrow WCV_{\tau _{mod}} \Rightarrow WCV_{tep}$. Here we decided to choose $DTHR = 1 nmi$, $TTHR = TCOA = 30 s$, and $ZTHR = 475 ft$. }}{13}{figure.6}}
+\newlabel{fig:graph}{{6}{13}{We clearly see here $WCV_{\tau } \Rightarrow WCV_{tcpa} \Rightarrow WCV_{\tau _{mod}} \Rightarrow WCV_{tep}$. Here we decided to choose $DTHR = 1 nmi$, $TTHR = TCOA = 30 s$, and $ZTHR = 475 ft$}{figure.6}{}}
+\newlabel{fig:graph@cref}{{[figure][6][]6}{13}}
+\newlabel{fig:Monitor structure}{{3.3}{13}{Third application : Well-clear criterion}{figure.6}{}}
+\newlabel{fig:Monitor structure@cref}{{[subsection][3][3]3.3}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces The overall structure of the monitor}}{13}{figure.7}}
+\@writefile{toc}{\contentsline {section}{Conclusion}{13}{section*.3}}
 \bibstyle{IEEEtrans}
 \bibdata{ref}
 \bibcite{Copilot06}{1}
 \bibcite{SemVerif7}{2}
 \bibcite{MBNMH2010NASA}{3}
 \bibcite{MNC13GNC}{4}
-\bibcite{NM2011NASA}{5}
-\bibcite{NMH14ATIO}{6}
-\bibcite{Copilot08}{7}
-\bibcite{Copilot01}{8}
-\bibcite{Copilot03}{9}
-\bibcite{Copilot07}{10}
-\bibcite{bugC}{11}
+\bibcite{WCV2}{5}
+\bibcite{NM2011NASA}{6}
+\bibcite{NMH14ATIO}{7}
+\bibcite{WCV3}{8}
+\bibcite{Copilot08}{9}
+\bibcite{Copilot01}{10}
+\bibcite{Copilot03}{11}
+\bibcite{Copilot07}{12}
+\bibcite{WCV1}{13}
+\bibcite{bugC}{14}
+\@writefile{toc}{\contentsline {section}{Références}{14}{section*.4}}
 \gdef\minted@oldcachelist{,
   default.pygstyle,
   10972494cb0721ee09206c8d28cc3384f05fe342.pygtex,
@@ -93,4 +108,3 @@
   7cea6368925fb84f1228ac7e6db8563184d43505.pygtex,
   1dde2b313cc296da43a6238f9104b9c64a0fcb46.pygtex,
   6b183a42aacb0fb110b993da9a77c9164aeaafa9.pygtex}
-\@writefile{toc}{\contentsline {section}{Références}{13}{section*.4}}

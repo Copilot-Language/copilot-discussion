@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  5 AUG 2015 14:58
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9) (preloaded format=xelatex 2015.5.22)  9 AUG 2015 21:03
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1422,9 +1422,6 @@ Requested font "[lmroman12-regular]:mapping=tex-text" at 14.4pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman12-regular.otf
 Requested font "[lmroman12-bold]:mapping=tex-text" at 14.4pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman12-bold.otf
- (rapport.toc
-Requested font "[lmroman10-bold]:mapping=tex-text" at 10.95pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman10-bold.otf
 Requested font "[lmroman8-regular]:mapping=tex-text" at 8.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman8-regular.otf
 Requested font "[lmroman6-regular]:mapping=tex-text" at 6.0pt
@@ -1436,11 +1433,11 @@ Requested font "cmsy10" at 10.95pt
 Requested font "cmsy8" at 8.0pt
 Requested font "cmsy6" at 6.0pt
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 4.
+(Font)              <10.95> on input line 134.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 4.
+(Font)              <8> on input line 134.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 4.
+(Font)              <6> on input line 134.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\microtype\mt-cmr.cfg"
 File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman 
@@ -1448,13 +1445,28 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 )
 Requested font "cmr8" at 8.0pt
 Requested font "cmr6" at 6.0pt
-)
-\tf@toc=\write8
- [1
-
-]
 Requested font "[lmroman10-italic]:mapping=tex-text" at 10.95pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman10-italic.otf
+Requested font "[lmroman9-regular]:mapping=tex-text" at 9.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman9-regular.otf
+Requested font "[lmroman5-regular]:mapping=tex-text" at 5.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman5-regular.otf
+Requested font "cmmi9" at 9.0pt
+Requested font "cmsy9" at 9.0pt
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <9> on input line 134.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 134.
+Requested font "cmr9" at 9.0pt
+ (rapport.toc
+Requested font "[lmroman10-bold]:mapping=tex-text" at 10.95pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman10-bold.otf
+)
+\tf@toc=\write8
+
+[1
+
+]
 Requested font "[lmroman12-bold]:mapping=tex-text" at 12.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman12-bold.otf
 Requested font "[lmmono10-regular]" at 10.95pt
@@ -1470,8 +1482,7 @@ pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
 chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
 \n \"); f.close();")...executed.
 
-
-(rapport.mintedmd5)
+ (rapport.mintedmd5)
 (_minted-rapport/10972494cb0721ee09206c8d28cc3384f05fe342.pygtex
 LaTeX Font Info:    Font shape `EU1/lmtt/bx/n' in size <10.95> not available
 (Font)              Font shape `EU1/lmtt/b/n' tried instead on input line 2.
@@ -1521,7 +1532,6 @@ chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
 (rapport.mintedmd5)
 (_minted-rapport/745967bb48c40237126fdac7378f1bb9fd21a419.pygtex [2
 
-
 ])
 runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
 t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
@@ -1564,18 +1574,6 @@ Requested font "[lmmono8-regular]" at 8.0pt
 Requested font "[lmmono8-regular]" at 6.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
  [3]
-Requested font "[lmroman9-regular]:mapping=tex-text" at 9.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman9-regular.otf
-Requested font "[lmroman5-regular]:mapping=tex-text" at 5.0pt
- -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman5-regular.otf
-Requested font "cmmi9" at 9.0pt
-Requested font "cmsy9" at 9.0pt
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <9> on input line 241.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 241.
-Requested font "cmr9" at 9.0pt
- [4]
 runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
 t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
 pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
@@ -1585,14 +1583,15 @@ chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
 
 
 (rapport.mintedmd5)
-(_minted-rapport/7cea6368925fb84f1228ac7e6db8563184d43505.pygtex) [5]
-Overfull \hbox (17.0pt too wide) in paragraph at lines 347--406
+(_minted-rapport/7cea6368925fb84f1228ac7e6db8563184d43505.pygtex [4])
+Overfull \hbox (17.0pt too wide) in paragraph at lines 349--408
 []$[]$ 
  []
 
+[5]
 Requested font "[lmmono9-regular]" at 9.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono9-regular.otf
-[6]
+ [6]
 runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
 t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
 pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
@@ -1601,7 +1600,7 @@ chr(125) + \"\"; f.write(\"\\makeatletter\" + macro + \"\\makeatother\\endinput
 \n \"); f.close();")...executed.
 
  (rapport.mintedmd5)
-(_minted-rapport/1dde2b313cc296da43a6238f9104b9c64a0fcb46.pygtex [7])
+(_minted-rapport/1dde2b313cc296da43a6238f9104b9c64a0fcb46.pygtex) [7]
 runsystem(python -c "import hashlib; hasher = hashlib.sha1(); f = open(\"rappor
 t.mintedcmd\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.
 pyg\", \"rb\"); hasher.update(f.read()); f.close(); f = open(\"rapport.mintedmd
@@ -1620,74 +1619,89 @@ File: images/label/splitted.ps Graphic file (type eps)
 File: images/label/splitted2.ps Graphic file (type eps)
  <images/label/splitted2.ps>
 [8]
-
-LaTeX Warning: Text page 9 contains only floats.
-
-[9]
 File: images/CAMsep.jpg Graphic file (type QTm)
- <use  "images/CAMsep.jpg" > [10]
-Overfull \hbox (28.57039pt too wide) in paragraph at lines 597--597
+ <use  "images/CAMsep.jpg" > [9] [10]
+Overfull \hbox (28.57039pt too wide) in paragraph at lines 601--601
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/d
 b0a348a8a6e3d33b0046d2b9b06c938705f0b32/example29/copilot-
  []
 
 File: images/TCASRA1.jpg Graphic file (type QTm)
 <use  "images/TCASRA1.jpg" > [11]
-Overfull \hbox (20.38042pt too wide) in paragraph at lines 616--616
+Overfull \hbox (20.38042pt too wide) in paragraph at lines 620--620
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/blob/4
 3beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs| 
  []
 
 
-Overfull \hbox (142.59149pt too wide) in paragraph at lines 616--616
-[][][]\EU1/lmr/m/n/9 The whole process is logged in https://github.com/Copilot-
-Language/examplesForACSL/blob/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example3
-6/copilot-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 616--616
+Underfull \hbox (badness 10000) in paragraph at lines 620--620
 \EU1/lmr/m/n/9 and a compact log better suited for readability is in https://ra
 w.githubusercontent.com/Copilot-
  []
 
 
-Overfull \hbox (18.04042pt too wide) in paragraph at lines 616--616
+Overfull \hbox (18.04042pt too wide) in paragraph at lines 620--620
 [][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/3
 9c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-
  []
 
-[12] (rapport.bbl
+File: images/WCV/wcv.pdf Graphic file (type QTm)
+<use  "images/WCV/wcv.pdf" >
+Requested font "[lmroman8-bold]:mapping=tex-text" at 8.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman8-bold.otf
+Requested font "[lmroman6-bold]:mapping=tex-text" at 6.0pt
+ -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmroman6-bold.otf
+File: images/WCV/tcoa.pdf Graphic file (type QTm)
+ <use  "images/WCV/tcoa.pdf" >
+Overfull \hbox (8.28441pt too wide) in paragraph at lines 637--637
+[][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/blob/9
+b58e239284368c4e5665231f53b209658cf62b3/WCV/main.hs| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 637--637
+\EU1/lmr/m/n/9 and a compact log better suited for readability is in https://ra
+w.githubusercontent.com/Copilot-
+ []
+
+
+Overfull \hbox (24.97939pt too wide) in paragraph at lines 637--637
+[][][]\EU1/lmr/m/n/9 https://github.com/Copilot-Language/examplesForACSL/tree/5
+6e35879cfb21286e924227dd61a770c05a43930/example38/copilot-
+ []
+
+File: images/WCV/graph.pdf Graphic file (type QTm)
+<use  "images/WCV/graph.pdf" > [12] [13] (rapport.bbl
 ** WARNING: IEEEtranS.bst: No hyphenation pattern has been
 ** loaded for the language `English'. Using the pattern for
 ** the default language instead.
 ** WARNING: IEEEtranS.bst: No hyphenation pattern has been
 ** loaded for the language `English'. Using the pattern for
 ** the default language instead.
-)
+) [14
+
+]
 runsystem(del "rapport.mintedcmd")...executed.
 
 runsystem(del "rapport.mintedmd5")...executed.
 
 runsystem(del "rapport.pyg")...executed.
 
- [13
-
-]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 638.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 638.
+ [15]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 706.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 706.
  (rapport.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 638.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 638.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 638.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 706.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 706.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 706.
  ) 
 Here is how much of TeX's memory you used:
- 41383 strings out of 428790
- 807819 string characters out of 3164815
- 1254916 words of memory out of 3000000
- 44102 multiletter control sequences out of 15000+200000
- 7891 words of font info for 57 fonts, out of 3000000 for 9000
+ 41450 strings out of 428790
+ 808825 string characters out of 3164815
+ 1295146 words of memory out of 3000000
+ 44162 multiletter control sequences out of 15000+200000
+ 7907 words of font info for 59 fonts, out of 3000000 for 9000
  1096 hyphenation exceptions out of 8191
- 56i,36n,82p,10385b,1209s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 56i,36n,82p,10385b,1820s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on rapport.pdf (14 pages).
+Output written on rapport.pdf (16 pages).

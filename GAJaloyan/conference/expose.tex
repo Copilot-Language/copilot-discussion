@@ -1034,7 +1034,7 @@ $d_{cpa} (\textbf{s},\textbf{v}) = \parallel \textbf{s} + t_{cpa}(\textbf{s}, \t
 		\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
 		\tikzstyle{every state}=[rectangle, rounded corners]
 		
-		\node[state] (Plane) {Plane};
+		\node[state] (Plane) {Planes};
 		\node[state] (GUI) [right of=Plane] {GUI};
 		\node[state] (Mon) [right=2cm of GUI] {monitor.c};
 		\node[state] (dr) [right of=Mon] {driver.c};
@@ -1056,6 +1056,7 @@ $d_{cpa} (\textbf{s},\textbf{v}) = \parallel \textbf{s} + t_{cpa}(\textbf{s}, \t
 		(Co) edge [bend left, anchor=west] node[left] {x,y,z} (Mon)
 		(Mon) edge [anchor=west] node {assign} (ex)
 		(Mon) edge [anchor=south] node {call} (dr)
+		(ex) edge [anchor=west] node {feed} (dr)
 		(GUI) edge node {} (AL);
 		\end{tikzpicture}
 	\end{figure}

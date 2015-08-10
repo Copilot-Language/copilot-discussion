@@ -5,7 +5,7 @@
 ^^I^^I\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
 ^^I^^I\tikzstyle{every state}=[rectangle, rounded corners]
 
-^^I^^I\node[state] (Plane) {Plane};
+^^I^^I\node[state] (Plane) {Planes};
 ^^I^^I\node[state] (GUI) [right of=Plane] {GUI};
 ^^I^^I\node[state] (Mon) [right=2cm of GUI] {monitor.c};
 ^^I^^I\node[state] (dr) [right of=Mon] {driver.c};
@@ -27,6 +27,7 @@
 ^^I^^I(Co) edge [bend left, anchor=west] node[left] {x,y,z} (Mon)
 ^^I^^I(Mon) edge [anchor=west] node {assign} (ex)
 ^^I^^I(Mon) edge [anchor=south] node {call} (dr)
+^^I^^I(ex) edge [anchor=west] node {feed} (dr)
 ^^I^^I(GUI) edge node {} (AL);
 ^^I^^I\end{tikzpicture}
 ^^I\end{figure}

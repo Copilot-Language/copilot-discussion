@@ -129,16 +129,17 @@
 	
 	
 	\cleardoublepage % Dans le cas du recto verso, ajoute une page blanche si besoin
-	\tableofcontents % Table des matières
-	\sloppy          % Justification moins stricte : des mots ne dépasseront pas des paragraphes
-	\cleardoublepage
-	
-	\cleardoublepage
 	\section*{Introduction}
 	\addcontentsline{toc}{section}{Introduction} % Ajout dans la table des matières
-	This report is referring to an internship from the 8\textsuperscript{th} of June 2015 to the 14\textsuperscript{th} of August 2015 at \emph{NASA Langley Research Center} also abbreviated as \emph{LaRC}.
+	This report is referring to an internship from the 8\textsuperscript{th} of June 2015 to the 14\textsuperscript{th} of August 2015 at \emph{NASA Langley Research Center} also abbreviated as \emph{LaRC}. According to the security policy of the NASA administration, my office was located at the \emph{National Institute of Aerospace} (or \emph{NIA}), a non-profit institute specialized in aerospace and atmospheric research\footnote{http://www.nianet.org/}. 
+	
+	The main goal of the internship was to work with Copilot, a tool for writing monitors of ultra-critical embedded systems. I had more specifically to work on the output monitor in C and manage to write ACSL contracts automatically in them, and to a broader extent, ensure some traceability of the compilation process, from the Haskell source code, down to the binary, in order to get Copilot to the practical level, and lay the base for a DO-178B certification.
+	
+	\tableofcontents % Table des matières
+	\sloppy          % Justification moins stricte : des mots ne dépasseront pas des paragraphes
 	
 	
+	\cleardoublepage
 	\section{Preliminaries}
 	\subsection{Copilot language}
 	Copilot is an \emph{EDSL} (embedded domain specific language), embedded in \emph{Haskell} and used for writing \emph{runtime monitors} for hard real-time, distributed, reactive systems written in C\cite{Copilot01}. Those Copilot programs, can either be compiled to C using two back-ends : SBV or ATOM, interpreted, or analyzed using static analysis tools (CBMC, Kind).
@@ -238,10 +239,11 @@ observer :: Typed a => String -> Stream a -> Spec
 	
 	\subsection{Copilot toolchain}
 	
-	Copilot is first reified using standard observation techniques\footnote{These techniques can be found in \cite{Copilot06}}. In its reified form, it can either be interpreted, printed or compiler, using two different back-ends, the first one using Atom, the second one SBV. Both compilers generate C-code, which can be afterwards compared to each other, to ensure that both are semantically equivalent, using model checking techniques\footnote{Namely Kind}. The Figure~\ref{fig:Copilot backend} shows a global view of the different tools used in Copilot.
+	Copilot is first reified using standard observation techniques\footnote{These techniques can be found in \cite{Copilot06}}. In its reified form, it can either be interpreted, printed or compiler, using two different back-ends, the first one using Atom, the second one SBV. Both compilers generate C-code, which can be afterwards compared to each other, to ensure that both are semantically equivalent, using model checking techniques. The Figure~\ref{fig:Copilot backend} shows a global view of the different tools used in Copilot.
 	\begin{figure}[ht!]
 		\centering
-		\begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
+		\footnotesize
+		\begin{tikzpicture}[->, node distance=2.6cm, auto, shorten >=1pt, bend angle=45,
 		thick]
 		\tikzstyle{every state}=[rectangle, rounded corners]
 		
@@ -492,7 +494,8 @@ trigger "trigger" (alt) []
 main = do
 reify spec >>= S.proofACSL S.defaultParams
 \end{minted}
-	\begin{figure}
+
+	\begin{figure}[!htb]
 		\includegraphics[width=42mm]{images/label/main.ps}
 		\centering
 		\includegraphics[width=42mm]{images/label/splitted.ps}
@@ -505,7 +508,8 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	\begin{figure}[ht!]
 		\centering
-		\begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
+		\footnotesize
+		\begin{tikzpicture}[->, node distance=2.6cm, auto, shorten >=1pt, bend angle=45,
 		thick]
 		\tikzstyle{every state}=[rectangle, rounded corners]
 		
@@ -604,7 +608,7 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	\begin{figure}[!htb]
 		\centering
-		\includegraphics[width=80mm]{images/TCASRA1.jpg}
+		\includegraphics[width=70mm]{images/TCASRA1.jpg}
 		\caption{The TCAS II resolution advice about vertical speed. The orange zone corresponds to the set of unsafe vertical speeds. The pilot has to maneuver so that its vertical speed gets out of this area. The intruder traffic is shown by the orange square, and the RA given to the other plane is represented by the arrow next to it (here the other traffic also has to descend, as the ownship). The two digit number shown is the intruder's altitude relative to the ownship (in hundreds of feet).}
 		\label{fig:TCASRA1}
 	\end{figure}
@@ -613,9 +617,73 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	More specifically, the author implemented two of these features : the TCAS II RA alert, and the discrimination function between the preventive and corrective advice. Those were extracted from the PVS model of the NASA library \footnote{https://github.com/nasa/pvslib/tree/master/TCASII}, which can also be found in \cite{MNC13GNC}. 
 	
-	The implementation is 447 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/43beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs}. The proof mode generates 1790 C source files, which are then verified by frama-c in 4 hours and 38 min on an intel i5-4200U\footnote{The whole process is logged in https://github.com/Copilot-Language/examplesForACSL/blob/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example36/copilot-sbv-codegen/logfwp2.tar.gz \\ and a compact log better suited for readability is in https://raw.githubusercontent.com/Copilot-Language/examplesForACSL/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example36/copilot-sbv-codegen/logfwpcompact}. In compiling mode, the copilot toolchain generates only 5 C source files, which are compiled in less than two second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/39c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-sbv-codegen}.
+	The implementation is 447 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/43beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs}. The proof mode generates 1790 C source files, which are then verified by frama-c in 4 hours and 38 min on an intel i5-4200U\footnote{The whole process is logged in https://github.com/Copilot-Language/\\examplesForACSL/blob/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example36/copilot-sbv-codegen/logfwp2.tar.gz \\ and a compact log better suited for readability is in https://raw.githubusercontent.com/Copilot-Language/examplesForACSL/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example36/copilot-sbv-codegen/logfwpcompact}. In compiling mode, the copilot toolchain generates only 5 C source files, which are compiled in less than two second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/39c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-sbv-codegen}.
 	
 	\subsection{Third application : Well-clear criterion}
+	The last application, is the implementation of the Well-Clear Violation criteria (also known as \emph{WCV}) in Copilot defined in \cite{WCV1}, \cite{WCV2} and \cite{WCV3} by C\'esar A. Mu\~{n}oz, Anthony J. Narkawicz and James Chamberlain, Mar\'ia Consiglio and Jason Upchurch. Those criteria ensure that two planes, if this criterion is met, are in a safe situation. To some extent, this criterion is a guarantee that, if respected, a TCAS alert would not be triggered. 
+	
+	The criterion has an horizontal and vertical part, as shown by its formula : 
+	\begin{figure}[!htb]
+		\centering
+		\includegraphics[height=40mm]{images/WCV/wcv.pdf}\\
+	\end{figure}\\
+	where $t_{coa}$ and $d_{cpa}$ are defined by the following :
+	\begin{figure}[!ht]
+		\centering
+		$d_{cpa} (\textbf{s},\textbf{v}) = \parallel \textbf{s} + t_{cpa}(\textbf{s}, \textbf{v})\textbf{v} \parallel$\\ \includegraphics[height=20mm]{images/WCV/tcoa.pdf}
+	\end{figure}\\
+	and $t_{var}$ is a time variable which can be $\tau$, $tcpa$, $\tau_{mod}$ or $tep$ ($\tau$ and $\tau_{mod}$ are two time thresholds defined by the TCAS II algorithm) defined in \cite{WCV1}.
+	
+	This allows us to define different areas of violation, which are included in each other according to the inclusion theorem in \cite{WCV1} and illustrated by the figure~\ref{fig:graph}. The implementation is 282 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/9b58e239284368c4e5665231f53b209658cf62b3/WCV/main.hs}. The proof mode generates 980 C source files, which are then verified by frama-c in 10 minutes and 2 sec on an intel i5-4200U\footnote{The whole process is logged in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/ef85521e9e5df85368f9f51f686e171b6c1413da/example38/copilot-sbv-codegen/logfwp \\ and a compact log better suited for readability is in  https://raw.githubusercontent.com/Copilot-Language/examplesForACSL/ef85521e9e5df85368f9f51f686e171b6c1413da/example38/copilot-sbv-codegen/logfwpcompact}.	In compiling mode, the copilot toolchain generates only 14 C source files, which are compiled in two seconds with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/56e35879cfb21286e924227dd61a770c05a43930/example38/copilot-sbv-codegen}.
+	
+	\begin{figure}[!ht]
+		\centering
+		\includegraphics[height=80mm]{images/WCV/graph.pdf}\\
+		\caption{We clearly see here $WCV_{\tau} \Rightarrow WCV_{tcpa} \Rightarrow WCV_{\tau_{mod}} \Rightarrow WCV_{tep}$. Here we decided to choose $DTHR = 1 nmi$, $TTHR = TCOA = 30 s$, and $ZTHR = 475 ft$. }
+		\label{fig:graph}
+	\end{figure} 
+	
+	A unit test was written for the generated code in C99, with some test cases provided (not published). All of those scenarii are involving two planes, giving a sampling rate of 1 second, with planes entering and getting out of violation. This was used for writing a monitor that would run on a ground station, which has to monitor both real UAVs and fake simulated vessels (there is no way for the monitor to discriminate both). The general structure of the monitor is in the Figure~\ref{fig:Monitor structure}. 
+	
+	More specifically, the planes would communicate with a first interface (named GUI here), that would take care of the conversion between raw data from the planes and the monitor.c (on stdout), and translate them into audible alerts (or visible) and feed the monitor on stdin. The monitor will take care of all the planes, and check if any two of them trigger a WCV alert, after computation by the driver.c. Given that the data is given into latitude and longitude coordinates, a converter has to be used to convert them in x, y, z coordinates. More precisely, the space is defined by the following : z is kept the same for all planes, x and y are obtained by projecting the ownship and the intruder on a plane tangent to the earth on the middle point of the great circle that connects the two vertical projection points.
+	
+	It is planned to test this monitor in a real situation in the Fall 2015.
+	
+\begin{figure}[ht!]
+	\centering
+	\footnotesize
+	\begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45,thick]
+	\tikzstyle{every state}=[rectangle, rounded corners]
+	
+	\node[state] (Plane) {Planes};
+	\node[state] (GUI) [right of=Plane] {GUI};
+	\node[state] (Mon) [right=2cm of GUI] {monitor.c};
+	\node[state] (dr) [right of=Mon] {driver.c};
+	\node[state] (ex) [above right of=Mon] {external};
+	
+	
+	\node[state] (AL) [below of=GUI] {ALERT};
+	\node[state] (Co) [below of=Mon] {Converter};
+	
+	
+	\tikzstyle{every node}=[]
+	
+	
+	\path
+	(Plane) edge node {UDP} (GUI)
+	(GUI) edge [bend right] node {stdin} (Mon)
+	(Mon) edge [bend right] node {stdout} (GUI)
+	(Mon) edge [bend left, anchor=west] node {lat-long} (Co)
+	(Co) edge [bend left, anchor=west] node[left] {x,y,z} (Mon)
+	(Mon) edge [anchor=west] node {assign} (ex)
+	(Mon) edge [anchor=south] node {call} (dr)
+	(ex) edge [anchor=west] node {feed} (dr)
+	(GUI) edge node {} (AL);
+	\end{tikzpicture}
+	\label{fig:Monitor structure}
+	\caption{The overall structure of the monitor}
+\end{figure} 
+
 	
 	\section*{Conclusion}
 	\addcontentsline{toc}{section}{Conclusion}
@@ -630,7 +698,7 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	\section*{Acknowledgment}
 	
-	The author would like to thank Dr. Alwyn Goodloe for his precious supervising, Dr. Lee Pike, Dr. Levent Erkok for his work on SBV and improves for the needs of the project, Dr. César A. Muñoz for his criterions of Well-Clear and Safe separation, Dr. Andrew Smith, Dr. Natasha Neogi, Dr. Mariano Moscato, Dr. Jean-Christophe Filliâtre.
+	The author would like to thank Dr. Alwyn Goodloe for his supervising, Dr. Lee Pike, Dr. Levent Erkok, Dr. César A. Muñoz, Dr. Andrew Smith, Dr. Natasha Neogi, Dr. Mariano Moscato, Dr. Jean-Christophe Filliâtre.
 	
 	
 	\section*{Appendix}

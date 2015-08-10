@@ -1,14 +1,14 @@
 \select@language {english}
-\contentsline {section}{Introduction}{2}{section*.2}
+\contentsline {section}{Introduction}{1}{section*.1}
 \contentsline {section}{\numberline {1}Preliminaries}{2}{section.1}
 \contentsline {subsection}{\numberline {1.1}Copilot language}{2}{subsection.1.1}
 \contentsline {subsubsection}{\numberline {1.1.1}Syntax}{2}{subsubsection.1.1.1}
-\contentsline {subsubsection}{\numberline {1.1.2}Interaction}{3}{subsubsection.1.1.2}
+\contentsline {subsubsection}{\numberline {1.1.2}Interaction}{2}{subsubsection.1.1.2}
 \contentsline {subsection}{\numberline {1.2}Introduction to ACSL and frama-c}{3}{subsection.1.2}
 \contentsline {subsection}{\numberline {1.3}Copilot toolchain}{4}{subsection.1.3}
 \contentsline {subsection}{\numberline {1.4}Main objective and first modifications}{4}{subsection.1.4}
-\contentsline {section}{\numberline {2}First attempt}{5}{section.2}
-\contentsline {subsection}{\numberline {2.1}Hand-written ACSL}{5}{subsection.2.1}
+\contentsline {section}{\numberline {2}First attempt}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Hand-written ACSL}{4}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Automatic generation of contracts by induction on the syntax.}{6}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Values Analysis vs Weakest Liberal Precondition.}{6}{subsection.2.3}
 \contentsline {subsection}{\numberline {2.4}CompCert.}{7}{subsection.2.4}
@@ -18,5 +18,5 @@
 \contentsline {subsection}{\numberline {3.1}First application : Self-separation criteria}{10}{subsection.3.1}
 \contentsline {subsection}{\numberline {3.2}Second application : TCAS II}{11}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Third application : Well-clear criterion}{12}{subsection.3.3}
-\contentsline {section}{Conclusion}{12}{section*.3}
-\contentsline {section}{Références}{13}{section*.4}
+\contentsline {section}{Conclusion}{13}{section*.3}
+\contentsline {section}{Références}{14}{section*.4}
