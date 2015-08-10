@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.24)  10 AUG 2015 13:07
+This is XeTeX, Version 3.14159265-2.6-0.99991 (MiKTeX 2.9 64-bit) (preloaded format=xelatex 2015.7.24)  10 AUG 2015 13:12
 entering extended mode
 **rapport.tex
 (rapport.tex
@@ -1692,81 +1692,86 @@ Overfull \hbox (17.0pt too wide) in paragraph at lines 688--693
 ]
 Requested font "[lmmono8-regular]" at 5.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmmono8-regular.otf
+
+Underfull \hbox (badness 10000) in paragraph at lines 793--794
+
+ []
+
 Requested font "[lmromancaps10-regular]:mapping=tex-text" at 6.0pt
  -> C:/Program Files/MiKTeX 2.9/fonts/opentype/public/lm/lmromancaps10-regular.
 otf
 
-Overfull \hbox (1.668pt too wide) detected at line 813
+Overfull \hbox (1.668pt too wide) detected at line 815
 []  
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 816
+Overfull \hbox (1.668pt too wide) detected at line 818
 []  
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 821
+Overfull \hbox (1.668pt too wide) detected at line 823
 []  
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 826
+Overfull \hbox (1.668pt too wide) detected at line 828
 []  
  []
 
 
-Overfull \hbox (38.4292pt too wide) detected at line 831
+Overfull \hbox (38.4292pt too wide) detected at line 833
  [] 
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 831
+Overfull \hbox (1.668pt too wide) detected at line 833
 []  
  []
 
 
-Overfull \hbox (19.01407pt too wide) detected at line 840
+Overfull \hbox (19.01407pt too wide) detected at line 842
  [] 
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 840
+Overfull \hbox (1.668pt too wide) detected at line 842
 []  
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 853
+Overfull \hbox (1.668pt too wide) detected at line 855
 []  
  []
 
 
-Overfull \hbox (24.80716pt too wide) detected at line 859
+Overfull \hbox (24.80716pt too wide) detected at line 861
  [] 
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 859
+Overfull \hbox (1.668pt too wide) detected at line 861
 []  
  []
 
 
-Overfull \hbox (11.69363pt too wide) detected at line 865
+Overfull \hbox (11.69363pt too wide) detected at line 867
  [] 
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 865
+Overfull \hbox (1.668pt too wide) detected at line 867
 []  
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 869
+Overfull \hbox (1.668pt too wide) detected at line 871
 []  
  []
 
 
-Overfull \hbox (1.668pt too wide) detected at line 877
+Overfull \hbox (1.668pt too wide) detected at line 879
 []  
  []
 
@@ -1777,19 +1782,19 @@ runsystem(del "rapport.mintedmd5")...executed.
 runsystem(del "rapport.pyg")...executed.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 701--884
+Underfull \hbox (badness 10000) in paragraph at lines 701--886
 
  []
 
 [15
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 884.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 884.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 886.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 886.
  (rapport.aux)
-Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 884.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 884.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 884.
+Package atveryend Info: Empty hook `AtVeryEndDocument' on input line 886.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 886.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 886.
  ) 
 Here is how much of TeX's memory you used:
  41460 strings out of 428790
