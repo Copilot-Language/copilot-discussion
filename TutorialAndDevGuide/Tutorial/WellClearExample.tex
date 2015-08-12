@@ -248,6 +248,7 @@ arithSat = onlySat      def { nraNLSat = True, debug = False }
 \subsection{Compiling process}
 
 The Haskell source file is then compiled using the SBV backend. The file is first preprocessed using m4 into an other Haskell file with all constants replaced by their appropriate values. Then, after parsing, we obtain a first AST that is then reified to a core AST (some beta reduction are done), using standard reification techniques in \cite{Copilot06}. Then some AST transformers that keep the semantics are applied, transforming some operands that do not exist in SBV into expressions with only operators with SBV (recip, abs, ...). After this, we first transform the AST into an other one used by SBV, and in the process we generate both ACSL source code and DOT code. This means that the SBV AST contains "decorative" nodes that contain a ACSL or DOT code describing the child AST (TODO modify expression). 
+
 This nodes are then converted into comments into the C sources files that are then checked against the source code generated for the child AST with frama-c wp plugin. This helps us increase the confidence in the compilation process, by checking two different techniques (pretty printing and compilation) each against the other, hence reducing the probability that a similar bug is present both in the pretty printer (which generates the ACSL contracts) and the SBV compiler. Moreover, the same Haskell that has been written at top level has been checked with Metitarski after the m4 expansion. This can be shown by the following Figure~\ref{fig:WCVprocess} :
 
 
@@ -271,19 +272,19 @@ This nodes are then converted into comments into the C sources files that are th
 	\node[state] (Core) [below=0.3cm of RR] {Copilot.Core AST};
 	
 	
-	\node[state] (ACSL) [below of=PP] {\begin{tabular}[b]{l}
-		ACSL\\ generator
+	\node[state] (ACSL) [below right= 2cm of Core] {\begin{tabular}[b]{l}
+		ACSL\\ code
 		\end{tabular}};
 	\node[state] (DOTc) [right of=ACSL] {\begin{tabular}[b]{l}
-		DOT\\ generator
+		DOT\\ code
 		\end{tabular}};
-	\node[state] (SBV) [below of=Core] {SBV Back-End};
+	\node[state] (SBV) [below of=Core] {SBV AST};
 	\node[state] (C99S) [below of=SBV] {\begin{tabular}[b]{l}
 		DOT\\ \hline ACSL\\ \hline C99
 		\end{tabular}};
 	\node[state] (DOT) [below right of=C99S] {DOT/graphviz};
-	\node[state] (CCOMP) [below left=0.3cm and 0.3cm of C99S] {CompCert};
-	\node[state] (ASM) [below=1cm of CCOMP] {Assembly code};
+	\node[state] (SMT) [left=3cm of SBV] {SMTLib code};
+	\node[state] (ASM) [below left of= C99S] {Assembly code};
 	
 	
 	\tikzstyle{every node}=[]
@@ -297,13 +298,13 @@ This nodes are then converted into comments into the C sources files that are th
 	(M4) edge [text width=2.5cm] node {Preprocessing} (M5)
 	(M5) edge [text width=1.5cm] node {Parsing} (Lang)
 	(Core) edge [anchor=east] node {Translation} (SBV)
-	edge node {} (PP)
 	(ACSL) edge [bend left, anchor=west] node {Integration} (C99S)
 	(DOTc) edge [bend left, anchor=east] node {} (C99S)
-	(PP) edge [->, anchor=east, text width=2cm] node {ACSL generation} (ACSL)
-	(PP) edge [->, anchor=west] node {DOT generation} (DOTc)
-	(C99S) edge [->, anchor=north west] node {make} (CCOMP)
-	(CCOMP) edge [->, anchor=east] node {Cross-compilation} (ASM)
+	(Core) edge [->, anchor=north, text width=3cm] node {ACSL generation} (ACSL)
+	(Core) edge [->, anchor=west] node {DOT generation} (DOTc)
+	(RR) edge [bend right, ->, anchor=north east,text width=4cm] node {SMTlib generation of high level properties} (SMT)
+	(SMT) edge [loop below, ->, anchor=north,text width=4cm] node {Verification with an SMT solver (Z3,...)} (SMT)
+	(C99S) edge [->, anchor=east] node {Cross-compilation} (ASM)
 	(C99S) edge [loop left, ->, anchor=east] node {Verification with frama-c WP plugin} (C99S)
 	(C99S) edge [->, anchor=west] node {Extraction and graph generation} (DOT)
 	(SBV) edge [->,anchor=east] node {Compilation} (C99S);
