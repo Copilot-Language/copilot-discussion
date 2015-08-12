@@ -295,7 +295,7 @@ This nodes are then converted into comments into the C sources files that are th
 	(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (RR)
 	(RR) edge [anchor=west, text width=2.5cm] node {} (Core)
 	%% edge node {0,1,L} (C)
-	(M4) edge [text width=2.5cm] node {Preprocessing} (M5)
+	(M4) edge [text width=2.5cm, anchor = west] node {Preprocessing with m4} (M5)
 	(M5) edge [text width=1.5cm] node {Parsing} (Lang)
 	(Core) edge [anchor=east] node {Translation} (SBV)
 	(ACSL) edge [bend left, anchor=west] node {Integration} (C99S)
