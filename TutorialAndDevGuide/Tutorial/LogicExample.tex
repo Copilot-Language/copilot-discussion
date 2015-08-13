@@ -1,3 +1,7 @@
+\newcommand{\previous}{\overset{\leftarrow}{\bigcirc}}
+\newcommand{\alwaysBeen}{\overset{\leftarrow}{\square}}
+\newcommand{\eventuallyPrev}{\overset{\leftarrow}{\lozenge}}
+
 \section{Logic Libraries}~\label{sec:logic}
 There are three logic libraries that are useful for monitoring temporal logic
 properties: the LTL, PTLTL, and MTL libraries.
@@ -12,7 +16,7 @@ bounded LTL library are given in Figure \ref{fig:ltl_desc}.
 
 All LTL properties except those involving only \verb,next,
 require a nonnegative bound \verb,n, that gives the number of transitions
-after the current period that the LTL property must hold for in order
+after the current period that the property must hold for in order
 for the bounded LTL property to be true.
 A stream must have sufficient history when being used with
 an LTL operator, i.e., any stream to which \verb,next, is applied must
@@ -21,26 +25,28 @@ have one value that may be dropped from it and if the nonnegative bound
 \verb,n, values in the stream that can be dropped.
 
 \begin{figure*}[!htb]
-\begin{tabular}{l l}
-\verb,next s, & True when the next value of \verb,s, is true\\
-\verb,always n s, & True when the current and next \verb,n,
-                    values of \verb,s, are all true\\
-\verb,eventually n s, & True when at least one of the current or
-                        next \verb,n, values of \verb,s, are all true\\
-\verb,until n s0 s1, & True when the following hold:
-                       \verb,s0, is currently true, \verb,s1,
-                       is true at\\
-                     & least once in the next \verb,n, steps,
-                       and \verb,s0, holds up until the first step\\
-                     & that \verb,s1, holds. Requires $\verb,n, > 0$.\\
-\verb,release n s0 s1, & True when either the current and next \verb,n,
-                         values of \verb,s1, are all true or\\
-                       & when the following hold: \verb,s0, is true at
-                         least once in the current\\
-                       & or next \verb,n, steps and \verb,s1, is
-                         true up until and including that step.\\
-                       & Requires $\verb,n, > 0$.\
+\begin{tabular}{l l l}
+$\verb,next s, \leadsto s_{\bigcirc}$ & where &
+  $ \forall t \in \mathbb{N}~( s_{\bigcirc}(t) = s(t + 1) )$\\
+$\verb,always n s, \leadsto s_{\square}$ & where &
+  $ \forall t \in \mathbb{N}~( s_{\square}(t) = \mathtt{True}
+    \Leftrightarrow \forall t' \in [0,n] \oplus t~(s(t') = \mathtt{True} ))$\\
+$\verb,eventually n s, \leadsto s_{\lozenge}$ & where &
+  $ \forall t \in \mathbb{N}~( s_{\lozenge}(t) = \mathtt{True}
+    \Leftrightarrow \forall t' \in [0,n] \oplus t~(s(t') = \mathtt{True} ))$\\
+$\verb,until n s0 s1, \leadsto s_{\mathbf{U}}$ & where &
+  $ \forall t \in \mathbb{N}~( s_{\mathbf{U}}(t) = \mathtt{True}
+    \Leftrightarrow$\\ &&
+  $ \exists t' \in [1,n] \oplus t~ (s_1(t') = \mathtt{True}~\wedge~
+    \forall t'' \in [t,t']~ (s_0(t'') = \mathtt{True})))$\\
+$\verb,release n s0 s1, \leadsto s_{\mathbf{R}} $ & where &
+  $ \forall t \in \mathbb{N} (s_{\mathbf{R}}(t) = \mathtt{True} \Leftrightarrow
+    \forall t' \in [0,n] \oplus t~(s_1 (t') = \mathtt{True})~\vee $\\ &&
+  $ \exists t' \in [0,n] \oplus t~ (s_0(t') = \mathtt{True}~\wedge~
+    \forall t'' \in [t,t']~ (s_1(t'') = \mathtt{True})))$\\
 \end{tabular}
+Where $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
+$\mathtt{s1} \leadsto s_1$.
 \caption{A description of the LTL library functions.}
 \label{fig:ltl_desc}
 \end{figure*}
@@ -49,10 +55,11 @@ Figure \ref{fig:ltl_example} provides an example of the use of LTL library funct
 to generate streams for monitors:
 
 \begin{itemize}
-\item The first stream \verb,lockedUntil, is used to monitor that
-when a door of a vehicle is signalled to be opened, the vehicle
-stops within four sampled values and that the doors remain locked
-until this stopping occurs.
+\item The first stream \verb,lockedUntil, is used to monitor the property
+that when a lock is signalled to be unlocked (\verb,canUnlock, becomes true),
+the lock is allowed to be unlocked (\verb,canUnlock, becomes true) within four
+sampled values, and the the lock remains locked until it is allowed to be
+unlocked.
 
 \item The second stream \verb,switchOnInTime, is used to monitor that
 when an event \verb,isEvent, occurs, a switch turns on (\verb,isSwitchOn,
@@ -62,15 +69,15 @@ becomes true) within three sampled values.
 \begin{figure*}[!htb]
 \begin{lstlisting}[frame=none]
 lockedUntil :: Stream Bool
-lockedUntil = openDoorSignal ==> (until 4 isLocked isStopped)
+lockedUntil = unlockSignal ==> (until 4 isLocked canUnlock)
   where
-  openDoorSignal :: Stream Bool
-  openDoorSignal =
-    (replicate 5 False) ++ (extern "open_door_signal" Nothing)
+  unlockSignal :: Stream Bool
+  unlockSignal =
+    (replicate 5 False) ++ (extern "unlock_signal" Nothing)
   isLocked :: Stream Bool
   isLocked = (replicate 5 False) ++ (extern "locked" Nothing)
-  isStopped :: Stream Bool
-  isStopped = (replicate 5 False) ++ (extern "stopped" Nothing)
+  canUnlock :: Stream Bool
+  canUnlock = (replicate 5 False) ++ (extern "can_unlock" Nothing)
 
 switchOnInTime :: Stream Bool
 switchOnInTime =
@@ -83,8 +90,8 @@ switchOnInTime =
 
 spec :: Spec
 spec = do
-  trigger "open_door_lock_problem" (not lockedUntil) []
-  trigger "switch_on_in_time_problem" (not switchOnInTime) []
+  trigger "unlock_problem" (not lockedUntil) []
+  trigger "switch_on_time_problem" (not switchOnInTime) []
 \end{lstlisting}
 \caption{An example use of the LTL library.}
 \label{fig:ltl_example}
@@ -99,33 +106,42 @@ and $\mathbf{S}$ (\verb,since,), which can be used to monitor
 properties that must hold over all the current and past values of the stream.
 
 \begin{figure*}[!htb]
-\begin{tabular}{l l}
-\verb,previous s, & True when the previous value of \verb,s, is true\\
-\verb,alwaysBeen s, & True when the current and previous \verb,n,
-                        values of \verb,s, are all true\\
-\verb,eventuallyPrev s, & True when at least one of the current or
-                            previous \verb,n, values of \verb,s, are all true\\
-\verb,since s0 s1, & True when either \verb,s1, never holds or when
-                     \verb,s1, first holds at a time \verb,n, and\\
-                   & \verb,s0, holds constantly starting from
-                     $\verb,n, + 1$
+\begin{tabular}{l l l}
+$\verb,previous s, \leadsto s_{\previous}$ & where &
+  $ s_{\previous}(0) = \mathtt{False} \wedge
+    \forall t \in \mathbb{N}^+ (s_{\overset{\leftarrow}{\bigcirc}}(t) = s(t - 1))$\\
+$\verb,alwaysBeen s, \leadsto s_{\alwaysBeen}$ & where &
+  $ \forall t \in \mathbb{N} ~ (s_{\alwaysBeen}(t) = \mathtt{True}
+    \Leftrightarrow \forall t' \in [0,t] ~ (s(t') = \mathtt{True})$\\
+$\verb,eventuallyPrev s, \leadsto s_{\eventuallyPrev}$ & where &
+  $ \forall t \in \mathbb{N} ~ (s_{\eventuallyPrev}(t) = \mathtt{True}
+    \Leftrightarrow \exists t' \in [0,t] ~ (s(t') = \mathtt{True})$\\
+$\verb,since s0 s1, \leadsto s_{\mathbf{S}}$ & where &
+  $ s_{\mathbf{S}}(0) = \mathtt{True} \wedge
+    \forall t \in \mathbb{N}^+~(s_{\mathbf{S}}(t) = \mathtt{True}
+    \Leftrightarrow \exists t' \in [0,t - 1]$ \\ &&
+  $ (s_1(t') = \mathtt{True}
+    \Rightarrow \forall t'' \in [t' + 1,t]~(s_0(t'') = \mathtt{True})))$
 \end{tabular}
+Where $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
+$\mathtt{s1} \leadsto s_1$.
 \caption{A description of the PTLTL library functions.}
 \label{fig:ptltl_desc}
 \end{figure*}
 
 The code in Figure \ref{fig:ptltl_example} provides an example of the use of the PTLTL function
 \verb,alwaysBeen, to produce a stream that could be used in a monitor:
-the stream \verb,countMonotonicallyIncreasing, is true if the values of the
-nonnegatively-valued stream \verb,count, have increased monotonically so far.
+the stream \verb,countMonotonicallyIncreasing, is true when the values of
+the nonnegatively-valued stream \verb,count, have increased monotonically
+so far.
 
 \begin{figure*}[!htb]
 \begin{lstlisting}[frame=none]
 countMonotonicallyIncreasing :: Stream Bool
 countMonotonicallyIncreasing = alwaysBeen (count >= ([0] ++ count))
   where
-  count :: Stream Int32
-  count = extern "nonnegative_count" Nothing
+  count :: Stream Word32
+  count = extern "count" Nothing
 \end{lstlisting}
 \caption{An example use of a PLTL library function.}
 \label{fig:ptltl_example}
@@ -142,89 +158,87 @@ sampling rate may result in undesired values.
 
 The MTL library provides an implementation of Metric Temporal Logic over a discrete time domain
 with implementations of metric temporal operators
-$\mathbf{U}_{I}$ (\verb,until,), $\mathbf{S}_{I}$ (\verb,since,), $\mathbf{R}_{I}$ (\verb,release,),
-$\mathbf{T}_{I}$ (\verb,trigger,), $\lozenge_{I}$ (\verb,eventually,),
-$\square_{I}$ (\verb,always,), $\overset{\leftarrow}{\lozenge}_{I}$ (\verb,eventuallyPrev,), and
-$\overset{\leftarrow}{\square}_{I}$ (\verb,alwaysBeen,) along with matching variants
-$\mathbf{U}^{\downarrow}_{I}$ (\verb,matchingUntil,),
-$\mathbf{S}^{\downarrow}_{I}$ (\verb,matchingSince,),
-$\mathbf{R}^{\downarrow}_{I}$ (\verb,matchingRelease,),
-and $\mathbf{T}^{\downarrow}_{I}$ (\verb,matchingTrigger,).
-A description of the MTL library functions is given in Figure
-\ref{fig:mtl_desc}, in which a a stream \verb,s, is ``true at a sampled
-time $t$'' iff \verb,s, is true at a sample that aligns with
-(is current at the same time as) the
-sampled time $t$ in the clock stream \verb,clk,.
+$\mathbf{U}_{I}$ (\verb,until,), $\mathbf{S}_{I}$ ({\tt since}),
+$\mathbf{R}_{I}$ ({\tt release}),
+$\mathbf{T}_{I}$ (\verb,trigger,), $\lozenge_{I}$ ({\tt eventually}),
+$\square_{I}$ (\verb,always,),
+$\eventuallyPrev_{I}$ ({\tt eventuallyPrev}), and
+$\alwaysBeen_{I}$ ({\tt alwaysBeen}) along with matching variants
+$\mathbf{U}^{\downarrow}_{I}$ ({\tt matchingUntil}),
+$\mathbf{S}^{\downarrow}_{I}$ ({\tt matchingSince}),
+$\mathbf{R}^{\downarrow}_{I}$ ({\tt matchingRelease}),
+and $\mathbf{T}^{\downarrow}_{I}$ ({\tt matchingTrigger}).
+A description of the MTL library functions (omitting the matching variants)
+is given in Figure \ref{fig:mtl_desc}.
 
 \begin{figure*}[!htb]
-\begin{tabular}{l l}
-\verb,until l u clk dist s0 s1,
-  & True when there exists a sampled time $t$ in the\\
-  & interval $[\verb,clk + l,, \verb,clk + u,]$ at which \verb,s1,
-    is true and\\
-  & when \verb,s0, is true for all sampled times in the interval\\
-  & $[\verb,clk,, t)$.\\
-\verb,since l u clk dist s0 s1,
-  & True when there exists a sampled time $t$ in the\\
-  & interval $[\verb,clk - u,, \verb,clk - l,]$ at which \verb,s1,
-    is true and\\
-  & when \verb,s0, is true for all sampled times in the interval\\
-  & $(t,\verb,clk,]$.\\
-\verb,release l u clk dist s0 s1,
-  & True when for all sampled times $t$ in the interval\\
-  & $[\verb,clk + l,, \verb,clk + u,]$, \verb,s1, holds or
-    there is a sampled\\
-  & time in the interval $[\verb,clk,, t)$ when \verb,s0, holds.\\
-\verb,trigger l u clk dist s0 s1,
-  & True when for all sampled times $t$ in the interval\\
-  & $[\verb,clk - u,, \verb,clk - l,]$, \verb,s1, holds or
-    there is a sampled\\
-  & time in the interval $(t, \verb,clk,]$ when \verb,s0, holds.\\
-\verb,eventually l u clk dist s,
-  & True when \verb,s, is true at some sampled time in the\\
-  & interval $[\verb,clk + l,, \verb,clk + u,]$.\\
-\verb,always l u clk dist s,
-  & True when \verb,s, is true at all sampled times in the\\
-  & interval $[\verb,clk + l,, \verb,clk + u,]$.\\
-\verb,eventuallyPrev l u clk dist s, 
-  & True when \verb,s, is true at some sampled time in the\\
-  & interval $[\verb,clk - u,, \verb,clk - l,]$.\\
-\verb,alwaysBeen l u clk dist s,
-  & True when \verb,s, is true at all sampled times in the\\
-  & interval $[\verb,clk - u,, \verb,clk - l,]$.\\
-\verb,matchingUntil l u clk dist s0 s1,
-  & True when there exists a sampled time $t$ in the\\
-  & interval $[\verb,clk + l,, \verb,clk + u,]$ at which \verb,s1,
-    is true and\\
-  & when \verb,s0, is true for all sampled times in the interval\\
-  & $[\verb,clk,, t]$.\\
-\verb,matchingSince l u clk dist s0 s1,
-  & True when there exists a sampled time $t$ in the\\
-  & interval $[\verb,clk - u,, \verb,clk - l,]$ at which \verb,s1,
-    is true and\\
-  & when \verb,s0, is true for all sampled times in the interval\\
-  & $[t,\verb,clk,]$.\\
-\verb,matchingRelease l u clk dist s0 s1,
-  & True when for all sampled times $t$ in the interval\\
-  & $[\verb,clk + l,, \verb,clk + u,]$, \verb,s1, holds or
-    there is a sampled\\
-  & time in the interval $[\verb,clk,, t]$ when \verb,s0, holds.\\
-\verb,matchingTrigger l u clk dist s0 s1,
-  & True when for all sampled times $t$ in the interval\\
-  & $[\verb,clk - u,, \verb,clk - l,]$, \verb,s1, holds or
-    there is a sampled\\
-  & time in the interval $[t, \verb,clk,]$ when \verb,s0, holds.\\
+\begin{tabular}{l l l}
+$\verb,until l u clk dist s0 s1, \leadsto s_{\mathbf{U}}$ & where &
+  $ \forall t \in \mathbb{T}~(s_{\mathbf{U}^clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \exists d \in [l,u]~s.t.~t + d \in \mathbb{T}~
+    (s_1^{clk} (t + d) = \mathtt{True}$ \\ &&
+  $ \wedge~\forall t' \in [0,d) \oplus t \cap \mathbb{T}~
+    (s_0^{clk}(t') = \mathtt{True})))$\\
+$\verb,since l u clk dist s0 s1, \leadsto s_{\mathbf{S}}$& where &
+  $ \forall t \in \mathbb{T}~(s_{\mathbf{S}}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \exists d \in [l,u]~s.t.~t - d \in \mathbb{T}~
+    (s_1^{clk} (t - d) = \mathtt{True}$ \\ &&
+  $ \wedge~\forall t' \in -[0,d) \oplus t \cap \mathbb{T}~
+    (s_0^{clk}(t') = \mathtt{True})))$\\
+$\verb,release l u clk dist s0 s1, \leadsto s_{\mathbf{R}}$ & where &
+  $ \forall t \in \mathbb{T}~(s_{\mathbf{R}}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \forall d \in [l,u]~s.t.~t + d \in \mathbb{T}~
+    (s_1^{clk} (t + d) = \mathtt{True}$ \\ &&
+  $ \vee~\exists t' \in [0,d) \oplus t \cap \mathbb{T}~
+    (s_0^{clk}(t') = \mathtt{True})))$\\
+$\verb,trigger l u clk dist s0 s1, \leadsto s_{\mathbf{T}}$ & where &
+  $ \forall t \in \mathbb{T}~(s_{\mathbf{R}}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \forall d \in [l,u]~s.t.~t - d \in \mathbb{T}~
+    (s_1^{clk} (t - d) = \mathtt{True}$ \\ &&
+  $ \vee\exists t' \in -[0,d) \oplus t \cap \mathbb{T}~
+    (s_0^{clk}(t') = \mathtt{True})))$\\
+$\verb,eventually l u clk dist s, \leadsto s_{\lozenge}$ & where &
+  $ \forall t \in \mathbb{T}~(s_{\lozenge}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \exists d \in [l,u]~s.t.~t + d \in \mathbb{T}~
+    (s^{clk}(t + d) = \mathtt{True}))$\\
+$\verb,always l u clk dist s, \leadsto s_{\square}$ & where &
+  $ \forall t \in \mathbb{T}~(s_{\square}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \forall d \in [l,u]~s.t.~t + d \in \mathbb{T}~
+    (s^{clk}(t + d) = \mathtt{True}))$\\
+$\verb,eventuallyPrev l u clk dist s, \leadsto s_{\eventuallyPrev}$
+  & where &
+  $ \forall t \in \mathbb{T}~(s_{\eventuallyPrev}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \exists d \in [l,u]~s.t.~t - d \in \mathbb{T}~
+    (s^{clk}(t - d) = \mathtt{True}))$\\
+$\verb,alwaysBeen l u clk dist s, \leadsto s_{\alwaysBeen}$
+  & where &
+  $ \forall t \in \mathbb{T}~(s_{\alwaysBeen}^{clk}(t) = \mathtt{True} 
+    \Leftrightarrow $ \\ & &
+  $ \forall d \in [l,u]~s.t.~t - d \in \mathbb{T}~
+    (s^{clk}(t - d) = \mathtt{True}))$
 \end{tabular}
+Where $\mathbb{T}$ is the set of sampled times,
+$\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$,
+$\mathtt{s1} \leadsto s_1$, $\mathtt{clk} \leadsto clk$,
+and for any stream $s$ and time
+$t \in \mathbb{T}$, $s^{clk}(t) = s(clk^{-1}(t))$.
 \caption{A description of the MTL library functions.}
 \label{fig:mtl_desc}
 \end{figure*}
 Each MTL operator must, in addition to its operand(s),  be provided
-with a lower and upper bound for the interval, a stream \verb,clk,
-of \verb,Int64, time values sampled at the same rate as the stream(s) being
-operated on, and a positive number of time units \verb,dist, giving the
-smallest possible difference between adjacent clock samples. Interval bounds
-must be nonnegative integers, and intervals include all sampled times
-that fall between or equal the provided bounds.
+with a lower and upper bound for the interval, a stream {\tt clk}
+of integral time values sampled at the same rate as the stream(s) being
+operated on, and a positive integer number of time units {\tt dist}
+giving the smallest possible difference between adjacent clock samples.
+Interval bounds must be nonnegative integers, and intervals include all
+sampled times that fall between or equal the provided bounds.
 
 For example, the property $\square_{[10,30]} P$ corresponds to
 \verb,always 10 30 clk 2 p,
@@ -234,7 +248,9 @@ $P$ holds.
 
 
 As with the LTL library, any streams used with future MTL operators must
-have sufficient history.
+have sufficient history. Since it is less straightforward to guarantee
+that streams have sufficient history for use with MTL operators, the past
+MTL operators are more convenient and practical for use in monitors.
 
 Figure \ref{fig:mtl_example} contains a specification that monitors a plane's airspeed for a
 violation of the property that a plane's speed does not exceed a maximum
@@ -244,7 +260,7 @@ values are sampled at a period that is greater than or equal to 1 second.
 If this property holds, then at some time within the past 60 seconds,
 the airspeed should be less than or equal to the maximum airspeed, i.e.,
 the following MTL property should hold:
-$$ \overset{\leftarrow}{\lozenge}_{[0,60]}~\verb,airspeed, \leq \verb,maxAS, $$
+$$ \eventuallyPrev_{[0,60]}~\mathtt{airspeed} \leq \mathtt{maxAS} $$
 
 Whenever this property does not hold, the trigger is evoked in response to
 the detected issue.
@@ -258,7 +274,7 @@ maxAirspeedViolation =
     (not (eventuallyPrev 0 60 clk 1 (airspeed <= maxAS)))
     [arg airspeed, arg clk]
   where
-  clk :: Stream Int64
+  clk :: Stream Word64
   clk = extern "clk_sec" Nothing
   airspeed :: Stream Double
   airspeed = extern "airspeed" Nothing
