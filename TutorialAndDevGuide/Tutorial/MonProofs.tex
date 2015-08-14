@@ -1,48 +1,62 @@
 \section{Proofs of Monitors}~\label{sec:proof}
 
 In addition to proofs on the soundness of the Copilot compilation process, we
-also support some automated proving of theorems about Copilot specifications
-themselves. A proposition is a Copilot stream of type \lstinline{Stream Bool}
-and can be added to a specification using the \lstinline{prop} and
-\lstinline{theorem} functions.
+also support some automated proving of safety properties about Copilot
+specifications themselves. A proposition is a Copilot stream of type
+\lstinline{Stream Bool} and can be added to a specification using the
+\lstinline{prop} and \lstinline{theorem} functions. Consider this Copilot
+monitor specification for a version of the fibonacci sequence:
 
-Consider this Copilot monitor specification for a version of the fibonacci
-sequence:
+\begin{Haskell}
+module Fib where
 
-\begin{lstlisting}
-fib :: Spec
+import Prelude ()
+import Copilot.Language
+import Copilot.Theorem
+
 fib = do
-  theorem "fibn_gre_n"    (fib >= ns) induction
-  theorem "fibn_not_zero" (fib /= 0)  induction
+  theorem "fibn_gre_n" (forall $ fibn >= n) $ kInductZ3 3
 
+  observer "fibn" fibn
+  observer "n"    n
   where
-    fib :: Stream Word32
-    fib = [1, 1] ++ (fib + drop 1 fib)
-    ns :: Stream Word32
-    ns = [0] ++ (ns + 1)
+    fibn = [1, 1] ++ (fibn + drop 1 fibn)
+    n = [0] ++ (n + 1)
+\end{Haskell}
 
-    induction = kInduction def z3
-\end{lstlisting}
+In the specification above, in addition to observing the value of streams in
+the specification, \lstinline{fibn_gre_n} names a theorem provable
+automatically with induction using the Z3 SMT solver. This theorem can be
+checked during reification:
 
-In the above, \lstinline{fibn_gre_n} and \lstinline{fibn_not_zero} name
-theorems, each provable automatically with induction using the Z3 SMT solver.
+\begin{code}
+*Fib> reify fib
+fibn_gre_n: valid (proved with k-induction (k = 3))
+Finished: fibn_gre_n: proof checked successfully
+\end{code}
 
-Overview of supported SMT solvers:
+See Figure~\ref{fig:solvers} for an overview of supported SMT solvers.
 
 \newcommand{\Yes}{\checkmark}
 \newcommand{\No}{\textsf{X}}
-\newcommand{\Kinda}{\textsf{Some}}
+\newcommand{\Some}{\textsf{Some}}
 
-\begin{tabular}{lllccc} 
-Tool       & Version & Interface & NRA    & Trig.\ funs.\ & Quantifiers \\
-\hline
-Z3         & 4.4.0   & SMTLib2   & \Yes   & \No           & \Yes \\
-DReal      & 2.15.01 & SMTLib2   & \Yes   & \Yes          & \No  \\
-Yices      & 2.4.0   & SMTLib2   & \Kinda & \No           & \No  \\
-CVC4       & 1.4     & SMTLib2   & \Kinda & \No           & \Yes \\
-MathSAT    & 5.3.7   & SMTLib2   & \Kinda & \No           & \No  \\
-Alt-Ergo   & 0.99.1  & SMTLib2   & \Yes   & \No           & \Yes \\
-MetiTarski & 2.5     & TPTP      & \Yes   & \Yes          & \Yes \\
+\begin{figure}
+\begin{center}
+\begin{tabular}{lllcccc}
+Tool       & Version & Interface & NL Real Arith.\ & Trig.\ funs.\ & Quantifiers & Bitvectors \\
+\toprule
+Alt-Ergo   & 0.99.1  & SMTLib2   & \Yes{}          & \No{}         & \Yes{}      & \No{}      \\
+CVC4       & 1.4     & SMTLib2   & \Some{}         & \No{}         & \Yes{}      & \Yes{}     \\
+DReal      & 2.15.01 & SMTLib2   & \Yes{}          & \Yes{}        & \No{}       & \No{}      \\
+MathSAT    & 5.3.7   & SMTLib2   & \Some{}         & \No{}         & \No{}       & \Yes{}     \\
+MetiTarski & 2.5     & TPTP      & \Yes{}          & \Yes{}        & \Yes{}      & \No{}      \\
+Yices      & 2.4.0   & SMTLib2   & \Some{}         & \No{}         & \No{}       & \Yes{}     \\
+Z3         & 4.4.0   & SMTLib2   & \Yes{}          & \No{}         & \Yes{}      & \Yes{}     \\
 \end{tabular}
+\end{center}
+\caption{An overview of some supported SMT solvers.}
+\label{fig:solvers}
+\end{figure}
 
 Also, the Kind2 model checker.
