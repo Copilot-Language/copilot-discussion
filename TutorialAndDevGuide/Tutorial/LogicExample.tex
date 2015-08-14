@@ -9,20 +9,20 @@ properties: the LTL, PTLTL, and MTL libraries.
 \subsection{Bounded Linear Temporal Logic}
 The LTL library provides an implementation of a bounded version of Linear
 Temporal Logic. Particularly, it provides implementations for the temporal
-operators $\bigcirc$ (\verb,next,), $\square$ (\verb,always,),
-$\lozenge$ (\verb,eventually,), $\mathbf{U}$ (\verb,until,), and
-$\mathbf{R}$ (\verb,release,). Descriptions of the functions in the
+operators $\bigcirc$ ({\tt next}), $\square$ ({\tt always}),
+$\lozenge$ ({\tt eventually}), $\mathbf{U}$ ({\tt until}), and
+$\mathbf{R}$ ({\tt release}). Descriptions of the functions in the
 bounded LTL library are given in Figure \ref{fig:ltl_desc}.
 
-All LTL properties except those involving only \verb,next,
-require a nonnegative bound \verb,n, that gives the number of transitions
+All LTL properties except those involving only {\tt next}
+require a nonnegative bound {\tt n} that gives the number of transitions
 after the current period that the property must hold for in order
 for the bounded LTL property to be true.
 A stream must have sufficient history when being used with
-an LTL operator, i.e., any stream to which \verb,next, is applied must
+an LTL operator, i.e., any stream to which {\tt next} is applied must
 have one value that may be dropped from it and if the nonnegative bound
-\verb,n, of an LTL operator is greater than 0, then there must be over
-\verb,n, values in the stream that can be dropped.
+{\tt n} of an LTL operator is greater than 0, then there must be over
+{\tt n} values in the stream that can be dropped.
 
 \begin{figure*}[!htb]
 \begin{tabular}{l l l}
@@ -37,15 +37,15 @@ $\verb,eventually n s, \leadsto s_{\lozenge}$ & where &
 $\verb,until n s0 s1, \leadsto s_{\mathbf{U}}$ & where &
   $ \forall t \in \mathbb{N}~( s_{\mathbf{U}}(t) = \mathtt{True}
     \Leftrightarrow$\\ &&
-  $ \exists t' \in [1,n] \oplus t~ (s_1(t') = \mathtt{True}~\wedge~
-    \forall t'' \in [t,t']~ (s_0(t'') = \mathtt{True})))$\\
+  $ \exists t' \in [0,n] \oplus t~ (s_1(t') = \mathtt{True}~\wedge~
+    \forall t'' \in [t,t')~ (s_0(t'') = \mathtt{True})))$\\
 $\verb,release n s0 s1, \leadsto s_{\mathbf{R}} $ & where &
   $ \forall t \in \mathbb{N} (s_{\mathbf{R}}(t) = \mathtt{True} \Leftrightarrow
     \forall t' \in [0,n] \oplus t~(s_1 (t') = \mathtt{True})~\vee $\\ &&
   $ \exists t' \in [0,n] \oplus t~ (s_0(t') = \mathtt{True}~\wedge~
     \forall t'' \in [t,t']~ (s_1(t'') = \mathtt{True})))$\\
 \end{tabular}
-Where $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
+Where $\mathtt{n} \leadsto n$, $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
 $\mathtt{s1} \leadsto s_1$.
 \caption{A description of the LTL library functions.}
 \label{fig:ltl_desc}
@@ -55,14 +55,14 @@ Figure \ref{fig:ltl_example} provides an example of the use of LTL library funct
 to generate streams for monitors:
 
 \begin{itemize}
-\item The first stream \verb,lockedUntil, is used to monitor the property
-that when a lock is signalled to be unlocked (\verb,canUnlock, becomes true),
-the lock is allowed to be unlocked (\verb,canUnlock, becomes true) within four
+\item The first stream {\tt lockedUntil} is used to monitor the property
+that when a lock is signalled to be unlocked ({\tt canUnlock} becomes true),
+the lock is allowed to be unlocked ({\tt canUnlock} becomes true) within four
 sampled values, and the the lock remains locked until it is allowed to be
 unlocked.
 
-\item The second stream \verb,switchOnInTime, is used to monitor that
-when an event \verb,isEvent, occurs, a switch turns on (\verb,isSwitchOn,
+\item The second stream {\tt switchOnInTime}, is used to monitor that
+when an event \verb,isEvent, occurs, a switch turns on ({\tt isSwitchOn}
 becomes true) within three sampled values.
 \end{itemize}
 
@@ -100,9 +100,9 @@ spec = do
 \subsection{Past-Time Linear Temporal Logic}
 The PTLTL library provides an implementation of Past-Time Linear Temporal Logic,
 including implementations for temporal operators
-$\overset{\leftarrow}{\bigcirc}$ (\verb,previous,), $\overset{\leftarrow}{\square}$
-(\verb,alwaysBeen,), $\overset{\leftarrow}{\lozenge}$ (\verb,eventuallyPrev,),
-and $\mathbf{S}$ (\verb,since,), which can be used to monitor
+$\previous$ ({\tt previous}), $\alwaysBeen$
+({\tt alwaysBeen}), $\eventuallyPrev$ ({\tt eventuallyPrev}),
+and $\mathbf{S}$ ({\tt since}), which can be used to monitor
 properties that must hold over all the current and past values of the stream.
 
 \begin{figure*}[!htb]
@@ -225,6 +225,7 @@ $\verb,alwaysBeen l u clk dist s, \leadsto s_{\alwaysBeen}$
     (s^{clk}(t - d) = \mathtt{True}))$
 \end{tabular}
 Where $\mathbb{T}$ is the set of sampled times,
+$\mathtt{l} \leadsto l$, $\mathtt{u} \leadsto u$,
 $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$,
 $\mathtt{s1} \leadsto s_1$, $\mathtt{clk} \leadsto clk$,
 and for any stream $s$ and time
