@@ -3,8 +3,8 @@
 \newcommand{\eventuallyPrev}{\overset{\leftarrow}{\lozenge}}
 
 \section{Logic Libraries}~\label{sec:logic}
-There are three logic libraries that are useful for monitoring temporal logic
-properties: the LTL, PTLTL, and MTL libraries.
+There are three logic libraries for Copilot that are useful for
+monitoring temporal logic properties: the LTL, PTLTL, and MTL libraries.
 
 \subsection{Bounded Linear Temporal Logic}
 The LTL library provides an implementation of a bounded version of Linear
@@ -21,8 +21,9 @@ for the bounded LTL property to be true.
 A stream must have sufficient history when being used with
 an LTL operator, i.e., any stream to which {\tt next} is applied must
 have one value that may be dropped from it and if the nonnegative bound
-{\tt n} of an LTL operator is greater than 0, then there must be over
-{\tt n} values in the stream that can be dropped.
+{\tt n} of an LTL operator is greater than 0, then there must be 
+{\tt n} values in the stream that can be dropped (over {\tt n} values
+in the stream).
 
 \begin{figure*}[!htb]
 \begin{tabular}{l l l}
@@ -93,7 +94,7 @@ spec = do
   trigger "unlock_problem" (not lockedUntil) []
   trigger "switch_on_time_problem" (not switchOnInTime) []
 \end{lstlisting}
-\caption{An example use of the LTL library.}
+\caption{An example use of some LTL library functions.}
 \label{fig:ltl_example}
 \end{figure*}
 
@@ -143,7 +144,7 @@ countMonotonicallyIncreasing = alwaysBeen (count >= ([0] ++ count))
   count :: Stream Word32
   count = extern "count" Nothing
 \end{lstlisting}
-\caption{An example use of a PLTL library function.}
+\caption{An example use of PLTL library function {\tt alwaysBeen}.}
 \label{fig:ptltl_example}
 \end{figure*}
 
@@ -174,7 +175,7 @@ is given in Figure \ref{fig:mtl_desc}.
 \begin{figure*}[!htb]
 \begin{tabular}{l l l}
 $\verb,until l u clk dist s0 s1, \leadsto s_{\mathbf{U}}$ & where &
-  $ \forall t \in \mathbb{T}~(s_{\mathbf{U}^clk}(t) = \mathtt{True} 
+  $ \forall t \in \mathbb{T}~(s_{\mathbf{U}}^{clk}(t) = \mathtt{True} 
     \Leftrightarrow $ \\ & &
   $ \exists d \in [l,u]~s.t.~t + d \in \mathbb{T}~
     (s_1^{clk} (t + d) = \mathtt{True}$ \\ &&
@@ -199,7 +200,7 @@ $\verb,trigger l u clk dist s0 s1, \leadsto s_{\mathbf{T}}$ & where &
     \Leftrightarrow $ \\ & &
   $ \forall d \in [l,u]~s.t.~t - d \in \mathbb{T}~
     (s_1^{clk} (t - d) = \mathtt{True}$ \\ &&
-  $ \vee\exists t' \in -[0,d) \oplus t \cap \mathbb{T}~
+  $ \vee~\exists t' \in -[0,d) \oplus t \cap \mathbb{T}~
     (s_0^{clk}(t') = \mathtt{True})))$\\
 $\verb,eventually l u clk dist s, \leadsto s_{\lozenge}$ & where &
   $ \forall t \in \mathbb{T}~(s_{\lozenge}^{clk}(t) = \mathtt{True} 
@@ -282,6 +283,6 @@ maxAirspeedViolation =
   maxAS :: Stream Double
   maxAS = extern "max_airspeed" Nothing
 \end{lstlisting}
-\caption{An example use of the MTL library.}
+\caption{An example use of the MTL library function {\tt eventuallyPrev}.}
 \label{fig:mtl_example}
 \end{figure*}
