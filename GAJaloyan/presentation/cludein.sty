@@ -1,0 +1,123 @@
+% cludein.sty: Include various file formats directly in a LaTeX file
+
+% *****************************************************************************
+% *******   NOTE: pdflatex must be run with the -shell-escape flag in order for
+% *******         this package to work.
+% *****************************************************************************
+
+% This package provides the following commands:
+%    \includesvg -- include an SVG image
+%    \svgfig     -- create a Figure environment with an SVG image
+%    \includelyx -- include a LyX image
+%
+% USAGE:
+%   \includesvg[width]{path/to/dir/of/svg/file}{name-of-svg-file-without-extension}
+%
+%   \svgfig[placement][label][width]{figname}{caption-text}
+%       -- default arguments can be used with an empty []:
+%       for example, \svgfig[tb][][5cm]{myfigname}{Some caption text.}
+%       uses the default label of fig:myfigname (in this example).
+%
+%   \includelyx{path/to/dir/of/lyx/file}{name-of-lyx-file-without-extension}
+
+\NeedsTeXFormat{LaTeX2e} 
+\RequirePackage[multidot]{grffile} % allow multiple dots in graphics filenames
+\RequirePackage{xargs}
+\RequirePackage{color}
+\RequirePackage{graphicx}
+
+\ProvidesPackage{cludein}[2011/01/17 v0.1
+                          direct inclusion of various file formats]
+\typeout{-> cludein.sty <- by Mark Edgington, 2011}
+%
+%%%%%%%%%%%% BEGIN: auto-include SVG / LyX files %%%%%%%%%%%%%
+
+% usage: \includesvg[width]{path/to/dir/of/svg/file}{name-of-svg-file-without-extension}
+% if source file doesn't exist, nothing is done...
+
+
+\newcommand{\executeiffilenewer}[3]{%
+\ifnum\pdfstrcmp{\pdffilemoddate{#1}}%
+{\pdffilemoddate{#2}}>0%
+{\immediate\write18{#3}}\fi%
+}
+
+
+\newcommand{\includesvg}[3][\undefined]{%
+\IfFileExists{#2/#3.svg}{%
+\executeiffilenewer{#2/#3.svg}{#2/output/#3.pdf}%
+{mkdir -p #2/output ; %
+inkscape -z -D --file=#2/#3.svg %
+--export-pdf=#2/output/#3.pdf --export-latex}%
+\graphicspath{{#2/output/}}% search here for output pdf
+% set figure width
+\ifx#1\undefined
+    \let\svgwidth\undefined
+\else
+    \def\svgwidth{#1}
+\fi
+% properly center a potentially overwide image
+\makebox[\textwidth][c]{%
+  \input{#2/output/#3.pdf_tex}%
+}%
+}{\colorbox[rgb]{0.7,0.7,0.7}{\textcolor{black}{MISSING FIGURE}} }% end of IfFileExists
+}
+
+
+\newcommand{\includesvgnobox}[3][\undefined]{%
+\IfFileExists{#2/#3.svg}{%
+\executeiffilenewer{#2/#3.svg}{#2/output/#3.pdf}%
+{mkdir -p #2/output ; %
+inkscape -z -D --file=#2/#3.svg %
+--export-pdf=#2/output/#3.pdf --export-latex}%
+\graphicspath{{#2/output/}}% search here for output pdf
+% set figure width
+\ifx#1\undefined
+    \let\svgwidth\undefined
+\else
+    \def\svgwidth{#1}
+\fi
+% properly center a potentially overwide image
+\input{#2/output/#3.pdf_tex}%
+}{\colorbox[rgb]{0.7,0.7,0.7}{\textcolor{black}{MISSING FIGURE}} }% end of IfFileExists
+}
+
+% TODO: make secondary \includesvg command which instead of directly exporting to PDF (which
+% currently is uncompressed with inkscape), does something which results in a compressed PDF. (maybe
+% postprocess the uncompressed pdf?)
+
+% usage: \svgfig[placement][label][width]{figname}{caption-text}
+% -- default arguments can be used with an empty []:
+%    for example, \svgfig[tb][][5cm]{myfigname}{Some caption text.}
+%    uses the default label of fig:myfigname (in this example).
+\newcommandx{\svgfig}[5][1=tb, 2=\undefined, 3=\undefined, usedefault]{%
+\begin{figure}[#1]%
+\begin{center}%
+  \includesvg[#3]{svg}{#4}%
+  \caption{#5}%
+\ifx#2\undefined%
+    \label{fig:#4}%
+\else%
+    \label{#2}%
+\fi%
+\end{center}%
+\end{figure}%
+}
+
+% export and include lyx files!
+% sed is used to keep only the stuff inside the document-environment 
+% sed command is: sed -i '0,/\\begin{document}/d; /\\end{document}/,$d' file-to-replace.tex
+\newcommand{\includelyx}[2][lyx]{%
+\executeiffilenewer{#1/#2.lyx}{#1/output/#2.lyx_tex}%
+{
+mkdir -p #1/output ; %
+lyx -e pdflatex #1/#2.lyx ; %
+mv #1/#2.tex #1/output/#2.lyx_tex ; %
+/bin/sed -i '%
+0,/\string\\begin{document}/d; /\string\\end{document}/,$d
+' %
+#1/output/#2.lyx_tex}
+\input{#1/output/#2.lyx_tex}%
+}
+
+%%%%%%%%%%%% END: auto-include SVG / LyX files %%%%%%%%%%%%%

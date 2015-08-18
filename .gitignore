@@ -254,3 +254,4 @@ GAJaloyan/sample_report/rapport.log
 *.log
 GAJaloyan/sample_report/rapport.bbl
 *.aux
+*.pygtex
