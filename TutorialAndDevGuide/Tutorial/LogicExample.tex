@@ -26,6 +26,8 @@ have one value that may be dropped from it and if the nonnegative bound
 in the stream).
 
 \begin{figure*}[!htb]
+
+{\def\arraystretch{1.5}%
 \begin{tabular}{l l l}
 $\verb,next s, \leadsto s_{\bigcirc}$ & where &
   $ \forall t \in \mathbb{N}~( s_{\bigcirc}(t) = s(t + 1) )$\\
@@ -46,8 +48,11 @@ $\verb,release n s0 s1, \leadsto s_{\mathbf{R}} $ & where &
   $ \exists t' \in [0,n] \oplus t~ (s_0(t') = \mathtt{True}~\wedge~
     \forall t'' \in [t,t']~ (s_1(t'') = \mathtt{True})))$\\
 \end{tabular}
-Where $\mathtt{n} \leadsto n$, $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
-$\mathtt{s1} \leadsto s_1$.
+}
+
+where $\mathtt{n} \leadsto n$, $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
+$\mathtt{s1} \leadsto s_1$
+
 \caption{A description of the LTL library functions.}
 \label{fig:ltl_desc}
 \end{figure*}
@@ -107,6 +112,7 @@ and $\mathbf{S}$ ({\tt since}), which can be used to monitor
 properties that must hold over all the current and past values of the stream.
 
 \begin{figure*}[!htb]
+{\def\arraystretch{1.5}%
 \begin{tabular}{l l l}
 $\verb,previous s, \leadsto s_{\previous}$ & where &
   $ s_{\previous}(0) = \mathtt{False} \wedge
@@ -124,8 +130,10 @@ $\verb,since s0 s1, \leadsto s_{\mathbf{S}}$ & where &
   $ (s_1(t') = \mathtt{True}
     \Rightarrow \forall t'' \in [t' + 1,t]~(s_0(t'') = \mathtt{True})))$
 \end{tabular}
-Where $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
-$\mathtt{s1} \leadsto s_1$.
+}
+
+where $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$, and
+$\mathtt{s1} \leadsto s_1$
 \caption{A description of the PTLTL library functions.}
 \label{fig:ptltl_desc}
 \end{figure*}
@@ -173,6 +181,7 @@ A description of the MTL library functions (omitting the matching variants)
 is given in Figure \ref{fig:mtl_desc}.
 
 \begin{figure*}[!htb]
+{\def\arraystretch{1.5}%
 \begin{tabular}{l l l}
 $\verb,until l u clk dist s0 s1, \leadsto s_{\mathbf{U}}$ & where &
   $ \forall t \in \mathbb{T}~(s_{\mathbf{U}}^{clk}(t) = \mathtt{True} 
@@ -225,12 +234,14 @@ $\verb,alwaysBeen l u clk dist s, \leadsto s_{\alwaysBeen}$
   $ \forall d \in [l,u]~s.t.~t - d \in \mathbb{T}~
     (s^{clk}(t - d) = \mathtt{True}))$
 \end{tabular}
-Where $\mathbb{T}$ is the set of sampled times,
+}
+
+where $\mathbb{T}$ is the set of sampled times,
 $\mathtt{l} \leadsto l$, $\mathtt{u} \leadsto u$,
 $\mathtt{s} \leadsto s$, $\mathtt{s0} \leadsto s_0$,
 $\mathtt{s1} \leadsto s_1$, $\mathtt{clk} \leadsto clk$,
 and for any stream $s$ and time
-$t \in \mathbb{T}$, $s^{clk}(t) = s(clk^{-1}(t))$.
+$t \in \mathbb{T}$, $s^{clk}(t) = s(clk^{-1}(t))$
 \caption{A description of the MTL library functions.}
 \label{fig:mtl_desc}
 \end{figure*}
