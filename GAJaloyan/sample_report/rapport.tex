@@ -239,7 +239,7 @@ observer :: Typed a => String -> Stream a -> Spec
 	
 	\subsection{Copilot toolchain}
 	
-	Copilot is first reified using standard observation techniques\footnote{These techniques can be found in \cite{Copilot06}}. In its reified form, it can either be interpreted, printed or compiler, using two different back-ends, the first one using Atom, the second one SBV. Both compilers generate C-code, which can be afterwards compared to each other, to ensure that both are semantically equivalent, using model checking techniques. The Figure~\ref{fig:Copilot backend} shows a global view of the different tools used in Copilot.
+	Copilot is first reified using standard observation techniques\footnote{These techniques can be found in \cite{Copilot06}}. In its reified form, it can either be interpreted, printed or compiled, using two different back-ends, the first one using Atom, the second one SBV. Both compilers generate C-code, which can be afterwards compared to each other, to ensure that both are semantically equivalent, using model checking techniques. The Figure~\ref{fig:Copilot backend} shows a global view of the different tools used in Copilot.
 	\begin{figure}[ht!]
 		\centering
 		\footnotesize
