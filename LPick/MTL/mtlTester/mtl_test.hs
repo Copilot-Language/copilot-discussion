@@ -1,50 +1,34 @@
-import Copilot.Library.MTL as MTL
-import qualified Prelude as P
 import Copilot.Language
+import Copilot.Library.MTL as MTL
 import Copilot.Library.Utils
 import Copilot.Compile.C99
 import Copilot.Language.Reify
-import Copilot.Core.PrettyPrint as PP
+import qualified Prelude as P
 
 -- Code to generate some tests for the MTL module
--- Compare results of the MTL functions with expected results based on MTL semantics
+-- Compare results of the MTL functions with expected results
 
--- v0:
--- T   F   F   T   F   F   T   F   F   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T
--- 0   20  27  33  50  66  72  109 130 136 141 149 160 180 187 193 210 226 232 269 290 296 301 309
--- v0':
--- T   F   T   T   F   T   T   F   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T
 
--- eventually [10,20] v0:
--- F   T   F   F   F   F   F   F   T   T   T   T   T   T   F   T   T   F   F   F   T   T   T   T
--- eventuallyPrev [10,20] v0:
--- F   T   F   F   T   F   F   F   F   F   F   T   T   T   F   T   T   T   F   F   F   F   T   T
--- always [10,20] v0:
--- F   T   T   F   F   T   T   T   T   T ... 
--- alwaysBeen [10,20] v0:
--- T   T   T   F   T   F   T   T   T   T   F   F   T ...
--- until [10,20] v0 v0':
--- F   F   F   F   F   F   F   F   F   T   T   T   T   T   F   T   T   F   F   F   T   T   T   T
--- since [10,20] v0 v0':
--- F   F   F   F   F   F   F   F   F   F   T   T   T   T   F   T   T   T   F   F   F   F   T   T
--- release [10,20] v0 v0':
--- T   T   T   T   T   T   T   T   T ...
--- trigger [10,20] v0 v0':
--- T   T   T   T   T   F   T   T   T ...
--- matchingUntil [10,20] v0 v0':
--- F   F   F   F   F   F   F   F   F   T   T   T   T   T   F   T   T   F   F   F   T   T   T   T
--- matchingSince [10,20] v0 v0':
--- F   F   F   F   F   F   F   F   F   F   F   T   T   T   F   T   T   T   F   F   F   F   T   T
--- matchingRelease [10,20] v0 v0':
--- T...
--- matchingTrigger [10,20] v0 v0':
--- T   T   T   T   T   F  T...
+-- Test 0
+-------------
+
+-- Value stream
 v0 = (P.take 10 (P.cycle [True, False, False])) ++ true
+
+-- Value stream
 v0' = (P.take 10 (P.cycle [True, False, True])) ++ true
+
+-- Clock stream
 t0 :: Stream Int32
 t0 = [0,20,27,33,50,66,72,109,130,136,141,149] ++ (160 + t0)
+
+-- Bounds
 lb0 = 10
 ub0 = 20
+
+-- Expected results for each operator:
+
+-- op 10 20 t0 5 v0
 eventually0 =
   [False, True] ++ (replicate 6 False) ++ (replicate 4 True) ++
   (cycle [True, True, False, True, True, False, False, False, True, True, True, True])
@@ -54,6 +38,8 @@ eventuallyPrev0 =
 always0 =
   [False, True, True, False, False] ++ true
 alwaysBeen0 = [True, True, True, False, True, False] ++ (replicate 4 True) ++ [False, False] ++ true 
+
+-- op 10 20 t0 5 v0 v0'
 until0 = (replicate 9 False) ++ (replicate 3 True) ++
    (cycle [True, True, False, True, True, False, False, False, True, True, True, True])
 since0 = (replicate 10 False) ++ [True, True] ++
@@ -67,47 +53,33 @@ matchingRelease0 = release0
 matchingTrigger0 = trigger0
 
 
--- v1:
--- T   F   T   T   F   T   T   F   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T
--- 0   20  27  33  50  66  72  109 130 136 141 149 160 180 187 193 210 226 232 269 290 296 301 309
--- v1':
--- T   F   F   T   F   F   T   F   F   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T
+-- Test 1 
+------------
 
--- eventually [10,20] v1:
--- F   T   F   F   T   F   F   F   T   T   T   T   T   T   F   T   T   F   F   F   T   T   T   T
--- eventuallyPrev [10,20] v1:
--- F   T   F   F   T   F   F   F   F   F   T   T   T   T   F   T   T   T   F   F   F   F   T   T
--- always [10,20] v1:
--- F   T   T   F   T   T   T   T   T   T ...
--- alwaysBeen [10,20] v1:
--- T   T   T   F   T   F   T   T   T ...
--- until [10,20] v1 v1':
--- F   F   F   F   F   F   F   F   T   T   T   T   T   T   F   T   T   F   F   F   T   T   T   T
--- since [10,20] v1 v1':
--- F   F   F   F   F   F   F   F   F   F   F   T   T   T   F   T   T   T   F   F   F   F   T   T
--- release [10,20] v1 v1':
--- T   T   T   T   F   T   T   T   T   T   T ... 
--- trigger [10, 20] v1 v1':
--- T   T   T   T   T   T   T   T   T   T   T ...
--- matchingUntil [10,20] v1 v1':
--- F   F   F   F   F   F   F   F   T   T (until) 
--- matchingSince [10,20] v1 v1':
--- F   F   F   F   F   F   F   F   F   F   F   T   T   T   F   T   T   T   F   F   F   F   T   T
--- matchingRelease [10,20] v1 v1':
--- T   T   T   T   T   T   T   T   T ...
--- matchingTrigger [10,20] v1 v1':
--- T   T   T   T   T   T   T   T   T   T   T ...
+-- Value Stream
 v1 = v0'
+
+-- Value Stream
 v1' = v0
+
+-- Clock Stream
 t1 = t0
+
+-- Bounds
 lb1 = lb0
 ub1 = ub0
+
+-- Expected results for each operator:
+
+-- op 10 20 t1 5 v1
 eventually1 = [False, True, False, False, True, False, False, False] ++ (replicate 4 True) ++
    (cycle [True, True, False, True, True, False, False, False, True, True, True, True])
 eventuallyPrev1 = [False, True, False, False, True] ++ (replicate 5 False) ++ [True, True] ++
    (cycle [True, True, False, True, True, True, False, False, False, False, True, True])
 always1 = [False, True, True, False] ++ true
 alwaysBeen1 = [True, True, True, False, True, False] ++ true
+
+-- op 10 20 t1 5 v1 v1'
 until1 = (replicate  8 False) ++ (replicate 4 True) ++
    (cycle [True, True, False, True, True, False, False, False, True, True, True, True])
 since1 = (replicate 11 False) ++ [True] ++
@@ -119,44 +91,32 @@ matchingSince1 = since1
 matchingRelease1 = true
 matchingTrigger1 = trigger1
 
--- v2:
--- T  T  T  F  T  T  T  F  T  T  T  T  T  T  T  T  T  T  T
--- 0  5  10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90
--- v2':
--- F  T  F  F  F  T  F  F  F  T  T  T  T  T  T  T  T  T  T
 
--- eventually [5,15] v2: true
--- eventuallyPrev [5, 15] v2:
--- F T ...
--- always [5,15] v2:
--- F  F  F  T  F  F  F  T ...
--- alwaysPrev [5,15] v2:
--- T  T  T  T  F  F  F  T  F  F  F  T ...
--- until [5,15] v2 v2':
--- T  F  F  F  T  F  F  F  T  T ...
--- since [5,15] v2 v2':
--- F  F  T  F  F  F  T  F  F  F  T ...
--- release [5,15] v2 v2':
--- T  T  T  F  T  T  T  F  T ... 
--- trigger [5,15] v2 v2':
--- T  T  T  F  T  T  T  F  T  T ...
--- matchingUntil [5,15] v2 v2':
--- T  F  F  F  T  F  F  F  T  T ...
--- matchingSince [5,15] v2 v2':
--- F  F  T  F  F  F  T  F  F  F  T ...
--- matchingRelease [5,15] v2 v2':
--- T  T  T  T  T  T  T  T  T ...
--- matchingTrigger [5,15] v2 v2':
--- T  T  T  T  T  T  T  T  T  T  ...
+-- Test 2
+------------
+
+-- Value Stream
 v2 = (P.take 10 (P.cycle [True, True, True, False])) ++ true
+
+-- Value Stream
 v2' = (P.take 10 (P.cycle [False, True, False, False])) ++ true
+
+-- Clock Stream
 t2 = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50] ++ (55 + t3)
+
+-- Bounds
 lb2 = 5
 ub2 = 15
+
+-- Expected results for each operator:
+
+-- op 5 15 t2 5 v2
 eventually2 = true
 eventuallyPrev2 = [False] ++ true
 always2 = [False, False, False, True, False, False, False] ++ true
 alwaysBeen2 = (replicate 4 True) ++ [False, False, False, True, False, False, False] ++ true
+
+-- op 5 15 t2 5 v2 v2'
 until2 = [True, False, False, False, True, False, False, False] ++ true
 since2 = [False, False] ++ until2
 release2 = v2
@@ -166,46 +126,33 @@ matchingSince2 = since2
 matchingRelease2 = true
 matchingTrigger2 = true
 
--- v3:
--- F  T  F  F  F  T  F  F  F  T  T  T  T  T  T  T  T  T  T
--- 0  5  10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90
--- v3':
--- T  T  T  F  T  T  T  F  T  T  T  T  T  T  T  T  T  T  T
 
--- eventually [5,15] v3:
--- T  F  T  T  T  F  T  T  T ...
--- eventuallyPrev [5,15] v3:
--- F  F  T  T  T  F  T  T  T  F  T ...
--- always [5,15] v3:
--- F  F  F  F  F  F  F  F  T ...
--- alwaysBeen [5,15] v3:
--- T  F  F  F  F  F  F  F  F  F  F  F  T ... 
--- until [5,15] v3 v3':
--- F  T  F  F  F  T  F  F  F  T ...
--- since [5,15] v3 v3':
--- F  T  F  F  F  T  F  F  F  T ...
--- release [5,15] v3 v3':
--- T  T  F  T  T  T  F  T  T ...
--- trigger [5,15] v3 v3':
--- T  T  T  T  F  T  T  T  F  T ...
--- matchingUntil [5,15] v3 v3':
--- F  F  F  F  F  F  F  F  F  T ...
--- matchingSince [5,15] v3 v3':
--- F  F  F  F  F  F  F  F  F  F  T  ...
--- matchingRelease [5,15] v3 v3':
--- T  T  F  T  T  T  F  T  T ...
--- matchingTrigger [5,15] v3 v3':
--- T  T  T  T  F  T  T  T  F  T ...
+-- Test 3
+------------
+
+-- Value Stream
 v3 = (P.take 10 (P.cycle [False, True, False, False])) ++ true
+
+-- Value Stream
 v3' = (P.take 10 (P.cycle [True, True, True, False])) ++ true
+
+-- Clock Stream
 t3 :: Stream Int32
 t3 = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50] ++ (55 + t3)
+
+-- Bounds
 lb3 = 5
 ub3 = 15
+
+-- Expected results for each operator:
+
+-- op 5 15 t3 5 v3
 eventually3 = [True, False, True, True, True, False] ++ true
 eventuallyPrev3 =[False, False, True, True, True, False, True, True, True, False] ++ true
 always3 = (replicate 8 False) ++ true
 alwaysBeen3 = [True] ++ (replicate 11 False) ++ true
+
+-- op 5 15 t3 5 v3 v3'
 until3 = v3
 since3 = v3
 release3 = [True, True, False, True, True, True, False] ++ true
@@ -215,47 +162,33 @@ matchingSince3 = (replicate 10 False) ++ true
 matchingRelease3 = release3
 matchingTrigger3 = trigger3
 
--- v4:
--- T  F  T  T  T  F  F  F  F  T  F  F  T  T  T  T  T  T  T  T  T  T  T  T  T  T
--- clk:
--- 3  6  8  11 14 16 18 21 23 26 28 30 32 35 38 40 43 46 48 50 53 55 58 60 62 64
--- v4':
--- F  F  T  T  F  F  T  T  T  T  F  F  T  T  T  T  T  T  T  T  T  T  T  T  T  T 
--- eventually [3,7] v4:
--- T  T  T  T  F  F  F  T  T  T  T  T ...
--- eventuallyPrev [3,7] v4:
--- F  T  T  T  T  T  T  T  F  F  F  T  T ...
--- always [3,7] v4:
--- F  T  T  F  F  F  F  F  F  F  T  T ...
--- alwaysBeen [3,7] v4:
--- T  T  T  F  T  T  T  F  F  F  F  F  F  F  T ...
--- until [3,7] v4 v4':
--- F  F  T  F  F  F  F  F  F  F  F  F  T ...
--- since [3,7] v4 v4':
--- F  F  F  T  T  F  F  F  F  T  F  F  F  T ...
--- release [3,7] v4 v4':
--- T  T  T  T  T  T  T  T  T  T  T  T ...
--- trigger [3,7] v4 v4':
--- T  F  T  T  T  T  F  F  F  T  T  T  T ...
--- matchingUntil [3,7] v4 v4':
--- F  F  T  F  F  F  F  F  F  F  F  F  T ...
--- matchingSince [3,7] v4 v4':
--- F  F  F  T  T  F  F  F  F  F  F  F  F  T ...
--- matchingRelease [3,7] v4 v4':
--- T ...
--- matchingTrigger [3,6] v4 v4':
--- T  T  T  T  T  T  T  F  F  T  T  T  T ...   
 
+-- Test 4
+------------
+
+-- Value Stream
 v4 = [True, False, True, True, True] ++ (replicate 4 False) ++ [True, False, False] ++ true
+
+-- Value Stream
 v4' = [False, False, True, True, False, False] ++ (replicate 4 True) ++ [False, False] ++ true
+
+-- Clock Stream
 t4 :: Stream Int32
 t4 = [3, 6, 8, 11, 14, 16, 18, 21, 23, 26, 28, 30, 32] ++ (32 + t4)
+
+-- Bounds
 lb4 = 3
 ub4 = 7
+
+-- Expected results for each operator:
+
+-- op 3 7 t4 2 v4
 eventually4 = (replicate 4 True) ++ [False, False, False] ++ true
 eventuallyPrev4 = [False] ++ (replicate 7 True) ++ [False, False, False] ++ true
 always4 = [False, True, True] ++ (replicate 7 False) ++ true
 alwaysBeen4 = [True, True, True, False, True, True, True] ++ (replicate 7 False) ++ true
+
+-- op 3 7 t4 2 v4 v4'
 until4 = [False, False, True] ++ (replicate 9 False) ++ true
 since4 = [False, False, False, True, True] ++ (replicate 4 False) ++ [True, False, False, False] ++ true
 release4 = true
@@ -266,46 +199,31 @@ matchingRelease4 = true
 matchingTrigger4 = (replicate 7 True) ++ [False, False] ++ true
 
 
--- v5:
--- F  F  T  T  F  F  T  T  T  T  F  F  T  T  T  T  T  T  T  T  T  T  T  T  T  T 
--- clk:
--- 3  6  8  11 14 16 18 21 23 26 28 30 32 35 38 40 43 46 48 50 53 55 58 60 62 64
--- v5':
--- T  F  T  T  T  F  F  F  F  T  F  F  T  T  T  T  T  T  T  T  T  T  T  T  T  T
--- eventually [3,7] v5:
--- T  T  T  T  T  T  T  T  T  T  T  T  ...
--- eventuallyPrev [3,7] v5:
--- F  F  F  T  T  T  T  T  T  T  T  T  T ...
--- always [3,7] v5:
--- F  T  F  F  T  T  T  F  F  F  T  T ...
--- alwaysBeen [3,7] v5:
--- T  F  F  F  T  T  F  F  F  T  T  T  F  F  T ...
--- until [3,7] v5 v5':
--- F  F  T  T  F  F  F  T  T  F  F  F  T ...
--- since [3,7] v5  v5':
--- F  F  F  T  F  F  F  F  F  F  F  F  F  T ...
--- release [3,7] v5 v5':
--- F  T  T  T  F  T  T  T  T  T  T  ...
--- trigger [3,7] v5 v5':
--- T  T  T  T  T  T  T  T  T  T  T  T  T  T  T ...
--- matchingUntil [3,7] v5 v5':
--- F  F  T  F  F  F  F  T  T  F  F  F  T ...
--- matchingSince [3,7] v5 v5':
--- F  F  F  T  F  F  F  F  F  F  F  F  F  T ...
--- matchingRelease [3,7] v5 v5':
--- F  T  T  T  T  T  T  T ...
--- matchingTrigger [3,7] v5 v5':
--- T  T  T  T  T  T  T  T  T  T  T  T  T ...
+-- Test 5
+------------
 
+-- Value Stream
 v5 = v4'
+
+-- Value Stream
 v5' = v4
+
+-- Clock Stream
 t5 = t4
+
+-- Bounds
 lb5 = 3
 ub5 = 7
+
+-- Expected results for each operator:
+
+-- op 3 7 t5 2 v5
 eventually5 = true
 eventuallyPrev5 = [False, False, False] ++ true
 always5 = [False, True, False, False, True, True, True, False, False, False] ++ true
 alwaysBeen5 = [True, False, False, False, True, True, False, False, False, True, True, True, False, False] ++ true
+
+-- op 3 7 t5 2 v5 v5'
 until5 = [False, False, True, True, False, False, False, True, True, False, False, False] ++ true
 since5 = [False, False, False, True] ++ (replicate 9 False) ++ true
 release5 = [False, True, True, True, False] ++ true
@@ -315,46 +233,33 @@ matchingSince5 = [False, False, False, True] ++ (replicate 9 False) ++ true
 matchingRelease5 = [False] ++ true
 matchingTrigger5 = true
 
--- v6:
--- F   F   F   F   T   T   T   T   F   F   F
--- t6:
--- 400 455 505 547 601 649 698 747 804 856 900
--- v6':
--- F   T   F   F   F   F   F   F   F   F   F
--- eventually [0,200] v6:
--- F   T   T   T   T   T   T   T   F   F   F ...
--- eventuallyPrev [0,200] v6:
--- F   F   F   F   T   T   T   T   T   T   T   F ...   
--- always [0,200] v6:
--- F   F   F   F   T   F   F   F   F ...
--- alwaysBeen [0,200] v6:
--- F   F   F   F   F   F   F   F ...
--- until [0,200] v6 v6':
--- F   T   F...
--- since [0,200] v6 v6':
--- F ...
--- release [0,200] v6 v6':
--- F   F   F   F ...
--- trigger [0,200] v6 v6':
--- F   F   F   F ...
--- matchingUntil [0,200] v6 v6':
--- F   T   F ...
--- matchingSince [0,200] v6 v6':
--- F ...
--- matchingRelease [0,200] v6 v6':
--- F   F   F   F   T   T   T   T   F ...
--- matchingTrigger [0,200] v6 v6':
--- F   F   F   F   T   T   T   T   F ...
+
+-- Test 6
+------------
+
+-- Value Stream
 v6 = [False, False, False, False, True, True, True, True, False, False, False] ++ false
+
+-- Value Stream
 v6' = ([False, True] P.++ (replicate 10 False)) ++ false
+
+-- Clock Stream
 t6 :: Stream Int32
 t6 = [400, 455, 505, 547, 601, 649, 698, 747, 804, 856, 900] ++ (550 + t6)
+
+-- Bounds
 lb6 = 0
 ub6 = 200
+
+-- Expected results for each operator:
+
+-- op 0 200 t6 40 0 200 v6
 eventually6 = [False] ++ (replicate 7 True) ++ false
 eventuallyPrev6 = (replicate 4 False) ++ (replicate 7 True) ++ false
 always6 = (replicate 4 False) ++ [True] ++ false
 alwaysBeen6 = false
+
+-- op 0 200 t6 40 0 200 v6 v6'
 until6 = [False, True] ++ false
 since6 = [False, True] ++ false
 release6 = false
@@ -364,46 +269,33 @@ matchingSince6 = false
 matchingRelease6 = v6
 matchingTrigger6 = v6
 
--- v7:
--- F  T  T  T  F  F  F  T  F  F  T  T  T  F  F ...
--- t7:
--- 19 20 22 23 24 25 27 28 31 32 33 34 36 37 38
--- v7':
--- T  F  F  F  T  T  T  F  T  T  F  F  F  T  T ...
--- eventually [3,5] v7:
--- T  T  F  T  T  T  F  T  T  T  T  F  F  ...
--- eventuallyPrev [3,5] v7:
--- F  F  F  T  T  T  T  T  T  T  T  F  T  T  T  T  T  F ...
--- always[3,5] v7:
--- F  F  F  F  F  T  F  F  T  F  F  F ...
--- alwaysBeen [3,5] v7:
--- T  T  F  F  F  T  F  F  F  F  T  F  F  F  T  T  F ...
--- until [3,5] v7 v7':
--- F  T  F  F  F  F  F  T  F  F  T  T  F ...
--- since [3,5] v7 v7':
--- F  F  T  T  F  F  F  F  F  F  F  F  T  F ...
--- release [3,5] v7 v7':
--- T  T  T  T  F  F  T  T  T  T  T  T  T  T ...
--- trigger [3,5] v7 v7':
--- T  T  T  T  T  T  F  T  F  F  T  T  T  T  T  F  F  T ...
--- matchingUntil [3,5] v7 v7':
--- F ...
--- matchingSince [3,5] v7 v7':
--- F ...
--- matchingRelease [3,5] v7 v7':
--- T ...
--- matchingSince [3,5] v7 v7':
--- T ...
+
+-- Test 7
+------------
+
+-- Value Stream
 v7 = [False, True, True, True, False, False, False, True, False, False, True, True, True] ++ false
+
+-- Value Stream
 v7' = [True, False, False, False, True, True, True, False, True, True, False, False, False] ++ true
+
+-- Clock Stream
 t7 :: Stream Int32
 t7 = [19, 20, 22, 23, 24, 25, 27, 28, 31, 32, 33 ,34 ,36, 37, 38] ++ (20 + t7)
+
+-- Bounds
 lb7 = 3
 ub7 = 5
+
+-- Expected results for each operator:
+
+-- op 3 5 t7 1 v7
 eventually7 = [True, True, False, True, True, True, False] ++ (replicate 4 True) ++ false
 eventuallyPrev7 = [False, False, False] ++ (replicate 8 True) ++ [False] ++ (replicate 5 True) ++ false
 always7 = (replicate 5 False) ++ [True, False, False, True] ++ false
 alwaysBeen7 = [True, True, False, False, False, True] ++ (replicate 4 False) ++ [True, False, False, False, True, True] ++ false
+
+-- op 3 5 t7 1 v7 v7'
 until7 = [False, True] ++ (replicate 5 False) ++ [True, False, False, True, True] ++ false
 since7 = [False, False, True, True] ++ (replicate 8 False) ++ [True] ++ false
 release7 = [True, True, True, True, False, False] ++ true
@@ -413,45 +305,32 @@ matchingSince7 = false
 matchingRelease7 = true
 matchingTrigger7 = true
 
--- v8:
--- T  F  F  F  T  T  T  F  T  T  F  F  F  T  T ...
--- t7:
--- 19 20 22 23 24 25 27 28 31 32 33 34 36 37 38
--- v8':
--- F  T  T  T  F  F  F  T  F  F  T  T  T  F  F ...
--- eventually [3,5] v8:
--- T  T  T  T  T  F  T  T  F  T  ...
--- eventuallyPrev [3,5] v8:
--- F  F  T  T  T  F  T  T  T  T  F  T  T  T  F  F  T  ...
--- always [3,5] v8 v8':
--- F  F  T  F  F  F  T  F  F  F  F  T  ...
--- alwaysBeen [3,5] v8:
--- T  T  T  F  F  F  F  F  F  F  F  T  F  F  F  F  F  T  ...
--- until [3,5] v8 v8': 
--- F  F  F  F  T  T  F  F  F  F  F  F  F  ...
--- since [3,5] v8 v8':
--- F  F  F  F  F  F  T  F  T  T  F  F  F  F  F  T  T  F  ...
--- release [3,5] v8 v8':
--- T  F  T  T  T  T  T  F  T  T  F  F  T  ...
--- trigger [3,5] v8 v8':
--- T  T  F  F  T  T  T  T  T  T  T  T  F  T  ...
--- matchingUntil [3,5] v8 v8':
--- F ...
--- matchingSince [3,5] v8 v8':
--- F ...
--- matchingRelease [3,5] v8 v8':
--- T ...
--- matchingTrigger [3,5] v8 v8':
--- T ...
+
+-- Test 8
+------------
+
+-- Value Stream
 v8 = v7'
+
+-- Value Stream
 v8' = v7
+
+-- Clock Stream
 t8 = t7
+
+-- Bounds
 lb8 = lb7
 ub8 = ub7
+
+-- Expected results for each operator:
+
+-- op 3 5 t8 1 v8
 eventually8 = (replicate 5 True) ++ [False, True, True, False] ++ true
 eventuallyPrev8 = [False, False, True, True, True, False, True, True, True, True, False, True, True, True, False, False] ++ true
 always8 = [False, False, True, False, False, False, True] ++ (replicate 4 False) ++ true
 alwaysBeen8 = [True, True, True] ++ (replicate 8 False) ++ [True] ++ (replicate 5 False) ++ true
+
+-- op 3 5 t8 1 v8 v8'
 until8 = (replicate 4 False) ++ [True, True] ++ false
 since8 = (replicate 6 False) ++ [True, False, True, True] ++ (replicate 5 False) ++ [True, True] ++ false
 release8 = [True, False] ++ (replicate 5 True) ++ [False, True, True, False, False] ++ true
@@ -461,47 +340,34 @@ matchingSince8 = false
 matchingRelease8 = true
 matchingTrigger8 = true
 
--- v9:
--- T  F  F  T  F  F  T  F  T  T  F  F  F  (cycle)
--- t9:
--- 48 51 54 58 67 70 73 77 80 83 88 92 95 98
--- v9':
--- T  T  F  T  T  F  T  T  F  T  T  F  F  (cycle)
--- eventually [3,3] v9:
--- F  F  F  F  F  T  F  T  T  F  F  F  T
--- eventuallyPrev [3,3] v9:
--- F  T  F  F  F  F  F  F  F  T  F  F  F
--- always [3,3] v9:
--- F  F  T  T  F  T  T  T  T  T  T  F  T
--- alwaysBeen [3,3] v9:
--- T  T  F  T  T  F  F  T  F  T  T  T  F  F  T  F  T  T  F  F  T  F  T  T  T  F
--- until [3,3] v9 v9':
--- T  F  F  F  F  F  F  F  T  F  F  F  F
--- since [3,3] v9 v9':
--- F  F  F  F  F  F  F  F  T  F  F  F  F 
--- release [3,3] v9 v9':
--- T  F  T  T  F  T  T  F  T  T  T  F  T
--- trigger [3,3] v9 v9':
--- T  T  T  T  T  T  T  T  T  T  T  T  F 
--- matchingUntil [3,3] v9 v9':
--- F  F  F  F  F  F  F  F  T  F  F  F  F
--- matchingSince [3,3] v9 v9':
--- F  F  F  F  F  F  F  F  F ...
--- matchingRelease [3,3] v9 v9':
--- T  F  T  T  F  T  T  T  T  T  T  F  T  
--- matchingTrigger [3,3] v9 v9':
--- T  T  T  T  T  T  T  T  T  T  T  T  F 
+
+-- Test 9
+------------
+
+-- Value Stream
 v9 = cycle [True, False, False, True, False, False, True, False, True, True, False, False, False]
+
+-- Value Stream
 v9' = cycle [True, True, False, True, True, False, True, True, False, True, True, False, False]
+
+-- Clock Stream
 t9 :: Stream Int32
 t9 = [48, 51, 54, 58, 67, 70, 73, 77, 80, 83, 88, 92, 95] ++ (50 + t9)
+
+-- Bounds
 lb9 = 3
 ub9 = 3
+
+-- Expected results for each operator:
+
+-- op 3 3 t9 3 v9
 eventually9 = cycle $ (replicate 5 False) P.++ [True, False, True, True, False, False, False, True]
 eventuallyPrev9 = cycle $ [False, True] P.++ (replicate 7 False) P.++ [True, False, False, False]
 always9 = cycle $ [False, False, True, True, False] P.++ (replicate 6 True) P.++ [False, True]
 alwaysBeen9 = [True, True, False, True, True, False, False, True, False, True, True, True, False] ++
               (cycle [False, True, False, True, True, False, False, True, False, True, True, True, False])
+
+-- op 3 3 t9 3 v9 v9'
 until9 = cycle $ [True] P.++ (replicate 7 False) P.++ [True] P.++ (replicate 4 False)
 since9 = cycle $ (replicate 8 False) P.++ [True] P.++ (replicate 4 False)
 release9 = cycle [True, False, True, True, False, True, True, False, True, True, True, False, True]
@@ -512,31 +378,36 @@ matchingRelease9 = cycle $ [True, False, True, True, False] P.++ (replicate 6 Tr
 matchingTrigger9 = trigger9
 
 
--- Put it all together
-vals = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
+-- Put it all together:
+
+vals  = [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
 vals' = [v0', v1', v2', v3', v4', v5', v6', v7', v8', v9']
-lbs = [lb0, lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, lb9]
-ubs = [ub0, ub1, ub2, ub3, ub4, ub5, ub6, ub7, ub8, ub9]
-ts = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9]
-ds = [5, 5, 5, 5, 2, 2, 40, 1, 1, 3]
-eventually_exp = [eventually0, eventually1, eventually2, eventually3, eventually4,
-                  eventually5, eventually6, eventually7, eventually8, eventually9]
-eventuallyPrev_exp = [eventuallyPrev0, eventuallyPrev1, eventuallyPrev2, eventuallyPrev3,
-                      eventuallyPrev4, eventuallyPrev5, eventuallyPrev6, eventuallyPrev7,
-                      eventuallyPrev8, eventuallyPrev9]
-always_exp = [always0, always1, always2, always3, always4, always5, always6, always7, always8, always9]
-alwaysBeen_exp = [alwaysBeen0, alwaysBeen1, alwaysBeen2, alwaysBeen3, alwaysBeen4,
-                  alwaysBeen5, alwaysBeen6, alwaysBeen7, alwaysBeen8, alwaysBeen9]
-until_exp = [until0, until1, until2, until3, until4, until5, until6, until7, until8, until9]
-since_exp = [since0, since1, since2, since3, since4, since5, since6, since7, since8, since9]
-release_exp = [release0, release1, release2, release3, release4, release5, release6, release7, release8, release9]
-trigger_exp = [trigger0, trigger1, trigger2, trigger3, trigger4, trigger5, trigger6, trigger7, trigger8, trigger9]
-matchingUntil_exp = [matchingUntil0, matchingUntil1, matchingUntil2, matchingUntil3,
-                     matchingUntil4, matchingUntil5, matchingUntil6, matchingUntil7,
-                     matchingUntil8, matchingUntil9]
-matchingSince_exp = [matchingSince0, matchingSince1, matchingSince2, matchingSince3,
-                     matchingSince4, matchingSince5, matchingSince6, matchingSince7,
-                     matchingSince8, matchingSince9]
+lbs   = [lb0, lb1, lb2, lb3, lb4, lb5, lb6, lb7, lb8, lb9]
+ubs   = [ub0, ub1, ub2, ub3, ub4, ub5, ub6, ub7, ub8, ub9]
+ts    = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9]
+ds    = [5, 5, 5, 5, 2, 2, 40, 1, 1, 3] -- dists
+-- Expected results lists
+eventually_exp      = [eventually0, eventually1, eventually2, eventually3, eventually4,
+                       eventually5, eventually6, eventually7, eventually8, eventually9]
+eventuallyPrev_exp  = [eventuallyPrev0, eventuallyPrev1, eventuallyPrev2, eventuallyPrev3,
+                       eventuallyPrev4, eventuallyPrev5, eventuallyPrev6, eventuallyPrev7,
+                       eventuallyPrev8, eventuallyPrev9]
+always_exp          = [always0, always1, always2, always3, always4, always5, always6,
+                       always7, always8, always9]
+alwaysBeen_exp      = [alwaysBeen0, alwaysBeen1, alwaysBeen2, alwaysBeen3, alwaysBeen4,
+                       alwaysBeen5, alwaysBeen6, alwaysBeen7, alwaysBeen8, alwaysBeen9]
+until_exp           = [until0, until1, until2, until3, until4, until5, until6, until7, until8, until9]
+since_exp           = [since0, since1, since2, since3, since4, since5, since6, since7, since8, since9]
+release_exp         = [release0, release1, release2, release3, release4, release5, release6, release7,
+                       release8, release9]
+trigger_exp         = [trigger0, trigger1, trigger2, trigger3, trigger4, trigger5, trigger6, trigger7,
+                       trigger8, trigger9]
+matchingUntil_exp   = [matchingUntil0, matchingUntil1, matchingUntil2, matchingUntil3,
+                       matchingUntil4, matchingUntil5, matchingUntil6, matchingUntil7,
+                       matchingUntil8, matchingUntil9]
+matchingSince_exp   = [matchingSince0, matchingSince1, matchingSince2, matchingSince3,
+                       matchingSince4, matchingSince5, matchingSince6, matchingSince7,
+                       matchingSince8, matchingSince9]
 matchingRelease_exp = [matchingRelease0, matchingRelease1, matchingRelease2, matchingRelease3,
                        matchingRelease4, matchingRelease5, matchingRelease6, matchingRelease7,
                        matchingRelease8, matchingRelease9]
@@ -631,4 +502,5 @@ main = do
     lbs ubs ts vals vals' ds
     [eventually_exp, eventuallyPrev_exp, always_exp, alwaysBeen_exp]
     [until_exp, since_exp, release_exp, trigger_exp,
-     matchingUntil_exp, matchingSince_exp, matchingRelease_exp, matchingTrigger_exp]) >>= compile (Params {prefix = Just "test", verbose = False})
+     matchingUntil_exp, matchingSince_exp, matchingRelease_exp, matchingTrigger_exp])
+    >>= compile (Params {prefix = Just "test", verbose = False})
