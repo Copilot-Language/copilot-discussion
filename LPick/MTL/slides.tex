@@ -1,0 +1,339 @@
+\documentclass{beamer}
+\usetheme{Boadilla}
+\useinnertheme{rectangles}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\lstset {
+  basewidth = {0.5em,0.45em},
+  basicstyle = \footnotesize\ttfamily,
+  flexiblecolumns = false,
+  keywordstyle = \color{beamer@blendedblue},
+  language = Haskell,
+  literate = {++}{{\ttfamily{\color{beamer@blendedblue}++}}}2,
+  morekeywords = {extern, Spec, Stream, Word64, trigger},
+  stringstyle = \color{beamer@blendedblue!60}
+}
+
+
+\title{Monitoring Real-Time Properties in Copilot}
+\author{Lauren Pick}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{frame}[fragile]
+\frametitle{Copilot Streams and Iterations}
+\begin{itemize}
+\item Copilot manipulates and receives data in the form of streams
+  \begin{itemize}
+  \item The $n$th value of a stream $s$ is denoted as $s(n)$
+  \end{itemize}
+\item Copilot programs have a cyclic behavior, where each iteration consists of
+  \begin{enumerate}
+  \item sampling externs
+  \item updating internal variables
+  \item firing external triggers
+  \end{enumerate}
+  \begin{itemize}
+  \item So for a stream $s$, the $n$th iteration provides the value
+        $s(n)$, where the first iteration is the 0th iteration.
+  \item For a Copilot program that has been compiled into C, an iteration
+        occurs each time the \verb,step(), function is called.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Monitoring Properties Involving Real-Time with Copilot}
+\begin{itemize}
+\item Given a knowledge of a constant sampling rate for externs of a monitor,
+real-time properties can be monitored, since each iteration would
+correspond to a known, constant amount of time elapsing.
+  \begin{itemize}
+  \item e.g. if the sampling period is known to be 1 second:
+\begin{lstlisting}
+bools = extern "bools" Nothing
+-- 1 second delay:
+bools' :: Stream Bool
+bools' = [False] ++ bools
+\end{lstlisting}
+  \end{itemize}
+\item Monitoring properties involves checking if the current and past values
+in streams match the values that would be expected if the property held
+  \begin{itemize}
+  \item As a result, it may be necessary to delay streams or express
+  the property in terms of past values if the original property involves future
+  values
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{A Property Involving Real-Time}
+A property that is to be monitored assuming that the global sampling
+period is 0.1 second:
+
+\begin{center}
+A sampled temperature value should not exceed the threshold temperature $thresh$ for 0.3
+second or longer.
+\end{center}
+
+\begin{itemize}
+\item If $over$ is the stream of booleans indicating whether or not the temperature
+$temp$ exceeds $thresh$ ($temp > thresh$), then this means that for all
+$n$, it is not the case that \vspace{0.5em}
+
+\begin{tabular}{lcl c lcl c}
+$over (n + 3)$ & = & \verb,true, & $\wedge$ & $over(n + 2)$ & = & \verb,true, & $\wedge$\\
+$over (n + 1)$ & = & \verb,true, & $\wedge$ & $over(n)$ & = & \verb,true,
+\end{tabular}
+
+\item or, if expressed in terms of past values, then for all $n > 2$,
+it is not the case that \vspace{0.5em}
+
+\begin{tabular}{lcl c lcl c}
+$over (n)$ & = & \verb,true, & $\wedge$ & $over(n - 1)$ & = & \verb,true, & $\wedge$\\
+$over (n - 2)$ & = & \verb,true, & $\wedge$ & $over(n - 3)$ & = & \verb,true,
+\end{tabular}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Monitoring Properties Involving Real-Time with Copilot}
+\begin{lstlisting}
+propTempExceedThreshold :: Spec
+propTempExceedThreshold =
+  trigger "over_threshold" (overThresh) []
+
+  where
+  thresh = 500
+
+  over :: Stream Bool
+  over = [False, False, False, False] ++ (temp > thresh) -- delay
+
+  temp :: Stream Float
+  temp = extern "temp" Nothing
+
+  overThresh :: Stream Bool
+  overThresh = drop 3 over &&
+               drop 2 over &&
+               drop 1 over &&
+               over
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Monitoring Properties Involving Real-Time with Copilot}
+\begin{lstlisting}
+propTempExceedThreshold :: Spec
+propTempExceedThreshold =
+  trigger "over_threshold" (overThresh) []
+
+  where
+  thresh = 500
+
+  over :: Stream Bool
+  over = temp > thresh
+
+  temp :: Stream Float
+  temp = extern "temp" Nothing
+
+  overThresh :: Stream Bool
+  overThresh = over &&
+               ([False] ++ over) &&
+               ([False, False] ++ over) &&
+               ([False, False, False] ++ over)
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The LTL and PTLTL libraries}
+\begin{itemize}
+\item The LTL library implements bounded Linear Temporal Logic
+  \begin{itemize}
+  \item E.g., the property that $\lozenge^n p$ can be
+  expressed as \verb,eventually n b,, where \verb,b, is a boolean
+  stream indicating whether $p$ currently holds
+  \item When using the library's functions, it is necessary that the streams
+  have sufficient history to ``drop'' from
+  \end{itemize}
+\item The PTLTL library implements past time Linear Temporal Logic
+  \begin{itemize}
+  \item Other than \verb,previous,, all functions provided in the PTLTL
+  library range over the entirety of a streams' history
+    \begin{itemize}
+    \item E.g., the property $\overset{\leftarrow}{\lozenge}p$ can be expressed as
+    \verb,eventuallyPrev b,
+    \end{itemize}
+  \end{itemize}
+\item Using these libraries, properties such as the one mentioned previously
+become easier to express within a monitor
+  \begin{itemize}
+  \item Using bounded LTL and the assumed 0.1 second sampling period, the property can be
+  written as
+  $$\neg\square^{3}({\tt temp} > {\tt thresh})$$
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Monitoring Real-Time Properties with Bounded LTL}
+\begin{lstlisting}
+propTempExceedThreshold :: Spec
+propTempExceedThreshold =
+  trigger "over_threshold" (overThresh) []
+
+  where
+  thresh = 500
+
+  over :: Stream Bool
+  over = [False, False, False, False] ++ (temp > thresh) -- delay
+
+  temp :: Stream Float
+  temp = extern "temp" Nothing
+
+  overThresh :: Stream Bool
+  overThresh = always 3 over
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+\frametitle{Drawbacks of Non-Explicit Real-Time}
+In the monitors for the \texttt{propTempExceedThreshold} specification so far,
+any connection to real-time values  was implicit;
+the monitors were stated to assume a constant sampling period of 0.1 second.
+\begin{itemize}
+\item If the sampling period is changed, then it is then necessary to alter the
+monitors each time this occurs
+\item If samples do not occur with exactly 0.1 second in between (e.g. if one sample
+is, for some reason, 0.1 second late), then the properties are no longer monitored
+correctly
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Metric Temporal Logic}
+Metric Temporal Logic is an extension to Linear Temporal Logic where operators
+are augmented with \emph{intervals} over which the properties should hold.
+\begin{itemize}
+\item An implementation of bounded MTL in Copilot that uses iterations
+as time units rather than real-time units would resemble the bounded
+LTL library but with each function accepting a lower bound in addition
+to the upper bound
+\item If the lower bound were set to zero, then the result would be the same as the LTL
+library could provide; e.g., given an integer value \texttt{n} and streams \texttt{s0}
+and \texttt{s1}, the following would result in the same streams:
+ \begin{itemize}
+ \item \verb,until n s0 s1,
+ \item \verb,until 0 n s0 s1,
+ \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Making Time More Explicit}
+\begin{itemize}
+\item The most straightforward way to incorporate real-time values into monitors
+is by sampling the clock, i.e., introducing a \texttt{clk} stream
+\item By adding \texttt{clk} and \texttt{dist} (the minimum sampling period) parameters
+to MTL functions, intervals can refer to real-time values instead of iterations
+\item So MTL properties such as $\mathbf{R}_{[l,u]} (p_1, p_2)$ can be expressed as
+\verb,release l u clk dist b1 b2,
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{A Property Involving Real-Time}
+In MTL, the property that the temperature should not exceed the
+threshold temperature for 0.3 second (300 ms) or longer can be written
+as:
+
+$$\neg~\square_{[0,300]} (\mathtt{temps} > \mathtt{threshold})$$
+
+For the purpose of monitoring, this property should instead be
+expressed in terms of a past-time operator:
+
+$$\neg~\overset{\leftarrow}{\square}_{[0,300]} (\mathtt{temps} > \mathtt{threshold})$$
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Monitoring Real-Time Properties with MTL}
+\begin{lstlisting}
+propTempExceedThreshold :: Spec
+propTempExceedThreshold =
+  trigger "over_threshold" (overThresh) []
+
+  where
+  thresh = 500
+
+  temp :: Stream Float
+  temp = extern "temp" Nothing
+
+  clk :: Stream Word64
+  clk = extern "clk_ms" Nothing
+
+  overThresh :: Stream Bool
+  overThresh = alwaysBeen 0 300 clk 100 (temp > thresh)
+\end{lstlisting}
+\end{frame}
+\begin{frame}[fragile]
+\frametitle{Monitoring Real-Time Properties with MTL}
+\begin{itemize}
+\item No longer the requirement that the global sampling period is exactly 0.1 second
+  \begin{itemize}
+  \item The monitor instead assumes that the sampling period for all the streams used
+  within the specification is \emph{at least} 0.1 second
+  \item Increasing the global sampling period to e.g. 0.15 second requires no change
+  to the monitor
+  \end{itemize}
+\item May set off ``false alarms'' until 300 ms pass
+  \begin{itemize}
+  \item Can prevent this at the expense of complicating the monitor slightly, e.g.
+  changing the \verb,trigger, to
+\begin{lstlisting}
+trigger "over_threshold" (overThresh && canTrigger) []
+\end{lstlisting}
+  where
+    \begin{itemize}
+    \item \verb,canTrigger = (clk - hold(clk)) >= 300,
+    \item
+\begin{lstlisting}
+hold s = s'
+  where s' = mux ([True] ++ false) s ([0] ++ s')
+\end{lstlisting}
+    \end{itemize}   
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Summary of Logic Libraries in Copilot}
+\begin{itemize}
+\item LTL
+  \begin{itemize}
+  \item an implementation of bounded Linear Temporal Logic
+  \item the parameter \texttt{n} provides the number of \emph{iterations} over which
+  the property should hold
+  \end{itemize}
+\item PTLTL
+  \begin{itemize}
+  \item an implementation of past-time Linear Temporal Logic
+  \item properties should hold over the current and all previous sampled values
+  \end{itemize}
+\item MTL
+  \begin{itemize}
+  \item an implementation of bounded Metric Temporal Logic with
+    \begin{itemize}
+    \item bounds $l,u$ that must be nonnegative integers
+    \item a time domain consisting of all time values sampled
+    \end{itemize}
+  \item the parameters \texttt{l} and \texttt{u} provide the \emph{real-time values}
+  for which the property should hold
+  \end{itemize}
+\end{itemize}
+\end{frame}
+\end{document}
