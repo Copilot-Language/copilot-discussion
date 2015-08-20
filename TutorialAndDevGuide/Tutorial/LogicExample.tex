@@ -57,8 +57,8 @@ $\mathtt{s1} \leadsto s_1$
 \label{fig:ltl_desc}
 \end{figure*}
 
-Figure \ref{fig:ltl_example} provides an example of the use of LTL library functions
-to generate streams for monitors:
+Figure \ref{fig:ltl_example} provides an example of the use of LTL library
+functions to generate streams for monitors:
 
 \begin{itemize}
 \item The first stream {\tt lockedUntil} is used to monitor the property
@@ -75,7 +75,7 @@ becomes true) within three sampled values.
 \begin{figure*}[!htb]
 \begin{lstlisting}[frame=none]
 lockedUntil :: Stream Bool
-lockedUntil = unlockSignal ==> (until 4 isLocked canUnlock)
+lockedUntil = unlockSignal ==> until 4 isLocked canUnlock
   where
   unlockSignal :: Stream Bool
   unlockSignal =
@@ -86,8 +86,7 @@ lockedUntil = unlockSignal ==> (until 4 isLocked canUnlock)
   canUnlock = (replicate 5 False) ++ (extern "can_unlock" Nothing)
 
 switchOnInTime :: Stream Bool
-switchOnInTime =
-  isEvent ==> eventually 3 isSwitchOn
+switchOnInTime = isEvent ==> eventually 3 isSwitchOn
   where
   isSwitchOn :: Stream Bool
   isSwitchOn = (replicate 4 False) ++ (extern "on" Nothing)
@@ -156,7 +155,7 @@ countMonotonicallyIncreasing = alwaysBeen (count >= ([0] ++ count))
 \label{fig:ptltl_example}
 \end{figure*}
 
-\subsection{Metric Temporal Logic}
+\subsection{Bounded Metric Temporal Logic}
 The MTL library is useful for monitoring properties involving
 bounded real time.
 While the LTL library can be used to monitor properties
@@ -165,8 +164,8 @@ samples are not taken precisely at the assumed rate and the amount
 of time between samples may vary, then depending on a constant
 sampling rate may result in undesired values.
 
-The MTL library provides an implementation of Metric Temporal Logic over a discrete time domain
-with implementations of metric temporal operators
+The MTL library provides an implementation of bounded Metric Temporal Logic
+over a discrete time domain with implementations of metric temporal operators
 $\mathbf{U}_{I}$ (\verb,until,), $\mathbf{S}_{I}$ ({\tt since}),
 $\mathbf{R}_{I}$ ({\tt release}),
 $\mathbf{T}_{I}$ (\verb,trigger,), $\lozenge_{I}$ ({\tt eventually}),
@@ -174,7 +173,7 @@ $\square_{I}$ (\verb,always,),
 $\eventuallyPrev_{I}$ ({\tt eventuallyPrev}), and
 $\alwaysBeen_{I}$ ({\tt alwaysBeen}) along with matching variants
 $\mathbf{U}^{\downarrow}_{I}$ ({\tt matchingUntil}),
-$\mathbf{S}^{\downarrow}_{I}$ ({\tt matchingSince}),
+$\mathbf{S}^{\downarrow}_{I}$ ({\tt matchingSince}),\\
 $\mathbf{R}^{\downarrow}_{I}$ ({\tt matchingRelease}),
 and $\mathbf{T}^{\downarrow}_{I}$ ({\tt matchingTrigger}).
 A description of the MTL library functions (omitting the matching variants)
