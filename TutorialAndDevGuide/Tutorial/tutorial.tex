@@ -57,7 +57,7 @@
 % Copilot + formatting for listings
 \lstdefinelanguage{Copilot} {
   language = Haskell,
-  morekeywords = {Arg, Bool, Double, Float, Int8, Int16, Int32, Int64,
+  morekeywords = {arg, Bool, Double, Float, Int8, Int16, Int32, Int64,
                   Word8, Word16, Word32, Word64, Spec, Stream, String,
                   true, false, label, Nothing, Just, arg, constant, drop,
                   trigger, observer, prop, theorem, interpret, reify, local,
@@ -68,9 +68,9 @@
                   externArrayW16, externArrayW32, externArrayW64, externArrayF,
                   externArrayD, not, abs, signum, complement, recip, exp, sqrt,
                   log, sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, asin,
-                  acosh, atanh, cast, unsafeCast, mod, div, logBase, xor, mux}
+                  acosh, atanh, cast, unsafeCast, mod, div, logBase, xor, mux},
   % formatting
-  commentstyle = \it\color{ForestGreen},
+  commentstyle = \color{ForestGreen}\it,
   keywordstyle = \color{blue}\bf,
   literate = {+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
              {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{${\color{blue}\lambda}$}}1
@@ -78,8 +78,7 @@
              {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
              {>>}{{>>}}2 {>>=}{{>>=}}2
              {++}{{${\color{blue}++}$}}2
-             {|}{{$\mid$}}1,
-  stringstyle = \color{red},
+             {|}{{$\mid$}}1
 }
 
 % A custom version of Haskell for listings
@@ -133,7 +132,7 @@
   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
   showstringspaces=false,          % underline spaces within strings only
   showtabs=false,                  % show tabs within strings adding particular underscores
-  stringstyle=\color{mymauve},     % string literal style
+  stringstyle=\color{red},         % string literal style
   tabsize=2,                       % sets default tabsize to 2 spaces
 }
 
