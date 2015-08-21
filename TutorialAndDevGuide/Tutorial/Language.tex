@@ -418,9 +418,9 @@ provided produces an infinite list of all the permutations of the list {\tt
 Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
 within Copilot:
 %
-\begin{lstlisting}[language = C, frame = single]
+\begin{code}[frame = single]
 double someTable[42] = { 3.5, 3.7, 4.5, ... };
-\end{lstlisting}
+\end{code}
 %
 We can use the table in a Copilot specification as follows:
 %
@@ -456,9 +456,9 @@ func = externFun "f" [arg e0, arg nats] Nothing
 % $
 samples a function in C that has the prototype
 %
-\begin{lstlisting}[language = C, frame = single]
+\begin{code}[frame = single]
 uint16_t f(uint8_t x, uint8_t nats);
-\end{lstlisting}
+\end{code}
 % 
 
 Both external arrays and functions must, like external variables, be defined

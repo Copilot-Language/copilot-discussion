@@ -52,8 +52,6 @@
 
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\footnotesize}
 
-\lstset{basicstyle=\tt\footnotesize}
-
 % Copilot + formatting for listings
 \lstdefinelanguage{Copilot} {
   language = Haskell,
@@ -116,6 +114,7 @@
 
 % Default listings settings
 \lstset{
+  basewidth={0.5em,0.45em},
   basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
