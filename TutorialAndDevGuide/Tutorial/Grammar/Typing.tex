@@ -7,7 +7,7 @@
     {\Gamma \vdash s : \tau}
 \infrule[arg]
     {\Gamma \vdash s : \texttt{Stream } \tau} 
-    {\Gamma \vdash \texttt{Arg } s : \texttt{Arg}}
+    {\Gamma \vdash \texttt{arg } s : \texttt{Arg}}
 %\infrule[argL]
 %    {} 
 %    {\Gamma \vdash \texttt{[]} : \texttt{Arg}}
@@ -24,8 +24,8 @@
     {\Gamma \vdash i : \texttt{Integer} \andalso \Gamma \vdash x :  \texttt{Stream } \tau} 
     {\Gamma  \vdash {\texttt{drop } i~x : \texttt{Stream } \tau }}
 \infrule[Append] 
-    {\Gamma \vdash ls : [a] \andalso \Gamma \vdash s : \mbox{Spec } a} 
-    {\Gamma \vdash ls ++ s : \mbox{Spec } a}
+    {\Gamma \vdash ls : [a] \andalso \Gamma \vdash s : \texttt{Spec } a}
+    {\Gamma \vdash ls ++ s : \texttt{Spec } a}
 
 
 \infrule[label]
@@ -143,8 +143,8 @@
 
 
 
-\infrule[op2Fractionnal]
-    {\Gamma \vdash x :  \texttt{Fractionnal } \tau \Rightarrow\texttt{Stream }  \tau \andalso \Gamma \vdash y : \texttt{Fractionnal } \tau  \Rightarrow \texttt{Stream }  \tau \andalso op \in \{ \texttt{/} \}} 
+\infrule[op2Fractional]
+    {\Gamma \vdash x :  \texttt{Fractional } \tau \Rightarrow\texttt{Stream }  \tau \andalso \Gamma \vdash y : \texttt{Fractional } \tau  \Rightarrow \texttt{Stream }  \tau \andalso op \in \{ \texttt{/} \}} 
     {\Gamma  \vdash {op~x~y : \texttt{Stream } \tau}}
 
 \infrule[op2Floating]
