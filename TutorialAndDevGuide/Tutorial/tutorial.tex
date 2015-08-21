@@ -54,54 +54,70 @@
 
 \lstset{basicstyle=\tt\footnotesize}
 
-\lstdefinelanguage{Haskell}
-	{
-		morekeywords={as, case, of, class, data, data, family, data, instance,
-		default, deriving, do, forall, foreign, hiding, if, then, else, import,
-		infix, infixl, infixr, let, in, mdo, module, newtype, proc, qualified,
-		rec, type, where},
-    	morecomment=[l]{--},
-    	morecomment=[s]{{\{-}{-\}}},
-    	morestring=[b]",
-    	keywordstyle=\color{blue}\bf,
-    	commentstyle=\it\color{ForestGreen},
-    	stringstyle=\color{red},
-    	literate= {'c}{{$\gamma$}}1
-    	{'d}{{$\delta$}}1 {'e}{{$\eta$}}1
-    }
-
-
-%\lstnewenvironment{code}
-%    {\lstset{}%
-%      \csname lst@SetFirstLabel\endcsname}
-%   {\csname lst@SaveFirstLabel\endcsname}
-\lstnewenvironment{Haskell}
-{
-\lstset{
-    language=Haskell,
-    basicstyle=\small\ttfamily,
-    flexiblecolumns=false,
-    basewidth={0.5em,0.45em},
-    literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
+% Copilot + formatting for listings
+\lstdefinelanguage{Copilot} {
+  language = Haskell,
+  morekeywords = {Arg, Bool, Double, Float, Int8, Int16, Int32, Int64,
+                  Word8, Word16, Word32, Word64, Spec, Stream, String,
+                  true, false, label, Nothing, Just, arg, constant, drop,
+                  trigger, observer, prop, theorem, interpret, reify, local,
+                  extern, externB, externI8, externI16, externI32, externI64,
+                  externW8, externW16, externW32, externW64, externF, externD,
+                  externFun, externArray, externArrayB, externArrayI8,
+                  externArrayI16, externArrayI32, externArrayI64, externArrayW8,
+                  externArrayW16, externArrayW32, externArrayW64, externArrayF,
+                  externArrayD, not, abs, signum, complement, recip, exp, sqrt,
+                  log, sin, cos, tan, asin, acos, atan, sinh, cosh, tanh, asin,
+                  acosh, atanh, cast, unsafeCast, mod, div, logBase, xor, mux}
+  % formatting
+  commentstyle = \it\color{ForestGreen},
+  keywordstyle = \color{blue}\bf,
+  literate = {+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
              {>}{{$>$}}1 {<}{{$<$}}1 {\\}{{${\color{blue}\lambda}$}}1
              {\\\\}{{\char`\\\char`\\}}1
              {\ .}{{$\circ$}}2 {\ .\ }{{$\circ$}}2
              {>>}{{>>}}2 {>>=}{{>>=}}2
              {++}{{${\color{blue}++}$}}2
-             {|}{{$\mid$}}1
+             {|}{{$\mid$}}1,
+  stringstyle = \color{red},
 }
+
+% A custom version of Haskell for listings
+\lstdefinelanguage{Haskell} {
+  morekeywords = {as, case, of, class, data, data, family, data, instance,
+                  default, deriving, do, forall, foreign, hiding, if, then, else, import,
+                  infix, infixl, infixr, let, in, mdo, module, newtype, proc, qualified,
+                  rec, type, where},
+  morecomment=[l]{--},
+  morecomment=[s]{{\{-}{-\}}},
+  morestring=[b]",
+  literate= {'c}{{$\gamma$}}1
+  {'d}{{$\delta$}}1 {'e}{{$\eta$}}1
 }
-{}
+
+%\lstnewenvironment{code}
+%    {\lstset{}%
+%      \csname lst@SetFirstLabel\endcsname}
+%   {\csname lst@SaveFirstLabel\endcsname}
+%\lstnewenvironment{Haskell}
+%{
+%\lstset{
+%    language=Haskell,
+%    basicstyle=\small\ttfamily,
+%    flexiblecolumns=false,
+%    basewidth={0.5em,0.45em}
+%}
+%}
+%{}
 
 
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
-
-\lstset{ %
-  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
-  basicstyle=\ttfamily,
+% Default listings settings
+\lstset{
+  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
   breaklines=true,                 % sets automatic line breaking
@@ -113,9 +129,6 @@
   frame=single,                    % adds a frame around the code
   keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
   keywordstyle=\color{blue},       % keyword style
-  language=Octave,                 % the language of the code
-  morekeywords={where,then,drop,extern,let,data,assert,Word8,Word32,Word64,Bool,
-    Stream,trigger,Spec},            % if you want to add more keywords to the set
   rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
   showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
   showstringspaces=false,          % underline spaces within strings only

@@ -34,7 +34,7 @@ lifted to work pointwise on streams:
 
 \noindent
 %\begin{minipage}{0.3\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 x :: Stream Int32
 x = 5 + 5
 
@@ -59,7 +59,7 @@ $\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
 looking into the future of streams:
 %
-\begin{lstlisting}]frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 la(++) :: [a] -> Stream a -> Stream a
 drop :: Int -> Stream a -> Stream a
 \end{lstlisting}
@@ -68,7 +68,7 @@ Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}
 For example the stream {\tt w} defined as follows, given our previous definition
 of {\tt x}:
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 w = [5,6,7] ++ x
 \end{lstlisting}
 %
@@ -78,7 +78,7 @@ The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
   s}, returning the remainder of the stream.  
 For example we can skip the first two values of {\tt w}:
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 u = drop 2 w
 \end{lstlisting}
 %
@@ -90,7 +90,7 @@ $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
 In Haskell, the lazy-list of natural numbers can be programmed like this:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 nats_ll :: [Int32]
 nats_ll = [0] ++ zipWith (+) (repeat 1) nats_ll
 \end{lstlisting}
@@ -99,20 +99,20 @@ As both constants and arithmetic operators are lifted to work pointwise on
 streams in Copilot, there is no need for {\tt zipWith} and {\tt repeat} when
 specifying the stream of natural numbers:
 %
-\begin{lstlisting}]frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 nats :: Stream Int32
 nats = [0] ++ (1 + nats)
 \end{lstlisting}
 %
 In the same manner, the lazy-list of Fibonacci numbers can be specified as follows:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 fib_ll :: [Int32]
 fib_ll = [1, 1] ++ zipWith (+) fib_ll (drop 1 fib_ll)
 \end{lstlisting}
 %
 In Copilot we simply throw away {\tt zipWith}:
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{lstlisting}
@@ -121,7 +121,7 @@ Copilot specifications must be \emph{causal}, informally meaning that
 stream values cannot depend on future values.  For example, the following stream
 definition is allowed:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 f :: Stream Word64
 f = [0,1,2] ++ f
 
@@ -149,7 +149,7 @@ We define the function, {\tt even}, which given a stream of
 integers returns a boolean stream which is true whenever the input stream
 contains an even number, as follows:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 even :: Stream Int32 -> Stream Bool
 even x = x `mod` 2 == 0
 \end{lstlisting}
@@ -164,7 +164,7 @@ Haskell tuples:
 \begin{example}
 We define complex multiplication as follows:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 mul_comp
   :: (Stream Double, Stream Double)
   -> (Stream Double, Stream Double)
@@ -239,7 +239,7 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
 \end{minipage}
 \hspace{1cm}
 \begin{minipage}{0.6\linewidth}
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = none]
 Counter Bool -> Stream Bool 
         -> Stream Int32
 counter inc reset = cnt
@@ -293,7 +293,7 @@ Copilot programs.
 
 We provide a {\tt cast} operator
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 cast :: (Typed a, Typed b) => Stream a -> Stream b  
 \end{lstlisting}
 %
@@ -321,7 +321,7 @@ external symbols take an optional environment for interpretation.
 
 External variables are defined by using the {\tt extern} construct:
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 extern :: Typed a => String -> Maybe [a] -> Stream a
 \end{lstlisting}
 %
@@ -330,7 +330,7 @@ It takes the name of an external variable, a possible Haskell list to serve as
 the environment for the interpreter, and generates a stream by sampling the
 variable at each clock cycle.  For example,
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 sumExterns :: Stream Word64
 sumExterns = let ex1 = extern "e1" (Just [0..])
                  ex2 = extern "e2" Nothing
@@ -346,7 +346,7 @@ an environment for both of its variables to be interpreted).
 Sometimes, type inference cannot infer the type of an external variable.  For
 example, in the stream definition
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 extEven :: Stream Bool
 extEven = e0 `mod` 2 == 0
   where e0 = externW8 "x" Nothing 
@@ -360,7 +360,7 @@ convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
 respectively.  In general it is best practice to define external symbols with
 top-level definitions, e.g.,
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 e0 :: Stream Word8
 e0 = extern  "e0" (Just [2,4..])
 \end{lstlisting}
@@ -371,7 +371,7 @@ so that the symbol name and its environment can be shared between streams.
 Besides variables, external arrays and arbitrary functions can be sampled.  The
 external array construct has the type
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 externArray :: (Typed a, Typed b, Integral a) 
             => String -> Stream a -> Int 
             -> Maybe [[a]] -> Stream b  
@@ -381,7 +381,7 @@ The construct takes (1) the name of an array, (2) a stream that generates indexe
 the array (of integral type), (3) the fixed size of the array, and (4) possibly a list of lists that is the
 environment for the external array, representing the sequence of array values.  For example,
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 
 extArr :: Stream Word32
 extArr = externArray "arr1" arrIdx size 
@@ -418,13 +418,13 @@ provided produces an infinite list of all the permutations of the list {\tt
 Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
 within Copilot:
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = C, frame = single]
 double someTable[42] = { 3.5, 3.7, 4.5, ... };
 \end{lstlisting}
 %
 We can use the table in a Copilot specification as follows:
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 lookupSomeTable :: Stream Word16 -> Stream Double
 lookupSomeTable idx = 
   externArray "someTable" idx 42 Nothing
@@ -437,7 +437,7 @@ Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the ou
 Finally, the constructor \texttt{externFun} takes (1) a function name, (2) a
 list of arguments, and (3) a possible list of values to provide its environment.
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = Copilot, frame = single]
 externFun :: Typed a => String -> [FunArg] 
           -> Maybe [a] -> Stream a
 \end{lstlisting}
@@ -445,7 +445,7 @@ externFun :: Typed a => String -> [FunArg]
 Each argument to an external function is given by a Copilot stream.  For
 example,
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 func :: Stream Word16
 func = externFun "f" [arg e0, arg nats] Nothing
   where
@@ -456,7 +456,7 @@ func = externFun "f" [arg e0, arg nats] Nothing
 % $
 samples a function in C that has the prototype
 %
-\begin{lstlisting}
+\begin{lstlisting}[language = C, frame = single]
 uint16_t f(uint8_t x, uint8_t nats);
 \end{lstlisting}
 % 
@@ -474,7 +474,7 @@ indexes.  They can both take external variables, however.
 Triggers, the only mechanism for Copilot streams to effect the outside world,
 are defined by using the {\tt trigger construct}:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 trigger :: String -> Stream Bool -> [TriggerArg] -> Spec
 \end{lstlisting}
 %
@@ -483,7 +483,7 @@ guard which determines when the trigger should be evoked, and the third paramete
 is a list of arguments which is passed to the trigger when evoked.
 Triggers can be combined into a specification by using the \emph{do}-notation:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 spec :: Spec
 spec = do
   trigger "f" (even nats) [arg fib, arg (nats * nats)]
@@ -501,7 +501,7 @@ rises more than 2.3 degrees within 0.2 seconds, then the fuel injector should
 not be running.  Assuming that the global sample rate is 0.1 seconds, we can
 define a monitor that surveys the above property:
 %
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 propTempRiseShutOff :: Spec
 propTempRiseShutOff = 
   trigger "over_temp_rise" 
@@ -535,15 +535,15 @@ seconds and the engine is not shut off.  Notice there is a latency of one tick b
 
 \begin{figure}[!htb]
 \begin{minipage}{0.5\textwidth}
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = none]
 s1 = let x = nats + nats
      in x * x
 \end{lstlisting}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = none]
 s2 = local (nats + nats) $
-    \ x -> x * x
+     \ x -> x * x
 \end{lstlisting} 
 % $
 \end{minipage}
@@ -552,15 +552,13 @@ s2 = local (nats + nats) $
 \end{figure}
 \noindent Copilot facilitates sharing in expressions by the \emph{local}-construct:
 %
-\begin{figure}[!htb]
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = single]
 local
   :: (Typed a, Typed b)
   => Stream a
   -> (Stream a -> Stream b)
   -> Stream b
 \end{lstlisting}
-\end{figure}
 %
 The local construct works similar to \emph{let}-bindings in ordinary Haskell.
 From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
@@ -574,7 +572,7 @@ In such cases, using explicit sharing helps to avoid this problem.
 
 It is possible to add labels in a copilot program. Labels are essentially working the same way as the \texttt{trace} function from \texttt{Debug.Trace}, but instead of outputting on stdout, they print their string in the C source file.
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 label
 :: (Typed a)
 => String
@@ -585,7 +583,7 @@ label
 
 The term \emph{magic label} refers to the possibility to add special characters in labels, which would modify the code generation. Up to now, only one has been implemented, which does a beta expansion where it is put. To invoke the splitting character, simply do:
 
-\begin{lstlisting}[frame=single]
+\begin{lstlisting}[language = Copilot, frame = single]
 label "?blabla" expr
 \end{lstlisting}
 

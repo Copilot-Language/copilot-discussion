@@ -7,7 +7,7 @@ specifications themselves. A proposition is a Copilot stream of type
 \lstinline{prop} and \lstinline{theorem} functions. Consider this Copilot
 monitor specification for a version of the fibonacci sequence:
 
-\begin{Haskell}
+\begin{lstlisting}[language = Copilot]
 module Fib where
 
 import Prelude ()
@@ -22,7 +22,7 @@ fib = do
   where
     fibn = [1, 1] ++ (fibn + drop 1 fibn)
     n = [0] ++ (n + 1)
-\end{Haskell}
+\end{lstlisting}
 
 In the specification above, in addition to observing the value of streams in
 the specification, \lstinline{fibn_gre_n} names a theorem provable

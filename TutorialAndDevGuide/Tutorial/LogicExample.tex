@@ -73,7 +73,7 @@ becomes true) within three sampled values.
 \end{itemize}
 
 \begin{figure*}[!htb]
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = none]
 lockedUntil :: Stream Bool
 lockedUntil = unlockSignal ==> until 4 isLocked canUnlock
   where
@@ -144,7 +144,7 @@ the nonnegatively-valued stream \verb,count, have increased monotonically
 so far.
 
 \begin{figure*}[!htb]
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = none]
 countMonotonicallyIncreasing :: Stream Bool
 countMonotonicallyIncreasing = alwaysBeen (count >= ([0] ++ count))
   where
@@ -278,7 +278,7 @@ Whenever this property does not hold, the trigger is evoked in response to
 the detected issue.
 
 \begin{figure*}[!htb]
-\begin{lstlisting}[frame=none]
+\begin{lstlisting}[language = Copilot, frame = none]
 maxAirspeedViolation :: Spec
 maxAirspeedViolation =
   Copilot.Language.trigger
