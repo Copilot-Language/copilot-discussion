@@ -60,7 +60,7 @@ Two types of \emph{temporal} operators are provided, one for delaying streams an
 looking into the future of streams:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
-la(++) :: [a] -> Stream a -> Stream a
+(++) :: [a] -> Stream a -> Stream a
 drop :: Int -> Stream a -> Stream a
 \end{lstlisting}
 %
@@ -145,7 +145,7 @@ Haskell as a macro language is powerful since Haskell is a
 general-purpose higher-order functional language.
 
 \begin{example}
-We define the function, {\tt even}, which given a stream of
+We define the function {\tt even}, which given a stream of
 integers returns a boolean stream which is true whenever the input stream
 contains an even number, as follows:
 %
@@ -240,7 +240,7 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
 \hspace{1cm}
 \begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[language = Copilot, frame = none]
-Counter Bool -> Stream Bool 
+counter :: Bool -> Stream Bool
         -> Stream Int32
 counter inc reset = cnt
   where 
@@ -574,10 +574,10 @@ It is possible to add labels in a copilot program. Labels are essentially workin
 
 \begin{lstlisting}[language = Copilot, frame = single]
 label
-:: (Typed a)
-=> String
--> Stream a
--> Stream a
+  :: (Typed a)
+  => String
+  -> Stream a
+  -> Stream a
 \end{lstlisting}
 
 

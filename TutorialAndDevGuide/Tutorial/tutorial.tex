@@ -57,6 +57,7 @@
   language = Haskell,
   morekeywords = {arg, Bool, Double, Float, Int8, Int16, Int32, Int64,
                   Word8, Word16, Word32, Word64, Spec, Stream, String,
+                  Proof, Universal, Existential,
                   true, false, label, Nothing, Just, arg, constant, drop,
                   trigger, observer, prop, theorem, interpret, reify, local,
                   extern, externB, externI8, externI16, externI32, externI64,
@@ -77,6 +78,7 @@
              {>>}{{>>}}2 {>>=}{{>>=}}2
              {++}{{${\color{blue}++}$}}2
              {|}{{$\mid$}}1
+             {==>}{{${\color{blue}==>}$}}3
 }
 
 % A custom version of Haskell for listings
@@ -112,27 +114,27 @@
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
-% Default listings settings
+% Global listings settings
 \lstset{
-  basewidth={0.5em,0.45em},
-  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
-  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
-  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
-  breaklines=true,                 % sets automatic line breaking
-  captionpos=b,                    % sets the caption-position to bottom
-  commentstyle=\color{mygreen},    % comment style
-  deletekeywords={ls,xor,conj,reset,gt,input},            % if you want to delete keywords from the given language
-  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
-  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
-  frame=single,                    % adds a frame around the code
-  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-  keywordstyle=\color{blue},       % keyword style
-  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
-  showstringspaces=false,          % underline spaces within strings only
-  showtabs=false,                  % show tabs within strings adding particular underscores
-  stringstyle=\color{red},         % string literal style
-  tabsize=2,                       % sets default tabsize to 2 spaces
+  basewidth={0.5em,0.45em},         % spacing more like verbatim
+  basicstyle=\footnotesize\ttfamily,% the size/face of the fonts that are used for the code
+  backgroundcolor=\color{white},    % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  breakatwhitespace=false,          % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                  % sets automatic line breaking
+  captionpos=b,                     % sets the caption-position to bottom
+  commentstyle=\color{mygreen},     % comment style
+  %deletekeywords={ls,xor,conj,reset,gt,input},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},           % if you want to add LaTeX within your code
+  extendedchars=true,               % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                     % adds a frame around the code
+  keepspaces=true,                  % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},        % keyword style
+  rulecolor=\color{black},          % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                 % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,           % underline spaces within strings only
+  showtabs=false,                   % show tabs within strings adding particular underscores
+  stringstyle=\color{red},          % string literal style
+  tabsize=2,                        % sets default tabsize to 2 spaces
 }
 
 
@@ -171,7 +173,7 @@ An Introduction to Copilot
 
 \vspace{0.6cm}
 
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
 Nis N. Wegmann\\
@@ -181,7 +183,7 @@ niswegmann@gmail.com\\
 
 \end{center}
 \end{minipage}
-\begin{minipage}{0.4\textwidth}
+\begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
 Lee Pike\\
