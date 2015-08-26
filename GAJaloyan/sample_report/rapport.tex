@@ -58,7 +58,7 @@
 
 \newcommand{\reporttitle}{Copilot, traceability of an EDSL generated code.}     % Titre
 \newcommand{\reportauthor}{Georges-Axel \textsc{Jaloyan}} % Auteur
-\newcommand{\reportsubject}{Undergraduate internship report} % Sujet
+\newcommand{\reportsubject}{Undergraduate internship report\\[0.5cm]8 June 2015 - 14 August 2015} % Sujet
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 \setlength{\parskip}{1ex} % Espace entre les paragraphes
 
@@ -72,7 +72,6 @@
 	pdfkeywords={rapport} {vos} {mots} {clés}
 }
 
-\newcommand\TestAppExists[3]{#2}
 \usepackage{minted}
 
 \begin{document}
@@ -83,10 +82,10 @@
 		\begin{center}
 			
 			
-			\textsc{\Large \reportsubject}\\[0.5cm]
+			\textsc{\Large \reportsubject}\\[2.5cm]
 			\HRule \\[0.4cm]
 			{\huge \bfseries \reporttitle}\\[0.4cm]
-			\HRule \\[1.5cm]
+			\HRule \\[2cm]
 			
 			\begin{minipage}[t]{0.3\textwidth}
 				\begin{flushleft} \large
@@ -100,7 +99,7 @@
 					Dr.~Alwyn \textsc{E. Goodloe}
 				\end{flushright}
 			\end{minipage}
-			\\[1.5cm]
+			\\[4cm]
 			\begin{minipage}[t]{0.25\textwidth}
 				\begin{flushleft}
 					\includegraphics[height=30mm]{images/NASA.png}	
@@ -133,7 +132,7 @@
 	\addcontentsline{toc}{section}{Introduction} % Ajout dans la table des matières
 	This report is referring to an internship from the 8\textsuperscript{th} of June 2015 to the 14\textsuperscript{th} of August 2015 at \emph{NASA Langley Research Center} also abbreviated as \emph{LaRC}. According to the security policy of the NASA administration, my office was located at the \emph{National Institute of Aerospace} (or \emph{NIA}), a non-profit institute specialized in aerospace and atmospheric research\footnote{http://www.nianet.org/}. 
 	
-	The main goal of the internship was to work with Copilot, a tool for writing monitors of ultra-critical embedded systems. I had more specifically to work on the output monitor in C and manage writing ACSL contracts automatically in them, and to a broader extent, ensure some traceability of the compilation process, from the Haskell source code, down to the binary, in order to get Copilot to the practical level, and lay the bases for a DO-178B certification.
+	The main goal of the internship was to work with Copilot, a tool for writing monitors for ultra-critical embedded systems. I had more specifically to work on the final monitor in C and manage writing ACSL contracts automatically in them, and to a broader extent, ensure some traceability of the compilation process, from the Haskell source code, down to the binary, in order to get Copilot to the practical level, and lay the bases for a DO-178B certification.
 	
 	\tableofcontents % Table des matières
 	\sloppy          % Justification moins stricte : des mots ne dépasseront pas des paragraphes
@@ -213,7 +212,7 @@ observer :: Typed a => String -> Stream a -> Spec
 	
 	A more detailed example named \texttt{over\_temp\_rise} is given in the Copilot manual\cite{Copilot07}. 
 	
-	For the purpose of the study, the author first wrote a grammar and typing rules for Copilot (which can be found in the Copilot manual\cite{Copilot08}). The difficulty resides in the fact that Copilot is an EDSL, thus its lexing, parsing and typing are done using Haskell's. A particular attention has been paid to make the grammar and the typing rules self sufficient, even by restriction some idiomatic constructs, making them unspecified. For instance, strings are only limited to basic one block declarations, lists or arguments are reduced to inductive constructs using explicit type constructors, ...
+	For the purpose of the study, the author first wrote a grammar and typing rules for Copilot (which can be found in the Copilot manual\cite{Copilot08}). The difficulty resides in the fact that Copilot is an EDSL, thus its lexing, parsing and typing are done using Haskell's. A particular attention has been paid to make the grammar and the typing rules self sufficient, even by restricting some idiomatic constructs, making them unspecified. For instance, strings are only limited to basic one block declarations, lists or arguments are reduced to inductive constructs using explicit type constructors, ...
 	
 	\subsection{Introduction to ACSL and frama-c}
 	ACSL is a language in which we can write specifications for a C program. Those contracts are written according to the following example :
@@ -289,7 +288,7 @@ observer :: Typed a => String -> Stream a -> Spec
 	\end{figure}
 	
 	\subsection{Main objective and first modifications}
-	The main goal was to write ACSL contracts in the code produced in order to have a high degree of confidence in the compiler, without having to prove the compiler, which is too complicated given that we use an EDSL. For this, we had to modify the backends, and the libraries producing the code (namely SBV and ATOM). A first look in the C code produced showed that given its structure, the code produced by ATOM would be really hard to prove (many hacks, non idiomatic expressions, bad splitting into functions). Henceforth, we decided to focus only on SBV, trying to produce the contracts in the Copilot backend for SBV.
+	The main goal was to write ACSL contracts in the code produced in order to have a high degree of confidence in the compilation process, without having to prove the compiler, which is too complicated given that we use an EDSL. For this, we had to modify the backends, and the libraries producing the code (namely SBV and ATOM). A first look in the C code produced showed that given its structure, the code produced by ATOM would be really hard to prove (many hacks, non idiomatic expressions, bad splitting into functions). Henceforth, we decided to focus only on SBV, trying to produce the contracts in the Copilot backend for SBV.
 	
 	\section{First attempt}
 	\subsection{Hand-written ACSL}
@@ -342,9 +341,9 @@ reify spec >>= S.compile S.defaultParams --SBV Backend
 	return s10;
 	}
 	\end{lstlisting}
-	By running \texttt{frama-c -wp -wp-out . -wp-prover PROVER} with several provers. First we tried on the original file with the contracts. Then we changed also the laziness of the logical operators (both in the contract and the code), leading to an impossibility in the proof (Timeout for Z3). 
+	Then, we ran \texttt{frama-c -wp -wp-out . -wp-prover PROVER} with several provers. First we tried on the original file with the contracts. Then we changed also the laziness of the logical operators (both in the contract and the code), leading to an impossibility in the proof (Timeout for Z3). 
 	
-	This means that no prover can prove a contract with bitwise boolean operators inside. That's why the SBV library had to be modified so that when having logical operators on bool values, those would be compiled to lazy variants, given that such an approximation is safe (which is obviously not the case on non boolean values)\footnote{https://github.com/LeventErkok/sbv/issues/177}. An other interesting observation is that if we delete the guard \texttt{requires ptr\_2 < 0x000078;}, then the prover Z3 concludes that the code is clearly unsafe, which can create problems given that the functions are spread on several files and no global invariant is available. 
+	This means that no prover can prove a contract with bitwise boolean operators inside. That's why the SBV library had to be modified so that when having logical operators on boolean values, those would be compiled to their lazy variants, given that such an approximation is safe (which is obviously not the case on non boolean values)\footnote{https://github.com/LeventErkok/sbv/issues/177}. An other interesting remark is that if we delete the guard \texttt{requires ptr\_2 < 0x000078;}, then the prover Z3 concludes that the code is clearly unsafe, which can create problems given that the functions are spread on several files and no global invariant is available. 
 	
 	\begin{minipage}{\textwidth}
 	\begin{multicols}{3}
@@ -406,31 +405,31 @@ reify spec >>= S.compile S.defaultParams --SBV Backend
 	\end{multicols}
 	\end{minipage}
 	
-	\subsection{Automatic generation of contracts by induction on the syntax.}
+	\subsection{Automatic generation of contracts by induction on the syntax}
 	
 	Thus, we can see that the SBV backend generates one function per expression of the reified AST (abstract syntax tree). Thus the main task consists in generating a contract for the expression, which can be done by induction on the syntax. This is very similar to writing a pretty printer for expressions (corresponding to the token $\langle funStream \rangle$ in the grammar), except for some tricks, which have to be taken into account, which are often due to the absence of implementation of some features described in ACSL.
 	
 	\begin{itemize}
 		\item No let bindings can be written in ACSL contracts.
-		\subitem It was decided to do not support let bindings during ACSL contract generation, thus making a code containing let bindings unprovable. Nevertheless, the programmer can use a functional style, changing the let bindings into function, at the cost of having arguments in order to use variables that should be in scope for let bindings.
+		\subitem It was decided not to support let bindings during ACSL contract generation, thus making a code containing let bindings unprovable. Nevertheless, the programmer can use a functional style programming, changing the let bindings into functions, at the cost of passing arguments to functions in order to use variables whereas they are in scope when using let bindings.
 		\item No mathematical functions are available (sin, cos, tan, sqrt, ...).
 		\subitem This is quite normal, given that on embedded systems, the access to math.h is not guaranteed. Thus we decided to transform each trigonometrical function into a call to an external function, called the same way (or sinf if working on floats), and it's up to the user to provide an implementation of the function (or to choose the standard implementation in math.h).
 		\item No global invariants are implemented in WP plugin.
-		\subitem We split the dereferencing of the pointer in an external function (called ident, which is equivalent to the identity), which allows to have simple enough contracts to be able to prove the assertions, and given that the splitting does not change the semantics of the program (it is similar to an beta-expansion).
+		\subitem We split the dereferencing of the pointer in an external function (called ident, which is equivalent to the identity), which allows to have simple enough contracts to be able to prove the assertions. Note that the splitting does not change the semantics of the program (it is similar to an beta-expansion).
 		\item No bitwise operator.
-		\subitem SBV library was changed in that purpose, and bitwise operators have been deprecated\footnote{https://github.com/LeventErkok/sbv/issues/177}.
+		\subitem SBV library was changed in that purpose, and bitwise operators have been deprecated in Copilot\footnote{https://github.com/LeventErkok/sbv/issues/177}.
 	\end{itemize}
 	
 	\subsection{Values Analysis vs Weakest Liberal Precondition.}
 	The value analysis plugin was also tested given that it supports global invariants. The problems resides in the facts that it can prove the safety of one step of sampling, and when trying to generalize the proof by adding an infinite loop of the step function, all the values are evaluated to Top using widening. This causes the analysis to fail (almost all instructions become unsafe). A solution the author implemented consists in telling the analyzer to unroll the infinite loop\footnote{Using the option \texttt{-slevel n} where \texttt{n} is the number of steps}, which allows the analyzer to run on a finite number of loop steps, which is enough to prove an assertion of the type : until the step $x$, this monitor is safe, which can be enough for a plane or a car (a civilian plane is not supposed to fly more than two days), but is clearly insufficient for the space industry.
 	
 	For these reasons, it was decided to focus on the WP plugin, even if we added a feature to try the value-analysis plugin.
-	\subsection{CompCert.}
+	\subsection{CompCert}
 	
 	After managing to write the generation of contracts, we finally changed the compiler to CompCert, which generates semantically equivalent assembly code in a prover manner (the option make all in the makefile compiles every source file in a object file and assembles all the objects into an archive using a standard archiver). For this purpose, SBV library also needed to be changed\footnote{https://github.com/LeventErkok/sbv/issues/175\#issuecomment-114105589}.
 	
 	\subsection{Bug finding}
-	After all the first steps done, the author did some bug tracking in the Copilot toolchain, looking for front-end errors, and even some back-end errors. Indeed, front-end errors are a common issue for high insurance compilers, which can not be avoided even by proving methods\cite{bugC}. 
+	After all the first steps done, the author did some bug finding in the Copilot toolchain, looking for front-end errors, and even some back-end errors. Indeed, front-end errors are a common issue for high insurance compilers, which can not be avoided even by proving methods\cite{bugC}. 
 	
 	First, a bug in the code generation using file handles was present in the source code, resulting in blank files randomly generated in SBV. This was corrected by deleting the handles, and going at a higher level construct with the functions writeFile of the haskell standard library\footnote{https://github.com/Copilot-Language/copilot-sbv/commit/5a7f274be38382155a7dd3422d9003ec349f92c0}. 
 	
@@ -442,7 +441,7 @@ reify spec >>= S.compile S.defaultParams --SBV Backend
 		\item A reduction of $0^x$ to $0$ instead of $mux (x==0) (1) (0)$\footnote{https://github.com/Copilot-Language/copilot-language/commit/577208958ee48355bbc5d7ce7ed5430130f00c9a}.
 	\end{itemize}
 	
-	What was more surprising is that a serious back-end bug was present in the translator to SBV (also called the SBV backend), which was not present in the ATOM backend, and which was never detected by model checking techniques (given that the code generating the bug was never tested). The bug was found by manually looking in a C source file of 100 lines, which contained a contract 900 characters which evaluated to Unknown status using WP plugin. By extracting the interesting piece of code, we had :
+	What was more surprising is that a serious back-end bug was present in the translator to SBV (also called the SBV backend), which was not present in the ATOM backend, and which was never detected by model checking techniques (given that the code generating the bug was never tested). The bug was found by manually looking in a C source file of 100 lines, which contained a contract of 900 characters which evaluated to Unknown status using WP plugin. By extracting the interesting piece of code, we had :
 	\begin{lstlisting}[language=C, keywordstyle=\color{blue}]
 	/*@
 	ensure s27 == ((ext_sqrt_0) /   (ext_maximum_time_for_horizontal_violation));
@@ -450,7 +449,7 @@ reify spec >>= S.compile S.defaultParams --SBV Backend
 	bool trigger(...)
 	{
 	const SDouble s11 = ext_maximum_time_for_horizontal_violation;
-	const SDouble s13 = ext_sqrt_1;
+	const SDouble s13 = ext_sqrt_1; //error, it should be ext_sqrt_0
 	const SDouble s27 = s13 / s11;
 	}  \end{lstlisting}
 	This similar bug can be generated with the following haskell code :
@@ -474,13 +473,13 @@ s = x + (y + x)
 	return s3;
 	}  \end{lstlisting}
 	
-	This was due to the fact that when we use an external function several times in one stream, the sbv backend just forgets to take into account the number of times that the external function has already been called with other arguments, so it always gets the value from the last call of the function. This was corrected by changing a key in a map\footnote{https://github.com/Copilot-Language/copilot-sbv/commit/6bc043117eac17e918ac7a6363b866058911e59f}. 
+	This bug is due to the fact that when we use an external function several times in one stream, the sbv backend just forgets to take into account the number of times that the external function has already been called with other arguments, hence the backend always gets the value from the last call of the function. This was corrected by changing a key in a map\footnote{https://github.com/Copilot-Language/copilot-sbv/commit/6bc043117eac17e918ac7a6363b866058911e59f}. 
 	
 	\subsection{Ensuring traceability}
 	
 	As requested by the DO-178B norm regarding the safety of critical flight avionics, a traceability has to be ensured between the origin haskell source code file and the generated C code produced. For that purpose, the author implemented a labeling system, similar to the trace instruction from Debug.Trace, but prints its label in the C source file instead of stdout. Moreover, the fact that the expressions could be huge after reification (all functions are beta expanded in expressions), it caused problems with frama-c which could not parse contracts of 500000 characters long. 
 	
-	For this purpose, the author had the idea to implement three features. The first is a prover mode, which will optimize the code in order to make it easier to prove (by splitting absolute values in half for example). The second is a pretty printer of the AST into a dot file, which then generates a graph of what a C file is supposed to do (this graph is equivalent to the ACSL contract, so it is easier to see a problem in the contract by looking at the AST graph). The last are magic characters in labels, which can affect the generated C code when the compilation is in mode prover. The only one implemented is the character \texttt{?} which causes the backend to cut the AST at this node and create an other one. This is done by the method presented in the paragraph 2.2 about the dereferencing of pointers in a box using the identity external function which is shown in the Figure~\ref{fig:splitting label} for the following simple Copilot code :
+	For this purpose, the author had the idea to implement three features. The first is a prover mode, which will optimize the code in order to make it easier to prove (by splitting absolute values in half for example). The second is a pretty printer of the AST into a dot file, which then generates a graph of what a C file is supposed to do (this graph is equivalent to the ACSL contract, so it is easier to see a problem in the contract by looking at the AST graph). The last are magic characters in labels, which can affect the generated C code when the compilation is in prover mode. The only character implemented yet is the character \texttt{?} which causes the backend to cut the AST at this node and create an other one. This is done by the method presented in the paragraph 2.2 about the dereferencing of pointers in a box using the identity as an external function which is shown in the Figure~\ref{fig:splitting label} for the following simple Copilot code :
 \begin{minted}{haskell}
 import qualified Copilot.Compile.SBV as S
 
@@ -589,8 +588,8 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	The details could be found in \cite{MBNMH2010NASA} and \cite{NM2011NASA}, and here are their inputs and outputs :
 	\begin{itemize}
-		\item Inputs : Velocity, Position of the ownship and the intruder (both 3 dimensional vectors). The output given by the algorithm of the ownship. The minimum horizontal and vertical separations $D$ and $H$ (usually $D = 5nm$, $H=1000ft$). The direction parameters for horizontal and vertical resolution, which are a value that can either be + or - 1 ; the two planes share the same value. The max time for violation $t$.
-		\item Outputs : two boolean values, corresponding each other to the violation of a criterion.
+		\item Inputs : Velocity, Position of the ownship and the intruder (both 3 dimensional vectors). The planned Position and Velocity of the ownship given by its control algorithm. The minimum horizontal and vertical separations $D$ and $H$ (usually $D = 5nm$, $H=1000ft$). The direction parameters for horizontal and vertical resolution, which are a value that can either be + or - 1 ; the two planes share the same value. The max time for violation $t$.
+		\item Outputs : two boolean values, corresponding to the violation of each criterion.
 	\end{itemize}
 	
 	The implementation is 262 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/master/example29/main.hs}. The proof mode generates 433 C source files, which are then verified by frama-c in 2 minutes and 39 sec on an intel i5-4200U\footnote{http://ark.intel.com/fr/products/75459/Intel-Core-i5-4200U-Processor-3M-Cache-up-to-2\_60-GHz}\footnote{The whole process is logged in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwp \\ and a compact log better suited for readability is in  https://raw.githubusercontent.com/Copilot-Language/\\examplesForACSL/2bead489ca551eb1c54aa7fa4408697e07344f26/example29/copilot-sbv-codegen/logfwpcompact} using the following bash command (which uses GNU parallel).
@@ -615,12 +614,12 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	A typical violation starts with an intruder plane entering the TA region, which triggers the audible alert "traffic, traffic". If the violation continues until the RA region, this time the system will evaluate if the resolution advice will be corrective or preventive. The preventive resolution advice, consist in giving indications to maintain altitude or vertical speed to the pilot, so that the collision will not happen. The corrective (and hence the most dangerous), gives indication that have to be followed in order to avoid an imminent collision. In this case an other audible alert is emitted, which either asks to "descend, descend", or "climb, climb NOW", or to "Adjust Vertical Speed, Adjust". When the conflict is definitely avoided, the TCAS sends a message saying  that the situation is "clear of conflict" \footnote{https://www.youtube.com/watch?v=z-6zF9PEtdU} \footnote{https://www.youtube.com/watch?v=OrYqIU0NxHQ}.
 	
-	More specifically, the author implemented two of these features : the TCAS II RA alert, and the discrimination function between the preventive and corrective advice. Those were extracted from the PVS model of the NASA library \footnote{https://github.com/nasa/pvslib/tree/master/TCASII}, which can also be found in \cite{MNC13GNC}. 
+	More specifically, the author implemented two of these features : the TCAS II RA alert, and the discrimination function between the preventive and corrective advice. Those were extracted from the PVS model of the NASA library\footnote{https://github.com/nasa/pvslib/tree/master/TCASII}, which can also be found in \cite{MNC13GNC}. 
 	
 	The implementation is 447 lines long\footnote{https://github.com/Copilot-Language/examplesForACSL/blob/43beff24ecf6c71aa20e544c9053fd7ed5491fc9/example36/main.hs}. The proof mode generates 1790 C source files, which are then verified by frama-c in 4 hours and 38 min on an intel i5-4200U\footnote{The whole process is logged in https://github.com/Copilot-Language/\\examplesForACSL/blob/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example36/copilot-sbv-codegen/logfwp2.tar.gz \\ and a compact log better suited for readability is in https://raw.githubusercontent.com/Copilot-Language/examplesForACSL/3aa55009e69351f9e5ea2d33a5eea067fa2dbafc/example36/copilot-sbv-codegen/logfwpcompact}. In compiling mode, the copilot toolchain generates only 5 C source files, which are compiled in less than two second with CompCert\footnote{https://github.com/Copilot-Language/examplesForACSL/tree/39c926a773f6cabbe4698fb13e24a3af9fb3e38f/example36/copilot-sbv-codegen}.
 	
 	\subsection{Third application : Well-clear criterion}
-	The last application, is the implementation of the Well-Clear Violation criteria (also known as \emph{WCV}) in Copilot defined in \cite{WCV1}, \cite{WCV2} and \cite{WCV3} by C\'esar A. Mu\~{n}oz, Anthony J. Narkawicz and James Chamberlain, Mar\'ia Consiglio and Jason Upchurch. Those criteria ensure that two planes, if this criterion is met, are in a safe situation. To some extent, this criterion is a guarantee that, if respected, a TCAS alert would not be triggered. The criterion has an horizontal and vertical part, as shown by its formula : 
+	The last application, is the implementation of the Well-Clear Violation criteria (also known as \emph{WCV}) in Copilot defined in \cite{WCV1}, \cite{WCV2} and \cite{WCV3} by C\'esar A. Mu\~{n}oz, Anthony J. Narkawicz, James Chamberlain, Mar\'ia Consiglio and Jason Upchurch. Those criteria ensure that two planes, if this criterion is met, are in a safe situation. To some extent, this criterion is a guarantee that, if respected, a TCAS alert would not be triggered. The criterion has an horizontal and vertical part, as shown by its formula : 
 	\begin{figure}[!htb]
 		\centering
 		\includegraphics[height=35mm]{images/WCV/wcv.pdf}\\
@@ -636,7 +635,7 @@ reify spec >>= S.proofACSL S.defaultParams
 	
 	\begin{figure}[!ht]
 		\centering
-		\includegraphics[height=70mm]{images/WCV/graph.pdf}
+		\includegraphics[height=65mm]{images/WCV/graph.pdf}
 		\caption{We clearly see here $WCV_{\tau} \Rightarrow WCV_{tcpa} \Rightarrow WCV_{\tau_{mod}} \Rightarrow WCV_{tep}$. Here we decided to choose $DTHR = 1 nmi$, $TTHR = TCOA = 30 s$, and $ZTHR = 475 ft$. }
 		\label{fig:graph}
 	\end{figure} 
@@ -644,11 +643,10 @@ reify spec >>= S.proofACSL S.defaultParams
 	A unit test was written for the generated code in C99, with some test cases provided (not published). All of those scenarii are involving two planes, giving a sampling rate of 1 second, with planes entering and getting out of violation. This was used for writing a monitor that would run on a ground station, which has to monitor both real UAVs and fake simulated vessels (there is no way for the monitor to discriminate both). The general structure of the monitor is in the figure~\ref{fig:monstructure}. 
 	
 	More specifically, the planes would communicate with a first interface (named GUI here), that would do the conversion between raw data from the planes, and translate them into audible alerts (or visible) and feed the monitor on stdin. The monitor will check if any two of planes trigger a WCV alert, after computation by the driver.c. Given that the data is given into latitude and longitude coordinates, a converter has to be used to convert them in x, y, z coordinates\footnote{More precisely, z is kept the same for all planes, x and y are obtained by projecting the ownship and the intruder on a plane tangent to the earth on the middle point of the great circle that connects the two vertical projection points.}. It is planned to test this monitor in a real situation in the Fall 2015.
-	
 \begin{figure}[ht!]
 	\centering
 	\footnotesize
-	\begin{tikzpicture}[->, node distance=2.1cm, auto, shorten >=1pt, bend angle=45,thick]
+	\begin{tikzpicture}[->, node distance=2.0cm, auto, shorten >=1pt, bend angle=45,thick]
 	\tikzstyle{every state}=[rectangle, rounded corners]
 	
 	\node[state] (Plane) {Planes};
@@ -661,9 +659,7 @@ reify spec >>= S.proofACSL S.defaultParams
 	\node[state] (AL) [below of=GUI] {ALERT};
 	\node[state] (Co) [below of=Mon] {Converter};
 	
-	
 	\tikzstyle{every node}=[]
-	
 	
 	\path
 	(Plane) edge node {UDP} (GUI)
@@ -681,7 +677,7 @@ reify spec >>= S.proofACSL S.defaultParams
 	\section*{Conclusion}\addcontentsline{toc}{section}{Conclusion}
 	All in all, this 10 week internship was really encouraging, with a lot of tools I discovered and used efficiently in order to improve the reliability and traceability of a synchronous EDSL in an original way. I also implemented three examples of programs that Copilot is targeting specifically (runtime monitor for hard real-time distributed systems in C), in order to show that the language is mature enough to start experimentations in real condition, and to show that taking it to an other level is neither pointless, nor groundless (DO-178B certification). 
 	
-	To reach the next step, there is still some work to do, such as code refactoring for Haskell, make the C source code comply to ISO/IEC 9899:1999, do more testing both with unit tests and real situation, add new features (matrix, structs, math functions), and strengthen the whole Haskell code by either intensive unit testing or by extending the ACSL contracts to check more than the simple compilation process.
+	To reach the next step, there is still some work to do, such as code refactoring for Haskell, make the C source code comply to ISO/IEC 9899:1999, do more testing both with unit tests and real situation, add new features (matrix, structs, math functions), and strengthen the whole Haskell code by either intensive unit testing or by extending the ACSL contracts to check more than the simple compilation process\footnote{Some steps have been already taken at top level by other interns, see \cite{Copilot08}}.
 	
 	
 	\cleardoublepage\phantomsection\addcontentsline{toc}{section}{Références}

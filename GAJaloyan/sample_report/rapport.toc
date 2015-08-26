@@ -9,9 +9,9 @@
 \contentsline {subsection}{\numberline {1.4}Main objective and first modifications}{4}{subsection.1.4}
 \contentsline {section}{\numberline {2}First attempt}{4}{section.2}
 \contentsline {subsection}{\numberline {2.1}Hand-written ACSL}{4}{subsection.2.1}
-\contentsline {subsection}{\numberline {2.2}Automatic generation of contracts by induction on the syntax.}{6}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.2}Automatic generation of contracts by induction on the syntax}{6}{subsection.2.2}
 \contentsline {subsection}{\numberline {2.3}Values Analysis vs Weakest Liberal Precondition.}{6}{subsection.2.3}
-\contentsline {subsection}{\numberline {2.4}CompCert.}{7}{subsection.2.4}
+\contentsline {subsection}{\numberline {2.4}CompCert}{7}{subsection.2.4}
 \contentsline {subsection}{\numberline {2.5}Bug finding}{7}{subsection.2.5}
 \contentsline {subsection}{\numberline {2.6}Ensuring traceability}{8}{subsection.2.6}
 \contentsline {section}{\numberline {3}Practical steps}{10}{section.3}

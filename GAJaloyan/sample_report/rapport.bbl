@@ -76,9 +76,6 @@ A.~J. Narkawicz, C.~A. Mu{\~{n}}oz, J.~M. Upchurch, J.~P. Chamberlain, and
   Langley Research Center, Hampton VA 23681-2199, USA, Technical Memorandum
   NASA/TM-2014-218155, January 2014.
 
-\bibitem{Copilot08}
-NASA, ``The copilot manual,'' 2015.
-
 \bibitem{Copilot01}
 \BIBentryALTinterwordspacing
 L.~Pike, A.~Goodloe, R.~Morisset, and S.~Niller,
@@ -107,6 +104,11 @@ L.~Pike, N.~Wegmann, S.~Niller, and A.~Goodloe, ``Experience report: A
   Management}, vol.~9, no.~4.\hskip 1em plus 0.5em minus 0.4em\relax Springer,
   2013, pp. 235--255, preprint available at
   \url{http://www.cs.indiana.edu/~lepike/pub_pages/isse.html}.
+
+\bibitem{Copilot08}
+L.~Pike, N.~Wegmann, S.~Niller, C.~Hathhorn, L.~Pick, and G.-A. Jaloyan, ``An
+  introduction to copilot,'' The National Institute of Aerospace, Galois Inc.,
+  NASA LaRC, Hampton, VA, USA, 2015.
 
 \bibitem{WCV1}
 J.~M. Upchurch, C.~A. Mu{\~{n}}oz, A.~J. Narkawicz, J.~P. Chamberlain, and

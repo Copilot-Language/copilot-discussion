@@ -1,4 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGdefault{n+nf}{trigger} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{String} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Bool} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{p}{[}\PYGdefault{k+kt}{TriggerArg}\PYGdefault{p}{]} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Spec}
-\PYGdefault{n+nf}{observer} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Typed} \PYGdefault{n}{a} \PYGdefault{o+ow}{=\PYGdefaultZgt{}} \PYGdefault{k+kt}{String} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Stream} \PYGdefault{n}{a} \PYGdefault{o+ow}{\PYGdefaultZhy{}\PYGdefaultZgt{}} \PYGdefault{k+kt}{Spec}
-\end{Verbatim}

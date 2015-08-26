@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYGdefault{n+nf}{x} \PYGdefault{o+ow}{::} \PYGdefault{k+kt}{Stream} \PYGdefault{k+kt}{Word8}
-\PYGdefault{n+nf}{x} \PYGdefault{o+ow}{=} \PYGdefault{n}{extern} \PYGdefault{l+s}{\PYGdefaultZdq{}x\PYGdefaultZdq{}} \PYGdefault{p}{(}\PYGdefault{k+kt}{Just} \PYGdefault{p}{[}\PYGdefault{l+m+mi}{0}\PYGdefault{p}{,}\PYGdefault{l+m+mi}{0}\PYGdefault{o}{..}\PYGdefault{p}{])}
-
-\PYGdefault{n+nf}{x2} \PYGdefault{o+ow}{=} \PYGdefault{n}{externW8} \PYGdefault{l+s}{\PYGdefaultZdq{}x\PYGdefaultZdq{}} \PYGdefault{k+kt}{Nothing}
-\end{Verbatim}
