@@ -13,9 +13,10 @@ fixed series of steps:
 \item Sample external variables, arrays, and functions.
 \item Update internal variables.
 \item Fire external triggers. (In case the specification is violated.)
+\item Update observers (for debugging purpose).
 \end{itemize}
 
-\noindent We refer to a single cycle as an \emph{iteration}.
+\noindent We refer to a single cycle as an \emph{iteration} or a \emph{step}.
 
 All transformation of data in Copilot is propagated through streams.
 A stream is an infinite, ordered sequence of values which must conform to the same type.
@@ -240,7 +241,7 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
 \hspace{1cm}
 \begin{minipage}{0.6\linewidth}
 \begin{lstlisting}[language = Copilot, frame = none]
-counter :: Bool -> Stream Bool
+counter :: Stream Bool -> Stream Bool
         -> Stream Int32
 counter inc reset = cnt
   where 
@@ -302,6 +303,12 @@ casts that do not lose information, so an unsigned word type {\tt a} can only be
 strictly larger than {\tt a}.  Signed types cannot be cast to unsigned types but
 can be cast to signed types at least as large.
 
+There also exists an {\tt unsafeCast} operator which allows casting from any type to any other (except from floating point numbers to integer types) :
+
+\begin{lstlisting}[language = Copilot, frame = single]
+unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b  
+\end{lstlisting}
+
 \subsection{Interacting With the Target Program}
 \label{sec:interacting}
 
@@ -357,7 +364,9 @@ the type of {\tt extern "x"} is ambiguous, since it cannot be inferred from a
 Boolean stream and we have not given an explicit type signature.  For
 convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
 {\tt externI64} denoting an external unsigned 8-bit word or signed 64-bit word,
-respectively.  In general it is best practice to define external symbols with
+respectively. Please see the grammar at \ref{sec:BNF} in order to have the list of all sampling functions.
+
+In general it is best practice to define external symbols with
 top-level definitions, e.g.,
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -567,6 +576,8 @@ As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
 Copilot programs may force the compiler to build syntax trees that blow up exponentially.
 In such cases, using explicit sharing helps to avoid this problem.
 
+Please also note that let bindings are not implemented in ACSL, hence it is impossible to run frama-c on a Copilot program that uses local bindings.
+
 \subsection{Magic labels}
 \label{sec:magiclabels}
 
@@ -587,5 +598,29 @@ The term \emph{magic label} refers to the possibility to add special characters 
 label "?blabla" expr
 \end{lstlisting}
 
-where \texttt{expr} is any stream. This would result in splitting the AST generated into two smaller ASTs, hence this is equivalent to the transformation : $ e \rightarrow_{\beta} (\lambda x . x) e $ where $(\lambda x . x)$ is a called as an external function (given that there is no polymorphism in Copilot, one identity function per type has been written, which explains why the expression labeled has to be typable). 
+where \texttt{expr} is any stream. This would result in splitting the AST generated into two smaller ASTs, hence this is equivalent to the transformation : $ e \rightarrow_{\beta} (\lambda x . x) e $ where $(\lambda x . x)$ is a called as an external function (given that there is no polymorphism in Copilot, one identity function per type has been written, which explains why the expression labeled has to be of the \texttt{Typed} class type). 
 This fundamentally does not change the big-step semantics of the generated program, however it splits a big expression into smaller expressions which can then be more easily read or verified with \texttt{frama-c}.
+
+Here is an example of the splitting process in the Figure~\ref{fig:splitting label} for the following simple Copilot code:
+\begin{lstlisting}[language=Haskell]
+	import qualified Copilot.Compile.SBV as S
+	
+	alt :: Stream Bool
+	alt = (label "?splitting" $ not $ externB "externvar" Nothing)
+	
+	spec :: Spec
+	spec = do
+	trigger "trigger" (alt) []
+	
+	main = do
+	reify spec >>= S.proofACSL S.defaultParams
+\end{lstlisting}
+
+\begin{figure}[!htb]
+	\includegraphics[width=46mm]{images/label/main.pdf}
+	\centering
+	\includegraphics[width=42mm]{images/label/splitted.pdf}
+	\includegraphics[width=42mm]{images/label/splitted2.pdf}
+	\caption{The splitting process. The AST on the left is split into two smaller ASTs, that then generate two separate functions into two separate files, making it easier to prove the contracts for them.}
+	\label{fig:splitting label}
+\end{figure}

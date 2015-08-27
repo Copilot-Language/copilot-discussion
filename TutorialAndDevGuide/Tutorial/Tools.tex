@@ -3,7 +3,7 @@
 Copilot comes with a variety of tools, including a pretty-printer, an
 interpreter, a compiler targeting C, and a verifier front-end. In the following
 section, we will demonstrate some of these tools and their usage. All the tools
-are shown in the Figure~\ref{fig:New toolchain}.
+are shown in the Figure~\ref{fig:new-toolchain}.
 
 \begin{figure}[ht!]
 	\centering
@@ -23,6 +23,7 @@ thick]
 	\node[state] (PP) [right of=Core] {Pretty Printer};
 	
 	
+	
 	\node[state] (ACSL) [below of=PP] {\begin{tabular}[b]{l}
 		ACSL\\ generator
 		\end{tabular}};
@@ -30,6 +31,8 @@ thick]
 		DOT\\ generator
 		\end{tabular}};
 	\node[state] (SBV) [below of=Core] {SBV Back-End};
+	
+	\node[state] (SMT) [below left=1.6cm and 1.2cm of Int] {SMT Lib};
 	\node[state] (C99S) [below of=SBV] {\begin{tabular}[b]{l}
 		DOT\\ \hline ACSL\\ \hline C99
 		\end{tabular}};
@@ -55,6 +58,7 @@ thick]
 	(PP) edge [->, anchor=east, text width=2cm] node {ACSL generation} (ACSL)
 	(PP) edge [->, anchor=west] node {DOT generation} (DOTc)
 	(C99S) edge [->, anchor=north west] node {make} (CCOMP)
+	(Core) edge [->, anchor=south east, text width=3cm] node {proof generation} (SMT)
 	(CCOMP) edge [->, anchor=east] node {Cross-compilation} (ASM)
 	(C99S) edge [loop left, ->, anchor=east] node {Verification with frama-c WP plugin} (C99S)
 	(C99S) edge [->, anchor=west] node {Extraction and graph generation} (DOT)
@@ -82,6 +86,10 @@ evaluated. Specifications that are built by recursive Haskell programs (e.g.,
 the majority voting example in Section~\ref{subsec:boyer_moore}) can generate
 expressions that are large. Large expressions can take significant
 time to interpret or compile.
+
+\subsubsection{Dot Pretty-Printing} 
+
+In order to use the Dot Pretty-Printter, you have to generate C source code. When generating C source code with SBV, each C source file (except driver.c), will have a dot source code output inside, which summaries what the file is. If the generation is on proof mode (using the function \texttt{proofACSL}), then Copilot will generate one more file named "main.gv", which contains the code for the whole AST of your program. 
 
 \subsection{Interpreting Copilot}
 The copilot interpreter is invoked as follows (e.g.\ within GHCI, the GHC
@@ -185,7 +193,7 @@ back-ends are implemented, both of which generate constant-time and
 constant-space C code. One back-end is called \emph{copilot-c99} and targets
 the Atom language,\footnote{\url{http://hackage.haskell.org/package/atom}}
 originally developed by Tom Hawkins at Eaton Corp.\ for developing control
-systems. The second back-end is called \emph{copilot-sbv} and targets the SBV
+systems (in the process of depreciation). The second back-end is called \emph{copilot-sbv} and targets the SBV
 language,\footnote{\url{http://hackage.haskell.org/package/sbv}} originally
 developed by Levent Erk\"{o}k. SBV is primarily used as an interface to SMT
 solvers~\cite{smt} and also contains a C-code generator. Both languages are
@@ -219,10 +227,10 @@ reify spec >>= compile defaultParams
 (The compile function takes a parameter to rename the generated C files; {\tt
 defaultParams} is the default, in which there is no renaming.)
 
-The compiler now generates two files:
+The compiler now generates several files in a separate-subfolder, some of which are called:
 
 \begin{itemize}
-\item ``copilot.c'' ---
+\item ``driver.c'' ---
 \item ``copilot.h'' ---
 \end{itemize}
 
@@ -250,10 +258,10 @@ extern bool running;
 void step();
 \end{code}
 
-Using the prototypes in ``copilot.h'' we can build a driver as follows:
+Using the prototypes in ``copilot.h'' we can build a controller as follows:
 
 \begin{code}
-/* driver.c */
+/* main.c */
 #include <stdio.h>
 #include "copilot.h"
 
@@ -280,7 +288,7 @@ int main (int argc, char const *argv[])
 }
 \end{code}
 
-Running {\tt gcc copilot.c driver.c -o prop} gives a program {\tt prop}, which,
+Running {\tt gcc *.c -o prop} gives a program {\tt prop}, which,
 when executed, yields the following output:
 %
 \begin{code}
@@ -312,9 +320,9 @@ For this, make sure the following is installed:
 	\item cvc4 prover
 \end{itemize}
 
-You can generate C code optimized for frama-c by using the \texttt{proofACSL}
+It is possible to generate C code optimized for frama-c by using the \texttt{proofACSL}
 function from SBV.Compile (instead of \texttt{compile} as shown
-in~\ref{sec:compiling}). Then, generate the C source code (which should be in
+in~\ref{sec:compiling}). It will then generate the C source code (which should be in
 the \texttt{copilot-sbv-codegen} folder). Go into that folder and just run
 \texttt{make fwp} to use frama-c with the WP plugin. This should generate two
 log files: a first exhaustive one called \texttt{logfwp}, and another which
@@ -335,18 +343,16 @@ It is also possible to run frama-c with the value analysis plugin by running
 all the C sources files together, which requires a lot of RAM memory for big
 projects.
 
-It is recommended to refactor your code before trying to use frama-c on it, for
-example by splitting non-trivial expressions using magic labels, deleting all
+It is recommended to refactor your code before trying to use frama-c on it, by for example splitting non-trivial expressions using magic labels, deleting all
 local variables (use functions) and bitwise operators. If this step is
 neglected, it may happen that frama-c would start swapping all your memory
 resulting in a system crash.
 
 \subsubsection{Splint}~\label{subsec:splint}
 
-If you have splint installed on your computer, you can also try running splint
-(with the command \texttt{make splint}), which will be a good starting point
-for manual code optimization or refactoring. The same problem as for frama-c
-may occur if you are working on a very big project (system crash).
+If you have splint installed on your computer, you can also try running splint on the C source code generated (with the command \texttt{make splint}), which will be a good starting point for manual code optimization or refactoring. The same problem as for frama-c may occur if you are working on a very big project (system crash).
+
+\textbf{This tools does not guarantee that the generated C source code is compliant to ISO 9899:1999.} 
 
 \subsubsection{Dot}~\label{subsec:dot}
 
@@ -368,4 +374,4 @@ during the linking process if you change the compiler for the final compilation
 (typically \texttt{gcc -m32 -lm main.c internal.a} where \texttt{main.c} is
 where your controller code is). For this purpose, we recommend installing first
 the cross compiler (example \texttt{arm-none-eabi-gcc}), and compile the
-\emph{whole} project using that very same compiler.
+\emph{whole} project using that very same compiler using the command \texttt{arm-none-eabi-gcc -m32 -lm [options] *.c}.

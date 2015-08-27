@@ -56,7 +56,7 @@
 \newcommand{\ignore}[1]{ }
 \newcommand{\hex}[1]{\texttt{0x#1}}
 
-\newcommand{\reporttitle}{Copilot, traceability of an EDSL generated code.}     % Titre
+\newcommand{\reporttitle}{Verification and traceability of an EDSL generated code.}     % Titre
 \newcommand{\reportauthor}{Georges-Axel \textsc{Jaloyan}} % Auteur
 \newcommand{\reportsubject}{Undergraduate internship report\\[0.5cm]8 June 2015 - 14 August 2015} % Sujet
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
@@ -160,7 +160,7 @@ nats = [0] ++ (1 + nats)
 	
 	Each operator and constant has been lifted to Streams (working pointwise), so that it is possible to simply do \texttt{1 + nats} instead of \texttt{zipWith (+) (repeat 1) nats}, which simplifies the writing of such monitors. 
 	
-	There are two more operators working on Streams : (++) which prepends a finite list to a Stream, and drop, which drops a finite number of elements at the beginning of a Stream. Given that a monitor cannot predict the future, it is impossible to drop elements from a Stream that has no elements prepended using (++).
+	There are two primary stream operators in Copilot : (++) which prepends a finite list to a Stream, and drop, which drops a finite number of elements at the beginning of a Stream. Given that a monitor cannot predict the future, it is impossible to drop elements from a Stream that has no elements prepended using (++).
 	
 \begin{minted}{haskell}
 (++) :: [a] -> Stream a -> Stream a
@@ -640,7 +640,7 @@ reify spec >>= S.proofACSL S.defaultParams
 		\label{fig:graph}
 	\end{figure} 
 	
-	A unit test was written for the generated code in C99, with some test cases provided (not published). All of those scenarii are involving two planes, giving a sampling rate of 1 second, with planes entering and getting out of violation. This was used for writing a monitor that would run on a ground station, which has to monitor both real UAVs and fake simulated vessels (there is no way for the monitor to discriminate both). The general structure of the monitor is in the figure~\ref{fig:monstructure}. 
+	A unit test was written for the generated code in C99, with some test cases provided (not published). All of those scenarios are involving two planes, giving a sampling rate of 1 second, with planes entering and getting out of violation. This was used for writing a monitor that would run on a ground station, which has to monitor both real UAVs and fake simulated vessels (there is no way for the monitor to discriminate both). The general structure of the monitor is in the figure~\ref{fig:monstructure}. 
 	
 	More specifically, the planes would communicate with a first interface (named GUI here), that would do the conversion between raw data from the planes, and translate them into audible alerts (or visible) and feed the monitor on stdin. The monitor will check if any two of planes trigger a WCV alert, after computation by the driver.c. Given that the data is given into latitude and longitude coordinates, a converter has to be used to convert them in x, y, z coordinates\footnote{More precisely, z is kept the same for all planes, x and y are obtained by projecting the ownship and the intruder on a plane tangent to the earth on the middle point of the great circle that connects the two vertical projection points.}. It is planned to test this monitor in a real situation in the Fall 2015.
 \begin{figure}[ht!]
