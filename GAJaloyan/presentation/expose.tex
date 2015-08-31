@@ -2,7 +2,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage{tabularx}
 \usetheme{Frankfurt}
-\newcommand\TestAppExists[3]{#2}
 \usepackage{minted}
 \usepackage{listings}
 \usepackage{media9}
@@ -128,7 +127,7 @@ fib = [1,1] ++ (fib + drop 1 fib)
 	\frametitle{Interaction}
 	Sensors :
 	\begin{itemize}
-		\item<1|only@1> Sample external variables. 
+		\item Sample external variables. 
 \begin{minted}{haskell}
 extern :: Typed a => String -> Maybe [a] -> Stream a
 \end{minted}
@@ -143,43 +142,9 @@ x = extern "x" (Just [0,0..])
 x2 = externW64 "x" Nothing
 \end{minted}
 
-		\item<2-4> Sample external variables. 
-		\item<2|only@2> Sample external arrays. 
-\begin{minted}{haskell}
-externArray :: (Typed a, Typed b, Integral a) => 
-String -> Stream a -> Int -> Maybe [[a]] -> Stream b
-\end{minted}
-Example : 
-\begin{lstlisting}[language=C]
-unsigned long long int tab[1000];
-\end{lstlisting}
-\begin{minted}{haskell}
--- nat = [0] ++ (nats + 1)
-x :: Stream Word64
-x = externArray "tab" nats 1000 Nothing
+		\item Sample external arrays. 
+		\item Sample external functions. 
 
-x2 = externArrayW64 "tab" nats 1000 Nothing
-\end{minted}
-	
-		\item<3-4> Sample external arrays. 
-		\item<3|only@3> Sample external functions. 
-
-\begin{minted}{haskell}
-externFun :: Typed a => 
-String -> [FunArg] -> Maybe [a] -> Stream a
-\end{minted}
-Example :
-\begin{lstlisting}[language=C]
-double sin(double a); //from math.h
-\end{lstlisting}
-\begin{minted}{haskell}
-x :: Stream Double
-x = externDouble "x" Nothing
-
-sinx = externFun "sin" [arg x] Nothing
-\end{minted}
-		
-		\item<4> Sample external functions. 
 	\end{itemize}
 \end{frame}
   	
@@ -305,30 +270,11 @@ Nevertheless, some hacks :
 	\frametitle{Magic labels}
 	The possibility to add labels that would be printed in the C source file was also added in SBV and in Copilot. \\~\\
 	The prover was not able to prove long expressions (some were 500000 characters long).\\~\\
-	So we need to add a special instruction that has one only role : split the AST into smaller ones that can be easily provable. This instruction has to be totally useless regarding to the semantics of the language. Labels do not change the semantics of the program. So why not using them ? \\~\\
+
 	The idea is to call the function identity when we encounter a magic label. This is equivalent to the transformation : $ e \rightarrow_{\beta} (\lambda x . x) e $. 
 
 \end{frame}
 
-\begin{frame}[fragile]
-	\frametitle{Magic labels: example}
-\begin{minted}{haskell}
-import qualified Copilot.Compile.SBV as S
-
-alt :: Stream Bool
-alt = (label "?splitting" $ not $ 
-      externB "externvar" Nothing)
-
-spec :: Spec
-spec = do
-trigger "trigger" (alt) []
-
-main = do
-reify spec >>= S.proofACSL S.defaultParams
-\end{minted}
-
-
-\end{frame}
 
 \begin{frame}[fragile]
 	\frametitle{Magic labels: example}
@@ -593,7 +539,7 @@ Corrective trigger version :
 		\item Compiler mode : 14 files compiled in 2 sec
 	\end{itemize}
 	
-	A unit test was written for the generated code in C99, with some test cases provided. But those scenarii are only involving two planes that are in violation.
+	A unit test was written for the generated code in C99, with some test cases provided. But those scenarios are only involving two planes that are in violation.
 	
 \end{frame}
 
