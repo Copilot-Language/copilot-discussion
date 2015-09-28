@@ -85,18 +85,32 @@ provide some indication about the complexity of the specification to be
 evaluated. Specifications that are built by recursive Haskell programs (e.g.,
 the majority voting example in Section~\ref{subsec:boyer_moore}) can generate
 expressions that are large. Large expressions can take significant
-time to interpret or compile.
+time to interpret or compile. 
 
 \subsubsection{Dot Pretty-Printing} 
 
 In order to use the Dot Pretty-Printter, you have to generate C source code. When generating C source code with SBV, each C source file (except driver.c), will have a dot source code output inside, which summaries what the file is. If the generation is on proof mode (using the function \texttt{proofACSL}), then Copilot will generate one more file named "main.gv", which contains the code for the whole AST of your program. 
 
 \subsection{Interpreting Copilot}
-The copilot interpreter is invoked as follows (e.g.\ within GHCI, the GHC
-compiler's interpreter for Haskell):
+To use Copilot's interpreter, one must first invoke the GHC Interpreter via
+the Cabal sandbox. Invoking the interpreter with the \texttt{cabal
+repl} command starts a session that looks like: 
+
 %
 \begin{lstlisting}[language = Copilot]
-GHCI> interpret 10 propTempRiseShutOff
+cabal repl
+Preprocessing library copilot-2.1.2...
+GHCi, version 7.10.1: http://www.haskell.org/ghc/  :? for help
+[1 of 1] Compiling Language.Copilot ( src/Language/Copilot.hs, interpreted )
+Ok, modules loaded: Language.Copilot.
+*Language.Copilot> 
+\end{lstlisting}
+%
+
+The copilot interpreter is invoked as follows:
+%
+\begin{lstlisting}[language = Copilot]
+Language.Copilot> interpret 10 propTempRiseShutOff
 \end{lstlisting}
 %
 The first argument to the function \emph{interpret} is the number of iterations
