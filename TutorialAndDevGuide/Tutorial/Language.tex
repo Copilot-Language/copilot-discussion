@@ -4,10 +4,9 @@
 Copilot is embedded into the functional programming language Haskell
 \cite{PeytonJones02}, and a working knowledge of Haskell is necessary to use
 Copilot effectively. Copilot is a pure declarative language; i.e., expressions
-are free of side-effects and satisfies referential transparency.  A program
-written in Copilot, which from now on will be referred to as a
-\emph{specification}, has a cyclic behavior, where each cycle consists of a
-fixed series of steps:
+are free of side-effects and are referentially transparent.  A program written
+in Copilot, which from now on will be referred to as a \emph{specification}, has
+a cyclic behavior, where each cycle consists of a fixed series of steps:
 
 \begin{itemize}
 \item Sample external variables, arrays, and functions.
@@ -220,7 +219,7 @@ input and a boolean state. Whenever the input is true the internal state is reve
 The operational behavior and the implementation of the latch is shown in Figure
 \ref{fig:jk_latch}.\footnote
 {In order
-to use conditionals (if-then-else's) in Copilot specifications,
+to use conditionals (i.e., if-then-else) in Copilot specifications,
 as in Figures~\ref{fig:jk_latch} and~\ref{fig:counter}, the GHC
 language extension {\tt RebindableSyntax} must be set on.}
 \end{example}
@@ -299,11 +298,13 @@ cast :: (Typed a, Typed b) => Stream a -> Stream b
 \end{lstlisting}
 %
 that casts from one type to another.  The cast operator is only defined for
-casts that do not lose information, so an unsigned word type {\tt a} can only be cast to another unsigned  type at least as large as {\tt a} or to a signed word type
-strictly larger than {\tt a}.  Signed types cannot be cast to unsigned types but
-can be cast to signed types at least as large.
+casts that do not lose information, so an unsigned word type {\tt a} can only be
+cast to another unsigned  type at least as large as {\tt a} or to a signed word
+type strictly larger than {\tt a}.  Signed types cannot be cast to unsigned
+types but can be cast to signed types at least as large.
 
-There also exists an {\tt unsafeCast} operator which allows casting from any type to any other (except from floating point numbers to integer types) :
+There also exists an {\tt unsafeCast} operator which allows casting from any
+type to any other (except from floating point numbers to integer types):
 
 \begin{lstlisting}[language = Copilot, frame = single]
 unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b  
@@ -364,7 +365,8 @@ the type of {\tt extern "x"} is ambiguous, since it cannot be inferred from a
 Boolean stream and we have not given an explicit type signature.  For
 convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
 {\tt externI64} denoting an external unsigned 8-bit word or signed 64-bit word,
-respectively. Please see the grammar at \ref{sec:BNF} in order to have the list of all sampling functions.
+respectively. Please see the grammar in Appendix~\ref{sec:BNF} for the list of
+all sampling functions.
 
 In general it is best practice to define external symbols with
 top-level definitions, e.g.,
@@ -576,12 +578,16 @@ As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
 Copilot programs may force the compiler to build syntax trees that blow up exponentially.
 In such cases, using explicit sharing helps to avoid this problem.
 
-Please also note that let bindings are not implemented in ACSL, hence it is impossible to run frama-c on a Copilot program that uses local bindings.
+Please also note that let bindings are not implemented in ACSL, hence it is
+impossible to run frama-c on a Copilot program that uses local bindings.
 
 \subsection{Magic labels}
 \label{sec:magiclabels}
 
-It is possible to add labels in a copilot program. Labels are essentially working the same way as the \texttt{trace} function from \texttt{Debug.Trace}, but instead of outputting on stdout, they print their string in the C source file.
+It is possible to add labels in a copilot program. Labels are essentially
+working the same way as the \texttt{trace} function from \texttt{Debug.Trace},
+but instead of outputting on stdout, they print their string in the C source
+file.
 
 \begin{lstlisting}[language = Copilot, frame = single]
 label
@@ -592,35 +598,49 @@ label
 \end{lstlisting}
 
 
-The term \emph{magic label} refers to the possibility to add special characters in labels, which would modify the code generation. Up to now, only one has been implemented, which does a beta expansion where it is put. To invoke the splitting character, simply do:
+The term \emph{magic label} refers to the possibility to add special characters
+in labels, which would modify the code generation. Up to now, only one has been
+implemented, which does a beta expansion where it is put. To invoke the
+splitting character, simply do:
 
 \begin{lstlisting}[language = Copilot, frame = single]
 label "?blabla" expr
 \end{lstlisting}
 
-where \texttt{expr} is any stream. This would result in splitting the AST generated into two smaller ASTs, hence this is equivalent to the transformation : $ e \rightarrow_{\beta} (\lambda x . x) e $ where $(\lambda x . x)$ is a called as an external function (given that there is no polymorphism in Copilot, one identity function per type has been written, which explains why the expression labeled has to be of the \texttt{Typed} class type). 
-This fundamentally does not change the big-step semantics of the generated program, however it splits a big expression into smaller expressions which can then be more easily read or verified with \texttt{frama-c}.
+where \texttt{expr} is any stream. This would result in splitting the AST
+generated into two smaller ASTs, hence this is equivalent to the transformation
+$ e \rightarrow_{\beta} (\lambda x . x) e $, where $(\lambda x . x)$ is called
+as an external function (given that there is no polymorphism in Copilot, one
+identity function per type has been written, which explains why the expression
+labeled has to be of the \texttt{Typed} typeclass). This fundamentally does not
+change the big-step semantics of the generated program, however it splits a big
+expression into smaller expressions which can then be more easily read or
+verified with \texttt{frama-c}.
 
-Here is an example of the splitting process in the Figure~\ref{fig:splitting label} for the following simple Copilot code:
+Here is an example of the splitting process in Figure~\ref{fig:splitting label}
+for the following simple Copilot code:
 \begin{lstlisting}[language=Haskell]
-	import qualified Copilot.Compile.SBV as S
-	
-	alt :: Stream Bool
-	alt = (label "?splitting" $ not $ externB "externvar" Nothing)
-	
-	spec :: Spec
-	spec = do
-	trigger "trigger" (alt) []
-	
-	main = do
-	reify spec >>= S.proofACSL S.defaultParams
+import qualified Copilot.Compile.SBV as S
+
+alt :: Stream Bool
+alt = (label "?splitting" $ not $ externB "externvar" Nothing)
+
+spec :: Spec
+spec = do
+trigger "trigger" (alt) []
+
+main = do
+reify spec >>= S.proofACSL S.defaultParams
 \end{lstlisting}
 
 \begin{figure}[!htb]
-	\includegraphics[width=46mm]{images/label/main.ps}
-	\centering
-	\includegraphics[width=42mm]{images/label/splitted.ps}
-	\includegraphics[width=42mm]{images/label/splitted2.ps}
-	\caption{The splitting process. The AST on the left is split into two smaller ASTs, that then generate two separate functions into two separate files, making it easier to prove the contracts for them.}
-	\label{fig:splitting label}
+      \vspace{3em}
+      \includegraphics[width=46mm]{images/label/main.ps}
+      \centering
+      \includegraphics[width=42mm]{images/label/splitted.ps}
+      \includegraphics[width=42mm]{images/label/splitted2.ps}
+      \caption{The splitting process. The AST on the left is split into two
+      smaller ASTs, that then generate two separate functions in two separate
+      files, making it easier to prove the contracts for them.}
+      \label{fig:splitting label}
 \end{figure}

@@ -26,10 +26,12 @@ installed by executing the following command:
 
 \noindent This should, if everything goes well, install Copilot on your system.
 
-Copilot is distributed throughout a series of packages at Hackage:
+Copilot is distributed through a series of packages at Hackage:
 
 \begin{itemize}
 \item copilot-language: Contains the language front-end.
+\item copilot-theorem: Contains some extensions to the language for proving
+properties about copilot programs using various SMT solvers and model checkers.
 \item copilot-core: Contains an intermediate representation for Copilot programs (shared by all back-ends).
 \item copilot-c99: A back-end for Copilot targeting C99 (based on Atom, \url{http://hackage.haskell.org/package/atom}). \textbf{Not updated anymore, might be deprecated soon.}
 \item copilot-sbv: A back-end for Copilot targeting C99 (based on SBV, \url{http://hackage.haskell.org/package/sbv}).
@@ -41,7 +43,6 @@ a voting library, and a regular expression framework.
 
 Many of the examples in this paper can be found at
 \url{https://github.com/Copilot-Language/Copilot/tree/copilot2.0/Examples}.
-\todo[inline]{Update the version of Copilot when released (3.0 ?), and do not forget to put some examplesForACSL not already in the directory (WCV, TCAS, Self-Separation).}
 
 To use the language, your Haskell module should contain the following import:
 %
@@ -49,7 +50,7 @@ To use the language, your Haskell module should contain the following import:
 import Language.Copilot  
 \end{code}
 %
-To use the back-ends, import, them, respectively:
+To use the back-ends, import them, respectively:
 %
 \begin{code}
 import Copilot.Compile.C99

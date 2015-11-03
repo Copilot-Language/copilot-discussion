@@ -1,0 +1,17 @@
+\section{Git Directory Structure}~\label{sec:Git}
+Copilot is an open source development effort with a github repository at
+https://github.com/Copilot-Language
+
+\begin{enumerate}
+\item Copilot: https://github.com/Copilot-Language/Copilot   This is the basic directory. Many branches but only two really active. Master and Struct. This repository contains all unit tests, basic documentation, and so on. Those two branches should be merged into master soon.
+%\item atom\_for\_copilot : https://github.com/Copilot-Language/atom\_for\_copilot   The modified package ATOM for generating ACSL contracts with Copilot. Some headers modified so NOT BACKWARD COMPATIBLE. One branch, probably deprecated.
+\item sbv-for-copilot: https://github.com/Copilot-Language/sbv-for-copilot This used to be a modified package for SBV. Deprecated, DO NOT USE. All the changes have been merged into the official SBV version 5.0.
+\item examplesForACSL: https://github.com/Copilot-Language/examplesForACSL  Some examples and projects in it to test. Makefiles provided. One branch : master. When using it, do not forget at each example to initialize the sandbox by cabal sandbox init --sandbox ../../Copilot/.cabal-sandbox/ 
+\subitem Becareful! Some examples are not fitted to be used with frama-c, or other tools (splint). Always check before running it, or you comnputer can crash by swapping.
+\item copilot-cbmc: https://github.com/Copilot-Language/copilot-cbmc  insert description here TODO. One branch : master
+\item copilot-c99: https://github.com/Copilot-Language/copilot-c99 : atom backend for SBV.  We no longer target the Atom backend for new development so new features such as ACSL contracts, monitoring structs, etc. will only work work with SBV. We may consider fully depreciating Atom support at some point. 
+\item copilot-discussion: https://github.com/Copilot-Language/copilot-discussion Here is where papers, tutorials, and working documents are kept. 
+\item copilot-librairies: https://github.com/Copilot-Language/copilot-libraries  If you do not want to reinvent the wheel. 
+
+\end{enumerate}
+

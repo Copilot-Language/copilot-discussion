@@ -1,25 +1,33 @@
 \section{Proofs of Monitors}~\label{sec:proof}
 
 In addition to proofs on the soundness of the Copilot compilation process, we
-also support some automated proving of safety properties about Copilot
-specifications themselves. A proposition is a Copilot stream of type
-\lstinline{Stream Bool} and can be added to a specification using the
-\lstinline{prop} and \lstinline{theorem} functions. Consider this Copilot
-monitor specification for a version of the fibonacci sequence:
+also support (in the {\tt Copilot.Theorem} module) some automated proving of
+safety properties about Copilot specifications themselves. A proposition is a
+Copilot value of type \lstinline{Prop Existential} or \lstinline{Prop
+Universal}, which can be introduced using \lstinline{exists} and
+\lstinline{forall}, respectively. These are functions taking as an argument a
+normal Copilot stream of type \lstinline{Stream Bool}. Propositions can be added
+to a specification using the \lstinline{prop} and \lstinline{theorem} functions,
+where \lstinline{theorem} must also be passed a tactic for autmatically proving
+the proposition. Consider this Copilot monitor specification for a version of
+the fibonacci sequence:
 
 \begin{lstlisting}[language = Copilot]
 module Fib where
 
 import Prelude ()
 import Copilot.Language
+import Copilot.Language.Reify
 import Copilot.Theorem
+import Copilot.Theorem.Prover.SMT
 
 fib = do
-  theorem "fibn_gre_n" (forall $ fibn >= n) $ kInductZ3 3
+  theorem "fibn_gre_n" (forall $ fibn >= n) $ kInduction def cvc4
 
   observer "fibn" fibn
   observer "n"    n
   where
+    fibn :: Stream Word32
     fibn = [1, 1] ++ (fibn + drop 1 fibn)
     n = [0] ++ (n + 1)
 \end{lstlisting}
@@ -35,7 +43,20 @@ fibn_gre_n: valid (proved with k-induction (k = 3))
 Finished: fibn_gre_n: proof checked successfully
 \end{code}
 
-See Figure~\ref{fig:solvers} for an overview of supported SMT solvers.
+The {\tt Copilot.Theorem} module provides two main mechanisms for interacting
+with SMT solver backends: a generic backend at {\tt Copilot.Theorem.Prover.SMT}
+that nominally supports a wide range of SMT solvers and {\tt
+Copilot.Theorem.Prover.Z3}, a backend specialized to Z3. The example above uses
+the generic {\tt SMT} backend with the CVC4 SMT solver.
+
+See Figure~\ref{fig:solvers} for an overview of SMT solvers that have at least
+been tested to work with our tool. The second column contains the value of type
+{\tt Backend} from the {\tt Copilot.Theorem.Prover.SMT} module which must be
+passed to the tactics in this module for executing the tactic using that SMT
+solver (e.g., as is done in the second argument to {\tt kInduction} in the
+example above). To use a certain SMT solver, the solver must be installed and
+the executable should reside in one of the directories listed in the {\tt
+\$PATH} environment variable.
 
 \newcommand{\Yes}{\checkmark}
 \newcommand{\No}{\textsf{X}}
@@ -43,20 +64,90 @@ See Figure~\ref{fig:solvers} for an overview of supported SMT solvers.
 
 \begin{figure}
 \begin{center}
-\begin{tabular}{lllcccc}
-Tool       & Version & Interface & NL Real Arith.\ & Trig.\ funs.\ & Quantifiers & Bitvectors \\
+\begin{tabular}{llllcccc}
+Tool       & {\tt Backend} & Version & Interface & NL Real Arith.\ & Trig.\ funs.\ & Quantif. & Bitvec. \\
 \toprule
-Alt-Ergo   & 0.99.1  & SMTLib2   & \Yes{}          & \No{}         & \Yes{}      & \No{}      \\
-CVC4       & 1.4     & SMTLib2   & \Some{}         & \No{}         & \Yes{}      & \Yes{}     \\
-DReal      & 2.15.01 & SMTLib2   & \Yes{}          & \Yes{}        & \No{}       & \No{}      \\
-MathSAT    & 5.3.7   & SMTLib2   & \Some{}         & \No{}         & \No{}       & \Yes{}     \\
-MetiTarski & 2.5     & TPTP      & \Yes{}          & \Yes{}        & \Yes{}      & \No{}      \\
-Yices      & 2.4.0   & SMTLib2   & \Some{}         & \No{}         & \No{}       & \Yes{}     \\
-Z3         & 4.4.0   & SMTLib2   & \Yes{}          & \No{}         & \Yes{}      & \Yes{}     \\
+Alt-Ergo   & {\tt altErgo} & 0.99.1  & SMTLib2   & \Yes{}          & \No{}         & \Yes{}      & \No{}      \\
+CVC4       & {\tt cvc4}    & 1.4     & SMTLib2   & \Some{}         & \No{}         & \Yes{}      & \Yes{}     \\
+DReal      & {\tt dReal}   & 2.15.01 & SMTLib2   & \Yes{}          & \Yes{}        & \No{}       & \No{}      \\
+MathSAT    & {\tt mathSat} & 5.3.7   & SMTLib2   & \Some{}         & \No{}         & \No{}       & \Yes{}     \\
+MetiTarski & {\tt metit}   & 2.5     & TPTP      & \Yes{}          & \Yes{}        & \Yes{}      & \No{}      \\
+Yices      & {\tt yices}   & 2.4.0   & SMTLib2   & \Some{}         & \No{}         & \No{}       & \Yes{}     \\
+Z3         & {\tt z3}      & 4.4.0   & SMTLib2   & \Yes{}          & \No{}         & \Yes{}      & \Yes{}     \\
 \end{tabular}
 \end{center}
 \caption{An overview of some supported SMT solvers.}
 \label{fig:solvers}
 \end{figure}
 
-Also, the Kind2 model checker.
+As seen in the figure mentioned above, different SMT solvers have different
+feature sets and the methods for using the various features are generally not
+well standardized. As a result, we also have backend specialized to Z3, one of
+the more feature-rich SMT solvers we've tested. The example above using the Z3
+backend looks very similar to the version above:
+
+\begin{lstlisting}[language = Copilot]
+module Fib where
+
+import Prelude ()
+import Copilot.Language
+import Copilot.Language.Reify
+import Copilot.Theorem
+import Copilot.Theorem.Prover.Z3
+
+fib = do
+  theorem "fibn_gre_n" (forall $ fibn >= n) $ kInduction def
+
+  observer "fibn" fibn
+  observer "n"    n
+  where
+    fibn :: Stream Word32
+    fibn = [1, 1] ++ (fibn + drop 1 fibn)
+    n = [0] ++ (n + 1)
+\end{lstlisting}
+
+Instead of importing {\tt Copilot.Theorem.Prover.SMT}, we import {\tt
+Copilot.Theorem.Prover.Z3}, and we no longer need to pass the {\tt cvc4}
+argument to {\tt kInduction} (because the SMT solver backend will be Z3). But
+now when we go to reify {\tt fib}:
+
+\begin{code}
+*Fib> reify fib
+fibn_gre_n: unknown (proof by k-induction failed)
+Finished: fibn_gre_n: proof failed
+Warning: failed to check some proofs.
+\end{code}
+
+This demonstrates an important limitation of the {\tt
+Copilot.Theorem.Prover.SMT} backend: it encodes fixed-width integers using the
+SMTLib {\tt Int} type (with some extra propositions about the bounds of {\tt
+Int} variables)---it {\em does not model overflow}. The {\tt
+Copilot.Theorem.Prover.Z3} backend, however, encodes Copilot's fixed-width
+integer types using Z3's bitvectors. Now if we allow {\tt fibn} to overflow, the
+theorem from the above example is clearly not true.
+
+The above example contains a single {\tt theorem}. A {\tt theorem} takes three
+arguments: the name of the theorem (which is only used to identify the theorem
+in output), a proposition, and a proof ``tactic'' to use when trying to
+automatically prove the proposition using SMT solvers. The {\tt
+Copilot.Theorem.Prover.SMT} and {\tt Copilot.Theorem.Prover.Z3} modules both
+export the same set of tactics\footnote{In fact, these modules share a lot a
+duplicated code and desparately need to be refactored.}:
+\begin{itemize}
+\item {\tt onlySat}: check that the proposition is satisfiable.
+\item {\tt onlyValidity}: check that the negation of the proposition is
+unsatisfiable.
+\item {\tt induction}: special case of $k$-induction, with $k = 0$.
+\item {\tt kInduction}: version of induction where the induction hypothesis is
+strengthened by including $k$ previous states.
+\end{itemize}
+
+Additionally, a few other tactics live in {\tt Copilot.Theorem.Tactics}:
+\begin{itemize}
+\item {\tt instantiate}: turn a proof for a universally quantified proposition
+into a proof for an existentially quantified one.
+\item {\tt assume}: prove a proposition true under an assumption.
+\item {\tt admit}: prove anything.
+\end{itemize}
+
+Also, we support some older versions of the Kind2 model checker.
