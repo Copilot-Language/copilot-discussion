@@ -11,6 +11,8 @@
 \usepackage{amsthm}
 \usepackage{setspace}
 \onehalfspacing
+\usepackage{natbib}
+\bibliographystyle{plain}
 \usepackage{framed}
 \usepackage[titles]{tocloft}
 \setlength{\cftbeforesecskip}{0.1ex}
@@ -225,7 +227,7 @@ Hampton, Virginia, United States, \today
 
 \section*{Abstract}
 {
-\small We descirbe an approach to assured runtime verificaition. Our apporach is illustrated using the example from airspace management. 
+\small We descirbe an approach to assured runtime verificaition. Our apporach is illustrated using an example from airspace management.
 }
 
 {
@@ -239,13 +241,12 @@ Hampton, Virginia, United States, \today
 \section*{Acknowledgement}
 TBD
 {
-
 \input{intro}
 \input{copilot}
 \input{wellclear} 
 \input{specverify}
 \input{verifiedmonitors} 
-\input{compcert}
+\input{CompCert}
 \input{flightTest}
 \input{conclusion}
 \bibliography{paper}
