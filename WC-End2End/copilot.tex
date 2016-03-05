@@ -38,6 +38,10 @@ Haskell.
 		\node[state] (DOTc) [right of=ACSL] {\begin{tabular}[b]{l}
 			DOT\\ generator
 			\end{tabular}};
+		\node[state] (SMTlib) [right of=DOTc] {\begin{tabular}[b]{l}
+			SMTlib\\ generator
+			\end{tabular}};
+		\node[state] (Z3) [below of=SMTlib] {Z3};
 		\node[state] (SBV) [below of=Core] {SBV Back-End};
 		\node[state] (C99S) [below of=SBV] {\begin{tabular}[b]{l}
 			DOT\\ \hline ACSL\\ \hline C99
@@ -51,27 +55,23 @@ Haskell.
 		
 		
 		\path %% (Libs) edge node {0,1,L} (Lang);
-		%% edge node {1,1,R} (C)
 		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
-		%% edge node {0,1,L} (C)
 		(M4) edge [text width=2.5cm] node {Preprocessing} (Lang)
 		(Core) edge [anchor=east] node {Translation} (SBV)
 		edge node {} (PP)
 		edge node [swap] {Evaluation} (Int)
 		(ACSL) edge [bend left, anchor=west] node {Integration} (C99S)
 		(DOTc) edge [bend left, anchor=east] node {} (C99S)
-		(Int) edge [<->, bend right, anchor=east] node {QuickCheck} (SBV)
-		(PP) edge [->, anchor=east, text width=2cm] node {ACSL generation} (ACSL)
-		(PP) edge [->, anchor=west] node {DOT generation} (DOTc)
+		%(Int) edge [<->, bend right, anchor=east] node {QuickCheck} (SBV)
+		(PP) edge [->, anchor=east] node {ACSL gen.} (ACSL)
+		(PP) edge [->, anchor=north] node {DOT gen.} (DOTc)
+		(PP) edge [->, anchor=west] node {SMTlib generation} (SMTlib)
+		(SMTlib) edge [->, anchor=west] node {theorem prooving} (Z3)
 		(C99S) edge [->, anchor=north west] node {make} (CCOMP)
 		(CCOMP) edge [->, anchor=east] node {Cross-compilation} (ASM)
 		(C99S) edge [loop left, ->, anchor=east] node {Verification with frama-c WP plugin} (C99S)
 		(C99S) edge [->, anchor=west] node {Extraction and graph generation} (DOT)
 		(SBV) edge [->,anchor=east] node {Compilation} (C99S);
-		%% edge [bend left] node {Translation} (SBV)
-		%% (Atom) edge [loop below] node {1,1,R} (D)
-		%% edge node {0,1,R} (Libs)
-		%% (SBV) edge [bend left] node {1,0,R} ();
 		\end{tikzpicture}
 		\caption{The new Copilot toolchain. }
 		\label{fig:New toolchain}
