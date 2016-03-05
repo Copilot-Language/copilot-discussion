@@ -11,3 +11,68 @@ specifications\citep{copilot, pike-icfp-12, pike-isse-13}. It is an embedded
 domain-specific language, hosted in the lazy functional programming language
 Haskell.
 
+
+	\begin{figure}[ht!]
+		\centering
+		\footnotesize
+		\begin{tikzpicture}[->, node distance=2.6cm, auto, shorten >=1pt, bend angle=45,
+		thick]
+		\tikzstyle{every state}=[rectangle, rounded corners]
+		
+		
+		\node[state] (Int) {Interpreter};
+		\node[state] (Lang) [above right of=Int]
+		{
+			\begin{tabular}[b]{l}
+			Copilot Libraries\\ \hline Copilot Language
+			\end{tabular}};
+		
+		\node[state] (M4) [left=3cm of Lang] {M4};
+		\node[state] (Core) [below right of=Lang] {Copilot Core};
+		\node[state] (PP) [right of=Core] {Pretty Printer};
+		
+		
+		\node[state] (ACSL) [below of=PP] {\begin{tabular}[b]{l}
+			ACSL\\ generator
+			\end{tabular}};
+		\node[state] (DOTc) [right of=ACSL] {\begin{tabular}[b]{l}
+			DOT\\ generator
+			\end{tabular}};
+		\node[state] (SBV) [below of=Core] {SBV Back-End};
+		\node[state] (C99S) [below of=SBV] {\begin{tabular}[b]{l}
+			DOT\\ \hline ACSL\\ \hline C99
+			\end{tabular}};
+		\node[state] (DOT) [below right of=C99S] {DOT/graphviz};
+		\node[state] (CCOMP) [below left=0.3cm and 0.3cm of C99S] {CompCert};
+		\node[state] (ASM) [below=1cm of CCOMP] {Assembly code};
+		
+		
+		\tikzstyle{every node}=[]
+		
+		
+		\path %% (Libs) edge node {0,1,L} (Lang);
+		%% edge node {1,1,R} (C)
+		(Lang) edge [bend left, anchor=west, text width=2.5cm] node {Reification and DSL-specific type-checking} (Core)
+		%% edge node {0,1,L} (C)
+		(M4) edge [text width=2.5cm] node {Preprocessing} (Lang)
+		(Core) edge [anchor=east] node {Translation} (SBV)
+		edge node {} (PP)
+		edge node [swap] {Evaluation} (Int)
+		(ACSL) edge [bend left, anchor=west] node {Integration} (C99S)
+		(DOTc) edge [bend left, anchor=east] node {} (C99S)
+		(Int) edge [<->, bend right, anchor=east] node {QuickCheck} (SBV)
+		(PP) edge [->, anchor=east, text width=2cm] node {ACSL generation} (ACSL)
+		(PP) edge [->, anchor=west] node {DOT generation} (DOTc)
+		(C99S) edge [->, anchor=north west] node {make} (CCOMP)
+		(CCOMP) edge [->, anchor=east] node {Cross-compilation} (ASM)
+		(C99S) edge [loop left, ->, anchor=east] node {Verification with frama-c WP plugin} (C99S)
+		(C99S) edge [->, anchor=west] node {Extraction and graph generation} (DOT)
+		(SBV) edge [->,anchor=east] node {Compilation} (C99S);
+		%% edge [bend left] node {Translation} (SBV)
+		%% (Atom) edge [loop below] node {1,1,R} (D)
+		%% edge node {0,1,R} (Libs)
+		%% (SBV) edge [bend left] node {1,0,R} ();
+		\end{tikzpicture}
+		\caption{The new Copilot toolchain. }
+		\label{fig:New toolchain}
+	\end{figure}
