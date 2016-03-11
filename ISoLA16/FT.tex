@@ -1,0 +1,57 @@
+\section{Reliabiity}\label{sec:ft}
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+ Question: Under what fault model do you expect the runtime verification system to function?
+    }%
+}
+
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+ Question: Are the monitors isolated from system under observation?
+    }%
+}
+
+\begin{itemize} 
+\item Complex safety-critical systems often have Hazard analysis,
+  FMEA, .... mandated.
+\item  While control engineers often
+  equate safety with stability, structural engineers with structural
+  integrity, and  s/w engineers with software correctness, it is
+  really a systems issues. 
+\item Each discipline's contribution is often vital to ensuring safety
+  and will provide critical evidence to a safety case that the
+  system is safe. 
+\item Given our focus on safety-critical systems we can, we can assume
+  that hazard analysis, FMEA, .... analysis are done in the
+  requirements phase.
+\begin{itemize}
+\item DO 178B 2.2.3 Monitor should not be rendered inoperable by the
+  same failure conditions that cause hazards.
+\item DO 178B 2.2.3  Dictates that the RV should be ``assigned the
+  same software level as most severe failure condition''.
+\item Assured RV for autonomous systems must respect a fault model so
+  as to not fall victim to the hazards and common mode failures
+  detected in analysis. 
+\end{itemize}
+\item Extensive safety analysis (hazard analysis, failure mode effects
+  analysis (FEMA), zonal analysis, etc. 
+\item RV should be able to handle faults allowable under fault model.
+\item Redundancy and independence as well as associated redundancy
+  management must be included in the RV system.
+\item We have investigated how to engineer fault-tolerant monitors to
+  withstand known hazards of sensor failure (pitot tube) failure. 
+\item Redundant HW stack, consensus to withstand 1 Byzantine fault. 
+\item Conducted experiments not only to demonstrate the FT, but to
+  see how the system responded when the defined safety threshold of
+  one fault is surpassed. 
+\item Monitors and steering code need to be isolated from faults in
+  the SUO. 
+ \begin{itemize}
+\item We have investigated both separate/redundant RV HW stack 
+\item We have investigated how to architect the monitor system so as
+  run monitors and steering code in separate partitions on a VX-Works
+  653 compliant system. 
+\end{itemize} 
+\end{itemize} 

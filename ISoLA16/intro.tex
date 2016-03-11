@@ -1,0 +1,96 @@
+\section{Introduction}~\label{sec:intro} 
+
+The consequences of failure of safety-critical systems such as nuclear
+reactor shutdown systems, railway switching systems, and civil air
+transportation are considered especially dire. The prescribe safety
+margin of a catastrophic fault for avionics in civil aircraft is
+$10^{-9}$ or one in a billion.  The justification for the requirement
+is to show that failures resulting in a catastrophic effect are ``so
+unlikely that it is not anticipated to occur during the operational
+life of an entire system or fleet''\cite{FAA2000}.  The safety record
+in civil aviation has been so outstanding the last several decades
+that it is often considered the gold standard for engineering safe and
+reliable systems. Strict certification regime imposed on hardware and
+software as well as licensing requirements on human operators in the
+system is a significant factor in the .  New technologies can take
+many years to transition onto civil aviation due to the need to
+demonstrate that safety is not being negatively impacted. Yet
+technological advances are enabling the development of increasingly
+autonomous (IA) unmanned aircraft systems (UAS) that modify their
+behavior in response to the external environment and learn from their
+experience.  In practice, the certification of avionics software
+relies heavily on it being predicable and existing standards do not
+have provisions to assure systems whose behavior is not predicable
+during certification.  The US National Academies study ``Autonomy
+Research for Civil Aviation''~\cite{NRC14} identifies the verification
+and validation of IA systems as considerable hurdle to the adaption.
+
+
+% Federal Aviation Administration (FAA) regulations
+%govern the certification of aircraft and engines including the
+%software. 
+%Strict government regulations
+%govern everything from the certification of aircraft to the management
+%of the airspace . 
+
+Runtime verification (RV), where monitors detect and respond to
+property violations at runtime, has the potential to enable the safe
+operation of safety-critical systems that are too complex to formally
+verify or fully test using conventional test such as IA systems. The
+\emph{Simplex Architecture}~\cite{simplex} provides an architectural
+pattern. A monitor checks that the executing system under observation
+(SUO) satisfies a specification and If the property is violated, the
+RV system will the switch to system to the control of a more
+conservative component that can be assured using conventional means
+that \emph{steers} the system into a safe state.   
+
+
+Since 2007, my colleague Lee Pike and I, with considerable help for a
+bevy of talent students, have been working on program aimed at
+creating a framework for \emph{high assurance RV} of safety-critical
+hard real-time systems primarily in the context of the Copilot RV
+framework.  In order to be used in ultra-critical environments,
+high-assurance RV must:
+\begin{enumerate}
+\item \label{req:a} Provide evidence for a safety case that the RV enforces safety guarantees.
+\item \label{req:b} Support verification that the specification of the monitors
+  is correct.
+\item \label{req:c} Ensure that monitor code generated implements the specification of the
+monitor.
+\end{enumerate} 
+In addition to building the Copilot framework, we have
+been conducting a number of case studies.
+
+
+\paragraph{Contributions} 
+A considerable challenge his been discovering what were the right
+questions to ask for assured RV.  This  paper is organized around a
+series of questions that we feel anyone trying to apply RV in
+ultracrtical IA systems must address. We will discuss how these
+questions have been addressed in the context of Copilot. While far
+from being a complete, we  believe
+that these questions can aide others in the RV community in building
+their own frameworks or conducting case studies. In keeping with the
+theme of the workshop, we will highlight our use of static analysis
+tools in the hope that we will not only encourage others in the
+community to apply them in their own RV frameworks, but encourage the
+static analysis community to collaborate with the RV researchers in
+creating tools that will enable assured RV.
+
+%Although building a safety
+%case~\ciite{Kelly98arguingsafety} in the spirit
+%of Rushby's~\cite{rvRushby,RushbyAIAA09} remains a challenge,  we
+%believe that 
+ 
+
+%To achieve this, the
+%system must be architected so that the RV component can observe the
+%state of the system  and prevent the autonomous decision making form
+%taking unsafe actions. 
+
+
+
+
+
+ 
+

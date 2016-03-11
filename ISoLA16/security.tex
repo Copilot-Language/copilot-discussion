@@ -1,0 +1,23 @@
+section{Secure Monitors} \label{sec:secure} 
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+ Question: Does the RV create introduce security vulnerabilities?  
+    }%
+}
+
+\begin{itemize}
+\item The RV system shouldn't introduce new security vulnerabilities.
+\item So analysis needs to be conducted.
+\item Replication and what not needed for FT may simply create more
+attack surfaces. 
+\item Privacy may not or may not be an issue with this  
+\item Does the monitor or steering communicate to outside parties? If
+so you may have security issues. 
+\item If the RV has a single point of failure like dependence on GPS,
+it enables an obvious attack on the system. 
+\item Consider a UAS where RV checks if a geofence has been violated
+and brings down the aircraft in a controlled fashion. Could spoofing
+GPS be turned into a denial of service attack or transform the vehicle
+into a weapon to hurt someone. 
+\end{itemize}

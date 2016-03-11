@@ -1,0 +1,24 @@
+\section{Observability}\label{sec:observ} 
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+ Question: Are the monitor specification properties observable? 
+    }%
+}
+
+
+\begin{itemize} 
+\item Does the monitor possess access to the necessary sensor data to
+  monitor state of the SUO?
+\item Do those sensors even exist?
+\item Need to preform traditional signal processing (filtering etc)
+\item  If sampling:
+\begin{itemize}
+\item Can you estimate missed values
+\item Can you figure out when to sample.
+\end{itemize}
+\item static analysis tools can help with code instrumentation 
+\item static analysis can help with determining when to sample based
+  on decision points in code. etc timing analysis for hard realtime
+  systems.
+\end{itemize} 

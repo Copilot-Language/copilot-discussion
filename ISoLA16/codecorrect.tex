@@ -1,0 +1,28 @@
+\section{Correct monitors} \label{sec:codecorrect} 
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+ Question: Are the executable monitors correct with respect to the monitor specification? 
+    }%
+}
+\begin{itemize}
+\item We have approached this in two ways. 
+\item Assuming the interpreter acts as the operational semantics and
+  have Quickcheck generate many many tests. Very light weight. Bugs
+  were found. 
+\item C code is generated with assertions and we have Frama-C prove
+  them correct.  Illustrate with examples. 
+\end{itemize} 
+
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+ Question: Are the executable monitors well defined programs with buffer overflows, integer overflows, etc?
+    }%
+}
+
+\begin{itemize}
+\item We have applied abstract interpretation to generated C code.
+\item Currently investigating applying RV Match tool KCC developed
+  under NASA SBIR award (XXXXX)  to the
+  generated C code. 
+\end{itemize}
