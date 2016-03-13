@@ -2,7 +2,30 @@
 
 \noindent\fbox{%
     \parbox{\textwidth}{
-Question:   When the monitor detects a problem, does the RV system steer the system so as to preserve safety. 
+Challenge:   When the monitor detects a problem, does the RV system steer the system so as to preserve safety. 
     }
 }
 
+The problem of what to do when a specification has been violated is
+one of the most thorny problems in RV and almost completely
+application dependent.  Most case studies the author has seen simply
+log the violation or raise an alarm for humans to intervene. This has
+been the case in our Copilot case studies. The the case of an
+autonomous robot there putting the system into a quiescent state may
+be a safe default operation depending on the operating environment.
+The research aircraft conflict detection mentioned above has produced
+an algorithm for generating resolution maneuvers that would
+reestablish safe aircraft separation.  How to build a safety case that
+would allow this to be used for steering UAS remains an open question.
+Our experience in participating in UAS flight tests illustrate how
+difficult the steering problem can be.  Under certain conditions,
+trained human operators sometime bring down a UAS in a controlled
+within the designated zone of operations to prevent an aircraft
+causing harm.  Automating this might seem as simple as killing power
+to the engines; yet aircraft can glide for some distance. The steering
+software may be able to direct the control surfaces to direct the
+vehicle into the ground, but consideration of aircraft dynamics is
+likely needed to close this can be safely done to the boundary of the
+operating zone.  In many domains, the challenge in constructing an
+assured safe steering algorithm may be as difficult as constructing
+the adaptive autonomous algorithm.

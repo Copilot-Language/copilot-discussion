@@ -2,19 +2,48 @@
 
 \noindent\fbox{%
     \parbox{\textwidth}{%
- Question: Is there tracibilty from the reqirememts and system level anaylsis to the actual monitor code?
+Challenge : Is there traceability from the reqirememts and system level analysis to the actual monitor code?
     }%
 }
 
-\begin{itemize}
-\item Many conventional processes based  guidance
-  documents require ``traceability'' from the requirements to the
-  executable. 
-\item In assured RV we should be able to trace from requirements to
-  monitor spec to monitor. 
-\item We have developed a feature for adding labels to Copilot specs
-  facilitating traceability.  
-\item  We leveraged the GNU dot tool to help visualize what is going
-  on. 
 
-\end{itemize}
+If an IA system is the gain certification under existing guidance
+through use of assured RV, the RV framework should generate the
+supporting documentation.  An identifying characteristic of any of any
+RV framework is the generation of monitors from
+specifications. Typically, the RV transforms a safety property
+expressed in logical notation such as LTL into a state machine encoded
+in a traditional programming language. For instance, MoP translates
+specifications into Java monitors while Copilot translates them into C
+monitors. Approval of aviation software under the guidance of DO-178C
+requires a traceability from requirements to object code. Guidance for
+producing certified software in other safety-critical domains also
+insist on traceability.  Industry has well established means for
+establishing traceability from source code to object code.  To
+facilitate the acceptance of RV in these areas, RV frameworks should
+facilitate traceability from the monitor to the specification.  
+
+
+Copilot's monitor generation process can create many small C
+files. The code generation module has recently been revised to
+generate code that is more readable and traceable.  We require the
+user to insert labels in their specifications. The translation process
+creates C header files with documentation formatted to be processed by
+the plan text graph description language processor  DOT~\cite{ZZZZ}
+giving  visual representation of the code  that includes the labels
+making it easy to determine the correspondence between the monitor and
+specification. 
+
+
+%\begin{itemize}
+%\item Many conventional processes based  guidance
+% documents require ``traceability'' from the requirements to the
+%  executable. 
+%\item In assured RV we should be able to trace from requirements to
+%  monitor spec to monitor. 
+%\item We have developed a feature for adding labels to Copilot specs
+%  facilitating traceability.  
+%\item  We leveraged the GNU dot tool to help visualize what is going
+%  on. 
+
+%\end{itemize}
