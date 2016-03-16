@@ -1,57 +1,74 @@
-\section{Reliabiity}~\label{sec:ft}
+\section{Fault-Tolerant RV}~\label{sec:ft}
 
-\noindent\fbox{%
-    \parbox{\textwidth}{%
- Question: Under what fault model do you expect the runtime verification system to function?
-    }%
-}
+%\noindent\fbox{%
+%    \parbox{\textwidth}{%
+% Question: Under what fault model do you expect the runtime verification system to function?
+%    }%
+%}
  
-If RV is to enable IA in safety-critical systems, than the RV must
-meet the high level of reliability that is expected of the of the
-system. Hence we content that assured RV must be \emph{fault-tolerant}
-~\cite{butler-faults}, meaning it that continues to provide its
-required functionality in the presence of faults.  A fault-tolerant
-system must not contain a \emph{single point of failure} such that if
-the single subsystem fails, the entire system fails. 
+Assured RV must meet the high level of reliability that is expected of
+the of the system. Safety engineers employ a range of established
+methods to identify hazards and failure modes. The level of desired
+reliability determines what faults the system must be designed to
+tolerate. If RV is to be the guarantor of safety, then it must be
+designed to be \emph{fault-tolerant} ~\cite{butler-faults}, meaning it
+that continues to provide its required functionality in the presence
+of faults.  A fault-tolerant system must not contain a \emph{single
+  point of failure} such that if the single subsystem fails, the
+entire system fails.
+
+\paragraph{Challenge}   The RV  should not be rendered inoperable by the
+ same failure conditions that cause hazards to the SUO. 
+
+ Ideally, the RV should and the SUO should not be subject to common
+ model of failure.  For instance, software errors in the SUO such as
+ numerical overflows an memory leaks that can render a system
+ inoperable should not affect the RV.  A fault tolerant systems must
+ be robust in the presence of hardware faults such as sensor failures
+ and voltage spikes as well.  A \emph{fault-containment region} (FCR)
+ is a region in a system designed to ensure faults do not propagate to
+ other regions~\cite{Rushby01:buscompare}.   The
+ easiest way to ensure this is to physically isolate one FCR from
+ another.  However, FCRs may need to communicate, hence they share
+ channels. An FCR containing a monitor may need to share a channel
+ with the SUO.  Care must be taken to ensure faults cannot propagate
+ over these channels.
 
 
-%As part of the
-%overall systems analysis, we can assume that safety analysis has been
-%conducted to at least identify hazards~\cite{XX} and common mode
-%failures~\cite{XXX} that can lead compromise safety. 
+ \paragraph{Example} Fault-tolerant RV has been a ongoing topic of
+ investigation for the Copilot research group. The avionics industry
+ has been migrating away from federated systems toward the use of
+ integrated modular avionics that provide fault-tolerance as a
+ service.  The Aeronautical Radio, Incorporated (ARINC)
+ 653~\cite{ARINC653} compliant hard real-time operating systems (RTOS)
+ ~\cite{Kaveh15} provides temporal and spatial partitioning guarantees
+ so applications can safely share resources.  The Copilot group has
+ been investigating design pattern for implementing fault-tolerant RV
+ on such platforms. Monitors run on the same nodes as the software
+ being monitored, but in separate partitions. Monitoring tasks
+ executing in a separate partition is done through very circumscribed
+ channels that preserve the isolation guarantees.  The spacial and
+ temporal protections provided by ARINC 653 keep the monitors safe
+ from other programs running on the same system, redundancy is
+ required to tolerate more pernicious faults.
 
 
-A \emph{fault-containment region} (FCR) is a region in a system
-designed to ensure faults do not propagate to other
-regions~\cite{Rushby01:buscompare}.  The easiest way to ensure this is
-to physically isolate one FCR from another.  However, FCRs may
-need to communicate, hence  they share channels. An FCR
-containing a monitor may need to share a channel with the SUO.  Care must be taken to
-ensure faults cannot propagate over these channels.  
+ Monitors for safety-critical cyber-physical systems typically involve
+ sensor data. The aircraft horizontal separation criteria in
+ Section~\cite{sec:spec} depends on reliably sensing the position and
+ velocity of both systems.  In aerospace, there are numerous
+ documented incidents that had the potential to impact safety.  In
+ earlier work~\cite{pike-isse-13}, we have tried to address this issue
+ in a case study where a system had redundant and Copilot monitors
+ performed Byzantine exchange and a majority voting to create a system
+ that could tolerate a single Byzantine fault~\cite{pike-isse-13}.
+ Fault injection testing was performed along with flight tests.  The
+ hardware used in these experiments were commodity microprocessors,
+ but we have recently bought Mil-Spec hardened processors are more
+ reliable when operating under varying environmental conditions.
 
-In the course of our research, we have investigated several approaches
-to creating fault-tolerant Copilot monitors.  Motivated by several
-incidents arising from failures of aircraft pitot tubes, we
-constructed a redundant hardware stack and implemented Copilot
-libraries so as to tolerate a single Byzantine fault of the pitot
-tubes~\cite{pike-isse-13}. Each node sampled an independently
-redundant sensor and performed a Byzantine exchange and a majority
-voting.  Fault injection testing was performed along with flight
-tests.  The hardware used in these experiments were commodity
-microprocessors, but we have recently bought Mil-Spec hardened
-processors are far more reliability given the operational conditions.
-It may not always ne necessary to execute one's monitors on separate
-hardware. We recently investigated several possible architectural
-patterns for implementing fault-tolerant Copilot monitors on
-integrated modular avionics systems running 653~{XXXX} compliant hard
-real-time operating systems~\cite{Kaveh15}. Here, monitors run on the
-same nodes as the software being monitored, but 
-in separate partitions that provide fault-isolation guarantees.
-
-
-
-
-
+Much more work in fault-tolerant RV remains to be done and we hope
+that the broader RV community will take up the challenge.
 
 
 
@@ -61,51 +78,8 @@ in separate partitions that provide fault-isolation guarantees.
 %example, widespread high-intensity radiation may affect multiple FCRs.
 
 
-\noindent\fbox{%
-    \parbox{\textwidth}{%
- Question: Are the monitors isolated from system under observation?
-    }%
-}
-
-%\begin{itemize} 
-%\item Complex safety-critical systems often have Hazard analysis,
- % FMEA, .... mandated.
-%\item  While control engineers often
-%  equate safety with stability, structural engineers with structural
-%  integrity, and  s/w engineers with software correctness, it is
-%  really a systems issues. 
-%\item Each discipline's contribution is often vital to ensuring safety
-%  and will provide critical evidence to a safety case that the
-%  system is safe. 
-%\item Given our focus on safety-critical systems we can, we can assume
-%  that hazard analysis, FMEA, .... analysis are done in the
-%  requirements phase.
-%\begin{itemize}
-%\item DO 178B 2.2.3 Monitor should not be rendered inoperable by the
-%  same failure conditions that cause hazards.
-%\item DO 178B 2.2.3  Dictates that the RV should be ``assigned the
-%  same software level as most severe failure condition''.
-%\item Assured RV for autonomous systems must respect a fault model so
-%  as to not fall victim to the hazards and common mode failures
-%  detected in analysis. 
-%\end{itemize}
-%\item Extensive safety analysis (hazard analysis, failure mode effects
-%  analysis (FEMA), zonal analysis, etc. 
-%\item RV should be able to handle faults allowable under fault model.
-%\item Redundancy and independence as well as associated redundancy
-%  management must be included in the RV system.
-%\item We have investigated how to engineer fault-tolerant monitors to
-%  withstand known hazards of sensor failure (pitot tube) failure. 
-%\item Redundant HW stack, consensus to withstand 1 Byzantine fault. 
-%\item Conducted experiments not only to demonstrate the FT, but to
-%  see how the system responded when the defined safety threshold of
-%  one fault is surpassed. 
-%\item Monitors and steering code need to be isolated from faults in
-%  the SUO. 
-% \begin{itemize}
-%\item We have investigated both separate/redundant RV HW stack 
-%\item We have investigated how to architect the monitor system so as
-%  run monitors and steering code in separate partitions on a VX-Works
-%  653 compliant system. 
-%\end{itemize} 
-%\end{itemize} 
+%\noindent\fbox{%
+%   \parbox{\textwidth}{%
+% Question: Are the monitors isolated from system under observation?
+%    }%
+% }

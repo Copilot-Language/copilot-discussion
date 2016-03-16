@@ -1,10 +1,6 @@
 \section{Observability}\label{sec:observ} 
 
-\noindent\fbox{%
-    \parbox{\textwidth}{%
- Question: Are the monitor specification properties observable? 
-    }%
-  } Technically speaking, an RV monitor takes a logical specificaiton
+   Technically speaking, an RV monitor takes a logical specificaiton
   $\phi$ and execution trace $\tau$ of state information of the SUO
   and decidws wheter $\tau$ satisfies $\phi$.  Ensuring observability of
   system state requried by the specification is one of the principal
@@ -24,8 +20,10 @@
   network (CAN)  bus of  an IA
   automobile.   
 
+\paragraph{Challenge} Are the state and environmental variables in the
+specification  observable.   
 
-  In our research applying RV to  the safe operation of a IA aircraft,
+  \paragraph{Example} In our research applying RV to  the safe operation of a IA aircraft,
   we have the found that  the monitor specifications typically require
   us to observe  the state of the vehicle such  as position, altitude,
   pitch,  and ground  speed.   The aircraft  safe separation  criteria
@@ -41,12 +39,12 @@
   data  being observed?  More  items are  likely to  be  added to  the
   checklist with further experience.
 
-Copilot monitors sample the state of the system through shared
-memory. Each monitor runs as a task separate from the SUO.  
+  Copilot monitors sample the state of the system through shared
+  memory. Each monitor runs as a task separate from the SUO.
   Currently, we rely on scheduling analysis with a good amount of
   experimentation. We have recently began investigating the
-  possibility of applying  abstract
-  interpretation to inform monitor scheduling. 
+  possibility of applying abstract interpretation to inform monitor
+  scheduling.
 
 
  

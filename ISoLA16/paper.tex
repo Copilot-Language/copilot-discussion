@@ -19,6 +19,7 @@
 \usepackage{color}
 \usepackage{pgf}
 \usepackage{tikz}
+\usepackage{bm}
 \usetikzlibrary{arrows,automata}
 
 \lstloadlanguages{Haskell}
@@ -97,8 +98,6 @@
     {\scriptsize Copilot}\\\hline}{\end{tabular}}
 
 
-\newcommand{\jonathan}[1]{\textcolor{magenta}{[Jonathan  writes: #1]}}
-\newcommand{\jonathantxt}[1]{\textcolor{magenta}{#1}}
 \newcommand{\alwyn}[1]{\textcolor{blue}{[Alwyn writes: #1]}}
 \newcommand{\lee}[1]{\textcolor{blue}{[Lee: #1]}}
 \newcommand{\draft}[1]{\textcolor{red}{\sf [Draft note: #1]}}
@@ -133,15 +132,17 @@ TBD
 \end{abstract}
 
 \input{intro}
+\input{copilot} 
 \input{spec} 
 \input{observ}
 \input{FT} 
+\input{noninterference} 
 \input{trace}
 \input{steer}
 \input{predictive}
 \input{security}
 \input{verispec}
-\input{noninterference} 
+
 \input{codecorrect}
 \input{Related}
 \input{conclusion} 

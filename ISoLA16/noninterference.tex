@@ -1,19 +1,51 @@
-section{Noninterference} \label{sec:noninter}        
+section{Do No Harm} \label{sec:noninter}         
+The RV components must be composed with the SUO so that they are
+executing in parallel with the SUO.   Care must be taken so that the
+system that has been put in place to ensure that  RV does not
+compromise the correct functioning of the SUO.  
+Section~\ref{sec:observ} highlighted the challenge of observing system
+state, but it is critical that whatever mechanisms employed to enable
+observability should not affect the correctness of the SUO.  Just as
+importantly, the monitors will impact timing and scheduling. Any
+instrumentation required by an RV system will likely require timing
+analysis and scheduling be redone. In large systems, there are likely
+to be many monitors running; each monitor might trigger different
+steering modes. A common pattern when things go wrong in complex
+safety-critical systems is that many alerts are sounded simultaneously
+often  placing a burden on a human operator to sort things out.  One
+can easily envision an analogous situation where several monitors
+detect violations, triggering their respective steering
+procedures. The system designer must ensure that these different
+steering modules do not interact with each out in ways that could
+compromise safety. 
 
-\noindent\fbox{%
-    \parbox{\textwidth}{
-        Question: Do the monitors and steering interact with the SUO as well as each other in such as a way as to negatively impact safety?
-    }%
-}
+\paragraph{Challenge} Assured RV must safely compose with the SUO. In
+short, assured RV must uphold the Hippocratic vow ``to do no harm''.
+In the long term,  RV frameworks should come equipped with a theory of
+noninterference. 
 
-\begin{itemize}
-\item Safety is known not to be compositional. 
-\item Keeping monitors independent help,but not a cure all. 
-\item Can the steering interact with the SUO to create problems. 
-\item Suppose I have a UAS with two monitors. One says if the vehicle  violates a
-geofence another says it's gone way off the reservation so fly into
-the ground. 
-\item Maybe another example?
-\item Basically we have to make sure that the composition of SUO and
-monitors+steering don't impact safety.  
-\end{itemize} 
+\paragraph{Example}  
+The Copilot research group has yet to develop a general theory
+noninterference, but we have made a number of design decisions with
+this in mind and have addressed those issues that arose when
+implementing case studies.  In Copilot, the choice of monitoring
+system state through sampling was a deliberate attempt to minimize
+interference with the SUO. Running monitors in separate partitions on
+an ARINC 653 as discussed in Section~\ref{sec:ft} ensures that the RV
+will not negatively affect the execution time of the SUO. 
+
+
+
+ 
+
+%\begin{itemize}
+%\item Safety is known not to be compositional. 
+%\item Keeping monitors independent help,but not a cure all. 
+%\item Can the steering interact with the SUO to create problems. 
+%\item Suppose I have a UAS with two monitors. One says if the vehicle  violates a
+%geofence another says it's gone way off the reservation so fly into
+%%the ground. 
+%\item Maybe another example?
+%\item Basically we have to make sure that the composition of SUO and
+%monitors+steering don't impact safety.  
+%\end{itemize} 
