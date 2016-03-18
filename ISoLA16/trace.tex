@@ -13,7 +13,7 @@ traceability from the monitor to the specification.
  \paragraph{Challenge} 
 To  traceability from the reqirememts and system level analysis to the actual monitor code. 
 
-\paragraph{Example} Copilot's monitor generation process can create many small C
+\paragraph{Copilot Approach} Copilot's monitor generation process can create many small C
 files. The code generation module has recently been revised to
 generate code that is more readable and traceable.  We require the
 user to insert labels in their specifications. The translation process
@@ -21,10 +21,25 @@ creates C header files with documentation formatted to be processed by
 the plan text graph description language processor  DOT~\cite{ZZZZ}
 giving  visual representation of the code  that includes the labels
 making it easy to determine the correspondence between the monitor and 
-specification. 
+specification.  
+
+Consider the case of the aircraft horizontal
+separation criterion, when adding
+labels for the numerator and denominator as follows.  
+\begin{lstlisting}[frame=single]
+hor_rr sx sy e v'x v'y = (label "?hor_rr_dividend" $ sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (label "?hor_rr_divisor" $ minHorSep)
+\end{lstlisting}  
+the SBV translation breaks this relatively simple expression into
+numerous small C functions. Figure~\ref{fig:label}
+
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=\textwidth,height=10cm]{rrfig2.pdf}
+ \label{fig:label}
+\end{center}
+\end{figure}
 
 
-In the case of the aircraft horizontal 
 
 
 %\begin{itemize}

@@ -1,0 +1,62 @@
+\section{Copilot}~\label{sec:copilot} 
+Copilot is a domain specific language (DSL)  embedded in the functional
+programming language Haskell~\cite{Haskell98}   tailored to
+programming monitors for hard real-time, reactive systems. Given that
+Copilot is deeply embedded in Haskell, one must have a working
+knowledge of Haskell to effectively use Copilot. However, the benefit of an
+embedded DSL in Haskell is that the host-language serves as a type-safe,
+Turing-complete macro language, allowing arbitrary compile-time computation,
+while keeping the core DSL small.
+
+Copilot is a \emph{stream} based language where a stream is an infinite ordered
+sequence of values that must conform to the same type.  All transformations of
+data in Copilot must be propagated through streams.  In this respect, Copilot is
+similar to Lustre~\cite{CaspiPHP87}, but is specialized for RV. Copilot
+guarantees that specifications compile to constant-time and constant-space
+implementations to update stream states. 
+
+Copilot streams mimic both the syntax and semantics of
+Haskell lazy lists with the exception that  operators are
+automatically promoted point-wise to the list level.
+
+Two types of temporal operators are provided in Copilot, one for
+delaying streams and one for looking into the future of streams:
+\begin{lstlisting}[frame=single]
+(++) :: [a] -> Stream a -> Stream a
+drop :: Int -> Stream a -> Stream a
+\end{lstlisting}
+%
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt
+  s}.  The expression {\tt drop k s} skips the first {\tt k} values of the
+stream {\tt s}, returning the remainder of the stream.
+
+
+
+Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}, which we
+highlight here; assurance-relevant aspects of the toolchain are covered in more
+detail later.  Copilot is deeply embedded in Haskell.  A Copilot program is
+reified (i.e., transformed from a recursive structure into explicit graphs via
+observable sharing~\cite{gill}) and then some domain-specific type-checking is
+done.  At this point, we have transformed the program into the ``core''
+language, an intermediate representation.  The core package contains
+an  interpreter  that can be viewed as an operational semantics for
+the language. 
+
+
+
+The back-ends translate a Copilot core program into the language of another
+Haskell-hosted EDSL for code generation.  We use the
+Symbolic Bit Vectors (SBV),  an EDSL
+developed by Levent Erk\"{o}k. 
+The EDSL also contains a C-code generator, which we use to generate C
+monitors. 
+
+We use the recent Safe Haskell compiler extensions to implement
+Copilot~\cite{safe}.  Copilot's language package is explicitly \emph{Trustworthy
+  Haskell}, as there is a single instance of {\tt unsafeCoerce} to implement
+observable sharing.  Copilot's core language is written in \emph{Safe Haskell}.
+
+
+\alwyn{Say something about interpreter vs compiler as well as SBV and
+  the big diagram.} 
+

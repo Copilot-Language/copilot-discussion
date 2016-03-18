@@ -42,7 +42,7 @@
   OPTaddress =   {},
   OPTmonth =     {},
   OPTorganization = {},
-  Tpublisher = {ACM},
+  publisher = {ACM},
   OPTnote =      {},
   OPTannote =    {}
 }
@@ -321,6 +321,21 @@ OPTnote = {Available at \url{http://www-verimag.imag.fr/index.php?page=techrep-l
    number = 	 {4} 
 }
 
+
+
+@InProceedings{pike-rv-15,
+  author =    {Jonathan Laurent Alwyn Goodloe and Lee Pike},
+  title =     {Assuring the Guardians},
+  booktitle = {Proceedings of the 6th Intl. Conference on Runtime Verification},
+  publisher = {Springer},
+  series  =   {LNCS 9333},
+  year =      {2015},
+  month =     {September}
+
+}
+
+
+
 @InProceedings{pike-icfp-12,
   author =    {Lee Pike and Nis Wegmann and Sebastian Niller and Alwyn Goodloe},
   title =     {Experience Report: a Do-It-Yourself High-Assurance Compiler},
@@ -498,7 +513,7 @@ pages =        {525-556},
 PUBLISHER =    {Springer Verlag},
 YEAR =         {2005},
 volume =       {3472},
-series =       {LNCS},
+series =       {LNCS}
 }
 %editor =       {Manfred Broy and Bengt Jonsson and Joost-Pieter Katoen and Martin Leucker and Alexander Pretschner},
 
@@ -638,16 +653,6 @@ year={2005}
 }
 
 
-@Misc{framac,
-  key =       {Frama-C webpage},
-  OPTauthor =    {{CEA~LIST} and {INRIA-Saclay} (developin},
-  title =     {{Frama-C}},
-  OPThowpublished = {Webpage},
-  OPTmonth =     {},
-  OPTyear =      {Accessed 2010},
-  note =      {Accessed August, 2010.  \url{http://frama-c.com/index.html}},
-  OPTannote =    {}
-}
 
 @InProceedings{ChenAR04,
   author = 	 {F. Chen and M. D'Amorim and G. Ro\c{s}u},
@@ -2044,3 +2049,33 @@ month={March}
   year = 	 {2015}
 }
 
+%------------------------------
+@Book{IEEE:1985:AIS,
+  author =       "{IEEE Task P754}",
+  title =        "{ANSI\slash IEEE 754-1985, Standard for Binary
+                 Floating-Point Arithmetic}",
+  publisher =    {{IEEE}},
+  pages =        "20",
+  year =         "1985"
+}
+
+@manual{baudin09acsl,
+  title = {{ACSL}: {ANSI}/{ISO} {C} Specification Language, version 1.10},
+  author = {Patrick Baudin  and Pascal Cuoq and  Jean-Christophe Filli\^atre and Claude March\'e and Benjamin Monate and Yannick Moy and Virgile Prevosto},
+  year = 2015,
+  OPTnote = {\url{http://frama-c.com/download/acsl_1.10.pdf}}
+}
+
+
+
+@Misc{framac,
+  key =       {Frama-C webpage},
+  OPTauthor =    {{CEA~LIST} and {INRIA-Saclay} (developin},
+  title =     {{Frama-C}},
+  OPThowpublished = {Webpage},
+  OPTmonth =     {},
+  OPTyear =      {Accessed 2016},
+  note =      {Accessed March, 2016.  \url{http://frama-c.com/index.html}},
+  OPTannote =    {}
+}
+%-----------------------------------

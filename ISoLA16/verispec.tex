@@ -1,20 +1,80 @@
 \section{Monitor Specification Correctness}~\label{sec:verispec}
 
-\noindent\fbox{%
-    \parbox{\textwidth}{%
- Question: Is the specification correct?
-    }%
-}
+As RV matures it will be employed to
+verify increasingly complex properties such as checking complex
+stability properties of a control system or ensuring that a critical
+system is fault-tolerant. As RV is applied to more complex systems, the
+monitors themselves will become increasingly sophisticated and as prone to error
+as the system being monitored.  Applying formal verification
+tools to the monitors to ensure they are correct can help safeguard
+that the last line of defense is actually effective. 
 
-\begin{itemize}
-\item Monitor specs are safety properties. 
-\item Spec needs to be validated against the requirements. Maybe spec
-  language needs to be closer to  language of domain.  Copilot
-  libraries. 
-\item Many LTL specs may be very strait forward, but we found that the
-  specs in FT and airspace management were subtle and easy to get
-  wrong. 
-\item Modern verification tools such as SMT solvers can be integrated
-  with the RV framework. 
-\item An example from Airspace management. 
-\end{itemize} 
+\paragraph{Challenge}  Assuring the correctness of the monitor
+specification.   
+
+Ideally, specification verification capabilities should be integrated
+into the RV framework so engineers could write specifications, verify
+their correctness, and generate monitors.  Proof tools based on
+Satisfiability Modulo Theories (\textsc{smt}) and similar advanced
+automated proof techniques have the potential to be effective at
+proving properties about specifications. 
+
+
+\paragraph{Copilot Approach}  
+ Copilot supports automated proofs of properties of specification
+ properties  through its {\tt Copilot.Theorem} module.  
+``synchronous observer'' approach~\cite{amast93}, properties \emph{about}
+Copilot programs are specified \emph{within} Copilot itself. In particular,
+properties are encoded with standard Boolean streams and Copilot streams are
+sufficient to encode past-time linear temporal logic~\cite{ptltl}.
+
+ A proposition is a Copilot value of type \texttt{Prop Existential}
+ or \texttt{Prop Universal}, which can be introduced using \texttt{exists} and
+\texttt{forall}, respectively. These are functions taking as an argument a
+normal Copilot stream of type \lstinline{Stream Bool}. Propositions can be added
+to a specification using the \texttt{prop} and \texttt{theorem} functions,
+where \texttt{theorem} must also be passed a tactic for automatically proving
+the proposition. The Copilot prover was first introduced
+in~\cite{pike-rv-15}, where its utility was demonstrated in assuring
+notoriously subtle voting algorithms to be used for fault-tolerant RV.
+
+In the course of the analysis of the separation criteria, a team of
+NASA domain experts and mathematicians used the PVS interactive prover
+to prove theorems that characterize the correctness of the
+criteria. Some these proofs required extensive expert human
+interaction to provide mathematical intuition that remains beyond the
+scope of fully automated proof techniques. As often is the case, many
+of the properties were not so mathematically sophisticated.  We were
+able to apply the Copilot prover  using Z3~\cite{XXX}  to prove
+many of the criteria correctness properties within the Copilot
+framework. Among the properties proved about the horizontal separation
+criteria are: 
+
+\begin{lstlisting}[frame=single]
+\lstinine{ horizontalCriterionForConflictResolution sx sy e v'x v'y 
+  <==>  horizontalCriterionForConflictResolution -sx -sy e -v'x -v'y} 
+\end{lstlisting}
+
+and
+
+\begin{lstlisting}[frame=single]
+\lstinine{ horizontalCriterionForConflictResolution sx sy e v'x v'y
+  &&  horizontalCriterionForConflictResolution sx sy e w'x w'y ==>
+  horizontalCriterionForConflictResolution sx sy e (v'x+w'x) (v'y + w'y)} 
+\end{lstlisting}
+
+
+
+
+%\begin{itemize}
+%\item Monitor specs are safety properties. 
+%\item Spec needs to be validated against the requirements. Maybe spec
+%  language needs to be closer to  language of domain.  Copilot
+%  libraries. 
+%\item Many LTL specs may be very strait forward, but we found that the
+%  specs in FT and airspace management were subtle and easy to get
+%  wrong. 
+%\item Modern verification tools such as SMT solvers can be integrated
+%% with the RV framework. 
+%\item An example from Airspace management. 
+%\end{itemize} 
