@@ -57,10 +57,11 @@ satisfy the correct specification.
 In the case of one of the functions implementing
 the horizontal separation below, the annotated code is given as 
 
-\begin{lstlisting}[frame=single]
+%\begin{lstlisting}[frame=single, language=C]
+\begin{verbatim}
 /*@
- assigns \nothing;
- ensures \result == (((ext_ident_double_8) - (((ext_minimal_horizontal_separation) * (ext_minimal_horizontal_separation)))));
+ assigns \ nothing;
+ ensures \ result == (((ext_ident_double_8) - (((ext_minimal_horizontal_separation) * (ext_minimal_horizontal_separation)))));
 */
 SDouble ext_sqrt_9_arg0(const SDouble ext_ident_double_8,
                         const SDouble ext_ownship_position_x,
@@ -76,7 +77,8 @@ SDouble ext_sqrt_9_arg0(const SDouble ext_ident_double_8,
 
   return s7;
 }
-\end{lstlisting}
+\end{verbatim}
+%\end{lstlisting}
 
 \noindent
 Frama-C's WP plugin easily proves that the function satisfies the
@@ -89,7 +91,7 @@ interpretation value analysis plug exposed the need to ensure that
 there are no floating point infinite values  or not a number (NaN).
 In the case of the \texttt{ext\_sqrt\_9\_arg0} function, the value
 analysis produces warnings:
-\begin{lstlisting}[frame=single]
+\begin{verbatim}
 value] computing for function ext_sqrt_9_arg0 <- sampleExts <- step <- testing.
         Called from driver.c:60.
 ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value ([-1.79769313486e+308 .. 1.79769313486e+308]):
@@ -97,7 +99,7 @@ ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value ([-1.79769313486e
 ext_sqrt_9_arg0.c:42:[kernel] warning: non-finite double value ([-1.79769313486e+308 .. 1.79769313486e+308]):
                   assert \is_finite((double)(s0-s6));
 ext_sqrt_9_arg0.c:30:[value] Function ext_sqrt_9_arg0: postcondition got status unknown.
-\end{lstlisting}
+\end{verbatim}
 
 indicating that steps must be taken to ensure that the two floating
 point operations do not result in errors. We are still investigating
