@@ -6,24 +6,23 @@
 %    }%
 %}
  
-Assured RV must meet the high level of reliability that is expected of
-the of the system. Safety engineers employ a range of established
-methods to identify hazards and failure modes. The level of desired
+High assurance  RV must meet the high level of reliability that is expected of
+the of the system.  Often mandated by regulatory
+guidelines~\cite{SAE4761}, sfety engineers employ a range of established
+methods to identify hazards and failure modes~\cite{Levenson}. The level of desired
 reliability determines what faults the system must be designed to
 tolerate. If RV is to be the guarantor of safety, then it must be
-designed to be \emph{fault-tolerant} ~\cite{butler-faults}, meaning it
+designed to be \emph{fault-tolerant}~\cite{butler-faults}, meaning it
 that continues to provide its required functionality in the presence
 of faults.  A fault-tolerant system must not contain a \emph{single
   point of failure} such that if the single subsystem fails, the
 entire system fails.
 
-\paragraph{Challenge}   The RV  should not be rendered inoperable by the
- same failure conditions that cause hazards to the SUO. 
 
- Ideally, the RV should and the SUO should not be subject to common
- model of failure.  For instance, software errors in the SUO such as
+ Ideally, the RV and the SUO should not be subject to common
+ modes of failure.  For instance, software errors in the SUO such as
  numerical overflows an memory leaks that can render a system
- inoperable should not affect the RV.  A fault tolerant systems must
+ inoperable should not affect the RV.  A fault tolerant system must
  be robust in the presence of hardware faults such as sensor failures
  and voltage spikes as well.  A \emph{fault-containment region} (FCR)
  is a region in a system designed to ensure faults do not propagate to
@@ -35,27 +34,31 @@ entire system fails.
  over these channels. 
 
 
- \paragraph{Copilot Approach} Fault-tolerant RV has been a ongoing topic of
- investigation for the Copilot research group. The avionics industry
- has been migrating away from federated systems toward the use of
- integrated modular avionics that provide fault-tolerance as a
- service.  The Aeronautical Radio, Incorporated (ARINC)
- 653~\cite{ARINC653} compliant hard real-time operating systems (RTOS)
- ~\cite{Kaveh15} provides temporal and spatial partitioning guarantees
- so applications can safely share resources.  The Copilot group has
- been investigating design pattern for implementing fault-tolerant RV
- on such platforms. Monitors run on the same nodes as the software
- being monitored, but in separate partitions. Monitoring tasks
- executing in a separate partition is done through very circumscribed
- channels that preserve the isolation guarantees.  The spacial and
- temporal protections provided by ARINC 653 keep the monitors safe
- from other programs running on the same system, redundancy is
- required to tolerate more pernicious faults.
+\paragraph{Challenge}   \emph{The RV  should not be rendered inoperable by the
+ same failure conditions that cause hazards to the SUO. }
+
+
+\paragraph{Copilot Approach} Fault-tolerant RV has been a ongoing
+topic of investigation for the Copilot research group. The avionics
+industry has been migrating away from federated systems toward the use
+of integrated modular avionics that provide fault-tolerance as a
+service.  The Aeronautical Radio, Incorporated (ARINC)
+653~\cite{ARINC653} compliant hard real-time operating systems RTOS
+provides temporal and spatial partitioning guarantees so applications
+can safely share resources.  The Copilot group has been investigating
+design pattern for implementing fault-tolerant RV on such
+platforms~\cite{Kaveh15}. Monitors run on the same nodes as the
+software being monitored, but in separate partitions. Monitoring tasks
+executing in a separate partition is done through very circumscribed
+channels that preserve the isolation guarantees.  The spacial and
+temporal protections provided by ARINC 653 keep the monitors safe from
+other programs running on the same system, redundancy is required to
+tolerate more pernicious faults.
 
 
  Monitors for safety-critical cyber-physical systems typically involve
  sensor data. The aircraft horizontal separation criteria in
- Section~\cite{sec:spec} depends on reliably sensing the position and
+ Section~\ref{sec:spec} depends on reliably sensing the position and
  velocity of both systems.  In aerospace, there are numerous
  documented incidents that had the potential to impact safety.  In
  earlier work~\cite{pike-isse-13}, we have tried to address this issue
@@ -67,10 +70,14 @@ entire system fails.
  but we have recently bought Mil-Spec hardened processors are more
  reliable when operating under varying environmental conditions.
 
-Much more work in fault-tolerant RV remains to be done and we hope
-that the broader RV community will take up the challenge.
 
-
+ \paragraph{Opportunities} Much more work in fault-tolerant RV remains
+ to be done and we hope that the broader RV community will take up the
+ challenge Static analysis tools have been very effective in detecting
+ software faults such as divide by zero errors. Analysis of more
+ sophisticated architectural fault tolerance has strained fully
+ automated techniques such as model checkers so analysis of realistic
+ systems requires inter
 
 % Generally,
 %physical faults in separate FCRs are statistically independent, but under

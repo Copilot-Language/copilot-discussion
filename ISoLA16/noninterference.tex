@@ -1,30 +1,29 @@
-section{Do No Harm} \label{sec:noninter}         
-The RV components must be composed with the SUO so that they are
-executing in parallel with the SUO.   Care must be taken so that the
-system that has been put in place to ensure that  RV does not
-compromise the correct functioning of the SUO.  
-Section~\ref{sec:observ} highlighted the challenge of observing system
-state, but it is critical that whatever mechanisms employed to enable
-observability should not affect the correctness of the SUO.  Just as
-importantly, the monitors will impact timing and scheduling. Any
-instrumentation required by an RV system will likely require timing
-analysis and scheduling be redone. In large systems, there are likely
-to be many monitors running; each monitor might trigger different
-steering modes. A common pattern when things go wrong in complex
-safety-critical systems is that many alerts are sounded simultaneously
-often  placing a burden on a human operator to sort things out.  One
-can easily envision an analogous situation where several monitors
-detect violations, triggering their respective steering
-procedures. The system designer must ensure that these different
-steering modules do not interact with each out in ways that could
-compromise safety. 
+\section{Do No Harm} \label{sec:noninter} The RV components must be
+composed with the SUO so that they are executing in parallel with the
+SUO.  Care must be taken so that the system that has been put in place
+to ensure that RV does not compromise the correct functioning of the
+SUO.  Section~\ref{sec:observ} highlighted the challenge of observing
+system state, but it is critical that whatever mechanisms employed to
+enable observability should not affect the correctness of the SUO.
+Just as importantly, the monitors will impact timing and
+scheduling. Any instrumentation required by an RV system will likely
+require timing analysis and scheduling be redone. In large systems,
+there are likely to be many monitors running; each monitor might
+trigger different steering modes. A common pattern when things go
+wrong in complex safety-critical systems is that many alerts are
+sounded simultaneously often placing a burden on a human operator to
+sort things out.  One can easily envision an analogous situation where
+several monitors detect violations, triggering their respective
+steering procedures. The system designer must ensure that these
+different steering modules do not interact with each out in ways that
+could compromise safety.
 
-\paragraph{Challenge} Assured RV must safely compose with the SUO. In
-short, assured RV must uphold the Hippocratic vow ``to do no harm''.
-In the long term,  RV frameworks should come equipped with a theory of
-noninterference. 
+\paragraph{Challenge} \emph{Assured RV must safely compose with the
+  SUO. In short, assured RV must uphold the Hippocratic vow ``to do no
+  harm''.  In the long term, RV frameworks should come equipped with a
+  theory of noninterference.}
 
-\paragraph{Example}  
+\paragraph{Copilot Approach}  
 The Copilot research group has yet to develop a general theory
 noninterference, but we have made a number of design decisions with
 this in mind and have addressed those issues that arose when
@@ -32,7 +31,7 @@ implementing case studies.  In Copilot, the choice of monitoring
 system state through sampling was a deliberate attempt to minimize
 interference with the SUO. Running monitors in separate partitions on
 an ARINC 653 as discussed in Section~\ref{sec:ft} ensures that the RV
-will not negatively affect the execution time of the SUO. 
+will not negatively affect the execution time of the SUO.
 
 
 

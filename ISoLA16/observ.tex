@@ -1,54 +1,63 @@
 \section{Observability}\label{sec:observ} 
 
-   Technically speaking, an RV monitor takes a logical specificaiton
-  $\phi$ and execution trace $\tau$ of state information of the SUO
-  and decidws wheter $\tau$ satisfies $\phi$.  Ensuring observability of
-  system state requried by the specification is one of the principal
-  engineering challenges of RV.  How an RV framework obtains state
-  data impacts the properties that can be monitored. Many of RV
-  frameworks such as MAC~\cite{KimLKS04}  and MOP~\cite{ChenR05}
-  instrument the software and hardware of the SUO so that it emits
-  events of interest to the monitor.  While attractive from the
-  veiwpoint of maximizing state observability, the additional overhead
-  may affect execution time affectiing worst case
-  execution times and consequently the scheduling; in addition regulatory
-  guidelines may require recertificaiton of that software.  Copilot
-  and several other RV frameworks~\cite{sampling} and!\cite{borzoo}
-  opt to sacrifice complete observability by sampling
-  events.  Copilot samples variables via shared memory. In a diffent approach
-  to sampling,~\cite{Kane15} observes messages on  the controller area
-  network (CAN)  bus of  an IA
-  automobile.   
+Technically speaking, an RV monitor takes a logical specification 
+$\phi$ and execution trace $\tau$ of state information of the SUO and
+decides wheter $\tau$ satisfies $\phi$.  Ensuring observability of
+both the system state and the environment as required by a
+specification is one of the principal engineering challenges of RV.
 
-\paragraph{Challenge} Are the state and environmental variables in the
-specification  observable.   
-
-  \paragraph{Example} In our research applying RV to  the safe operation of a IA aircraft,
-  we have the found that  the monitor specifications typically require
-  us to observe  the state of the vehicle such  as position, altitude,
-  pitch,  and ground  speed.   The aircraft  safe separation  criteria
-  specification  involves   state  data  about  other   aircraft.  The
-  diversity of data  sources can complicate the  translation of safety
-  properties  into  monitor specifications  and  we  ask a  number  of
-  questions.  Can  we actually  obtain the  information?  Is  the data
-  found  in  program  variables,  on board  sensors,  or  obtained  by
-  communications?  If it  is  raw sensor  data, do  we  need to  apply
+  If monitoring the state of an executing program, is it possible that
+  the  monitor fails to detect a state change?  It is often necessary
+  to read sensor data to obtain the required   state data (e.g. aircraft
+  pitch and  vehicle position)  or environmental data
+  (e.g. temperature).  If it  is  raw sensor  data, do  we  apply
   filters  before feeding  the data  into  the monitors?  Is the  data
-  available   in  the   same  coordinate   systems  demanded   of  the
-  specification?  Can  we ensure the  integrity and provenance  of the
-  data  being observed?  More  items are  likely to  be  added to  the
-  checklist with further experience.
+  available   in  the  same  coordinate   systems  demanded   of  the
+  specification?  Can we ensure the  integrity and provenance  of the
+  data  being observed?
 
-  Copilot monitors sample the state of the system through shared
-  memory. Each monitor runs as a task separate from the SUO.
-  Currently, we rely on scheduling analysis with a good amount of
-  experimentation. We have recently began investigating the
-  possibility of applying abstract interpretation to inform monitor
-  scheduling.
+\paragraph{Challenge} \emph{Are the state and environmental variables in the
+specification  observable.}  
 
 
  
+  \paragraph{Copilot Approach} 
+  How an RV framework obtains state data impacts the properties that
+  can be monitored.  Many of RV frameworks such as MAC~\cite{KimLKS04}
+  and MOP~\cite{ChenR05} instrument the software and hardware of the
+  SUO so that it emits events of interest to the monitor.  While
+  attractive from the veiwpoint of maximizing state observability, the
+  additional overhead may affect execution time affectiing worst case
+  execution times and consequently the scheduling; in addition
+  regulatory guidelines may require recertificaiton of that software.
+  Copilot and several other RV
+  frameworks~\cite{sampling,Kane15,borzoo} opt to sacrifice complete
+  observability by sampling events.  Copilot monitors run as dedicated
+  thread and sample program variables and state information via shared
+  memory.  Currently, we rely on scheduling analysis with a good
+  amount of experimentation to ensure that we sample values at a
+  sufficient rate that specification violations are detected. This has
+  been very successful when the implementation platform is running a
+  real-time operating system (RTOS) with deterministic scheduling
+  guarantees, but we cannot make strong guarantees running on less
+  specialized systems.
 
+  The aircraft safe separation criteria specification introduced in
+  Section~\ref{sec:req} requires the monitor observe state data for
+  both the aircraft the monitor is executing on as well as state for
+  the ``intruder'' aircraft which is obtained by
+  communication. Meaning monitors required sampling data from
+  executing programs (planned maneuver), onboard positioning sensors,
+  and data broadcast from other vehicles.
+
+\paragraph{Opportunities}  There are ample opportunities for targeting
+static analysis tools. At times it can be a daunting task to simply
+ascertain if the values in the specification are present in the act If the RV approach involves
+instrumenting code, then static analysis can both assist in the
+instrumentation and prove that the instrumentation did not affect the
+correctness of the code. If sampling, static analysis has the
+potential to inform when
+to sample. 
   
 
 %\begin{itemize} 
