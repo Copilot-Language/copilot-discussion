@@ -3,7 +3,8 @@
  from specifications. In safety-critical systems, subtle errors in the
  translation process can have potentially catastrophic
  consequences and consequently, a safety case for assured RV must
- provide evidence of the correctness the translation process. 
+ provide evidence of the correctness the translation process.
+
 
 
 \paragraph{Challenge} There should be assurance arguments that
@@ -32,7 +33,7 @@ without either violating the IEEE floating point standard.
 In order to gain greater assurance of the correctness copilot monitor
 synthesis, we recently begin leveraging several static analysis tools
 to provide a more rigorous footing to the assurance of Copilot
-monitors.  The process of translating a specification into a monitor
+monitors.   The process of translating a specification into a monitor
 transforms an AST of the ``core'' language representation into an SBV
 AST.  We then use SBV's C code generation capabilities to create
 executable C code.  To facilitate monitor verification, Copilot now
@@ -42,7 +43,11 @@ contracts are written in the ANSI C Specification Language
 (ACSL)~\cite{baudin09acsl}, an assertion language for specifying
 behavioral properties of C programs in first-order logic.
 Frama-C's~\cite{framac} WP deductive verification engine is employed
-to prove that the code does indeed satisfy the contract.   
+to prove that the code does indeed satisfy the contract. Deductive
+verification tools have evolved quite a bit recently, but scalability
+is still an issue.  That the translation process creates separate C
+functions for subexpressions of a large expression makes the
+verification tractable. 
 
 The translation processes that transforms  a specification  into C monitors will create a number small files
 that get linked together. Each file has a contract  with an ACSL 
@@ -58,26 +63,21 @@ In the case of one of the functions implementing
 the horizontal separation below, the annotated code is given as 
 
 %\begin{lstlisting}[frame=single, language=C]
-\begin{verbatim}
+\begin{Verbatim}[fontsize=\tiny]
 /*@
  assigns \ nothing;
  ensures \ result == (((ext_ident_double_8) - (((ext_minimal_horizontal_separation) * (ext_minimal_horizontal_separation)))));
 */
 SDouble ext_sqrt_9_arg0(const SDouble ext_ident_double_8,
-                        const SDouble ext_ownship_position_x,
-                        const SDouble ext_intruder_position_x,
-                        const SDouble ext_ownship_position_y,
-                        const SDouble ext_intruder_position_y,
-                        const SDouble ext_minimal_horizontal_separation)
-{
-  const SDouble s0 = ext_ident_double_8;
-  const SDouble s5 = ext_minimal_horizontal_separation;
-  const SDouble s6 = s5 * s5;
-  const SDouble s7 = s0 - s6;
-
-  return s7;
-}
-\end{verbatim}
+       const SDouble ext_ownship_position_x, const SDouble ext_intruder_position_x,
+       const SDouble ext_ownship_position_y,  const SDouble ext_intruder_position_y,
+       const SDouble ext_minimal_horizontal_separation)
+{   const SDouble s0 = ext_ident_double_8;
+    const SDouble s5 = ext_minimal_horizontal_separation;
+    const SDouble s6 = s5 * s5;
+    const SDouble s7 = s0 - s6;
+    return s7;  }
+\end{Verbatim}
 %\end{lstlisting}
 
 \noindent
@@ -91,23 +91,21 @@ interpretation value analysis plug exposed the need to ensure that
 there are no floating point infinite values  or not a number (NaN).
 In the case of the \texttt{ext\_sqrt\_9\_arg0} function, the value
 analysis produces warnings:
-\begin{verbatim}
-value] computing for function ext_sqrt_9_arg0 <- sampleExts <- step <- testing.
-        Called from driver.c:60.
-ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value ([-1.79769313486e+308 .. 1.79769313486e+308]):
-                  assert \is_finite((double)(s5*s5));
+\begin{Verbatim}[fontsize=\tiny]
+\ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value ([-1.79769313486e+308 .. 1.79769313486e+308]):
+         assert \is_finite((double)(s5*s5));
 ext_sqrt_9_arg0.c:42:[kernel] warning: non-finite double value ([-1.79769313486e+308 .. 1.79769313486e+308]):
                   assert \is_finite((double)(s0-s6));
 ext_sqrt_9_arg0.c:30:[value] Function ext_sqrt_9_arg0: postcondition got status unknown.
-\end{verbatim}
-
+\end{Verbatim}
 indicating that steps must be taken to ensure that the two floating
-point operations do not result in errors. We are still investigating
-the best way to  handle floating point issues in the context of
-Copilot RV.
+point operations do not result in errors.  Domain specific knowledge
+on the  bounds on the velocity and state vectors  eliminated this
+error.  At present, we must add domain specific knowledge to the
+contracts by hand, but intend to explore ways to better propagate such
+information during monitor generation.  
 
-
-\paragraph{Assured Turtles  All They Way Down} 
+\paragraph{Assurance All The Way Down} 
 Having assured that the C code implementing the monitor is correct,
 how can we be sure that the executable binary code correctly
 implements the C program. For Copilot, we have experimented
@@ -115,4 +113,19 @@ with using the verified Compcert compiler~\cite{leroy} to generate
 binaries.  Unfortunately, Compcert does not yet target many of the
 processors used in our experiments limiting its utility.
 
-
+\paragraph{Opportunities} Applying static analysis tools makes so much
+sense that it should be de rigueur. For high-assurance RV monitors,
+the case is strengthened when evidence from static analysis can be
+applied to certification ~\cite{DO333}.  Copilot is not unique in
+generating constant time and constant time monitor, thus tools
+targeting memory leaks are not particularly useful. The application
+areas targeted by Copilot, floating point arithmetic is a source of
+problems that is readily amenable to static analysis.  Other
+application domains such as security or low power devices offer many
+possibilities for static analysis.  In Copilot, we applied deductive
+verification to verify the correctness of the translation from
+specification to monitor code.  Monitors have many characteristics
+that  make automatic proofs tractable, but  the monitor synthesis must
+generate code that  suitable for the tool being used. This raises the
+opportunity for close collaboration between RV researchers and tool
+builders. 

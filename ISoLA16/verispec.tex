@@ -9,8 +9,8 @@ as the system being monitored.  Applying formal verification
 tools to the monitors to ensure they are correct can help safeguard
 that the last line of defense is actually effective. 
 
-\paragraph{Challenge}  Assuring the correctness of the monitor
-specification.   
+\paragraph{Challenge}  \emph{Assuring the correctness of the monitor
+specification.}   
 
 Ideally, specification verification capabilities should be integrated
 into the RV framework so engineers could write specifications, verify
@@ -48,20 +48,47 @@ of the properties were not so mathematically sophisticated.  We were
 able to apply the Copilot prover  using Z3~\cite{XXX}  to prove
 many of the criteria correctness properties within the Copilot
 framework. Among the properties proved about the horizontal separation
-criteria are: 
+criteria are
 
-\begin{lstlisting}[frame=single]
-\lstinine{ horizontalCriterionForConflictResolution sx sy e v'x v'y 
-  <==>  horizontalCriterionForConflictResolution -sx -sy e -v'x -v'y} 
-\end{lstlisting}
+\begin{eqnarray*}
+\texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
+\epsilon,  \bm{vx},  \bm{vy}) & \Longleftrightarrow &
+\texttt{horiz\_criteria}(\bm{-sx},  \bm{-sy},
+\epsilon, \bm{-vx},  \bm{-vy})   \\
+( \texttt{horiz\_criteria}(\bm{sx},\bm{sy},
+\epsilon, \bm{vx},\bm{vy}) ) \wedge &&  \\ 
+\texttt{horiz\_criteria} (\bm{sx},  \bm{sy},
+\epsilon,  \bm{wx}, \bm{wy})& \Longrightarrow&
+\texttt{horiz\_criteria} (\bm{sx}, \bm{sy},
+\epsilon,\bm{vx},\bm{vy})\\
+( \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
+\epsilon,  \bm{vx},  \bm{vy})  \wedge  &&\\
+\texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
+\epsilon',  \bm{vx},  \bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
+\end{eqnarray*}
 
-and
+\paragraph{Opportunities} RV monitors offer a rich target for
+researchers building proof engines and static analysis tools.  In
+spite of tremendous improvements in SMT solvers, the continuous math
+used in cyber-physical systems .e have not yet found an automated
+proof engine that can prove properties of formula with trigonometric
+functions. Static analysis techniques, such as abstract interpretation,
+could be applied to show a floating point error might arise before the
+monitor is even generated. Finally, there are opportunities for
+investigating integrating interactive provers in the RV framework. 
 
-\begin{lstlisting}[frame=single]
-\lstinine{ horizontalCriterionForConflictResolution sx sy e v'x v'y
-  &&  horizontalCriterionForConflictResolution sx sy e w'x w'y ==>
-  horizontalCriterionForConflictResolution sx sy e (v'x+w'x) (v'y + w'y)} 
-\end{lstlisting}
+%\begin{lstlisting}[frame=single]
+%\lstinine{ horizont(sx, sy, e, vx vy) 
+% <==>  horizontalCriterionForConflictResolution -sx -sy e -v'x -v'y} 
+%\end{lstlisting}
+%
+%and
+%
+%\begin{lstlisting}[frame=single]
+%\lstinine{ horizontalCriterionForConflictResolution sx sy e v'x v'y
+%  &&  horizontalCriterionForConflictResolution sx sy e w'x w'y ==>
+%  horizontalCriterionForConflictResolution sx sy e (v'x+w'x) (v'y + w'y)} 
+%\end{lstlisting}
 
 
 
