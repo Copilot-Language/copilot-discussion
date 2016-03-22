@@ -64,17 +64,12 @@ thick ]
         \end{tikzpicture}
 }
         \caption{The Copilot toolchain.}
-        \label{fig:new-toolchain}
+        \label{fig:toolchain}
         \end{figure}
 
 Copilot is a domain specific language (DSL)  embedded in the functional
 programming language Haskell~\cite{Haskell98}   tailored to
-programming monitors for hard real-time, reactive systems. Given that
-Copilot is deeply embedded in Haskell, one must have a working
-knowledge of Haskell to effectively use Copilot. However, the benefit of an
-embedded DSL in Haskell is that the host-language serves as a type-safe,
-Turing-complete macro language, allowing arbitrary compile-time computation,
-while keeping the core DSL small.
+programming monitors for hard real-time, reactive systems.
 
 Copilot is a \emph{stream} based language where a stream is an infinite ordered
 sequence of values that must conform to the same type.  All transformations of
@@ -97,7 +92,7 @@ stream {\tt s}, returning the remainder of the stream.
 
 
 
-Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}..  Copilot is deeply embedded in Haskell.  A Copilot program is
+Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}.  Copilot is deeply embedded in Haskell.  A Copilot program is
 reified (i.e., transformed from a recursive structure into explicit graphs via
 observable sharing~\cite{gill}) and then some domain-specific type-checking is
 done.  At this point, we have transformed the program into the ``core''
@@ -106,14 +101,20 @@ an  interpreter  that can be viewed as an operational semantics for
 the language.   The back-ends translate a Copilot core program into the language of another
 Haskell-hosted EDSL for code generation.  We use the
 Symbolic Bit Vectors (SBV),  an EDSL developed by Levent Erk\"{o}k. 
-The EDSL also contains a C-code generator, which we use to generate C
+SBV also contains a C-code generator, which we use to generate C
 monitors.  Aspects of the toolchain relevant to high assurance are covered in more
 detail later
 
-We use the recent Safe Haskell compiler extensions to implement
-Copilot~\cite{safe}.  Copilot's language package is explicitly \emph{Trustworthy
-  Haskell}, as there is a single instance of {\tt unsafeCoerce} to implement
-observable sharing.  Copilot's core language is written in \emph{Safe Haskell}.
+%We use the recent Safe Haskell compiler extensions to implement
+%Copilot~\cite{safe}.  Copilot's language package is explicitly \emph{Trustworthy
+% Haskell}, as there is a single instance of {\tt unsafeCoerce} to implement
+%observable sharing.  Copilot's core language is written in \emph{Safe Haskell}.
 
 
 
+% Given that
+%Copilot is deeply embedded in Haskell, one must have a working
+%knowledge of Haskell to effectively use Copilot. However, the benefit of an
+%embedded DSL in Haskell is that the host-language serves as a type-safe,
+%Turing-complete macro language, allowing arbitrary compile-time computation,
+%while keeping the core DSL small.

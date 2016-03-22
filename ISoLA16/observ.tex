@@ -1,20 +1,19 @@
 \section{Observability}\label{sec:observ} 
 
-Technically speaking, an RV monitor takes a logical specification 
+Technically speaking, an RV monitor takes a logical specification
 $\phi$ and execution trace $\tau$ of state information of the SUO and
 decides wheter $\tau$ satisfies $\phi$.  Ensuring observability of
 both the system state and the environment as required by a
 specification is one of the principal engineering challenges of RV.
 
-  If monitoring the state of an executing program, is it possible that
-  the  monitor fails to detect a state change?  It is often necessary
-  to read sensor data to obtain the required   state data (e.g. aircraft
-  pitch and  vehicle position)  or environmental data
-  (e.g. temperature).  If it  is  raw sensor  data, do  we  apply
-  filters  before feeding  the data  into  the monitors?  Is the  data
-  available   in  the  same  coordinate   systems  demanded   of  the
-  specification?  Can we ensure the  integrity and provenance  of the
-  data  being observed?
+If monitoring the state of an executing program, is it possible that
+the monitor fails to detect a state change?  It is often necessary to
+read sensor data to obtain the required state data (e.g. aircraft
+pitch and vehicle position) or environmental data (e.g. temperature).
+If it is raw sensor data, do we apply filters before feeding the data
+into the monitors?  Is the data available in the same coordinate
+systems demanded of the specification?  Can we ensure the integrity
+and provenance of the data being observed?
 
 \paragraph{Challenge} \emph{Are the state and environmental variables in the
 specification  observable.}  
@@ -46,9 +45,11 @@ specification  observable.}
   Section~\ref{sec:req} requires the monitor observe state data for
   both the aircraft the monitor is executing on as well as state for
   the ``intruder'' aircraft which is obtained by
-  communication. Meaning monitors required sampling data from
+  communication.  Meaning monitors required sampling data from
   executing programs (planned maneuver), onboard positioning sensors,
-  and data broadcast from other vehicles.
+  and data broadcast from other vehicles.  The aircraft position had
+  to be converted from World Geodetic System latitude and longitude to
+  ECEF.
 
 \paragraph{Opportunities}  There are ample opportunities for targeting
 static analysis tools. At times it can be a daunting task to simply
@@ -56,8 +57,7 @@ ascertain if the values in the specification are present in the act If the RV ap
 instrumenting code, then static analysis can both assist in the
 instrumentation and prove that the instrumentation did not affect the
 correctness of the code. If sampling, static analysis has the
-potential to inform when
-to sample. 
+potential to inform when to sample. 
   
 
 %\begin{itemize} 
