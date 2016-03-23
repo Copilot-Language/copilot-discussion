@@ -1,11 +1,8 @@
 \section{Observability}\label{sec:observ} 
 
-Technically speaking, an RV monitor takes a logical specification
-$\phi$ and execution trace $\tau$ of state information of the SUO and
-decides wheter $\tau$ satisfies $\phi$.  Ensuring observability of
+ Ensuring observability of
 both the system state and the environment as required by a
 specification is one of the principal engineering challenges of RV.
-
 If monitoring the state of an executing program, is it possible that
 the monitor fails to detect a state change?  It is often necessary to
 read sensor data to obtain the required state data (e.g. aircraft
@@ -29,8 +26,8 @@ specification  observable.}
   additional overhead may affect execution time affectiing worst case
   execution times and consequently the scheduling; in addition
   regulatory guidelines may require recertificaiton of that software.
-  Copilot and several other RV
-  frameworks~\cite{sampling,Kane15,borzoo} opt to sacrifice complete
+  Copilot, and several other RV
+  frameworks~\cite{sampling,Kane15,borzoo}, opt to sacrifice complete
   observability by sampling events.  Copilot monitors run as dedicated
   thread and sample program variables and state information via shared
   memory.  Currently, we rely on scheduling analysis with a good
@@ -47,17 +44,11 @@ specification  observable.}
   the ``intruder'' aircraft which is obtained by
   communication.  Meaning monitors required sampling data from
   executing programs (planned maneuver), onboard positioning sensors,
-  and data broadcast from other vehicles.  The aircraft position had
+  and data broadcast from other vehicles.  For our experiments, the
+  aircraft  position data  had
   to be converted from World Geodetic System latitude and longitude to
-  ECEF.
+  ECEF. 
 
-\paragraph{Opportunities}  There are ample opportunities for targeting
-static analysis tools. At times it can be a daunting task to simply
-ascertain if the values in the specification are present in the act If the RV approach involves
-instrumenting code, then static analysis can both assist in the
-instrumentation and prove that the instrumentation did not affect the
-correctness of the code. If sampling, static analysis has the
-potential to inform when to sample. 
   
 
 %\begin{itemize} 

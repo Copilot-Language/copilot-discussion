@@ -28,16 +28,19 @@ systems is a considerable research challenge~\cite{NRC14} .
 \emph{Runtime verification} (RV)~\cite{monitors}, where monitors
 detect and respond to property violations at runtime, has the
 potential to enable the safe operation of safety-critical systems that
-are too complex to formally verify or fully test. The \emph{Simplex
+are too complex to formally verify or fully test.  Technically
+speaking, an RV monitor takes a logical specification $\phi$ and
+execution trace $\tau$ of state information of the SUO and decides
+wheter $\tau$ satisfies $\phi$. The \emph{Simplex
   Architecture}~\cite{simplex} provides an architectural pattern for
 RV. A monitor checks that the executing system under observation (SUO)
 satisfies a specification and If the property is violated, the RV
 system will the switch to system to the control of a more conservative
 component that can be assured using conventional means that
 \emph{steers} the system into a safe state. Although there have been
-considerable progress in the RV community,  there are considerable
-barriers to realizing  RV that is trusted to safeguard safety-critical
-system. 
+considerable progress in the RV community, there are considerable
+barriers to realizing RV that is trusted to safeguard safety-critical
+system.
 
 Copilot~\cite{copilot, pike-isse-13}  is an RV framework  targeted at
 safety-critical hard real-realtime systems. Recently, Copilot research

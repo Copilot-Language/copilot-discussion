@@ -1,28 +1,26 @@
 \section{Monitor Specification Correctness}~\label{sec:verispec}
 
-As RV matures it will be employed to
-verify increasingly complex properties such as checking complex
-stability properties of a control system or ensuring that a critical
-system is fault-tolerant. As RV is applied to more complex systems, the
-monitors themselves will become increasingly sophisticated and as prone to error
-as the system being monitored.  Applying formal verification
-tools to the monitors to ensure they are correct can help safeguard
-that the last line of defense is actually effective. 
 
-\paragraph{Challenge}  \emph{Assuring the correctness of the monitor
+As RV is applied to ensure increasingly sophisticated properties, the
+monitor specifications themselves will grow in complexity and become
+prone to error.  Our experience with a number of case studies
+involving complex monitor properties is that were able to discover
+many simple theorems that should be true about a specification if it
+is correct. Hence applying formal proof tools to the monitors to
+ensure they are correct can help safeguard that the last line of
+defense is actually effective. Ideally, specification verification
+capabilities should be integrated into the RV framework so engineers
+could write specifications, verify their correctness, and generate
+monitors.
+
+\paragraph{Challenge}  \emph{Assure  the correctness of the monitor
 specification.}   
 
-Ideally, specification verification capabilities should be integrated
-into the RV framework so engineers could write specifications, verify
-their correctness, and generate monitors.  Proof tools based on
-Satisfiability Modulo Theories (\textsc{smt}) and similar advanced
-automated proof techniques have the potential to be effective at
-proving properties about specifications. 
 
 
 \paragraph{Copilot Approach}  
  Copilot supports automated proofs of properties of specification
- properties  through its {\tt Copilot.Theorem} module.  
+ properties  through its {\tt Copilot.Theorem} module.  Applying a 
 ``synchronous observer'' approach~\cite{amast93}, properties \emph{about}
 Copilot programs are specified \emph{within} Copilot itself. In particular,
 properties are encoded with standard Boolean streams and Copilot streams are
@@ -34,19 +32,18 @@ sufficient to encode past-time linear temporal logic~\cite{ptltl}.
 normal Copilot stream of type \lstinline{Stream Bool}. Propositions can be added
 to a specification using the \texttt{prop} and \texttt{theorem} functions,
 where \texttt{theorem} must also be passed a tactic for automatically proving
-the proposition. The Copilot prover was first introduced
+the proposition. Currently, proof tools based on
+Satisfiability Modulo Theories (\textsc{smt})   used to discharge
+proofs.  The Copilot prover was first introduced
 in~\cite{pike-rv-15}, where its utility was demonstrated in assuring
 notoriously subtle voting algorithms to be used for fault-tolerant RV.
 
 In the course of the analysis of the separation criteria, a team of
-NASA domain experts and mathematicians used the PVS interactive prover
+domain experts  used the PVS interactive prover
 to prove theorems that characterize the correctness of the
-criteria. Some these proofs required extensive expert human
-interaction to provide mathematical intuition that remains beyond the
-scope of fully automated proof techniques. As often is the case, many
-of the properties were not so mathematically sophisticated.  We were
+criteria.  We were
 able to apply the Copilot prover  using Z3~\cite{XXX}  to prove
-many of the criteria correctness properties within the Copilot
+many of  these theorems within the Copilot
 framework. Among the properties proved about the horizontal separation
 criteria are
 
@@ -66,16 +63,11 @@ criteria are
 \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
 \epsilon',  \bm{vx},  \bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
 \end{eqnarray*}
+A few of the properties involve complex existential quantifiers over
+the real numbers and would require the use of a interactive prover,
+but combined with testing they were enough to argue that we got the
+specification correct. 
 
-\paragraph{Opportunities} RV monitors offer a rich target for
-researchers building proof engines and static analysis tools.  In
-spite of tremendous improvements in SMT solvers, the continuous math
-used in cyber-physical systems .e have not yet found an automated
-proof engine that can prove properties of formula with trigonometric
-functions. Static analysis techniques, such as abstract interpretation,
-could be applied to show a floating point error might arise before the
-monitor is even generated. Finally, there are opportunities for
-investigating integrating interactive provers in the RV framework. 
 
 %\begin{lstlisting}[frame=single]
 %\lstinine{ horizont(sx, sy, e, vx vy) 

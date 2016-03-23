@@ -35,7 +35,7 @@ entire system fails.
 
 
 \paragraph{Challenge}   \emph{The RV  should not be rendered inoperable by the
- same failure conditions that cause hazards to the SUO. }
+ same failure conditions that cause hazards to the SUO.}
 
 
 \paragraph{Copilot Approach} Fault-tolerant RV has been a ongoing
@@ -56,28 +56,23 @@ other programs running on the same system, redundancy is required to
 tolerate more pernicious faults.
 
 
- Monitors for safety-critical cyber-physical systems typically involve
- sensor data. The aircraft horizontal separation criteria in
- Section~\ref{sec:spec} depends on reliably sensing the position and
- velocity of both systems.  In aerospace, there are numerous
- documented incidents that had the potential to impact safety.  In
- earlier work~\cite{pike-isse-13}, we have tried to address this issue
- in a case study where a system had redundant and Copilot monitors
- performed Byzantine exchange and a majority voting to create a system
- that could tolerate a single Byzantine fault~\cite{pike-isse-13}.
- Fault injection testing was performed along with flight tests.  The
- hardware used in these experiments were commodity microprocessors,
- but we have recently bought Mil-Spec hardened processors are more
- reliable when operating under varying environmental conditions.
+Systems that need be ultrareliable typically have employ redundancy to
+tolerate the most pernicious faults such as \emph{Byzantine fault}
+(i.e., a fault in which different nodes interpret a single broadcast
+message differently.  There are numerous documented incidents in the
+aerospace industry where sensors failed in a Byzantine fashion with
+the potential to affect a vehicle's safety.  The aircraft horizontal separation criteria in
+Section~\ref{sec:req} depends on reliably sensing the position and
+velocity of both systems. In earlier work~\cite{pike-isse-13}, we have
+tried to address this issue in a case study where a system had
+redundant and Copilot monitors performed Byzantine exchange and a
+majority voting to create a system that could tolerate a single
+Byzantine fault~\cite{pike-isse-13}.  Fault injection testing was
+performed along with flight tests.  The hardware used in these
+experiments were commodity microprocessors, but we have recently
+bought Mil-Spec hardened processors that are more reliable when operating
+under varying environmental conditions.
 
-
- \paragraph{Opportunities} Much more work in fault-tolerant RV remains
- to be done and we hope that the broader RV community will take up the
- challenge Static analysis tools have been very effective in detecting
- software faults such as divide by zero errors. Analysis of more
- sophisticated architectural fault tolerance has strained fully
- automated techniques such as model checkers so analysis of realistic
- systems requires inter
 
 % Generally,
 %physical faults in separate FCRs are statistically independent, but under
