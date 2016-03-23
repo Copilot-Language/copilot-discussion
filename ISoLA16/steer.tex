@@ -1,65 +1,64 @@
-\section{Additioanl Challanges }\label{sec:future} 
-We  so far examined challenges and opportunities in assured  RV that
+\section{Additional Challanges }\label{sec:future} 
+The presentation so far has examined challenges in assured RV that
 have been addressed in our own research. In this section, we will
-raise  three of the key additional  challenges that we believe need to be
-addressed in future work. 
+raise three of the key additional challenges that we believe need to
+be addressed in future work.
 
-
-\paragraph{Challenge:}  Verifying the correctness and safety of the
-steering performed once a specification violation is detected. 
-  
-The problem of what to do when a specification has been violated is
-one of the most thorny problems in RV and almost completely
-application dependent.  Most case studies the author has seen simply
-log the violation or raise an alarm for humans to intervene. This has
-been the case in our Copilot case studies. The the case of an
-autonomous robot there putting the system into a quiescent state may
-be a safe default operation depending on the operating environment.
-The research aircraft conflict detection mentioned above has produced
-an algorithm for generating resolution maneuvers that would
-reestablish safe aircraft separation. Our experience in participating
-in UAS flight tests illustrate how difficult the steering problem can
-be. Automating this might seem as simple as killing power to the
-engines; yet aircraft can glide for some distance. The steering
-software may be able to direct the control surfaces to direct the
-vehicle into the ground, but consideration of aircraft dynamics is
-likely needed to close this can be safely done to the boundary of the
-operating zone.  In many domains, the challenge in constructing an
+\paragraph{Safe Steering} The problem of what to do when a
+specification has been violated is one of the most thorny problems in
+high-assurance RV and almost completely application dependent. The
+simplest action is to log the violation for further analysis or raise
+an alarm for humans to intervene, but in many cases the RV system must
+take proactive steps to preserve safety. For an autonomous robot,
+putting the system into a quiescent state may be a safe default
+operation depending on the operating environment.  In the case of an
+adaptive control system, the RV framework may switch to a conventional
+controller, but whether this re-establishes safety depends on many
+factors.  Our experience in participating in UAS flight tests
+illustrate how difficult the steering problem can be as just direct
+the vehicle into the ground to insure the vehicle does not endanger
+those outside of a test range not simple due to the need to consider
+aircraft dynamics.  In many domains, the challenge in constructing an
 assured safe steering algorithm may be as difficult as constructing
 the adaptive autonomous algorithm.
 
-\paragraph{Challenge} Can the monitor detect a violation of the specification and invoke the safety controller in time to preserve safe operation.
-
-Applying RV to application domains such as an  adaptive control system
-that have to act in strict time windows posses  technical
-challenges. The monitor needs to detect  that the adaptive
-controller is about to loose stability in time to  switch to a safe
-controller. In the case of aircraft flight management, the RV system
-needs to detect that  two airplanes are about to lose separation in
-time for the aircraft to take corrective action.   Assured predictive
-monitors are needed, but much work remains to be done. A promising
-approach to monitoring controllers against a loss of stability is
-given in~\cite{}. Researchers using Copilot have shown how  timing
-analysis and  hard real-time scheduling of monitors can ensure that
-monitors are executed at a set time.  Assured predictive monitoring
-remains a research challenge for the RV community.
+\paragraph{Challenge:}  \emph{Verifying the correctness and safety of the
+steering performed once a specification violation is detected.}
+ 
 
 
+\paragraph{Predictive Monitors} Applying RV to application domains
+such as an adaptive control system that have strict timing constraints
+raises many technical challenges. The monitor needs to detect that the
+adaptive controller is about to loose stability in time to switch to a
+safe controller. In the case of our running example, the RV system
+needs to detect that two aircraft are about to lose separation in time
+for them to take corrective action.  Assured predictive monitors are
+needed, but much work remains to be done.  Johnson
+et. al.~\cite{johnson2015tecs} is a promising approach to predictive
+monitoring of controller, but very domain specific. Assured predictive
+monitoring remains a research challenge for the RV community.
 
-\paragraph{Challenge} Assured RV should not introduce security
-vulnerabilities into a system. 
+\paragraph{Challenge:} \emph{The monitor should detect  violations of the specification and invoke the safety controller in time to preserve safe operation.}
 
-Adding more software or  hardware to a system  has the potential to  
-introduce vulnerabilities that that can be exploited by  an
-attacker.  Copilot and many other RV frameworks generate monitors that
-have constant time and constant space execution footprints and
-while this eliminates some common attacks it does not provide general
-protection. If an attacker can trick the systems into a monitor
-specification violation, the triggered steering behavior may itself
-constitute an attack.  Future research is needed in  Identifying attack surfaces
-and suitable techniques to thwart adversaries from turning the RV
-meant to protect a system into a liability that exposes the system to
-attack.
+
+
+
+\paragraph{Secured RV} Adding more software or hardware to a system
+has the potential to introduce vulnerabilities that that can be
+exploited by an attacker.  Copilot and many other RV frameworks
+generate monitors that have constant time and constant space execution
+footprints and while this eliminates some common attacks it does not
+provide general protection. Every sensor and unauthenticated message
+may contribute to the attack surface. If an attacker can trick the
+systems into a monitor specification violation, the triggered steering
+behavior may itself constitute a denial-of-service attack.  Future
+research is needed in Identifying attack surfaces and suitable
+techniques to thwart adversaries from turning the RV meant to protect
+a system into a liability that exposes the system to attack.
+
+\paragraph{Challenge:} \emph{Assured RV should not introduce security
+vulnerabilities into a system.} 
 
 
 

@@ -1,40 +1,46 @@
-\section{Opportunites for Toolbuilders}\label{sec:oportunities} 
-We have fond case studies involving both
-domain and safety experts invaluable at informing our research agenda
-high assurance RV and encourage researchers working in the area to do
-so as well.  Tools that can aide domain experts in validating safety
-properties are in sorely needed.  As in our case study, the safety
-properties of cyber-physical systems are involve continuous
-mathematics. While advances in SMT solvers have been impressive, it is
-still necessary to often resort to interactive theorem provers, which
-require specialized skills that domain experts are not likely to
-obtain.  There are many opportunities to design  domain specific decision procedures
-that can help automate a class of analyses. 
+\section{Better Together}\label{sec:oportunities} 
+High-assurance RV will only become practical if there is accompanying
+integrated tool support for verification and validation.  From the
+perspective of a researcher in high-assurance RV, engaging with the
+communities building static analysis tools and proof engines seems
+obvious.  Especially in light of the fact that regulatory bodies that
+govern many safety-critical systems are increasingly willing to accept
+the analysis produce from such tools as evidence that can be applied to
+certification ~\cite{DO333}. Similarly, there are many features of RV
+that make it a great target for the tool builder. For instance, there are formal
+specifications to work with  and monitor code is generally small and
+conforms to safe coding practices. 
 
+ 
+Several of the challenges we have raised for high-assurance RV are
+really at the system level. Tools that can assist domain experts in
+validating safety properties are sorely needed.  As in our case study,
+the safety properties of cyber-physical systems are involve continuous
+mathematics. While advances in \textsc{smt} solvers have been
+impressive, it is still necessary to often resort to interactive
+theorem provers, which require specialized skills that domain experts
+are not likely to obtain. There are many opportunities to design
+domain specific decision procedures that would make fully automated
+tools at least somewhat more tractable.  
 
-
-At times it can be a daunting task to simply
-ascertain if the values in the specification are present in the act If the RV approach involves
+ Applying static analysis tools to addressing observability
+ issues provide a rich target for tool builders. If the RV approach involves
 instrumenting code, then static analysis can both assist in the
 instrumentation and prove that the instrumentation did not affect the
 correctness of the code. If sampling, static analysis has the
 potential to inform when to sample. 
-  
-  Much more work in fault-tolerant RV remains
- to be done and we hope that the broader RV community will take up the
- challenge Static analysis tools have been very effective in detecting
- software faults such as divide by zero errors. Analysis of more
- sophisticated architectural fault tolerance has strained fully
- automated techniques such as model checkers so analysis of realistic
- systems requires inter
 
+The Challenge of ensuring noninterference between the RV and SUO seems
+like a natural target for static analysis. Effective tools may require
+very precise execution and timing models.  Floating point arithmetic
+is a source of problems that is readily amenable to static analysis.In
+our work, we applied abstract interpretation to monitor source code,
+but  analysis could be done at the specification level with any needed
+proof obligations flowing down to the monitor code. 
 
-\paragraph{Opportunities} RV monitors offer a rich target for
-researchers building proof engines and static analysis tools.  In
-spite of tremendous improvements in SMT solvers, the continuous math
-used in cyber-physical systems .e have not yet found an automated
-proof engine that can prove properties of formula with trigonometric
-functions. Static analysis techniques, such as abstract interpretation,
-could be applied to show a floating point error might arise before the
-monitor is even generated. Finally, there are opportunities for
-investigating integrating interactive provers in the RV framework. 
+Applying tools to verify monitor correctness makes so much sense that
+it should be de rigueur.  In Copilot, we applied deductive
+verification to verify the correctness of the translation from
+specification to monitor code.  Monitors have many characteristics
+that make automatic proofs tractable, but the monitor synthesis must
+generate code that suitable for the tool being used.   
