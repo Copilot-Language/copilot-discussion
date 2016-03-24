@@ -2,9 +2,9 @@
 composed with the SUO so that they are executing in parallel with the
 SUO.  Care must be taken that the RV system itself does not compromise
 the correct functioning of the SUO.  For instance executing monitors
-may impact timing and scheduling. Any instrumentation required by an
-RV system will likely require timing analysis and scheduling be
-redone. In large systems, there are likely to be many monitors
+may impact timing and scheduling. Care must be taken that any
+instrumentation of the SUO does not affect the functional
+correctness. In large systems, there are likely to be many monitors
 running; each monitor might trigger different steering modes. A common
 pattern when things go wrong in complex safety-critical systems is
 that many alerts are sounded simultaneously often placing a burden on

@@ -1,19 +1,17 @@
 \section{From Whence the Specification}~\label{sec:req}
 Sound systems engineering practices  as well
 as regulatory guidelines typically mandate safety-critical systems
-have detailed written requirements and as well as a through safety
-assessment. Safety is a systems level property and  high-assurance RV recognizes
-that if RV specifications are to indeed provide safety guarantees,
+have detailed written requirements and as well as a thorough safety
+assessment. Safety is a systems level property so if RV is  to  provide safety guarantees,
 then the  monitor specifications must flow down from the requirements
 and safety analyses.   Indeed, Rushby's study~\cite{rvRushby,RushbyAIAA09} demonstrated
 that  a convincing safety case~\cite{Kelly98arguingsafety} for an IA
 system protected by RV  demands evidence that the
-monitor specifications are  derived from validated requirements and in
-addition that the monitor specifications should include checks of the assumptions on
+monitor specifications are  derived from validated requirements and, in
+addition, that the monitor specifications should include checks of the assumptions on
 which safe operation of the system rests  are indeed satisfied. 
 and monitors specifications should follow from these.
-Thus leading to our first challenge for
-assured RV.
+
 
 
 \paragraph{Challenge:}   \emph{ Monitor specifications should derive from
@@ -39,8 +37,8 @@ aircraft maneuvers and ensures separation when two conflicting
 aircraft both maneuver. The criteria  have been
 extensively validated by domain experts emplying sophisticated
 simulation as well as mathematical proof using the Prototype
-Verification System (PVS) theorem prover. These criteria were encoded
-as Copilot specificaitons. The criteria for horizontal separation for
+Verification System (PVS) theorem prover. We have encoded
+these conditions as Copilot specificaitons. The criteria for horizontal separation for
 two aircradt is given as follows:
 %$$ \texttt{horizontal\_criteria}(\bm{s}, \epsilon)(\bm{v'})
 %\equiv  \bm{s} \cdot \bm{v'} \geq \epsilon  \frac{\sqrt{\bm{s} \cdot
@@ -52,7 +50,7 @@ two aircradt is given as follows:
 & \wedge &  \epsilon \operatorname{det}(\bm{s},\bm{v})  \leq  0 
 \end{eqnarray*}
 
-
+\noindent 
 where $\bm{s}$ and $\bm{v}$ are the  relative position  and velocity
 vectors for the two aircraft, $\epsilon$ is $1$ or $-1,$  and 
 $\bm{v}$ is the relative velocity vector after a planned maneuver. 
