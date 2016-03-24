@@ -6,32 +6,34 @@
 %    }%
 %}
  
-High assurance  RV must meet the high level of reliability that is expected of
-the of the system.  Often mandated by regulatory
-guidelines~\cite{SAE4761}, sfety engineers employ a range of established
-methods to identify hazards and failure modes~\cite{Levenson}. The level of desired
+Safety engineers employ a range of established methods to identify
+hazards and failure modes~\cite{Levenson}.  The level of desired
 reliability determines what faults the system must be designed to
-tolerate. If RV is to be the guarantor of safety, then it must be
-designed to be \emph{fault-tolerant}~\cite{butler-faults}, meaning it
-that continues to provide its required functionality in the presence
-of faults.  A fault-tolerant system must not contain a \emph{single
-  point of failure} such that if the single subsystem fails, the
-entire system fails.
-
+tolerate. If RV is to be the guarantor of safety, then it must at
+least meet the level of reliability demanded of the system as a whole.
+This implies that the RV be designed to be
+\emph{fault-tolerant}~\cite{butler-faults}, meaning it that continues
+to provide its required functionality in the presence of faults.  A
+fault-tolerant system must not contain a \emph{single point of
+  failure} such that if the single subsystem fails, the entire system
+fails.
 
  Ideally, the RV and the SUO should not be subject to common
  modes of failure.  For instance, software errors in the SUO such as
  numerical overflows an memory leaks that can render a system
- inoperable should not affect the RV.  A fault tolerant system must
- be robust in the presence of hardware faults such as sensor failures
- and voltage spikes as well.  A \emph{fault-containment region} (FCR)
+ inoperable should not affect the RV.  A fault-tolerant system must
+ also be robust in the presence of hardware faults such as sensor failures
+ and voltage spikes.  A \emph{fault-containment region} (FCR)
  is a region in a system designed to ensure faults do not propagate to
  other regions~\cite{Rushby01:buscompare}.   The 
  easiest way to ensure this is to physically isolate one FCR from
  another.  However, FCRs may need to communicate, hence they share
  channels. An FCR containing a monitor may need to share a channel
  with the SUO.  Care must be taken to ensure faults cannot propagate
- over these channels. 
+ over these channels. In the case of ultra-reliable systems, the only
+ way to achieve the level of fault tolerance demanded of the system is
+ by hardware replication that demands complex hardware redundancy
+ management software. 
 
 
 \paragraph{Challenge}   \emph{The RV  should not be rendered inoperable by the
@@ -46,15 +48,13 @@ service.  The Aeronautical Radio, Incorporated (ARINC)
 653~\cite{ARINC653} compliant hard real-time operating systems RTOS
 provides temporal and spatial partitioning guarantees so applications
 can safely share resources.  The Copilot group has been investigating
-design pattern for implementing fault-tolerant RV on such
-platforms~\cite{Kaveh15}. Monitors run on the same nodes as the
+design patterns for implementing fault-tolerant RV on such
+platforms~\cite{Kaveh15}. Monitors are run on the same nodes as the
 software being monitored, but in separate partitions. Monitoring tasks
 executing in a separate partition is done through very circumscribed
 channels that preserve the isolation guarantees.  The spacial and
 temporal protections provided by ARINC 653 keep the monitors safe from
-other programs running on the same system, redundancy is required to
-tolerate more pernicious faults.
-
+other programs running on the same system.
 
 Systems that need be ultrareliable typically have employ redundancy to
 tolerate the most pernicious faults such as \emph{Byzantine fault}
@@ -65,7 +65,7 @@ the potential to affect a vehicle's safety.  The aircraft horizontal separation 
 Section~\ref{sec:req} depends on reliably sensing the position and
 velocity of both systems. In earlier work~\cite{pike-isse-13}, we have
 tried to address this issue in a case study where a system had
-redundant and Copilot monitors performed Byzantine exchange and a
+redundant sensors and Copilot monitors performed Byzantine exchange and a
 majority voting to create a system that could tolerate a single
 Byzantine fault~\cite{pike-isse-13}.  Fault injection testing was
 performed along with flight tests.  The hardware used in these

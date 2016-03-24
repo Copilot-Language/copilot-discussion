@@ -75,7 +75,7 @@ Copilot is a \emph{stream} based language where a stream is an infinite ordered
 sequence of values that must conform to the same type.  All transformations of
 data in Copilot must be propagated through streams. Copilot
 guarantees that specifications compile to constant-time and constant-space
-implementations to update stream states. Copilot streams mimic both the syntax and semantics of
+implementations. Copilot streams mimic both the syntax and semantics of
 Haskell lazy lists with the exception that  operators are
 automatically promoted point-wise to the list level.
 
@@ -99,7 +99,7 @@ done.  At this point, we have transformed the program into the ``core''
 language, an intermediate representation.  The core package contains
 an  interpreter  that can be viewed as an operational semantics for
 the language.   The back-ends translate a Copilot core program into the language of another
-Haskell-hosted EDSL for code generation.  We use the
+Haskell-hosted EDSL for code generation.  We make use of 
 Symbolic Bit Vectors (SBV),  an EDSL developed by Levent Erk\"{o}k. 
 SBV also contains a C-code generator, which we use to generate C
 monitors.  Aspects of the toolchain relevant to high assurance are covered in more

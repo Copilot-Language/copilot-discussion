@@ -1,22 +1,25 @@
 \section{Do No Harm} \label{sec:noninter} The RV components must be
 composed with the SUO so that they are executing in parallel with the
-SUO.  Care must be taken that the RV system itself  does not compromise the correct functioning of the
-SUO.    For instance executing monitors may  impact timing and
-scheduling. Any instrumentation required by an RV system will likely
-require timing analysis and scheduling be redone. In large systems,
-there are likely to be many monitors running; each monitor might
-trigger different steering modes. A common pattern when things go
-wrong in complex safety-critical systems is that many alerts are
-sounded simultaneously often placing a burden on a human operator to
-sort things out.  One can easily envision an analogous situation where
-several monitors detect violations, triggering their respective
-steering procedures. Coensure that these
-different steering modules do not interact with each out in ways that
-could compromise safety. In summary, high-assurance  RV must uphold the Hippocratic vow ``to do no
-  harm''.   Ideally, RV frameworks should come equipped with a
-  theory of noninterference
+SUO.  Care must be taken that the RV system itself does not compromise
+the correct functioning of the SUO.  For instance executing monitors
+may impact timing and scheduling. Any instrumentation required by an
+RV system will likely require timing analysis and scheduling be
+redone. In large systems, there are likely to be many monitors
+running; each monitor might trigger different steering modes. A common
+pattern when things go wrong in complex safety-critical systems is
+that many alerts are sounded simultaneously often placing a burden on
+a human operator to sort things out.  One can easily envision an
+analogous situation where several monitors detect violations,
+triggering their respective steering procedures. Hence it is necessary
+to verify that these different steering modules do not interact with
+each other in ways that could compromise safety. In summary,
+high-assurance RV must uphold the Hippocratic vow ``to do no harm''.
+Ideally, we would formulate an noninterference theorem and the RV
+framework would produce a proof certificate that the composed system
+satisfies the property.
 
-\paragraph{Challenge} \emph{Assured RV must safely compose with the
+
+\paragraph{Challenge:} \emph{Assured RV must safely compose with the
   SUO.}
 
 \paragraph{Copilot Approach}  
@@ -28,7 +31,7 @@ with the SUO. Running monitors in separate partitions on an ARINC 653
 compliant RTOS as in Section~\ref{sec:ft} ensures that the any fault
 in the RV will not negatively affect the executing SUO. The RTOS
 scheduler also provides guarantees that a missed deadline in the RV
-does not affect the SUO. 
+does not affect the SUO.
 
  
 

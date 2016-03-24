@@ -13,7 +13,7 @@ predicable and existing regulatory guidance  such as
 DO-178~\cite{DO178B}  do not  have provisions to
 assure safety-critical systems that are not predictable at certification. 
 Yet technological advances are enabling the development of increasingly
-autonomous (IA) cyber-physical  that modify their behavior in response
+autonomous (IA) cyber-physical  systems that modify their behavior in response
 to the external environment and learn from their experience.  While
 unmanned aircraft systems (UAS) and self-driving cars have the
 potential of transforming society in many beneficial ways, they also
@@ -30,37 +30,35 @@ detect and respond to property violations at runtime, has the
 potential to enable the safe operation of safety-critical systems that
 are too complex to formally verify or fully test.  Technically
 speaking, an RV monitor takes a logical specification $\phi$ and
-execution trace $\tau$ of state information of the SUO and decides
-wheter $\tau$ satisfies $\phi$. The \emph{Simplex
-  Architecture}~\cite{simplex} provides an architectural pattern for
-RV. A monitor checks that the executing system under observation (SUO)
-satisfies a specification and If the property is violated, the RV
-system will the switch to system to the control of a more conservative
+execution trace $\tau$ of state information of the system under
+observation (SUO) and decides wheter $\tau$ satisfies $\phi$. The
+\emph{Simplex Architecture}~\cite{simplex} provides a model
+architectural pattern for RV, where a monitor checks that the
+executing SUO satisfies a specification and If the property is
+violated, the RV system will switch control to a more conservative
 component that can be assured using conventional means that
-\emph{steers} the system into a safe state. Although there have been
-considerable progress in the RV community, there are considerable
-barriers to realizing RV that is trusted to safeguard safety-critical
-system.
+\emph{steers} the system into a safe state.
 
-Copilot~\cite{copilot, pike-isse-13}  is an RV framework  targeted at
-safety-critical hard real-realtime systems. Recently, Copilot research
-has  focused on a program on \emph{high-assurance} RV targeting IA
-applications that cannot be assured by conventional means.
+\emph{High-assurance} RV provides an assured level of safety even when
+the SUO itself cannot be verified  by conventional
+means. Copilot~\cite{copilot, pike-isse-13} is an RV framework
+targeted at safety-critical hard real-realtime system, which we have
+recently applied to our program of high-assurance RV.  
 
 
-\paragraph{Contributions'} We will present a number of challenges to
-achieving high-assurance RV that have been identified during the
-course of our investigation.  When appropriate, we will survey how we
-have approached these challenge in Copilot.  A running example is  taken
-from our research on using RV to ensure that aircraft  maintain safe
-distance of separation. An general theme of our
+\paragraph{Contributions:} During the course of our research on we
+have been guided by the general question of ``what will take to
+convince someone in authority to use high-assurance RV so safeguard a
+system that cannot be otherwise assured.''  While we are a long way
+from the point of convincing a regulatory authority, we believe we
+have identified a number of challenges impede actualizing
+high-assurance RV.  We discuss how we have approached these challenge
+in Copilot with the help of a running example. A general theme of our
 work is the application of lightweight formal methods to achieve
-high-assurance.  Safety is a systems property so the scope of the  challenge
-is necessarily broad ranging from how one arrives at the specification
-to be monitored to necessary capabilities the  RV framework must meet.
-RV components are considerably simpler than the system as a whole and
-consequently we have found static analysis and other light-weight
-formal methods tools can play a very effective role in high assurance
-RV.  We will highlight many opportunities for applying light-weight
-formal methods tools to high-assurance RV in hopes of fostering
-greater collaboration between the RV and tool communities.
+high-assurance.  Safety is a systems property so the scope of the
+challenge is necessarily broad ranging from how one arrives at the
+specification to be monitored to necessary capabilities the RV
+framework must meet. We will highlight many opportunities for applying
+light-weight formal methods tools to high-assurance RV in hopes of
+fostering greater collaboration between the RV and tool communities.
+

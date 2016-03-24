@@ -13,12 +13,12 @@ capabilities should be integrated into the RV framework so engineers
 could write specifications, verify their correctness, and generate
 monitors.
 
-\paragraph{Challenge}  \emph{Assure  the correctness of the monitor
+\paragraph{Challenge:}  \emph{Assure  the correctness of the monitor
 specification.}   
 
 
 
-\paragraph{Copilot Approach}  
+\paragraph{Copilot Approach:}  
  Copilot supports automated proofs of properties of specification
  properties  through its {\tt Copilot.Theorem} module.  Applying a 
 ``synchronous observer'' approach~\cite{amast93}, properties \emph{about}
@@ -32,20 +32,18 @@ sufficient to encode past-time linear temporal logic~\cite{ptltl}.
 normal Copilot stream of type \lstinline{Stream Bool}. Propositions can be added
 to a specification using the \texttt{prop} and \texttt{theorem} functions,
 where \texttt{theorem} must also be passed a tactic for automatically proving
-the proposition. Currently, proof tools based on
-Satisfiability Modulo Theories (\textsc{smt})   used to discharge
+the proposition. Currently, proof engines  based on
+Satisfiability Modulo Theories (\textsc{smt})   are used to discharge
 proofs.  The Copilot prover was first introduced
 in~\cite{pike-rv-15}, where its utility was demonstrated in assuring
 notoriously subtle voting algorithms to be used for fault-tolerant RV.
 
 In the course of the analysis of the separation criteria, a team of
-domain experts  used the PVS interactive prover
-to prove theorems that characterize the correctness of the
-criteria.  We were
-able to apply the Copilot prover  using Z3~\cite{XXX}  to prove
-many of  these theorems within the Copilot
-framework. Among the properties proved about the horizontal separation
-criteria are
+domain experts used the PVS interactive prover to prove theorems that
+characterize the correctness of the criteria.  We were able to apply
+the Copilot prover using Z3~\cite{XXX} to prove many of these theorems
+within the Copilot framework. Among the properties proved about the
+horizontal separation criteria are
 
 \begin{eqnarray*}
 \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
@@ -65,7 +63,7 @@ criteria are
 \end{eqnarray*}
 A few of the properties involve complex existential quantifiers over
 the real numbers and would require the use of a interactive prover,
-but combined with testing they were enough to argue that we got the
+but combined with testing we have a convincing argument that we got the
 specification correct. 
 
 

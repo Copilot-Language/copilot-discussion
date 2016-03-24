@@ -12,12 +12,12 @@ into the monitors?  Is the data available in the same coordinate
 systems demanded of the specification?  Can we ensure the integrity
 and provenance of the data being observed?
 
-\paragraph{Challenge} \emph{Are the state and environmental variables in the
+\paragraph{Challenge:} \emph{Are the state and environmental variables in the
 specification  observable.}  
 
 
  
-  \paragraph{Copilot Approach} 
+  \paragraph{Copilot Approach:}
   How an RV framework obtains state data impacts the properties that
   can be monitored.  Many of RV frameworks such as MAC~\cite{KimLKS04}
   and MOP~\cite{ChenR05} instrument the software and hardware of the
@@ -40,14 +40,12 @@ specification  observable.}
 
   The aircraft safe separation criteria specification introduced in
   Section~\ref{sec:req} requires the monitor observe state data for
-  both the aircraft the monitor is executing on as well as state for
-  the ``intruder'' aircraft which is obtained by
-  communication.  Meaning monitors required sampling data from
+  both the aircraft the monitor is executing on as well as the
+  ``intruder'' aircraft.  Meaning monitors required sampling data from
   executing programs (planned maneuver), onboard positioning sensors,
   and data broadcast from other vehicles.  For our experiments, the
-  aircraft  position data  had
-  to be converted from World Geodetic System latitude and longitude to
-  ECEF. 
+  aircraft position data had to be converted from World Geodetic
+  System latitude and longitude to ECEF.
 
   
 

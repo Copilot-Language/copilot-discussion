@@ -7,15 +7,15 @@
 
 
 
-\paragraph{Challenge} There should be assurance arguments that
+\paragraph{Challenge:} There should be assurance arguments that
 executable monitors correctly implement the specification.  The monitor implementation
 should not be susceptible to unsafe or undefined behaviors such as
 buffer and floating point overflows. 
 
-\paragraph{Copilot Approach}    
+\paragraph{Copilot Approach:}    
 The  small  Copilot interpreter can be seen as providing an executable
 operational semantics for the Copilot language.  As reported
-in~\cite{pike-icfp-12} , our first efforts in monitor
+in~\cite{pike-icfp-12}, our first efforts in monitor
 synthesis assurance were  to support  regression tests for the semantics
 of the EDSL using Haskell's QuickCheck~\cite{qc} property testing
 engine. Type-correct Copilot programs get randomly generated and

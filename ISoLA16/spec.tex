@@ -1,25 +1,26 @@
 \section{From Whence the Specification}~\label{sec:req}
-
-If high-assurance RV is to ensure safety of autonomous systems, then great care must be given to
-the monitor specifications.   Rushby's study~\cite{rvRushby,RushbyAIAA09} demonstrated
-that  a convincing safety case~\cite{Kelly98arguingsafety} for an IA
-system protected by RV will require that  validated evidence that the
-monitor specifications should ensures that systems safety properties
-are satisfied and check  that the set of assumptions on
-which safe operation of the system rests  are indeed satisfied. 
 Sound systems engineering practices  as well
 as regulatory guidelines typically mandate safety-critical systems
 have detailed written requirements and as well as a through safety
-assessment and monitors specifications should follow from these.
+assessment. Safety is a systems level property and  high-assurance RV recognizes
+that if RV specifications are to indeed provide safety guarantees,
+then the  monitor specifications must flow down from the requirements
+and safety analyses.   Indeed, Rushby's study~\cite{rvRushby,RushbyAIAA09} demonstrated
+that  a convincing safety case~\cite{Kelly98arguingsafety} for an IA
+system protected by RV  demands evidence that the
+monitor specifications are  derived from validated requirements and in
+addition that the monitor specifications should include checks of the assumptions on
+which safe operation of the system rests  are indeed satisfied. 
+and monitors specifications should follow from these.
 Thus leading to our first challenge for
 assured RV.
 
 
-\paragraph{Challenge}   \emph{ Monitor specifications should derive from
+\paragraph{Challenge:}   \emph{ Monitor specifications should derive from
   system level requirements and assumptions that have been validated
   by domain experts.} 
 
-\paragraph{Copilot Approach} We are conducting case studies informed
+\paragraph{Copilot Approach:} We are conducting case studies informed
 by collaborations with colleagues who are developing new concepts that
 will enable aircraft to perform autonomous flight by self-optimizing
 their four-dimensional trajectories while conforming to constraints
