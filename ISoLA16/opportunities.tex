@@ -9,7 +9,7 @@ the analysis produce from such tools as evidence that can be applied to
 certification ~\cite{DO333}. Similarly, there are many features of RV
 that make it a great target for the tool builder. For instance, there are formal
 specifications to work with  and monitor code is generally small and
-conforms to safe coding practices. 
+conforms to coding practices that are friendly to static analysis. 
 
  
 Several of the challenges we have raised for high-assurance RV are
@@ -23,16 +23,13 @@ are not likely to obtain. There are many opportunities to design
 domain specific decision procedures that would make fully automated
 tools at least somewhat more tractable.  
 
- Applying static analysis tools to addressing observability
- issues provide a rich target for tool builders. If the RV approach involves
-instrumenting code, then static analysis can both assist in the
-instrumentation and prove that the instrumentation did not affect the
-correctness of the code. If sampling, static analysis has the
-potential to inform when to sample. 
+The problem of RV observability provides a rich source of problems for tool builders. If the RV
+approach involves instrumenting code, then static analysis can both
+assist in the instrumentation and prove that the instrumentation did
+not affect the correctness of the code. If sampling, static analysis
+has the potential to inform when to sample.
 
-The Challenge of ensuring noninterference between the RV and SUO seems
-like a natural target for static analysis. Effective tools may require
-very precise execution and timing models.  Floating point arithmetic
+Floating point arithmetic
 is a source of problems that is readily amenable to static analysis.In
 our work, we applied abstract interpretation to monitor source code,
 but  analysis could be done at the specification level with any needed

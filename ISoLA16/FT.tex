@@ -51,21 +51,22 @@ can safely share resources.  The Copilot group has been investigating
 design patterns for implementing fault-tolerant RV on such
 platforms~\cite{Kaveh15}. Monitors are run on the same nodes as the
 software being monitored, but in separate partitions. Monitoring tasks
-executing in a separate partition is done through very circumscribed
+executing in a separate partition observe the state of the executing
+program through very circumscribed
 channels that preserve the isolation guarantees.  The spacial and
 temporal protections provided by ARINC 653 keep the monitors safe from
 other programs running on the same system.
 
-Systems that need be ultrareliable typically have employ redundancy to
+Systems that need be ultrareliable typically must employ redundancy to
 tolerate the most pernicious faults such as \emph{Byzantine fault}
 (i.e., a fault in which different nodes interpret a single broadcast
-message differently.  There are numerous documented incidents in the
-aerospace industry where sensors failed in a Byzantine fashion with
+message differently.  There are have been  documented incidents in
+critical avionics  where sensors failed in a Byzantine fashion with
 the potential to affect a vehicle's safety.  The aircraft horizontal separation criteria in
 Section~\ref{sec:req} depends on reliably sensing the position and
 velocity of both systems. In earlier work~\cite{pike-isse-13}, we have
-tried to address this issue in a case study where a system had
-redundant sensors and Copilot monitors performed Byzantine exchange and a
+ addressed this issue in a case study where a system had
+redundant sensors and Copilot monitors performed Byzantine exchange and 
 majority voting to create a system that could tolerate a single
 Byzantine fault~\cite{pike-isse-13}.  Fault injection testing was
 performed along with flight tests.  The hardware used in these

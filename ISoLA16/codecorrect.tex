@@ -1,5 +1,5 @@
 \section{Correct monitors} \label{sec:codecorrect} 
- RV frameworks employ sophisticated algorithms to synthesize  monitors
+ RV frameworks apply sophisticated algorithms to synthesize  monitors
  from specifications. In safety-critical systems, subtle errors in the
  translation process can have potentially catastrophic
  consequences and consequently, a safety case for assured RV must
@@ -20,7 +20,7 @@ synthesis assurance were  to support  regression tests for the semantics
 of the EDSL using Haskell's QuickCheck~\cite{qc} property testing
 engine. Type-correct Copilot programs get randomly generated and
 output from the interpreter are compared against the actual
-monitor. Quickcheck testing easy to implement and uncovered 
+monitor. Quickcheck testing uncovered 
 a number of bugs during early development of the monitor synthesis
 software. Among those bugs caught were forgotten witnesses needed by
 the code generation tools. The testing also highlighted issues
@@ -38,7 +38,7 @@ representation independent of the monitor generation process. The
 contracts are written in the ANSI C Specification Language
 (ACSL)~\cite{baudin09acsl}, an assertion language for specifying
 behavioral properties of C programs in first-order logic.  Each file has a contract  with an ACSL 
-post-condition that basically specifying the subexpression of the core
+post-condition  specifying the subexpression of the core
 AST representation that the function should  implement. 
 Frama-C's~\cite{framac} WP deductive verification engine is employed
 to prove that the code does indeed satisfy the contract. Deductive
@@ -75,10 +75,10 @@ contract.
 
 While the current analysis demonstrates a faithful translation from
 core language to C code, this analysis perform elides the issues that
-arise performing floating point. Applying Frarma-C's abstract
-interpretation value analysis plug exposed the need to ensure that
-there are no floating point infinite values  or not a number (NaN).
-In the case of the \texttt{ext\_sqrt\_9\_arg0} function, the value
+arise performing floating point arithmetic. We apply the  Frama-C's abstract
+interpretation value analysis plugin  to detect when floating point
+arithmetic produces infinite values  or not a number (NaN).
+When applied to the  \texttt{ext\_sqrt\_9\_arg0} function, the value
 analysis produces warnings:
 \begin{Verbatim}[fontsize=\scriptsize]
 \ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double 
@@ -89,14 +89,14 @@ ext_sqrt_9_arg0.c:42:[kernel] warning: non-finite double
          assert \is_finite((double)(s0-s6));
 ext_sqrt_9_arg0.c:30:[value] Function ext_sqrt_9_arg0: postcondition got status unknown.
 \end{Verbatim}
-indicating that steps must be taken to ensure that the two floating
+indicating that steps must be taken to guarantee  that the two floating
 point operations do not result in errors.  Domain specific knowledge
 on the  bounds on the velocity and state vectors  eliminated this
 error.  At present, we must add domain specific knowledge to the
 contracts by hand, but intend to explore ways to better propagate such
 information during monitor generation.  
 
-\paragraph{Assurance All The Way Down} 
+\paragraph{Assurance All The Way Down:} 
 Having assured that the C code implementing the monitor is correct,
 how can we be sure that the executable binary code correctly
 implements the C program. For Copilot, we have experimented

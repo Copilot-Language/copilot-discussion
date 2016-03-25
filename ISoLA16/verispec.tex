@@ -1,17 +1,17 @@
 \section{Monitor Specification Correctness}~\label{sec:verispec}
 
 
-As RV is applied to ensure increasingly sophisticated properties, the
+As RV is applied to  guarantee sophisticated properties, the
 monitor specifications themselves will grow in complexity and become
 prone to error.  Our experience with a number of case studies
 involving complex monitor properties is that were able to discover
 many simple theorems that should be true about a specification if it
 is correct. Hence applying formal proof tools to the monitors to
-ensure they are correct can help safeguard that the last line of
+ensure they are correct can safeguard that the last line of
 defense is actually effective. Ideally, specification verification
 capabilities should be integrated into the RV framework so engineers
 could write specifications, verify their correctness, and generate
-monitors.
+monitors in a seamless fashion.
 
 \paragraph{Challenge:}  \emph{Assure  the correctness of the monitor
 specification.}   
@@ -61,7 +61,7 @@ horizontal separation criteria are
 \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
 \epsilon',  \bm{vx},  \bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
 \end{eqnarray*}
-A few of the properties involve complex existential quantifiers over
+A few of the properties proved in PVS  involve complex existential quantifiers over
 the real numbers and would require the use of a interactive prover,
 but combined with testing we have a convincing argument that we got the
 specification correct. 
