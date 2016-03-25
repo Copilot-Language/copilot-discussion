@@ -97,10 +97,9 @@ observable sharing~\cite{gill}) and then some domain-specific type-checking is
 done.  At this point, we have transformed the program into the ``core''
 language, an intermediate representation.  The core package contains
 an  interpreter  that can be viewed as an operational semantics for
-the language.   The back-ends translate a Copilot core program into the language of another
-Haskell-hosted EDSL for code generation.  We make use of 
-Symbolic Bit Vectors (SBV),  an EDSL developed by Levent Erk\"{o}k. 
-SBV also contains a C-code generator, which we use to generate C
+the language.   The back-end translates a Copilot core program into the language of another
+Haskell-hosted EDSL, 
+Symbolic Bit Vectors (SBV),  an EDSL developed by Levent Erk\"{o}k, which we use to generate C
 monitors.  Aspects of the toolchain relevant to high assurance are covered in more
 detail later
 
