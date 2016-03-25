@@ -1,6 +1,5 @@
 \section{Monitor Specification Correctness}~\label{sec:verispec}
 
-
 As RV is applied to  guarantee sophisticated properties, the
 monitor specifications themselves will grow in complexity and become
 prone to error.  Our experience with a number of case studies
@@ -15,8 +14,6 @@ monitors in a seamless fashion.
 
 \paragraph{Challenge:}  \emph{Assure  the correctness of the monitor
 specification.}   
-
-
 
 \paragraph{Copilot Approach:}  
  Copilot supports automated proofs of properties of specification
@@ -58,8 +55,7 @@ horizontal separation criteria are
 \epsilon,\bm{vx},\bm{vy})\\
 ( \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
 \epsilon,  \bm{vx},  \bm{vy})  \wedge  &&\\
-\texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
-\epsilon',  \bm{vx},  \bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
+\texttt{horiz\_criteria}(\bm{sx},  \bm{sy}, \epsilon',  \bm{vx},  \bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
 \end{eqnarray*}
 A few of the properties proved in PVS  involve complex existential quantifiers over
 the real numbers and would require the use of a interactive prover,
