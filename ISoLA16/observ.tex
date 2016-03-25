@@ -5,19 +5,19 @@ challenges of RV. In embedded systems the RV specification often
 involves data from a number of different types of data sources,
 including state data of executing programs, sensor data, as well as
 data that is communicated from other systems.  The systems safety
-properties of cyber-physical systems are often formulated by the
-aerospace and automobile engineers that are domain experts, but in
-practice they usually have little understanding of the computing
-systems so the RV engineer needs to be very proactive in addressing
-the observability issue. In embedded systems, the closed nature of the
-hardware platforms and the propriety issues can make it impossible to
-observe the information required in the specification.  Additional
-sensors may be needed or communication data formats changed.  At times
-it is necessary to change the specification so that it only depends on
-observable data.  The observability issue may seem like
-an``engineering detail'', but based on our experience it's often a
-significant often a significant obstacle causing delays, frustration,
-and sometimes preventing progress altogether.
+properties of cyber-physical systems are often formulated by aerospace
+and automobile engineers that are domain experts, but in can have
+varying degrees of understanding of the computing systems so the RV
+engineer needs to be very proactive in addressing the observability
+issue. In embedded systems, the closed nature of the hardware
+platforms and propriety issues can make it impossible to observe the
+information required in the specification.  Additional sensors may be
+needed or communication data formats changed.  At times it is
+necessary to change the specification so that it only depends on
+observable data.  The observability issue may seem like an
+``engineering detail'', but based on our experience it is often a
+significant obstacle resulting in  delays, frustration, and sometimes
+preventing progress altogether.
 
 
 \paragraph{Challenge:} \emph{Are the state and environmental variables in the
@@ -43,7 +43,7 @@ specification  observable?}
   guarantees, but we cannot make strong guarantees running on less
   specialized systems.
 
-A critical lesson learned in the course of conducting may case studies
+A critical lesson learned in the course of conducting many case studies
 is to ask questions about observability early and often. 
 If monitoring the state of an executing program, is it possible that
 the monitor fails to detect a state change?  It is often necessary to
@@ -56,9 +56,9 @@ and provenance of the data being observed?
 
 
   The aircraft safe separation criteria specification introduced in
-  Section~\ref{sec:req} requires the monitor observe state data for
+  Section~\ref{sec:req} requires the monitor to  observe state data for
   both the aircraft the monitor is executing on as well as the
-  ``intruder'' aircraft.  Meaning monitors required sampling data from
+  ``intruder'' aircraft.  Hence the monitors must sample data from
   executing programs (planned maneuver), onboard positioning sensors,
   and data broadcast from other vehicles.  For our experiments, the
   aircraft position data had to be converted from World Geodetic

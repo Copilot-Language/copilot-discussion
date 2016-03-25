@@ -21,8 +21,7 @@ pose new dangers to public safety. The algorithmic methods such as
 machine learning that enable autonomy lack the salient feature of
 being predictable since the system's behavior depends on what it has
 learned.  Consequently, the  problem  of assuring safety-critical IA is
-both a barrier to industrial use of  as well as a 
-systems is a considerable research challenge~\cite{NRC14}.
+both a barrier to industrial use of  as well as a research challenge~\cite{NRC14}.
 
 
 \emph{Runtime verification} (RV)~\cite{monitors}, where monitors
@@ -34,7 +33,7 @@ execution trace $\tau$ of state information of the system under
 observation (SUO) and decides wheter $\tau$ satisfies $\phi$. The
 \emph{Simplex Architecture}~\cite{simplex} provides a model
 architectural pattern for RV, where a monitor checks that the
-executing SUO satisfies a specification and If the property is
+executing SUO satisfies a specification and if the property is
 violated, the RV system will switch control to a more conservative
 component that can be assured using conventional means that
 \emph{steers} the system into a safe state.
@@ -42,15 +41,14 @@ component that can be assured using conventional means that
 \emph{High-assurance} RV provides an assured level of safety even when
 the SUO itself cannot be verified  by conventional
 means. Copilot~\cite{copilot, pike-isse-13} is an RV framework
-targeted at safety-critical hard real-realtime system, which we have
+targeted at safety-critical hard real-realtime systems, which we have
 recently applied to our program of high-assurance RV.  
 
 
-\paragraph{Contributions:} During the course of our research on we
-have been guided by the general question of ``what questions must be
-addressed  to make a
-convincing case that  high-assurance RV can safeguard a
-system that cannot be otherwise assured.''  In this paper, we
+\paragraph{Contributions:} During the course of our research we have
+been guided by the question ``what
+ issues must be  addressed in a convincing argument  that  high-assurance RV can safeguard a
+system that cannot be otherwise assured?''  In this paper, we
 chronicle a number of  challenges we have identified that must be
 thoroughly addressed in order to actualize high-assurance RV.  We hope
 that this helps inform other researchers that wish to apply RV to

@@ -1,7 +1,7 @@
 \section{From Whence the Specification}~\label{sec:req}
 Sound systems engineering practices  as well
 as regulatory guidelines typically mandate safety-critical systems
-have detailed written requirements and as well as a thorough safety
+have detailed written requirements as well as a thorough safety
 assessment. Safety is a systems level property so if RV is  to  provide safety guarantees,
 then the  monitor specifications must flow down from the requirements
 and safety analyses.   Indeed, Rushby's study~\cite{rvRushby,RushbyAIAA09} demonstrated
@@ -9,8 +9,7 @@ that  a convincing safety case~\cite{Kelly98arguingsafety} for an IA
 system protected by RV  demands evidence that the
 monitor specifications are  derived from validated requirements and, in
 addition, that the monitor specifications should include checks of the assumptions on
-which safe operation of the system rests  are indeed satisfied. 
-and monitors specifications should follow from these.
+which safe operation of the system rests  are indeed satisfied.
 
 
 
@@ -35,8 +34,8 @@ called \emph{criteria}~\cite{NM2011NASA,NMH14ATIO} that characterize
 those resolution maneuvers that both ensure safe separation when one
 aircraft maneuvers and ensures separation when two conflicting
 aircraft both maneuver. The criteria  have been
-extensively validated by domain experts emplying sophisticated
-simulation as well as mathematical proof using the Prototype
+extensively validated by domain experts who applied sophisticated
+simulations as well as performing formal mathematical proofs using   the Prototype
 Verification System (PVS) theorem prover. We have encoded
 these conditions as Copilot specificaitons. The criteria for horizontal separation for
 two aircradt is given as follows:
@@ -74,11 +73,11 @@ coordinates.  This is easily encoded in  Copilot's EDSL as:
 %-- Horizontal Criterion for Conflict Resolution
 %----------------------------------------
 \begin{lstlisting}[frame=single]
-hor_rr :: Stream Double -> Stream Double -> Stream Double -> Stream Double -> Stream Double -> Stream Double
-hor_rr sx sy e v'x v'y = (sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (minHorSep)
+hor_rr :: Stream Double -> Stream Double -> Stream Double
+hor_rr sx sy= (sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (minHorSep)
 
 horizontalCriterionForConflictResolution :: Stream Double -> Stream Double -> Stream Double -> Stream Double -> Stream Double -> Stream Bool
-horizontalCriterionForConflictResolution sx sy e v'x v'y = ((scalar2dim sx sy v'x v'y) >= (e * (hor_rr sx sy e v'x v'y) * (det2dim sx sy v'x v'y)) ) && ( ((det2dim sx sy v'x v'y) *e)  <= 0.0)
+horizontalCriterionForConflictResolution sx sy e vx vy = ((scalar2dim sx sy vx vy) >= (e * (hor_rr sx sy e vx vy) * (det2dim sx sy vx vy)) ) && ( ((det2dim sx sy vx vy) *e)  <= 0.0)
 \end{lstlisting}
 
 Formalizing the assumptions about the reliability of communicating

@@ -67,12 +67,11 @@ thick ]
         \label{fig:toolchain}
         \end{figure}
 
-Copilot is a domain specific language (DSL)  embedded in the functional
+Copilot is a domain specific language  embedded (EDSL) in the functional
 programming language Haskell~\cite{Haskell98}   tailored to
 programming monitors for hard real-time, reactive systems.
 
-Copilot is a \emph{stream} based language where a stream is an infinite ordered
-sequence of values that must conform to the same type.  All transformations of
+Copilot is a \emph{stream} based language where a stream is an infinite sequence of values that must conform to the same type.  All transformations of
 data in Copilot must be propagated through streams. Copilot
 guarantees that specifications compile to constant-time and constant-space
 implementations. Copilot streams mimic both the syntax and semantics of

@@ -3,7 +3,7 @@
  from specifications. In safety-critical systems, subtle errors in the
  translation process can have potentially catastrophic
  consequences and consequently, a safety case for assured RV must
- provide evidence of the correctness the translation process.
+ provide evidence of the correctness of the translation process.
 
 
 
@@ -19,12 +19,12 @@ in~\cite{pike-icfp-12}, our first efforts in monitor
 synthesis assurance were  to support  regression tests for the semantics
 of the EDSL using Haskell's QuickCheck~\cite{qc} property testing
 engine. Type-correct Copilot programs get randomly generated and
-output from the interpreter are compared against the actual
+output from the interpreter is compared against the actual
 monitor. Quickcheck testing uncovered 
 a number of bugs during early development of the monitor synthesis
 software. Among those bugs caught were forgotten witnesses needed by
 the code generation tools. The testing also highlighted issues
-differences in how GHC and Haskell implemented floating point numbers,
+differences in how GCC and Haskell implemented floating point numbers,
 without either violating the IEEE floating point standard. 
 
 

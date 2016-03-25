@@ -11,16 +11,16 @@ hazards and failure modes~\cite{Levenson}.  The level of desired
 reliability determines what faults the system must be designed to
 tolerate. If RV is to be the guarantor of safety, then it must at
 least meet the level of reliability demanded of the system as a whole.
-This implies that the RV be designed to be
-\emph{fault-tolerant}~\cite{butler-faults}, meaning it that continues
+Thus high-assurance RV be designed to be
+\emph{fault-tolerant}~\cite{butler-faults}, meaning it continues
 to provide its required functionality in the presence of faults.  A
 fault-tolerant system must not contain a \emph{single point of
-  failure} such that if the single subsystem fails, the entire system
+  failure} so  if the single subsystem fails, the entire system
 fails.
 
  Ideally, the RV and the SUO should not be subject to common
  modes of failure.  For instance, software errors in the SUO such as
- numerical overflows an memory leaks that can render a system
+ numerical overflows and memory leaks that can render a system
  inoperable should not affect the RV.  A fault-tolerant system must
  also be robust in the presence of hardware faults such as sensor failures
  and voltage spikes.  A \emph{fault-containment region} (FCR)
@@ -36,16 +36,16 @@ fails.
  management software. 
 
 
-\paragraph{Challenge}   \emph{The RV  should not be rendered inoperable by the
+\paragraph{Challenge:}   \emph{The RV  should not be rendered inoperable by the
  same failure conditions that cause hazards to the SUO.}
 
 
-\paragraph{Copilot Approach} Fault-tolerant RV has been a ongoing
+\paragraph{Copilot Approach:} Fault-tolerant RV has been a ongoing
 topic of investigation for the Copilot research group. The avionics
 industry has been migrating away from federated systems toward the use
 of integrated modular avionics that provide fault-tolerance as a
 service.  The Aeronautical Radio, Incorporated (ARINC)
-653~\cite{ARINC653} compliant hard real-time operating systems RTOS
+653~\cite{ARINC653} compliant hard  RTOS
 provides temporal and spatial partitioning guarantees so applications
 can safely share resources.  The Copilot group has been investigating
 design patterns for implementing fault-tolerant RV on such
@@ -68,7 +68,7 @@ velocity of both systems. In earlier work~\cite{pike-isse-13}, we have
  addressed this issue in a case study where a system had
 redundant sensors and Copilot monitors performed Byzantine exchange and 
 majority voting to create a system that could tolerate a single
-Byzantine fault~\cite{pike-isse-13}.  Fault injection testing was
+Byzantine fault.  Fault injection testing was
 performed along with flight tests.  The hardware used in these
 experiments were commodity microprocessors, but we have recently
 bought Mil-Spec hardened processors that are more reliable when operating
