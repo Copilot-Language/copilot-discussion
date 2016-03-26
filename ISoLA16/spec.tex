@@ -17,6 +17,21 @@ which safe operation of the system rests  are indeed satisfied.
   system level requirements and assumptions that have been validated
   by domain experts.} 
 
+It is not sufficient for   domain experts to informally state a
+property, the property must be precisely formulated.  As machine
+intelligence replaces people,  RV is likely to be called upon to
+enforce behavioral concepts that have been learned from birth.     For an  autonomous
+automobile controlled by a machine learning, a safety property might
+be ``do not hit a pedestrian'' or ``do  not behave erratically'', but
+what does these mean precisely?  A more conservative statement such as
+``say five meters from any object in the vehicle path'' may be more
+precise, but is that what is the expert wanted?   Phrases like
+``erratic behavior'' may seem reasonable to a mature adult, but a how
+to precisely define them could easily become an open ended endeavor. 
+
+\paragraph{Challenge:} \empth{Precisely formalize safety properties in
+  a decidable logic.}
+
 \paragraph{Copilot Approach:} We are conducting case studies informed
 by collaborations with colleagues who are developing new concepts that
 will enable aircraft to perform autonomous flight by self-optimizing
@@ -50,7 +65,7 @@ two aircradt is given as follows:
 \end{eqnarray*}
 
 \noindent 
-where $\bm{s}$ and $\bm{v}$ are the  relative position  and velocity
+where $\bm{s}$ and $\bm{v}$ are the relative position  and velocity
 vectors for the two aircraft, $\epsilon$ is $1$ or $-1,$  and 
 $\bm{v}$ is the relative velocity vector after a planned maneuver. 
 The position is  assumed to be given in Earth Centered Earth Fixed (ECEF)
@@ -81,22 +96,15 @@ horizontalCriterionForConflictResolution sx sy e vx vy = ((scalar2dim sx sy vx v
 \end{lstlisting}
 
 Formalizing the assumptions about the reliability of communicating
-aircraft position data is ongoing work. 
-
-
- 
-
-
-
-
-
-
+aircraft position data is ongoing work.  A case study formalizing what
+it means for a UAS to behave erratically is also 
+are planned as future work. 
 
 
 %\begin{itemize}
 %\item Safety-Critical that that are considered ultra-critical systems
 % typically have detailed requirements
-
+%
 %\item established that only ``safety properties'' can be checked with
 %  RV 
 % \item For adaptive systems where RV is the entrusted repository of
@@ -113,8 +121,8 @@ aircraft position data is ongoing work.
 %\item EDSL we strive to build libraries allow specification in this
 %  sort of notation. 
 %\end{itemize}
-
-
+%
+%
 %The obvious specification is simply check to see if the aircraft have
 %violated separation and take corrective action.  system level
 %needs demanded a specification that the aircract will not come into
