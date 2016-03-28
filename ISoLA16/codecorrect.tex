@@ -74,7 +74,7 @@ Frama-C's WP plugin easily proves that the function satisfies the
 contract. 
 
 While the current analysis demonstrates a faithful translation from
-core language to C code, this analysis perform elides the issues that
+core language to C code, this analysis  elides the issues that
 arise performing floating point arithmetic. We apply the  Frama-C's abstract
 interpretation value analysis plugin  to detect when floating point
 arithmetic produces infinite values  or not a number (NaN).
@@ -99,7 +99,7 @@ information during monitor generation.
 \paragraph{Assurance All The Way Down:} 
 Having assured that the C code implementing the monitor is correct,
 how can we be sure that the executable binary code correctly
-implements the C program. For Copilot, we have experimented
+implements the C program?  For Copilot, we have experimented
 with using the verified Compcert compiler~\cite{leroy} to generate
 binaries.  Unfortunately, Compcert does not yet target many of the
 processors used in our experiments limiting its utility.

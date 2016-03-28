@@ -34,7 +34,7 @@ specification  observable?}
   regulatory guidelines may  also require recertification of that software.
   Copilot, and several other RV frameworks~\cite{sampling,Kane15,borzoo}, opt to sacrifice complete
   observability by sampling events.  Copilot monitors run as dedicated
-  thread and sample program variables and state information via shared
+  threads and sample program variables and state information via shared
   memory.  Currently, we rely on scheduling analysis with a good
   amount of experimentation to ensure that we sample values at a
   sufficient rate that specification violations are detected. This has
