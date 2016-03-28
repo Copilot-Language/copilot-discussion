@@ -7,10 +7,10 @@
 
 
 
-\paragraph{Challenge:} There should be assurance arguments that
+\paragraph{Challenge:} \emph{There should be assurance arguments that
 executable monitors correctly implement the specification.  The monitor implementation
 should not be susceptible to unsafe or undefined behaviors such as
-buffer and floating point overflows. 
+buffer and floating point overflows.}
 
 \paragraph{Copilot Approach:}    
 The  small  Copilot interpreter can be seen as providing an executable
@@ -23,7 +23,7 @@ output from the interpreter is compared against the actual
 monitor. Quickcheck testing uncovered 
 a number of bugs during early development of the monitor synthesis
 software. Among those bugs caught were forgotten witnesses needed by
-the code generation tools. The testing also highlighted issues
+the code generation tools. The testing also highlighted 
 differences in how GCC and Haskell implemented floating point numbers,
 without either violating the IEEE floating point standard. 
 

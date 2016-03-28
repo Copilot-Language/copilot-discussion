@@ -5,7 +5,7 @@ perspective of a researcher in high-assurance RV, engaging with the
 communities building static analysis tools and proof engines seems
 obvious.  Especially in light of the fact that regulatory bodies that
 govern many safety-critical systems are increasingly willing to accept
-the analysis produce from such tools as evidence that can be applied to
+the analysis produced from such tools as evidence that can be applied to
 certification ~\cite{DO333}. Similarly, there are many features of RV
 that make it a great target for the tool builder. For instance, there are formal
 specifications to work with  and monitor code is generally small and
@@ -18,10 +18,10 @@ validating safety properties are sorely needed.  As in our case study,
 the safety properties of cyber-physical systems are involve continuous
 mathematics. While advances in \textsc{smt} solvers have been
 impressive, it is still necessary to often resort to interactive
-theorem provers, which require specialized skills that domain experts
-are not likely to obtain. There are many opportunities to design
-domain specific decision procedures that would make fully automated
-tools at least somewhat more tractable.  
+theorem prover. There are many opportunities to design
+domain specific decision procedures that would increase the utility of
+automated proof
+tools .  
 
 The problem of RV observability provides a rich source of problems for tool builders. If the RV
 approach involves instrumenting code, then static analysis can both
@@ -32,7 +32,7 @@ has the potential to inform when to sample.
 Floating point arithmetic
 is a source of problems that is readily amenable to static analysis.In
 our work, we applied abstract interpretation to monitor source code,
-but  analysis could be done at the specification level with any needed
+but  analysis could be done at the specification level with
 proof obligations flowing down to the monitor code. 
 
 Applying tools to verify monitor correctness makes so much sense that

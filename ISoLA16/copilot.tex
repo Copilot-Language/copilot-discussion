@@ -4,7 +4,7 @@
 \begin{figure}[ht!]
         \centering
 
-        \resizebox {0.8\textwidth} {!} {
+        \resizebox {0.6\textwidth} {!} {
 
 \begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
 thick ]
@@ -33,7 +33,7 @@ thick ]
                 \end{tabular}};
         \node[state] (DOT) [below right of=C99S] {DOT/graphviz};
         \node[state] (CCOMP) [below left=0.3cm and 0.3cm of C99S] {CompCert};
-        \node[state] (ASM) [below=1cm of CCOMP] {Assembly code};
+        \node[state] (ASM)[left = 3cm of CCOMP] {Assembly code};
 
 
         \tikzstyle{every node}=[]
@@ -53,7 +53,7 @@ thick ]
         (PP) edge [->, anchor=west] node {DOT generation} (DOTc)
         (C99S) edge [->, anchor=north west] node {make} (CCOMP)
         (Core) edge [->, anchor=south east, text width=3cm] node {proof generation} (SMT)
-        (CCOMP) edge [->, anchor=east] node {Cross-compilation} (ASM)
+        (CCOMP) edge [->, text width=3cm] node {Cross Compilation} (ASM)
         (C99S) edge [loop left, ->, anchor=east] node {Verification with frama-c WP plugin} (C99S)
         (C99S) edge [->, anchor=west] node {Extraction and graph generation} (DOT)
         (SBV) edge [->,anchor=east] node {Compilation} (C99S);
@@ -68,7 +68,7 @@ thick ]
         \end{figure}
 
 Copilot is a domain specific language  embedded (EDSL) in the functional
-programming language Haskell~\cite{Haskell98}   tailored to
+programming language Haskell   tailored to
 programming monitors for hard real-time, reactive systems.
 
 Copilot is a \emph{stream} based language where a stream is an infinite sequence of values that must conform to the same type.  All transformations of

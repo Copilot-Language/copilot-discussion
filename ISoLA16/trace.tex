@@ -22,7 +22,7 @@ supports traceability from specification to monitor code.
 
  In the case of the following example:
 \begin{lstlisting}[frame=single]
-hor_rr sx sy e v'x v'y = (label "?hor_rr_dividend" $ sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (label "?hor_rr_divisor" $ minHorSep)
+hor_rr sx sy  = (label "?hor_rr_dividend" $ sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (label "?hor_rr_divisor" $ minHorSep)
 \end{lstlisting}  
 the SBV translation breaks this relatively simple expression into
 numerous small C functions and function parameters get instantiated
@@ -52,7 +52,7 @@ the names of the program variables being monitored.
 
 \begin{figure}[ht!]
         \centering
-        \resizebox {0.5\textwidth} {!} {
+        \resizebox {0.4\textwidth} {!} {
 \begin{tikzpicture}[->, node distance=2.3cm, auto, shorten >=1pt, bend angle=45 ]
 \tikzstyle{every state}=[rectangle]
 \node[state] (fil2) {ext\_sqrt};
@@ -82,10 +82,6 @@ the names of the program variables being monitored.
 % \label{fig:label}
 %\end{center}
 %\end{figure}
-
-
-
-
 
 
 

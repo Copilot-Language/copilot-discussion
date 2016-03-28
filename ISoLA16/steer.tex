@@ -14,34 +14,30 @@ putting the system into a quiescent state may be a safe default
 operation depending on the operating environment.  In the case of an
 adaptive control system, the RV framework may switch to a conventional
 controller, but whether this re-establishes safety depends on many
-factors.  Our experience in participating in UAS flight tests
-illustrate how difficult the steering problem can be as simply directing
-the vehicle into the ground, so that it does not leave a test range,
-is  require the need to consider
-aircraft dynamics.  In many domains, the challenge in constructing an
-assured safe steering algorithm may be as difficult as constructing
-the adaptive autonomous algorithm itself.
+factors.  In many domains, the challenge in constructing an assured
+safe steering algorithm may be as difficult as constructing the
+adaptive autonomous algorithm itself.
 
 \paragraph{Challenge:}  \emph{Verifying the correctness and safety of the
 steering performed once a specification violation is detected.}
  
 
+\paragraph{Predictive Monitors:} Applying RV to application domains
+that have strict timing constraints, such as an adaptive control
+system, raises many technical challenges.  It is imperative that the
+monitor detects that the adaptive controller is about to loose
+stability in time to switch to a safe controller. In the case of our
+running example, the RV system needs to detect that two aircraft are
+about to lose separation in time for them to take corrective action.
+Assured predictive monitors are needed, but much work remains to be
+done.  Johnson et. al.~\cite{johnson2015tecs} is a promising approach
+to predictive monitoring for controllers, but the general problem is
+very domain specific. Assured predictive monitoring remains a research
+challenge for the RV community.
 
-\paragraph{Predictive Monitors:} Applying RV to application domains  that have strict timing constraints,
-such as an adaptive control system,
-raises many technical challenges.  It is imperative that the  monitor  detects that the
-adaptive controller is about to loose stability in time to switch to a
-safe controller. In the case of our running example, the RV system
-needs to detect that two aircraft are about to lose separation in time
-for them to take corrective action.  Assured predictive monitors are
-needed, but much work remains to be done.  Johnson
-et. al.~\cite{johnson2015tecs} is a promising approach to predictive
-monitoring for controllers, but the general problem is very domain specific. Assured predictive
-monitoring remains a research challenge for the RV community.
-
-\paragraph{Challenge:} \emph{The monitor should detect  violations of the specification and invoke the safety controller in time to preserve safe operation.}
-
-
+\paragraph{Challenge:} \emph{The monitor should detect violations of
+  the specification and invoke the safety controller in time to
+  preserve safe operation.}
 
 
 \paragraph{Secured RV:} Adding more software or hardware to a system
@@ -53,7 +49,7 @@ provide general protection. Every sensor and unauthenticated message
 may contribute to the attack surface. If an attacker can trick the
 systems into a monitor specification violation, the triggered steering
 behavior may itself constitute a denial-of-service attack.  Future
-research is needed in Identifying attack surfaces and suitable
+research is needed in identifying attack surfaces and suitable
 techniques to thwart adversaries from turning the RV meant to protect
 a system into a liability that exposes the system to attack.
 
@@ -62,3 +58,7 @@ vulnerabilities into a system.}
 
 
 
+%Our experience in participating in UAS flight tests
+%illustrate how difficult the steering problem can be as simply
+%directing the vehicle into the ground, so that it does not leave a
+%test range, is require the need to consider aircraft dynamics. 
