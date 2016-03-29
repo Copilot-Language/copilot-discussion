@@ -45,7 +45,7 @@ topic of investigation for the Copilot research group. The avionics
 industry has been migrating away from federated systems toward the use
 of integrated modular avionics that provide fault-tolerance as a
 service.  The Aeronautical Radio, Incorporated (ARINC)
-653~\cite{ARINC653} compliant hard  RTOS
+653~\cite{ARINC653} compliant RTOS
 provides temporal and spatial partitioning guarantees so applications
 can safely share resources.  The Copilot group has been investigating
 design patterns for implementing fault-tolerant RV on such
@@ -60,7 +60,7 @@ other programs running on the same system.
 Systems that need be ultrareliable typically must employ redundancy to
 tolerate the most pernicious faults such as a \emph{Byzantine fault}
 (i.e., a fault in which different nodes interpret a single broadcast
-message differently.  There are have been  documented incidents in
+message differently).  There are have been  documented incidents in
 critical avionics  where sensors failed in a Byzantine fashion with
 the potential to affect a vehicle's safety.  The aircraft horizontal separation criteria in
 Section~\ref{sec:req} depends on reliably sensing the position and

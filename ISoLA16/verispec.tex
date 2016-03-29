@@ -42,22 +42,31 @@ the Copilot prover using Z3~\cite{DeMoura2008} to prove many of these theorems
 within the Copilot framework. Among the properties proved about the
 horizontal separation criteria are
 
+\resizebox{.9\linewidth}{!}{
+\begin{minipage}{\linewidth}
 \begin{eqnarray*}
 \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
 \epsilon,  \bm{vx},  \bm{vy}) & \Longleftrightarrow &
 \texttt{horiz\_criteria}(\bm{-sx},  \bm{-sy},
 \epsilon, \bm{-vx},  \bm{-vy})   \\
 ( \texttt{horiz\_criteria}(\bm{sx},\bm{sy},
-\epsilon, \bm{vx},\bm{vy})  \wedge &&  \\ 
+\epsilon, \bm{vx},\bm{vy}) \  \wedge &&  \\ 
 \texttt{horiz\_criteria} (\bm{sx},  \bm{sy},
 \epsilon,  \bm{wx}, \bm{wy}) )& \Longrightarrow&
 \texttt{horiz\_criteria} (\bm{sx}, \bm{sy},
 \epsilon,\bm{vx},\bm{vy})\\
 ( \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
-\epsilon,  \bm{vx},  \bm{vy})  \wedge  &&\\
-\texttt{horiz\_criteria}(\bm{sx},  \bm{sy}, \epsilon',  \bm{vx},  \bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
+\epsilon,  \bm{vx},  \bm{vy}) \   \wedge  &&\\
+\texttt{horiz\_criteria}(\bm{sx},  \bm{sy}, \epsilon',  \bm{vx},
+\bm{vy}) )  &\Longrightarrow & \epsilon = \epsilon'
 \end{eqnarray*}
-A few of the properties proved in PVS involve continuous mathematics
+\end{minipage}
+}
+
+ \vspace{\belowdisplayskip}
+
+\noindent 
+\paragraph{}A few of the properties proved in PVS involve continuous mathematics
 that remains beyond the capabilities of fully automated tools,
 but combined with testing we have a convincing argument that we got the
 specification correct. 
