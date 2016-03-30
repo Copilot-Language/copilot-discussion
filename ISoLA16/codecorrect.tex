@@ -74,26 +74,28 @@ Frama-C's WP plugin easily proves that the function satisfies the
 contract. 
 
 While the current analysis demonstrates a faithful translation from
-core language to C code, this analysis  elides the issues that
-arise performing floating point arithmetic. We apply the  Frama-C's abstract
-interpretation value analysis plugin  to detect when floating point
-arithmetic produces infinite values  or not a number (NaN).
-When applied to the  \texttt{ext\_sqrt\_9\_arg0} function, the value
-analysis produces warnings:
-\begin{Verbatim}[fontsize=\scriptsize]
-\ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double 
-                            value ([-1.79769313486e+308 .. 1.79769313486e+308]):
-         assert \is_finite((double)(s5*s5));
-ext_sqrt_9_arg0.c:42:[kernel] warning: non-finite double
-                           value ([-1.79769313486e+308 .. 1.79769313486e+308]):
-         assert \is_finite((double)(s0-s6));
-ext_sqrt_9_arg0.c:30:[value] Function ext_sqrt_9_arg0: postcondition got status unknown.
+core language to C code, it elides the issues that arise performing
+floating point arithmetic.  We applied both the RV-Match
+tool~\cite{RV-Match} and Frama-C's abstract interpretation value
+analysis plugin to detect when floating point arithmetic produces
+infinite values or not a number (NaN).  The RV-Match C undefinedness
+checker found a divide-by-zero error due to our initializing a
+variable to zero.  The abstract interpreter produced warnings for
+every floating point operation. In the case of the
+\texttt{ext\_sqrt\_9\_arg0} function, the value analysis produces
+warnings: C\begin{Verbatim}[fontsize=\scriptsize]
+  \ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value
+  ([-1.79769313486e+308 .. 1.79769313486e+308]): assert
+  \is_finite((double)(s5*s5)); ext_sqrt_9_arg0.c:42:[kernel] warning:
+  non-finite double value ([-1.79769313486e+308
+  .. 1.79769313486e+308]): assert \is_finite((double)(s0-s6));
+  ext_sqrt_9_arg0.c:30:[value] Function ext_sqrt_9_arg0: postcondition
+  got status unknown.
 \end{Verbatim}
-indicating that steps must be taken to guarantee  that the two floating
-point operations do not result in errors.  Domain specific knowledge
-on the  bounds on the velocity and state vectors  eliminated this
-error.  At present, we must add domain specific knowledge to the
-contracts by hand, but intend to explore ways to better propagate such
+Applying domain specific knowledge about  the  bounds on the velocity and state
+vectors  eliminated this
+error.  At present, we must add these bounds to the
+contracts by hand, but intend to generate  such
 information during monitor generation.  
 
 \paragraph{Assurance All The Way Down:} 

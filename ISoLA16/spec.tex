@@ -17,18 +17,18 @@ satisfied.
   by domain experts.} 
 
 
-\paragraph{}It is insufficient for domain experts to informally state a safety
-property, the property must be precisely formulated.  As machine
-intelligence replaces people, RV is likely to be called upon to
-enforce safe behaviors that humans began learning in early childhood.
-For an autonomous automobile controlled by  machine learning, a
-safety property might be ``do not hit a pedestrian'' or ``do not
-behave erratically'', but what do these statements mean precisely?  A
-more precise  statement such as ``maintain  five meters distance from any object
-in the vehicle path'' may be more formal, but is that what is the
-expert wanted?  Phrases like ``erratic behavior'' may seem reasonable 
-to a mature adult, but formalizing such statements can be an open
-ended problem.  
+\paragraph{}It is insufficient for domain experts to informally state
+a safety property, the property must be precisely formulated.  As
+machine intelligence replaces people, RV is likely to be called upon
+to enforce safe behaviors that humans began learning in early
+childhood.  For an autonomous automobile controlled by machine
+learning, a safety property might be ``do not hit a pedestrian'' or
+``do not behave erratically'', but what do these statements mean
+precisely?  A more precise statement such as ``maintain five meters
+distance from any object in the vehicle path'' may be more formal, but
+is that what is the expert wanted?  Phrases like ``erratic behavior''
+may seem reasonable to a mature adult, but formalizing such statements
+can be an open ended problem.
 
 \paragraph{Challenge:} \emph{Precisely formalize safety properties  in
   a decidable logic.}
@@ -46,7 +46,7 @@ preserve safe aircraft separation, where the separation requirement
 for two aircraft is specified by a minimum horizontal separation $D$
 (typically, $5$ nautical miles).  Fortuitously, colleagues at NASA
 have discovered analytical formula, called
-\emph{criteria}~\cite{NM2011NASA,NMH14ATIO} that characterize those
+\emph{criteria}~\cite{NM2011NASA} that characterize those
 resolution maneuvers that both ensure safe separation when one
 aircraft maneuvers and ensures separation when two conflicting
 aircraft both maneuver. The criteria have been extensively validated
@@ -98,7 +98,7 @@ horizontalCriterionForConflictResolution sx sy e vx vy = ((scalar2dim sx sy vx v
 
 Formalizing the assumptions about the reliability of communicating
 aircraft position data is ongoing work.  A case study formalizing what
-it means for a UAS to be behave erratically is planned as future
+it means for a UAS to behave erratically is planned as future
 work.  
 
 
@@ -133,3 +133,5 @@ work.
 %These are expressed as a collection of formula
 %involving the position and velocity vectors of the two
 %aircraft.
+
+%,NMH14ATIO
