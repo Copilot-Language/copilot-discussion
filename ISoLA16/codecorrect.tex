@@ -83,7 +83,8 @@ checker found a divide-by-zero error due to our initializing a
 variable to zero.  The abstract interpreter produced warnings for
 every floating point operation. In the case of the
 \texttt{ext\_sqrt\_9\_arg0} function, the value analysis produces
-warnings: C\begin{Verbatim}[fontsize=\scriptsize]
+warnings are: 
+\begin{Verbatim}[fontsize=\scriptsize]
   \ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value
   ([-1.79769313486e+308 .. 1.79769313486e+308]): assert
   \is_finite((double)(s5*s5)); ext_sqrt_9_arg0.c:42:[kernel] warning:
