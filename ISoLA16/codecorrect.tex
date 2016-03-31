@@ -73,7 +73,7 @@ SDouble ext_sqrt_9_arg0(const SDouble ext_ident_double_8,
 Frama-C's WP plugin easily proves that the function satisfies the
 contract. 
 
-While the current analysis demonstrates a faithful translation from
+While this analysis demonstrates a faithful translation from
 core language to C code, it elides the issues that arise performing
 floating point arithmetic.  We applied both the RV-Match
 tool~\cite{RV-Match} and Frama-C's abstract interpretation value
@@ -95,7 +95,7 @@ warnings are:
 \end{Verbatim}
 Applying domain specific knowledge about  the  bounds on the velocity and state
 vectors  eliminated this
-error.  At present, we must add these bounds to the
+warning.  At present, we must add these bounds to the
 contracts by hand, but intend to generate  such
 information during monitor generation.  
 
