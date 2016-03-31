@@ -67,16 +67,23 @@ thick ]
         \label{fig:toolchain}
         \end{figure}
 
-Copilot is a domain specific language  embedded (EDSL) in the functional
-programming language Haskell   tailored to
-programming monitors for hard real-time, reactive systems.\footnote{\url{https://github.com/Copilot-Language}}
+        Copilot is an RV framework
+        targeted at safety-critical hard real-realtime systems, which
+        has served as an experimental platform enabling a research
+        program in high-assurance RV.  Copilot is a domain specific
+        language embedded (EDSL) in the functional programming
+        language Haskell tailored to programming monitors for hard
+        real-time, reactive
+        systems.\footnote{\url{https://github.com/Copilot-Language}}
 
-Copilot is a \emph{stream} based language where a stream is an infinite sequence of values that must conform to the same type.  All transformations of
-data in Copilot must be propagated through streams. Copilot
-guarantees that specifications compile to constant-time and constant-space
-implementations. Copilot streams mimic both the syntax and semantics of
-Haskell lazy lists with the exception that  operators are
-automatically promoted point-wise to the list level.
+Copilot is a \emph{stream} based language where a stream is an
+infinite sequence of values that must conform to the same type.  All
+transformations of data in Copilot must be propagated through
+streams. Copilot guarantees that specifications compile to
+constant-time and constant-space implementations. Copilot streams
+mimic both the syntax and semantics of Haskell lazy lists with the
+exception that operators are automatically promoted point-wise to the
+list level.
 
 Two types of temporal operators are provided in Copilot, one for
 delaying streams and one for looking into the future of streams:
@@ -91,17 +98,19 @@ stream {\tt s}, returning the remainder of the stream.
 
 
 
-Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}.  Copilot is deeply embedded in Haskell.  A Copilot program is
-reified (i.e., transformed from a recursive structure into explicit graphs via
-observable sharing~\cite{gill}) and then some domain-specific type-checking is
-done.  At this point, we have transformed the program into the ``core''
-language, an intermediate representation.  The core package contains
-an  interpreter  that can be viewed as an operational semantics for
-the language.   The back-end translates a Copilot core program into the language of another
-Haskell-hosted EDSL, 
-Symbolic Bit Vectors (SBV),  an EDSL developed by Levent Erk\"{o}k, which we use to generate C
-monitors.  Aspects of the toolchain relevant to high assurance are covered in more
-detail later.
+Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}. A
+Copilot program is reified (i.e., transformed from a recursive
+structure into explicit graphs) and
+then some domain-specific type-checking is done.  At this point, we
+have transformed the program into the ``core'' language, an
+intermediate representation.  The core package contains an interpreter
+that can be viewed as an operational semantics for the language.  The
+back-end translates a Copilot core program into the language of
+another Haskell-hosted EDSL, Symbolic Bit Vectors (SBV)\footnote{\url{http://hackage.haskell.org/package/sbv}, BSD3 license.}, an EDSL
+developed by Levent Erk\"{o}k, which we use to generate C monitors.
+
+% Aspects of the toolchain relevant to high assurance are covered in more
+%detail later.
 
 %We use the recent Safe Haskell compiler extensions to implement
 %Copilot~\cite{safe}.  Copilot's language package is explicitly \emph{Trustworthy

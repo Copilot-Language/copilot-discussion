@@ -10,7 +10,7 @@ and automobile engineers that are domain experts, but can have
 varying degrees of understanding of the computing systems so the RV
 engineer needs to be very proactive in addressing the observability
 issue. In embedded systems, the closed nature of the hardware
-platforms and propriety issues can make it impossible to observe the
+platforms and proprietary  issues can make it impossible to observe the
 information required in the specification.  Additional sensors may be
 needed or communication data formats changed.  At times it is
 necessary to change the specification so that it only depends on
@@ -29,18 +29,17 @@ specification  observable?}
   and MOP~\cite{ChenR05} instrument the software and hardware of the
   SUO so that it emits events of interest to the monitor.  While
   attractive from the viewpoint of maximizing state observability, the
-  additional overhead may affect execution time affectiing worst case
+  additional overhead may affect execution time affecting worst case
   execution times and consequently the scheduling; 
-  regulatory guidelines may  also require recertification of that software.
+  regulatory guidelines may  also require recertification of that system.
   Copilot, and several other RV frameworks~\cite{sampling,Kane15,borzoo}, opt to sacrifice complete
   observability by sampling events.  Copilot monitors run as dedicated
   threads and sample program variables and state information via shared
-  memory.  Currently, we rely on scheduling analysis with a good
-  amount of experimentation to ensure that we sample values at a
+  memory.  Currently, we rely on scheduling analysis and experimentation to ensure that we sample values at a
   sufficient rate that specification violations are detected. This has
   been very successful when the implementation platform is running a
   real-time operating system (RTOS) with deterministic scheduling
-  guarantees, but we cannot make strong guarantees running on less
+  guarantees, but we cannot make strong assertions of efficacy running on less
   specialized systems.
 
 A critical lesson learned in the course of conducting many case studies
@@ -60,9 +59,11 @@ and provenance of the data being observed?
   both the aircraft the monitor is executing on as well as the
   ``intruder'' aircraft.  Hence the monitors must sample data from
   executing programs (planned maneuver), onboard positioning sensors,
-  and data broadcast from other vehicles.  For our experiments, the
-  aircraft position data had to be converted from World Geodetic
-  System latitude and longitude to ECEF.
+  and data broadcast from other vehicles.  
+
+%For our experiments, the
+% aircraft position data had to be converted from World Geodetic
+%  System latitude and longitude to ECEF.
 
 
 %\item Does the monitor possess access to the necessary sensor data to

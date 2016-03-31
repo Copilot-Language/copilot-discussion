@@ -1,11 +1,10 @@
 \section{Monitor Specification Correctness}~\label{sec:verispec}
 
 As RV is applied to  guarantee sophisticated properties, the
-monitor specifications themselves will grow in complexity and become
+monitor specifications themselves will grow in complexity and may become
 prone to error.  Our experience with a number of case studies
 involving complex monitor properties is that were able to discover
-many simple theorems that should be true about a specification if it
-is correct. Hence applying formal proof tools to the monitors to
+many simple theorems that should hold for a correct specification.  Hence applying formal proof tools to the monitors to
 ensure they are correct can safeguard that the last line of
 defense is actually effective. Ideally, specification verification
 capabilities should be integrated into the RV framework so engineers
@@ -40,7 +39,7 @@ domain experts used the PVS interactive prover to prove theorems that
 characterize the correctness of the criteria.  We were able to apply
 the Copilot prover using Z3~\cite{DeMoura2008} to prove many of these theorems
 within the Copilot framework. Among the properties proved about the
-horizontal separation criteria are
+horizontal separation criteria are:
 
 \resizebox{.9\linewidth}{!}{
 \begin{minipage}{\linewidth}

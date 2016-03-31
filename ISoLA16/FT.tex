@@ -7,7 +7,7 @@
 %}
  
 Safety engineers employ a range of established methods to identify
-hazards and failure modes~\cite{Levenson}.  The level of desired
+hazards and failure modes~\cite{SAE4761}.  The level of desired
 reliability determines what faults the system must be designed to
 tolerate. If RV is to be the guarantor of safety, then it must at
 least meet the level of reliability demanded of the system as a whole.
@@ -15,8 +15,7 @@ Thus high-assurance RV should  be designed to be
 \emph{fault-tolerant}~\cite{butler-faults}, meaning it continues
 to provide its required functionality in the presence of faults.  A
 fault-tolerant system must not contain a \emph{single point of
-  failure} so  if the single subsystem fails, the entire system
-fails.
+  failure}.
 
  Ideally, the RV and the SUO should not be subject to common
  modes of failure.  For instance, software errors in the SUO such as
@@ -52,12 +51,12 @@ design patterns for implementing fault-tolerant RV on such
 platforms~\cite{Kaveh15}. Monitors are run on the same nodes as the
 software being monitored, but in separate partitions. Monitoring tasks
 executing in a separate partition observe the state of the executing
-program through very circumscribed
+program through very restricted
 channels that preserve the isolation guarantees.  The spacial and
 temporal protections provided by ARINC 653 keep the monitors safe from
 other programs running on the same system.
 
-Systems that need be ultrareliable typically must employ redundancy to
+Systems that need to  be ultrareliable typically must employ redundancy to
 tolerate the most pernicious faults such as a \emph{Byzantine fault}
 (i.e., a fault in which different nodes interpret a single broadcast
 message differently).  There are have been  documented incidents in

@@ -3,11 +3,12 @@
  from specifications. In safety-critical systems, subtle errors in the
  translation process can have potentially catastrophic
  consequences and consequently, a safety case for assured RV must
- provide evidence of the correctness of the translation process.
+ include  evidence of the correctness of the translation process.
 
 
 
-\paragraph{Challenge:} \emph{There should be assurance arguments that
+\paragraph{Challenge:} \emph{There should be assurance arguments with
+  evidence that
 executable monitors correctly implement the specification.  The monitor implementation
 should not be susceptible to unsafe or undefined behaviors such as
 buffer and floating point overflows.}
@@ -30,7 +31,7 @@ without either violating the IEEE floating point standard.
 
 Recent work  leverages light-weight verification tools for monitor
 synthesis assurance.   The process of translating a specification into a monitor
-transforms an AST of the ``core'' language representation into an SBV
+transforms an abstract syntax tree (AST) of the ``core'' language representation into an SBV
 AST.  SBV's C code generation capabilities are used to generate 
 executable C code.  To facilitate monitor verification, Copilot 
 produces Hoare-logic style contracts directly from the Copilot core
@@ -43,9 +44,8 @@ AST representation that the function should  implement.
 Frama-C's~\cite{framac} WP deductive verification engine is employed
 to prove that the code does indeed satisfy the contract. Deductive
 verification tools have evolved quite a bit recently, but scalability
-is still an issue.  That the translation process creates separate C
-functions for subexpressions of a large expression makes the
-verification tractable. 
+is still an issue. However, the verification is tractable because the  translation process creates separate C
+functions for subexpressions of a large expression. 
 
 
 An example of an annotated monitor C function follows: 
