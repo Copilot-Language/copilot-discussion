@@ -4,7 +4,7 @@
 \begin{figure}[ht!]
         \centering
 
-        \resizebox {0.6\textwidth} {!} {
+        \resizebox {0.7\textwidth} {!} {
 
 \begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
 thick ]
@@ -68,7 +68,7 @@ thick ]
         \end{figure}
 
         Copilot is an RV framework
-        targeted at safety-critical hard real-realtime systems, which
+        targeted at safety-critical hard real-time systems, which
         has served as an experimental platform enabling a research
         program in high-assurance RV.  Copilot is a domain specific
         language embedded (EDSL) in the functional programming
@@ -100,14 +100,14 @@ stream {\tt s}, returning the remainder of the stream.
 
 Copilot's toolchain is depicted in Figure~\ref{fig:toolchain}. A
 Copilot program is reified (i.e., transformed from a recursive
-structure into explicit graphs) and
-then some domain-specific type-checking is done.  At this point, we
-have transformed the program into the ``core'' language, an
-intermediate representation.  The core package contains an interpreter
-that can be viewed as an operational semantics for the language.  The
-back-end translates a Copilot core program into the language of
-another Haskell-hosted EDSL, Symbolic Bit Vectors (SBV)\footnote{\url{http://hackage.haskell.org/package/sbv}, BSD3 license.}, an EDSL
-developed by Levent Erk\"{o}k, which we use to generate C monitors.
+structure into explicit graphs) and then some domain-specific
+type-checking is done.  At this point, we have transformed the program
+into the ``core'' language, an intermediate representation.  The core
+package contains an interpreter that can be viewed as an operational
+semantics for the language.  The back-end translates a Copilot core
+program into the language of another Haskell-hosted EDSL, Symbolic Bit
+Vectors (SBV)\footnote{\url{http://hackage.haskell.org/package/sbv},
+  BSD3 license.}, which we use to generate C monitors.
 
 % Aspects of the toolchain relevant to high assurance are covered in more
 %detail later.
@@ -125,3 +125,5 @@ developed by Levent Erk\"{o}k, which we use to generate C monitors.
 %embedded DSL in Haskell is that the host-language serves as a type-safe,
 %Turing-complete macro language, allowing arbitrary compile-time computation,
 %while keeping the core DSL small.
+
+%developed by Levent Erk\"{o}k
