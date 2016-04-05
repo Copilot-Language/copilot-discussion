@@ -21,7 +21,7 @@ synthesis assurance were  to support  regression tests for the semantics
 of the EDSL using Haskell's QuickCheck~\cite{qc} property testing
 engine. Type-correct Copilot programs get randomly generated and
 output from the interpreter is compared against the actual
-monitor. Quickcheck testing uncovered 
+monitor. QuickCheck testing uncovered 
 a number of bugs during early development of the monitor synthesis
 software. Among those bugs caught were forgotten witnesses needed by
 the code generation tools. The testing also highlighted 
@@ -31,7 +31,7 @@ without either violating the IEEE floating point standard.
 
 Recent work  leverages light-weight verification tools for monitor
 synthesis assurance.   The process of translating a specification into a monitor
-transforms an abstract syntax tree (AST) of the ``core'' language representation into an SBV
+transforms an abstract syntax tree (AST) of the ``core'' language representation into a SBV
 AST.  SBV's C code generation capabilities are used to generate 
 executable C code.  To facilitate monitor verification, Copilot 
 produces Hoare-logic style contracts directly from the Copilot core

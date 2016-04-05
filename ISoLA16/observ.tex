@@ -4,7 +4,7 @@ actually \emph{observable} is one of the principal engineering
 challenges of RV. In embedded systems, the RV specification often
 involves data from a number of different types of data sources,
 including state data of executing programs, sensor data, as well as
-data that is communicated from other systems.  The systems safety
+data that is communicated from other systems.  The safety
 properties of cyber-physical systems are often formulated by aerospace
 and automobile engineers that are domain experts, but can have
 varying degrees of understanding of the computing systems, so the RV
@@ -15,7 +15,7 @@ information required in the specification.  Additional sensors may be
 needed or communication data formats changed.  At times it is
 necessary to change the specification so that it only depends on
 observable data.  The observability issue may seem like an
-``engineering detail'', but based on our experience it is often a
+``engineering detail'', but based on our experience,  it is often a
 significant obstacle resulting in  delays, frustration, and sometimes
 preventing progress altogether.
 
@@ -24,15 +24,15 @@ preventing progress altogether.
 specification  observable?}  
 
 
-  \paragraph{Copilot Approach:} How an RV framework obtains state data impacts the properties that
-  can be monitored. Many of RV frameworks such as MAC~\cite{KimLKS04}
+  \paragraph{Copilot Approach:} How a RV framework obtains state data impacts the properties that
+  can be monitored. Many RV frameworks such as MAC~\cite{KimLKS04}
   and MOP~\cite{ChenR05} instrument the software and hardware of the
   SUO so that it emits events of interest to the monitor.  While
   attractive from the viewpoint of maximizing state observability, the
   additional overhead may affect  worst case
   execution times and consequently the scheduling; 
   regulatory guidelines may  also require recertification of that system.
-  Copilot, and several other RV frameworks~\cite{sampling,Kane15,borzoo}, opt to sacrifice complete
+  Copilot and several other RV frameworks~\cite{sampling,Kane15,borzoo} opt to sacrifice complete
   observability by sampling events.  Copilot monitors run as dedicated
   threads and sample program variables and state information via shared
   memory.  Currently, we rely on scheduling analysis and experimentation to ensure that we sample values at a
@@ -57,7 +57,7 @@ and provenance of the data being observed?
   The aircraft safe separation criteria specification introduced in
   Section~\ref{sec:req} requires the monitor to  observe state data for
   both the aircraft the monitor is executing on as well as the
-  ``intruder'' aircraft.  Hence the monitors must sample data from
+  ``intruder'' aircraft.  Hence, the monitors must sample data from
   executing programs (planned maneuver), onboard positioning sensors,
   and data broadcast from other vehicles.  
 
