@@ -34,7 +34,7 @@
 %      \csname lst@SetFirstLabel\endcsname}
 %   {\csname lst@SaveFirstLabel\endcsname}
     \lstset{
-      basicstyle=\small\ttfamily,
+      basicstyle=\footnotesize\ttfamily,
       flexiblecolumns=false,
      basewidth={0.5em,0.45em},
       literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1 {=}{{$=$}}1
@@ -54,7 +54,7 @@
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}
 \definecolor{mymauve}{rgb}{0.58,0,0.82}
 
-\lstset{ %
+\lstset{ 
   basicstyle=\footnotesize,        % the size of the fonts that are used for the code
   basicstyle=\ttfamily,
   backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
@@ -111,7 +111,7 @@
 
 
 \title{Challenges in High-Assurance  Runtime Verification} 
-\titlerunning{Assuring the Guardians}  % abbreviated title (for running head)
+\titlerunning{Challenges in High-Assurance  Runtime Verification}  % abbreviated title (for running head)
 %                                     also used for the TOC unless
 %                                     \toctitle is used
 %
@@ -133,10 +133,10 @@ Hampton, Virginia, USA\\
 \maketitle              % typeset the title of the contribution
 
 \begin{abstract}
-Safety-critical systems are growing more complex and becoming   increasingly
+Safety-critical systems are growing more complex and becoming  increasingly
 autonomous. Runtime Verification (RV) has the potential to provide
 protections when a system cannot be assured by conventional means,
-but only if the RV itself can be trusted.  In this paper, we proffer a
+but only if the RV itself can be trusted.  In this paper, we present a
 number of challenges to realizing high-assurance RV and illustrate how
 we have addressed them in our research.  We argue that
 high-assurance RV provides a rich target for automated verification

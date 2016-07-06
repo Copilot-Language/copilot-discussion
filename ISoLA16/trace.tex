@@ -21,7 +21,9 @@ supports traceability from specification to monitor code.
 
  In the case of the following example:
 \begin{lstlisting}[frame=single]
-hor_rr sx sy  = (label "?hor_rr_dividend" $ sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (label "?hor_rr_divisor" $ minHorSep)
+hor_rr sx sy  = (label "?hor_rr_dividend" $ sqrt $ 
+                (normsq2dim sx sy) - (minHorSep * minHorSep)) 
+                / (label "?hor_rr_divisor" $ minHorSep)
 \end{lstlisting}  
 the SBV translation breaks this relatively simple expression into
 numerous small C functions and function parameters get instantiated

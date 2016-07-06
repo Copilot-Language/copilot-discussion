@@ -22,8 +22,8 @@ Copilot programs are specified \emph{within} Copilot itself. In particular,
 properties are encoded with standard Boolean streams and Copilot streams are
 sufficient to encode past-time linear temporal logic~\cite{ptltl}.
 
- A proposition is a Copilot value of type \texttt{Prop Existential}
- or \texttt{Prop Universal}, which can be introduced using \texttt{exists} and
+ A proposition is a Copilot value of type \texttt{Prop} \texttt{Existential}
+ or \texttt{Prop} \texttt{Universal}, which can be introduced using \texttt{exists} and
 \texttt{forall}, respectively. These are functions taking as an argument a
 normal Copilot stream of type \lstinline{Stream Bool}. Propositions can be added
 to a specification using the \texttt{prop} and \texttt{theorem} functions,
@@ -47,13 +47,13 @@ horizontal separation criteria are:
 \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
 \epsilon,  \bm{vx},  \bm{vy}) & \Longleftrightarrow &
 \texttt{horiz\_criteria}(\bm{-sx},  \bm{-sy},
-\epsilon, \bm{-vx},  \bm{-vy})   \\
+\epsilon, \bm{-vx},  \bm{-vy})   \\ \\
 ( \texttt{horiz\_criteria}(\bm{sx},\bm{sy},
 \epsilon, \bm{vx},\bm{vy}) \  \wedge &&  \\ 
 \texttt{horiz\_criteria} (\bm{sx},  \bm{sy},
 \epsilon,  \bm{wx}, \bm{wy}) )& \Longrightarrow&
 \texttt{horiz\_criteria} (\bm{sx}, \bm{sy},
-\epsilon,\bm{vx},\bm{vy})\\
+\epsilon,\bm{vx},\bm{vy})\\ \\
 ( \texttt{horiz\_criteria}(\bm{sx},  \bm{sy},
 \epsilon,  \bm{vx},  \bm{vy}) \   \wedge  &&\\
 \texttt{horiz\_criteria}(\bm{sx},  \bm{sy}, \epsilon',  \bm{vx},

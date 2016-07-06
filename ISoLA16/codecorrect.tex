@@ -6,7 +6,6 @@
  include  evidence of the correctness of the translation process.
 
 
-
 \paragraph{Challenge:} \emph{There should be assurance arguments with
   evidence that
 executable monitors correctly implement the specification.  The monitor implementation
@@ -51,16 +50,19 @@ functions for subexpressions of a large expression.
 An example of an annotated monitor C function follows: 
 
 %\begin{lstlisting}[frame=single, language=C]
-\begin{Verbatim}[fontsize=\scriptsize]
+\begin{Verbatim}[fontsize=\footnotesize]
 /*@
  assigns \ nothing;
- ensures \ result == (((ext_ident_double_8) - (((ext_minimal_horizontal_separation) *
-                                 (ext_minimal_horizontal_separation)))));
+ ensures \ result == (((ext_ident_double_8) - 
+                   (((ext_minimal_horizontal_separation) *
+                    (ext_minimal_horizontal_separation)))));
 */
-SDouble ext_sqrt_9_arg0(const SDouble ext_ident_double_8,
-       const SDouble ext_ownship_position_x, const SDouble ext_intruder_position_x,
-       const SDouble ext_ownship_position_y,  const SDouble ext_intruder_position_y,
-       const SDouble ext_minimal_horizontal_separation)
+ SDouble ext_sqrt_9_arg0(const SDouble ext_ident_double_8,
+     const SDouble ext_ownship_position_x, 
+     const SDouble ext_intruder_position_x, 
+     const SDouble ext_ownship_position_y, 
+     const SDouble ext_intruder_position_y,
+     const SDouble ext_minimal_horizontal_separation)
 {   const SDouble s0 = ext_ident_double_8;
     const SDouble s5 = ext_minimal_horizontal_separation;
     const SDouble s6 = s5 * s5;
@@ -84,7 +86,7 @@ variable to zero.  The abstract interpreter produced warnings for
 every floating point operation. In the case of the
 \texttt{ext\_sqrt\_9\_arg0} function, the value analysis produces the following
 warnings: 
-\begin{Verbatim}[fontsize=\scriptsize]
+\begin{Verbatim}[fontsize=\footnotesize]
   \ext_sqrt_9_arg0.c:41:[kernel] warning: non-finite double value
   ([-1.79769313486e+308 .. 1.79769313486e+308]): assert
   \is_finite((double)(s5*s5)); ext_sqrt_9_arg0.c:42:[kernel] warning:

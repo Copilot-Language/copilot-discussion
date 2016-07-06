@@ -87,10 +87,16 @@ coordinates.  This is easily encoded in  Copilot's EDSL as:
 %----------------------------------------
 \begin{lstlisting}[frame=single]
 hor_rr :: Stream Double -> Stream Double -> Stream Double
-hor_rr sx sy= (sqrt $ (normsq2dim sx sy) - (minHorSep * minHorSep)) / (minHorSep)
+hor_rr sx sy= (sqrt $ (normsq2dim sx sy) - 
+                      (minHorSep * minHorSep)) / (minHorSep)  
 
-horizontalCriterionForConflictResolution :: Stream Double -> Stream Double -> Stream Double -> Stream Double -> Stream Double -> Stream Bool
-horizontalCriterionForConflictResolution sx sy e vx vy = ((scalar2dim sx sy vx vy) >= (e * (hor_rr sx sy) * (det2dim sx sy vx vy)) ) && ( ((det2dim sx sy vx vy) *e)  <= 0.0)
+horizontalCriterionForConflictResolution :: Stream Double ->
+                Stream Double -> Stream Double -> Stream Double ->
+                Stream Double -> Stream Bool
+horizontalCriterionForConflictResolution sx sy e vx vy =
+        ((scalar2dim sx sy vx vy) >=
+               (e * (hor_rr sx sy) * (det2dim sx sy vx vy))) 
+        && (((det2dim sx sy vx vy) *e)  <= 0.0) 
 \end{lstlisting}
 
 Formalizing the assumptions about the reliability of communicating

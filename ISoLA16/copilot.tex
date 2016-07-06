@@ -4,7 +4,7 @@
 \begin{figure}[ht!]
         \centering
 
-        \resizebox {0.7\textwidth} {!} {
+        \resizebox {0.75\textwidth} {!} {
 
 \begin{tikzpicture}[->, node distance=3cm, auto, shorten >=1pt, bend angle=45,
 thick ]
@@ -54,7 +54,7 @@ thick ]
         (C99S) edge [->, anchor=north west] node {make} (CCOMP)
         (Core) edge [->, anchor=south east, text width=3cm] node {proof generation} (SMT)
         (CCOMP) edge [->, text width=3cm] node {Cross Compilation} (ASM)
-        (C99S) edge [loop left, ->, anchor=east] node {Verification with frama-c WP plugin} (C99S)
+        (C99S) edge [loop left, ->, anchor=east] node {Verification with Frama-c WP plugin} (C99S)
         (C99S) edge [->, anchor=west] node {Extraction and graph generation} (DOT)
         (SBV) edge [->,anchor=east] node {Compilation} (C99S);
         %% edge [bend left] node {Translation} (SBV)
