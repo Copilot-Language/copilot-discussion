@@ -6,21 +6,31 @@ Question: Can the monitor detect a violation of the specification and invoke the
     }
 }
 
-\begin{itemize}
-\item One can view cyber-physical system composed of layers with the
-decision making at a higher layer than the physical control. In
-robotics, we usually separate out the planning from the actuation. In
-avionics, the flight management can be thought of as being at a higher
-layer than the flight controls. Typically the controllers require
-millisecond response times, where the planners and flight management
-have much   
-\item In the case of control s/w, the RV must detect a possible
-violation of stability in time to react. Mention Stan and Taylor's
-work.
-\item A flight management s/w it's hard to say. Need to take action if the
-FMS goes off and doesn't generate plans in time - a real possibility
-for genetic algorithms and what not. 
-\item Scheduling monitors in a RTOS so we know they at least execute
-at a certain rate is how we have tried to address this with our
-investigations of 653 RTOS.
-\end{itemize}
+Complex  real-time cyber-physical systems  are a natural target for
+RV.  Applying RV to  functions such as an  adaptive control system
+that have to act in strict time windows posses  technical
+challenges. The monitor needs to detect  that the adaptive
+controller is about to loose stability in time to  switch to a safe
+controller. In the case of aircraft flight management, the RV system
+needs to detect that  two airplanes are about to lose separation in
+time for the aircraft to take corrective action.   Assured predictive
+monitors are needed, but much work remains to be done. A promising
+approach to monitoring controllers against a loss of stability is
+given in~\cite{}. Researchers using Copilot have shown how  timing
+analysis and  hard real-time scheduling of monitors can ensure that
+monitors are executed at a set time.  Assured predictive monitoring
+remains a research challenge for the RV community. 
+
+
+
+
+%\item In the case of control s/w, the RV must detect a possible
+%violation of stability in time to react. Mention Stan and Taylor's
+%work.
+%\item A flight management s/w it's hard to say. Need to take action if the
+%FMS goes off and doesn't generate plans in time - a real possibility
+%for genetic algorithms and what not. 
+%\item Scheduling monitors in a RTOS so we know they at least execute
+%at a certain rate is how we have tried to address this with our
+%investigations of 653 RTOS.
+%\end{itemize}
