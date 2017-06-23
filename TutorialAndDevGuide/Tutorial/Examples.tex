@@ -1,0 +1,357 @@
+\section{Examples} \label{sec:examples}
+
+Here we give a few examples of Copilot code. Additional examples can be found in the Examples directory of the Copilot language. 
+
+\subsection{Extended Example: The Boyer-Moore Majority-Vote Algorithm}
+\label{subsec:boyer_moore}
+
+In this section we demonstrate how to use Haskell as an advanced macro language
+on top of Copilot by implementing an algorithm for solving the voting problem
+in Copilot.
+
+\begin{figure*}[!htb]
+\begin{lstlisting}[language = Copilot, frame = none]
+majorityPure :: Eq a => [a] -> a
+majorityPure []     = error "majorityPure: empty list!"
+majorityPure (x:xs) = majorityPure' xs x 1
+
+majorityPure' []     can _   = can
+majorityPure' (x:xs) can cnt =
+  let
+    can' = if cnt == 0 then x else can
+    cnt' = if cnt == 0 || x == can then succ cnt else pred cnt
+  in
+    majorityPure' xs can' cnt'
+\end{lstlisting}
+\caption{The first pass of the majority vote algorithm in Haskell.}
+\label{fig:majority_pure}
+\end{figure*}
+
+\begin{figure*}[!htb]
+\begin{lstlisting}[language = Copilot, frame = none]
+aMajorityPure :: Eq a => [a] -> a -> Bool
+aMajorityPure xs can = aMajorityPure' 0 xs can > length xs `div` 2
+
+aMajorityPure' cnt []     _   = cnt
+aMajorityPure' cnt (x:xs) can =
+  let
+    cnt' = if x == can then cnt+1 else cnt
+  in
+    aMajorityPure' cnt' xs can
+\end{lstlisting}
+\caption{The second pass of the majority vote algorithm in Haskell.}
+\label{fig:amajority_pure}
+\end{figure*}
+
+Reliability in mission critical software is often improved by replicating
+the same computations on separate hardware and by doing a vote in the end
+based on the output of each system. The majority vote problem consists of
+determining if in a given list of votes there is a candidate that has more
+than half of the votes, and if so, of finding this candidate.
+
+The Boyer-Moore Majority Vote Algorithm \cite{MooreBoyer82,Hesselink2005} solves
+the problem in linear time and constant memory. It does so in two passes: The
+first pass chooses a candidate; and the second pass asserts that the
+found candidate indeed holds a majority.
+
+Without going into details of the algorithm, the first pass can be implemented
+in Haskell as shown in Figure \ref{fig:majority_pure}. The second pass, which
+simply checks that a candidate has more than half of the votes, is
+straightforward to implement and is shown in Figure \ref{fig:amajority_pure}.
+E.g. applying {\tt majorityPure} on the string {\tt AAACCBBCCCBCC} yields {\tt
+  C}, which {\tt aMajorityPure} can confirm is in fact a majority.
+
+\begin{figure*}[!htb]
+\begin{lstlisting}[language = Copilot, frame = none]
+majority :: (Eq a, Typed a) => [Stream a] -> Stream a
+majority []     = error "majority: empty list!"
+majority (x:xs) = majority' xs x 1
+
+majority' []     can _   = can
+majority' (x:xs) can cnt =
+  local
+    (if cnt == 0 then x else can) $
+      \ can' ->
+        local (if cnt == 0 || x == can then cnt+1 else cnt-1) $
+          \ cnt' ->
+            majority' xs can' cnt'
+\end{lstlisting}
+\caption{The first pass of the majority vote algorithm in Copilot.}
+\label{fig:majority}
+\end{figure*}
+
+\begin{figure*}[!htb]
+\begin{lstlisting}[language = Copilot, frame = none]
+aMajority :: (Eq a, Typed a) => [Stream a] -> Stream a -> Stream Bool
+aMajority xs can = aMajority' 0 xs can > (fromIntegral (length xs) `div` 2)
+
+aMajority' cnt []     _   = cnt
+aMajority' cnt (x:xs) can =
+  local
+    (if x == can then cnt+1 else cnt) $
+      \ cnt' ->
+        aMajority' cnt' xs can
+\end{lstlisting}
+\caption{The second pass of the majority vote algorithm in Copilot.}
+\label{fig:amajority}
+\end{figure*}
+% $
+
+When implementing the majority vote algorithm for Copilot, we can use reuse
+almost all of the code from the Haskell implementation. However, as functions
+in Copilot are macros that are expanded at compile time, care must
+be taken in order to avoid an explosion in the code size. Hence, instead of
+using Haskell's built-in \emph{let}-blocks, we use explicit sharing, as
+described in Section~\ref{sec:explicit_sharing}. The Copilot implementations
+of the first and the second pass are given in Figure \ref{fig:majority} and
+Figure \ref{fig:amajority} respectively. Comparing the Haskell implementation
+with the Copilot implementation, we see that the code is almost identical,
+except for the type signatures and the explicit sharing annotations.
+
+\subsection{Well Clear Example}~\label{subsec:WellClear}
+
+\textbf{NEEDS A LOT OF WORK}
+
+\todo[inline]{Here we will add a detailed description of well clear example}
+
+\begin{itemize}
+\item Intro to the problem of monitoring aircraft
+\item Overview of concept of well clear citing papers and maybe include some of the PVS models
+\item Our monitors with description maybe we show both PVS and Copilot with explanation
+\item Properties we have proven
+\item code generation 
+\item what we had to do to run on ground station. 
+\end{itemize}
+
+One application that suits well to the Copilot language is the monitoring of
+violations of separation criteria between two planes. We decided to implement
+the Well-Clear criterion as an example of practical use.
+
+\todo[inline]{Put here some WellClear stuff}.
+
+Do not forget:
+
+\begin{itemize}
+	\item m4
+	\item no let binding (everything in functions)
+	\item magic labels
+	\item following the PVS model (show examples on how close it is). Except for the arrays (HUGE mux stack).
+	\item magic makefile
+	\item cross compilation on windows
+	\item writing the main associated with.
+	\item making it work.
+\end{itemize}
+
+\textbf{Specification}
+
+
+\begin{lstlisting}[language=Copilot]
+
+module WCV where
+
+import Prelude ()
+
+import Copilot.Language
+import Copilot.Language.Reify
+import Copilot.Theorem
+
+import qualified Copilot.Language.Operators.Propositional as P
+
+dthr, tthr, zthr, tcoathr :: Stream Double
+dthr    = extern "dthr" Nothing
+tthr    = extern "tthr" Nothing
+zthr    = extern "zthr" Nothing
+tcoathr = extern "tcoathr" Nothing
+
+type Vect2 = (Stream Double, Stream Double)
+
+--------------------------------
+-- Relative velocity/position --
+--------------------------------
+
+vx, vy, vz :: Stream Double
+vx = extern "relative_velocity_x" Nothing
+vy = extern "relative_velocity_y" Nothing
+vz = extern "relative_velocity_z" Nothing
+
+v :: (Stream Double, Stream Double)
+v = (vx, vy)
+
+sx, sy, sz :: Stream Double
+sx = extern "relative_position_x" Nothing
+sy = extern "relative_position_y" Nothing
+sz = extern "relative_position_z" Nothing
+
+s :: (Stream Double, Stream Double)
+s = (sx, sy)
+
+------------------
+-- Vector stuff --
+------------------
+
+(|*|) :: Vect2 -> Vect2 -> Stream Double
+(x1, y1) |*| (x2, y2) = (x1 * x2) + (y1 * y2)
+
+sq :: Vect2 -> Stream Double
+sq x = x |*| x
+
+norm :: Vect2 -> Stream Double
+norm = sqrt . sq
+
+det :: Vect2 -> Vect2 -> Stream Double
+det (x1, y1) (x2, y2) = (x1 * y2) - (x2 * y1)
+
+(~=) :: Stream Double -> Stream Double -> Stream Bool
+a ~= b = (abs (a - b)) < 0.001
+
+neg :: Vect2 -> Vect2
+neg (x, y) = (negate x, negate y)
+
+--------------------
+-- Time variables --
+--------------------
+
+tau :: Vect2 -> Vect2 -> Stream Double
+tau s v = mux (s |*| v < 0) ((-(sq s)) / (s |*| v)) (-1)
+
+tcpa :: Vect2 -> Vect2 -> Stream Double
+tcpa s v@(vx, vy) = mux (vx ~= 0 && vy ~= 0) 0 (-(s |*| v)/(sq v))
+
+taumod :: Vect2 -> Vect2 -> Stream Double
+taumod s v = mux (s |*| v < 0) ((dthr * dthr - (sq s))/(s |*| v)) (-1)
+
+tep :: Vect2 -> Vect2 -> Stream Double
+tep s v = mux ((s |*| v < 0) && ((delta s v dthr) >= 0))
+  (theta s v dthr (-1))
+  (-1)
+
+delta :: Vect2 -> Vect2 -> Stream Double -> Stream Double
+delta s v d = (d*d) * (sq v) - ((det s v)*(det s v))
+
+theta :: Vect2 -> Vect2 -> Stream Double -> Stream Double -> Stream Double
+theta s v d e = (-(s |*| v) + e * (sqrt $ delta s v d)) / (sq v)
+
+--------------------------
+-- Some tools for times --
+--------------------------
+
+tcoa :: Stream Double -> Stream Double -> Stream Double
+tcoa sz vz = mux ((sz * vz) < 0) ((-sz) / vz) (-1)
+
+dcpa :: Vect2 -> Vect2 -> Stream Double
+dcpa s@(sx, sy) v@(vx, vy) = norm (sx + (tcpa s v) * vx, sy + (tcpa s v) * vy)
+
+--------------------------
+-- Well clear violation --
+--------------------------
+
+wcv :: (Vect2 -> Vect2 -> Stream Double) ->
+       Vect2 -> Stream Double ->
+       Vect2 -> Stream Double ->
+       Stream Bool
+wcv tvar s sz v vz = (horizontalWCV tvar s v) && (verticalWCV sz vz)
+
+verticalWCV :: Stream Double -> Stream Double -> Stream Bool
+verticalWCV sz vz =
+  ((abs $ sz) <= zthr) ||
+  (0 <= (tcoa sz vz) && (tcoa sz vz) <= tcoathr)
+
+horizontalWCV :: (Vect2 -> Vect2 -> Stream Double) -> Vect2 -> Vect2 -> Stream Bool
+horizontalWCV tvar s v =
+  (norm s <= dthr) ||
+  (((dcpa s v) <= dthr) && (0 <= (tvar s v)) && ((tvar s v) <= tthr))
+
+---------------------
+-- Local convexity --
+---------------------
+
+t1, t2, t3 :: Stream Double
+t1 = extern "t1" Nothing
+t2 = extern "t2" Nothing
+t3 = extern "t3" Nothing
+
+locallyConvex :: (Vect2 -> Vect2 -> Stream Double) -> Stream Bool
+locallyConvex tvar = (0 <= t1 && t1 <= t2 && t2 <= t3)
+   ==> not ( (wcv tvar (sx + t1*vx, sy + t1*vy) (sz + t1*vz) v vz)
+      &&  (not $ wcv tvar (sx + t2*vx, sy + t2*vy) (sz + t2*vz) v vz)
+      &&  (wcv tvar (sx + t3*vx, sy + t3*vy) (sz + t3*vz) v vz))
+
+--------------
+-- Spec --
+--------------
+
+spec :: Spec
+spec = do
+
+-------------------------
+-- Horizontal symmetry --
+-------------------------
+  theorem "1a" (forall $ (tau s v)    ~= (tau (neg s) (neg v)))     arith
+  theorem "1b" (forall $ (tcpa s v)   ~= (tcpa (neg s) (neg v)))    arith
+  theorem "1c" (forall $ (taumod s v) ~= (taumod (neg s) (neg v)))  arith
+  theorem "1d" (forall $ (tep s v)    ~= (tep (neg s) (neg v)))     arith
+
+-------------------------
+-- Horizontal ordering --
+-------------------------
+  theorem "2a" (forall $ ((s |*| v) < 0 && (norm s) > dthr && (dcpa s v) <= dthr)
+    ==> ((tep s v) <= (taumod s v)))
+    arith
+  theorem "2b" (forall $ ((s |*| v) < 0 && (norm s) > dthr && (dcpa s v) <= dthr)
+    ==> ((taumod s v) <= (tcpa s v)))
+    arith
+  theorem "2c" (forall $ ((s |*| v) < 0 && (norm s) > dthr && (dcpa s v) <= dthr)
+    ==> ((tcpa s v) <= (tau s v)))
+    arith
+
+--------------
+-- Symmetry --
+--------------
+  theorem "3a" (forall $
+    (wcv tau s sz v vz)    == (wcv tau (neg s) (-sz) (neg v) (-vz)))
+    arith
+  theorem "3b" (forall $
+    (wcv tcpa s sz v vz)   == (wcv tcpa (neg s) (-sz) (neg v) (-vz)))
+    arith
+  theorem "3c" (forall $
+    (wcv taumod s sz v vz) == (wcv taumod (neg s) (-sz) (neg v) (-vz)))
+    arith
+  theorem "3d" (forall $
+    (wcv tep s sz v vz)    == (wcv tep (neg s) (-sz) (neg v) (-vz)))
+    arith
+
+---------------
+-- Inclusion --
+---------------
+  theorem "4i"   (forall $ (wcv tau s sz v vz)    ==> (wcv tcpa s sz v vz))
+    arith
+  theorem "4ii"  (forall $ (wcv tcpa s sz v vz)   ==> (wcv taumod s sz v vz ))
+    arith
+  theorem "4iii" (forall $ (wcv taumod s sz v vz) ==> (wcv tep s sz v vz))
+    arith
+
+---------------------
+-- Local convexity --
+---------------------
+  theorem "5a" (forall $ locallyConvex tcpa)        arith
+  theorem "5b" (forall $ locallyConvex taumod)      arith
+  theorem "5c" (forall $ locallyConvex tep)         arith
+  theorem "6"  (P.not (forall $ locallyConvex tau)) arithSat
+
+---------------------
+-- Triggers --
+---------------------
+  trigger "alert_WCVtau"    (wcv tau s sz v vz)    []
+  trigger "alert_WCVtcpa"   (wcv tcpa s sz v vz)   []
+  trigger "alert_WCVtaumod" (wcv taumod s sz v vz) []
+  trigger "alert_WCVtep"    (wcv tep s sz v vz)    []
+
+----------------------------------------------------------------------------
+
+arith :: Proof Universal
+arith    = onlyValidity def { nraNLSat = True, debug = False }
+
+arithSat :: Proof Existential
+arithSat = onlySat      def { nraNLSat = True, debug = False }
+
+\end{lstlisting}
