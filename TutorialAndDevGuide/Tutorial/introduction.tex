@@ -1,7 +1,29 @@
 
 \section{Introduction} \label{sec:introduction}
 
-Copilot is embedded into the functional programming language Haskell
+ 
+Neither formal verification nor testing can ensure system reliability.
+Nearly 20 years ago, Butler and Finelli showed that testing alone cannot verify
+the reliability of ultra-critical software~\cite{butler}.
+\emph{Runtime verification} (RV)~\cite{monitors}, where monitors
+detect and respond to property violations at runtime, has the
+potential to enable the safe operation of safety-critical systems that
+are too complex to formally verify or fully test.  Technically
+speaking, a RV monitor takes a logical specification $\phi$ and
+execution trace $\tau$ of state information of the system under
+observation (SUO) and decides whether $\tau$ satisfies $\phi$. The
+\emph{Simplex Architecture}~\cite{simplex} provides a model
+architectural pattern for RV, where a monitor checks that the
+executing SUO satisfies a specification and, if the property is
+violated, the RV system will switch control to a more conservative
+component that can be assured using conventional means that
+\emph{steers} the system into a safe state.  \emph{High-assurance} RV
+provides an assured level of safety even when the SUO itself cannot be
+verified by conventional means.
+
+
+Copilot is a RV framework for specifying and generating monitors for C programs that is 
+embedded into the functional programming language Haskell
 \cite{PeytonJones02}.  A working knowledge of Haskell is necessary to use
 Copilot effectively; a variety of books and free web resources introduce Haskell.
 Copilot uses Haskell language extensions
@@ -10,7 +32,58 @@ specific to the Glasgow Haskell Compiler (GHC).
 \subsection{Uses} \label{uses}
 \textbf{Here we will discuss sampling, runtime verification, and practical uses of the copilot language.}
 
-\subsection{Domain} \label{domain}
+
+\subsubsection{Sampling} \label{sampling}
+Monitoring based on sampling state-variables has historically been disregarded
+as a runtime monitoring approach, for good reason: without the assumption of
+synchrony between the monitor and observed software, monitoring via sampling may
+lead to false positives and false negatives~\cite{DwyerDE08}.  For example,
+consider the property $(0;1;1)^*$, written as a regular expression, denoting the
+sequence of values a monitored variable may take.  If the monitor samples the
+variable at the inappropriate time, then both false negatives (the monitor
+erroneously rejects the sequence of values) and false positives (the monitor
+erroneously accepts the sequence) are possible.  For example, if the actual
+sequence of values is $0,1,1,0,1,1$, then an observation of $0,1,1,1,1$ is a
+false negative by skipping a value, and if the actual sequence is $0,1,0,1,1$,
+then an observation of $0,1,1,0,1,1$ is a false positive by sampling a value
+twice.
+
+
+
+However, in a hard real-time context, sampling is a suitable strategy.  Often,
+the purpose of real-time programs is to deliver output signals at a predicable
+rate and properties of interest are generally data-flow oriented.  In this
+context, and under the assumption that the monitor and the observed program
+share a global clock and a static periodic schedule, while false positives are
+possible, false negatives are not.  A false positive is possible, for example,
+if the program does not execute according to its schedule but just happens to
+have the expected values when sampled.  If a monitor samples an unacceptable
+sequence of values, then either the program is in error, the monitor is in
+error, or they are not synchronized, all of which are faults to be reported.
+
+Most of the popular runtime monitoring frameworks inline monitors in
+the observed program to avoid the aforementioned problems with
+sampling.  However, inlining monitors changes the real-time behavior
+of the observed program, perhaps in unpredicable ways.
+Solutions that
+introduce such unpredictability are not a viable solution for
+ultra-critical hard real-time systems.  In a sampling-based approach,
+the monitor can be integrated as a separate scheduled process during
+available time slices (this is made possible by generating efficient
+constant-time monitors).  Indeed, sampling-based monitors may even be
+scheduled on a separate processor (albeit doing so requires additional
+synchronization mechanisms), ensuring time and space partitioning from
+the observed programs.  Such an architecture may even be necessary if
+the monitored program is physically distributed.
+
+When deciding whether to use Copilot to monitor systems that are not hard real-time, the user must determine if
+sampling is suitable to capture the errors and faults of interest in the  SUO. In many cyber-physical systems, the trace being monitored is
+coming from sensors measuring physical data such as GPS coordinates, air speed, and actuation signals. These continuous signals do not
+change abruptly so as long as it is sampled at a suitable ratei, that usually must be determined experimentally, sampling is sufficient.
+
+
+\subsection{Target Application Domain} \label{domain}
+
 
 Copilot is a domain-specific language tailored to programming \emph{runtime
 monitors} for \emph{hard real-time}, \emph{distributed}, \emph{reactive systems}.
