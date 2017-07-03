@@ -104,7 +104,7 @@ nats :: Stream Int32
 nats = [0] ++ (1 + nats)
 \end{lstlisting}
 %
-In the same manner, the lazy-list of Fibonacci numbers can be specified as follows:
+In the same manner, the lazy-list of Fibonacci numbers can be specified  in Haskell as follows:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 fib_ll :: [Int32]
@@ -185,7 +185,7 @@ is a function which has an internal state, e.g. as a latch (as in electronic
 circuits) or a low/high-pass filter (as in a DSP).
 
 \begin{figure*}
-\begin{minipage}{0.4\linewidth}
+\begin{minipage}{0.25\linewidth}
 \begin{tabular}{c|c||c}
 $\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
 \hline
@@ -198,8 +198,7 @@ $T$ & $F$ & $T$ \\
 $T$ & $T$ & $F$
 \end{tabular}
 \end{minipage}
-\hspace{1cm}
-\begin{minipage}{0.6\linewidth}
+\begin{minipage}{0.35\linewidth}
 \begin{lstlisting}[frame=none]
 latch :: Stream Bool -> Stream Bool
 latch x = y
@@ -208,14 +207,27 @@ latch x = y
   z = [False] ++ y
 \end{lstlisting}
 \end{minipage}
-\caption{A latch. The specification is provided at the left and the
-implementation is provided at the right.}
+\hspace{1cm}
+\begin{minipage}{0.3\linewidth}
+\begin{tabular}{c|c|c|c|c|c}
+   & 0 & 1 & 2 & 3 & 4\\
+\hline
+x & $F$ & $T$ & $T$ & $F$ & $F$ \\
+\hline
+y & $F$ & $T$ & $F$ & $F$ & $F$ \\ 
+\end{tabular}
+\end{minipage}
+\caption{A latch. The specification function is provided at the left and the
+implementation in copilot is provided in the middle. The right shows an example of 
+the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find 
+$y_0$ since there is no $y_{-1}$) is False.}
 \label{fig:jk_latch}
 \end{figure*}
 
 \begin{example}
 We consider a simple latch, as described in \cite{Farhat2004}, with a single
-input and a boolean state. Whenever the input is true the internal state is reversed.
+input and a boolean state. A latch is a way of simulating memory in circuits by feeding
+back output gates as inputs.  Whenever the input is true the internal state is reversed.
 The operational behavior and the implementation of the latch is shown in Figure
 \ref{fig:jk_latch}.\footnote
 {In order
