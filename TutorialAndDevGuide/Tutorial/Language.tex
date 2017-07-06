@@ -217,7 +217,7 @@ x & $F$ & $T$ & $T$ & $F$ & $F$ \\
 y & $F$ & $T$ & $F$ & $F$ & $F$ \\ 
 \end{tabular}
 \end{minipage}
-\caption{A latch. The specification function is provided at the left and the
+\caption{A latch [Example 3]. The specification function is provided at the left and the
 implementation in copilot is provided in the middle. The right shows an example of 
 the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find 
 $y_0$ since there is no $y_{-1}$) is False.}
@@ -333,13 +333,15 @@ program that we are monitoring.  They include variables, arrays, and functions
 defined outside Copilot and which are evoked when Copilot needs to report that
 the target program has violated a specification constraint.
 
-\paragraph{Sampling.}
+\paragraph{External Variables.}
+
 A Copilot specification is \emph{open} if defined with external symbols in the
 sense that values must be provided externally at runtime.  To simplify writing
 Copilot specifications that can be interpreted and tested, constructs for
 external symbols take an optional environment for interpretation.
 
-External variables are defined by using the {\tt extern} construct:
+External variables are similar to global variables in other languages. They 
+are defined by using the {\tt extern} construct:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 extern :: Typed a => String -> Maybe [a] -> Stream a
@@ -493,6 +495,12 @@ external functions or external arrays in their arguments, and external arrays
 cannot contain streams containing external functions or external arrays in their
 indexes.  They can both take external variables, however.
 
+\textbf{Here we discuss how external variables relate to sampling. }
+As discussed in section 1.4, \emph{sampling} is a way of monitoring based on 
+sampling state-variables, while assuming synchrony between the monitor and 
+the observed software. 
+
+
 \paragraph{Triggers.}
 Triggers, the only mechanism for Copilot streams to effect the outside world,
 are defined by using the {\tt trigger construct}:
@@ -511,11 +519,32 @@ spec :: Spec
 spec = do
   trigger "f" (even nats) [arg fib, arg (nats * nats)]
   trigger "g" (fib > 10) []
-  let x = externW32 "x" Nothing
+  let x = externW64 "x" (Just [1..])
   trigger "h" (x < 10) [arg x]
 \end{lstlisting}
 %
-The order in which the triggers are defined is irrelevant.
+The order in which the triggers are defined is irrelevant. To interpret this spec we run:
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+interpret 10 spec
+\end{lstlisting}
+%
+which will yield the following output:
+%
+\begin{code}
+f:        g:	 h:
+(1,0)     ()        (1)
+--        ()        (2)
+(2,4)     ()        (3)
+--        ()        (4)
+(5,16)    ()        (5)
+--        ()        (6)
+(13,36)   --	(7)
+--        --        (8)
+(34,64)   --	(9)
+--        --         --
+\end{code}
+%
 
 \begin{example}
 \label{exm:engine}
