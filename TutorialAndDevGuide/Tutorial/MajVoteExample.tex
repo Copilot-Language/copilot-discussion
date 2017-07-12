@@ -1,9 +1,37 @@
-\section{Extended Example: The Boyer-Moore Majority-Vote Algorithm}
+\subsection{The Boyer-Moore Majority-Vote Algorithm}
 \label{subsec:boyer_moore}
 
 In this section we demonstrate how to use Haskell as an advanced macro language
 on top of Copilot by implementing an algorithm for solving the voting problem
 in Copilot.
+
+Reliability in mission critical software is often improved by replicating
+the same computations on separate hardware and by doing a vote in the end
+based on the output of each system. The majority vote problem consists of
+determining if in a given list of votes there is a candidate that has more
+than half of the votes, and if so, of finding this candidate.
+
+The Boyer-Moore Majority Vote Algorithm \cite{MooreBoyer82,Hesselink2005} solves
+the problem in linear time and constant memory. It does so in two passes: The
+first pass chooses a candidate; and the second pass asserts that the
+found candidate indeed holds a majority.
+
+The algorithm for the first pass involves the sequence of elements we are interpreting,
+a single element that represents the current majority, and a counter,
+which is initially set to zero. The algorithm is as follows:
+\begin{itemize}
+\item Initialize an element $m$ and a counter $i$ where $i=0$
+\item For each element x of the input sequence: 
+	\begin{itemize} 
+	\item If $i=0$ then let $m=x$ and $i=1$
+	\item else if $m=x$ then increment $i$
+	\item else let $i = i-1$
+	\end{itemize}
+\item Return $m$
+\end{itemize}
+
+This algorithm will produce an output even if there is no majority, which is why 
+the second pass is needed to verify that the output of the first pass is valid. 
 
 \begin{figure*}[!htb]
 \begin{lstlisting}[language = Copilot, frame = none]
@@ -39,18 +67,7 @@ aMajorityPure' cnt (x:xs) can =
 \label{fig:amajority_pure}
 \end{figure*}
 
-Reliability in mission critical software is often improved by replicating
-the same computations on separate hardware and by doing a vote in the end
-based on the output of each system. The majority vote problem consists of
-determining if in a given list of votes there is a candidate that has more
-than half of the votes, and if so, of finding this candidate.
-
-The Boyer-Moore Majority Vote Algorithm \cite{MooreBoyer82,Hesselink2005} solves
-the problem in linear time and constant memory. It does so in two passes: The
-first pass chooses a candidate; and the second pass asserts that the
-found candidate indeed holds a majority.
-
-Without going into details of the algorithm, the first pass can be implemented
+The first pass can be implemented
 in Haskell as shown in Figure \ref{fig:majority_pure}. The second pass, which
 simply checks that a candidate has more than half of the votes, is
 straightforward to implement and is shown in Figure \ref{fig:amajority_pure}.
