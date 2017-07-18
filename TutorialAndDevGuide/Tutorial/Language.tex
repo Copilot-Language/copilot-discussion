@@ -335,7 +335,34 @@ the target program has violated a specification constraint.
 
 \paragraph{External Variables.}
 
-A Copilot specification is \emph{open} if defined with external symbols in the
+
+As discussed in Section~\ref{sampling}, \emph{sampling} is an approach
+for monitoring the state of an executing system based on sampling
+state-variables, while assuming synchrony between the monitor and the
+observed software. Copilot targets hard real-time embedded C programs
+so the state variables that are observed by the monitors are variables
+of C programs. Copilot monitors run either in the same thread or a
+separate thread as the system under observation and the only variables
+that can be observed are those that are made available through shared
+memory. This means local variables cannot be observed. Currently,
+Copilot can only observe basic C data structures and cannot handle C
+structs, dynamic data structures, or two dimensional arrays.
+
+
+Copilot has both an interpreter and a compiler.The compiler must be
+used to monitor an executing program. The Copilot reification process
+generates a C monitor from a Copilot specification. The variables that
+are observed in the C code must be declared as \emph{external}
+variables in the monitor. The external variables have the same name as
+the variables being monitored in the C code are treated as shared
+memory. The interpreter is intended for exploring ideas and algorithms
+and is not intended to monitor executing  C
+programs. It may seem external variables would have no meaning if the
+monitor was run in the interpreter, but Copilot gives the user the
+ability to specify default stream values for an external variable that
+get used when the monitor interpreted.
+
+ A Copilot specification is \emph{open} if defined with external symbols in the
 sense that values must be provided externally at runtime.  To simplify writing
 Copilot specifications that can be interpreted and tested, constructs for
 external symbols take an optional environment for interpretation.
@@ -495,10 +522,6 @@ external functions or external arrays in their arguments, and external arrays
 cannot contain streams containing external functions or external arrays in their
 indexes.  They can both take external variables, however.
 
-\textbf{Here we discuss how external variables relate to sampling. }
-As discussed in section 1.4, \emph{sampling} is a way of monitoring based on 
-sampling state-variables, while assuming synchrony between the monitor and 
-the observed software. 
 
 
 \paragraph{Triggers.}
