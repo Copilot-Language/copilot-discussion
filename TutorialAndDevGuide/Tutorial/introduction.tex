@@ -128,6 +128,14 @@ Many of the examples in this paper can be found at
 \url{https://github.com/Copilot-Language/Copilot/tree/copilot2.0/Examples}.
 
 \subsection{Sampling} \label{sampling}
+The idea of sampling representative data from a large set of data  is well
+established in data science and engineering. For instance, in digital
+signal processing, a signal such as music is sampled at a high enough
+rate to obtain enough discrete points to represent the physical sound
+wave. The fidelity of the recording is dependant on the sampling
+rate. Sampling a state variable of an executing program is similar,
+but variables are rarely continuous signals so they lack the nice
+properties of continuity.  
 Monitoring based on sampling state-variables has historically been disregarded
 as a runtime monitoring approach, for good reason: without the assumption of
 synchrony between the monitor and observed software, monitoring via sampling may

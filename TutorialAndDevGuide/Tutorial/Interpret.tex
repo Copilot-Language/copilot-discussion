@@ -1,6 +1,8 @@
+\newpage 
 \section{Interpreting and Compiling}
 \label{interpcompile}
-
+The Copilot RV framework comes with both an interpreter and a
+compiler. 
 \subsection{Interpreting Copilot}
 To use Copilot's interpreter, one must first invoke the GHC Interpreter via
 the Cabal sandbox. Invoking the interpreter with the \texttt{cabal
@@ -154,4 +156,7 @@ The compiler then generates several files in a separate-subfolder, some of which
 The file named ``copilot.h'' contains prototypes for all external variables,
 functions, and arrays, and contains a prototype for the ``step''-function,
 which evaluates a single iteration.
+
+
+
 
