@@ -157,6 +157,14 @@ The file named ``copilot.h'' contains prototypes for all external variables,
 functions, and arrays, and contains a prototype for the ``step''-function,
 which evaluates a single iteration.
 
+Another example can be found in Copilot/Examples/Examples2.hs. At the top of the 
+file we alias {\tt Copilot.Compile.SBV} as {\tt S} for simplicity. Observe line 75:
 
+\begin{lstlisting}[language = Copilot]
+reify spec  >>=  S.compile (S.Params { S.prefix = Just "secondexamplespec"} )
+\end{lstlisting}
+
+Which, when executed, prefixes ``secondexamplespec" to all of the ``standard" file names and
+the step function.
 
 

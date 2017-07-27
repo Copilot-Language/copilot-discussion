@@ -2,6 +2,46 @@
 
 \todo[inline]{Here we will add a detailed description of well clear example}
 
+One application that suits well to the Copilot language is the monitoring of
+violations of separation criteria between two planes. We decided to implement
+the Well-Clear criterion as an example of practical use.
+Well Clear is a mathematically defined way of preventing collisions in the air. The well-clear boundary 
+sets the \emph{well-clear violation volume}, such that "aircraft pairs jointly occupying this volume are 
+considered to be in a well-clear violation" [cite DAEDALUS].
+
+Observe the \emph{Well clear violation} section of the code below. The function {\tt wcv} takes in parameters and
+checks the horizontal and vertical boundries for violation via the {\tt horizontalWCV} and {\tt verticalWCV} functions respectively. 
+
+\begin{lstlisting}[language = copilot]
+--------------------------
+-- Well clear violation --
+--------------------------
+
+wcv :: (Vect2 -> Vect2 -> Stream Double) ->
+       Vect2 -> Stream Double ->
+       Vect2 -> Stream Double ->
+       Stream Bool
+wcv tvar s sz v vz = (horizontalWCV tvar s v) && (verticalWCV sz vz)
+
+verticalWCV :: Stream Double -> Stream Double -> Stream Bool
+verticalWCV sz vz =
+  ((abs $ sz) <= zthr) ||
+  (0 <= (tcoa sz vz) && (tcoa sz vz) <= tcoathr)
+
+horizontalWCV :: (Vect2 -> Vect2 -> Stream Double) -> Vect2 -> Vect2 -> Stream Bool
+horizontalWCV tvar s v =
+  (norm s <= dthr) ||
+  (((dcpa s v) <= dthr) && (0 <= (tvar s v)) && ((tvar s v) <= tthr))
+\end{lstlisting}
+
+The main parameters for these functions are {\tt s, v, sz,} and {\tt vz}. {\tt s,v} represents the horizontal position and velocity of the aircraft being monitored, while {\tt sz,vz} represents the vertical position and velocity. We assume that the "other" aircraft is at the origin, so their horizontal and vertical positions are zero. 
+
+To determine if there is a horizontal well clear violation we check whether the position of our own craft ({\tt s}) is less than the distance threshold ({\tt dthr}), which is the closest two aircraft can be within well-clear regulations. If it is, then there is a violation. If not, we then check that the distance at closest point of approach ({\tt dcpa}) corresponding to our position and speed is also less than the distance threshold \emph{and} that the time of that closest point of approach ({\tt tvar}) corresponding to our position and speed is greater than zero and less than the time threshold. If both of these are true, then we have a violation. 
+
+Essentially, we have a violation if either our aircraft is too close to the "other" aircraft (less than {\tt dthr}) or if our aircraft will be too close to the "other aircraft" within a certain amount of time. For example, assume that the distance threshold we choose is 400m. If {\tt s} is less than 400m, we will have a violation. Otherwise, assume our time threshold is 30 seconds. If at the point in the paths of our aircrafts where the two paths are closest is less than 400m apart \emph{and} if both aircrafts hit that point in their paths within 30 seconds of each other, there is a well-clear violation. 
+
+The vertical well clear violation function works much the same way. It first checks whether the vertical position ({\tt sz}) is less than the vertical distance threshold. It then checks that the time at which the two aircraft will have the same vertical given the distance and velocity is less than the time to co-altitude threshold, which is the minimum time at which the two aircraft are allowed to have the same altitude. 
+
 \begin{itemize}
 \item Intro to the problem of monitoring aircraft
 \item Overview of concept of well clear citing papers and maybe include some of the PVS models
@@ -11,24 +51,22 @@
 \item what we had to do to run on ground station. 
 \end{itemize}
 
-One application that suits well to the Copilot language is the monitoring of
-violations of separation criteria between two planes. We decided to implement
-the Well-Clear criterion as an example of practical use.
+
 
 \todo[inline]{Put here some WellClear stuff}.
 
-Do not forget:
+%Do not forget:
 
-\begin{itemize}
-	\item m4
-	\item no let binding (everything in functions)
-	\item magic labels
-	\item following the PVS model (show examples on how close it is). Except for the arrays (HUGE mux stack).
-	\item magic makefile
-	\item cross compilation on windows
-	\item writing the main associated with.
-	\item making it work.
-\end{itemize}
+%\begin{itemize}
+%	\item m4
+%	\item no let binding (everything in functions)
+%	\item magic labels
+%	\item following the PVS model (show examples on how close it is). Except for the arrays (HUGE mux stack).
+%	\item magic makefile
+%	\item cross compilation on windows
+%	\item writing the main associated with.
+%	\item making it work.
+%\end{itemize}
 
 \subsubsection{Specification}
 
