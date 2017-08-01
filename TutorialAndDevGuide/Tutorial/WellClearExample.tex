@@ -50,6 +50,8 @@ Essentially, we have a violation if either our aircraft is too close to the "oth
 
 The vertical well clear violation function works much the same way. It first checks whether the vertical position ({\tt sz}) is less than the vertical distance threshold. It then checks that the time at which the two aircraft will have the same vertical given the distance and velocity is less than the time to co-altitude threshold, which is the minimum time at which the two aircraft are allowed to have the same altitude. 
 
+The horizontal and vertical distance and time thresholds are given as external variables, as described in Section~\ref{subsec:interacting}. Similarly, the relative velocity and position for our aircraft with respect to the ``other" aircraft are given as external variables in the \emph{Relative velocity/position} section of the code. The \emph{Vector stuff, Time variables,} and \emph{Some tools for times} sections of the code give us various streams and functions that we reference in the \emph{Well clear violation} section and allow us to do the calculations. 
+
 \begin{itemize}
 \item Intro to the problem of monitoring aircraft
 \item Overview of concept of well clear citing papers and maybe include some of the PVS models
