@@ -2,12 +2,21 @@
 
 \todo[inline]{Here we will add a detailed description of well clear example}
 
-One application that suits well to the Copilot language is the monitoring of
-violations of separation criteria between two planes. We decided to implement
-the Well-Clear criterion as an example of practical use.
-Well Clear is a mathematically defined way of preventing collisions in the air. The well-clear boundary 
-sets the \emph{well-clear violation volume}, such that "aircraft pairs jointly occupying this volume are 
-considered to be in a well-clear violation" [cite DAEDALUS].
+One application that suits well to the Copilot language is the
+monitoring of violations of separation criteria between two aircraft.
+In civil aviation, the air traffic management  system is designed to  keep
+aircraft at a safe distance from each other avoid even the
+possibility of a mid-air collision.  In particular,  aircraft are
+generally considered safety separated if they maintain 5 mile
+horizontal distance from another aircraft and 1000 ft vertical
+separation. Technically,  we define  a safe-separation volume around an
+aircraft that if violated by an intruder aircraft, the two aircraft
+are said to be in conflict. The mathematical definition of this volume
+of space around the  moving aircraft  is referred
+to as Well Clear. The well-clear boundary defines  the
+\emph{well-clear violation volume}, such that "aircraft pairs jointly
+occupying this volume are considered to be in a well-clear violation"
+[cite DAEDALUS].
 
 Observe the \emph{Well clear violation} section of the code below. The function {\tt wcv} takes in parameters and
 checks the horizontal and vertical boundries for violation via the {\tt horizontalWCV} and {\tt verticalWCV} functions respectively. 
