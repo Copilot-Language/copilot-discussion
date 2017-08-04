@@ -1,5 +1,4 @@
 \subsection{Well Clear Example}~\label{sec:WellClear}
-
 \begin{center}
 \textbf{The full Well Clear specification can be found in Appendix A.}
 \end{center}
@@ -18,7 +17,7 @@ of space around the  moving aircraft  is referred
 to as Well Clear. The well-clear boundary defines  the
 \emph{well-clear violation volume}, such that "aircraft pairs jointly
 occupying this volume are considered to be in a well-clear violation"
-[cite DAEDALUS].
+~\cite{Munoz2015DASC}.
 
 Observe the \emph{Well clear violation} section of the code below. The function {\tt wcv} takes in parameters and
 checks the horizontal and vertical boundries for violation via the {\tt horizontalWCV} and {\tt verticalWCV} functions respectively. 
@@ -53,16 +52,16 @@ Essentially, we have a violation if either our aircraft is too close to the "oth
 
 The vertical well clear violation function works much the same way. It first checks whether the vertical position ({\tt sz}) is less than the vertical distance threshold. It then checks that the time at which the two aircraft will have the same vertical given the distance and velocity is less than the time to co-altitude threshold, which is the minimum time at which the two aircraft are allowed to have the same altitude. 
 
-The horizontal and vertical distance and time thresholds are given as external variables, as described in Section~\ref{subsec:interacting}. Similarly, the relative velocity and position for our aircraft with respect to the ``other" aircraft are given as external variables in the \emph{Relative velocity/position} section of the code. The \emph{Vector stuff, Time variables,} and \emph{Some tools for times} sections of the code give us various streams and functions that we reference in the \emph{Well clear violation} section and allow us to do the calculations. 
+The rest of the Well Clear Code can be found in Appendix A. The horizontal and vertical distance and time thresholds are given as external variables, as described in Section~\ref{subsec:interacting}. Similarly, the relative velocity and position for our aircraft with respect to the ``other" aircraft are given as external variables in the \emph{Relative velocity/position} section of the code. The \emph{Vector stuff, Time variables,} and \emph{Some tools for times} sections of the code give us various streams and functions that we reference in the \emph{Well clear violation} section and allow us to do the calculations. 
 
-\begin{itemize}
-\item Intro to the problem of monitoring aircraft
-\item Overview of concept of well clear citing papers and maybe include some of the PVS models
-\item Our monitors with description maybe we show both PVS and Copilot with explanation
-\item Properties we have proven
-\item code generation 
-\item what we had to do to run on ground station. 
-\end{itemize}
+%\begin{itemize}
+%\item Intro to the problem of monitoring aircraft
+%\item Overview of concept of well clear citing papers and maybe include some of the PVS models
+%\item Our monitors with description maybe we show both PVS and Copilot with explanation
+%\item Properties we have proven
+%\item code generation 
+%\item what we had to do to run on ground station. 
+%\end{itemize}
 
 
 %Do not forget:
