@@ -1,0 +1,648 @@
+\documentclass{beamer}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata}
+
+\lstset {
+    language=haskell
+  , frame=tb
+  , moredelim=**[is][\only<-+>{\color{white}}%
+                     \only<.(1)>{\color{red}}%
+                     \only<.(2)>{\color{black}}]{\#}{\#}%
+}
+
+\title{A new C backend for Copilot}
+
+\author{Frank Dedden\inst{1,2} \and Alwyn Goodloe\inst{3} \and Wouter Swierstra\inst{1}}
+
+\institute
+{
+  \inst{1}
+  Utrecht University\\
+  Department of Information and Computing Sciences\\
+  \emph{Utrecht, The Netherlands}
+  \and
+  \inst{2}
+  National Institute of Aerospace\\
+  \emph{Hampton, Virginia, United States of America}
+  \and
+  \inst{3}
+  NASA Langley Research Center\\
+  Safety Critical Avionics Systems Branch\\
+  \emph{Hampton, Virginia, United States of America}
+}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}{Outline}
+  \tableofcontents
+\end{frame}
+
+
+
+\section{Introduction}
+\begin{frame}{Introduction}
+\begin{itemize}
+  \item Copilot is a Haskell library for monitoring C programs.
+  \item Implements a Domain Specific Language to write specifications.
+  \item Currently comes with two backends for translation to C:
+  \begin{itemize}
+    \item \emph{Copilot-C99}: Based on Atom, unmaintained.
+    \item \emph{Copilot-SBV}: SBV based code generator.
+  \end{itemize}
+  \item Task: to create a new backend, replacing both current ones.
+\end{itemize}
+\end{frame}
+
+
+\section{Copilot overview}
+\begin{frame}{Copilot overview}
+\begin{figure}[ht!]
+  \centering
+  \input{toolchain.tex}
+  \caption{The Copilot toolchain}
+  \label{fig:copilot_toolchain}
+\end{figure}
+\end{frame}
+
+\begin{frame}[fragile]{Small example}
+\begin{lstlisting}
+module Main where
+
+import Language.Copilot
+import Copilot.Compile.SBV
+import qualified Prelude as P
+
+a :: Stream Int8
+a = [1,2,3] ++ a
+
+b :: Stream Int8
+b = [5,6] ++ a
+
+spec = do
+  trigger "func" (a > 2) [arg b]
+
+main = do reify spec >>= compile defaultParams
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}{Limitations}
+\begin{itemize}
+  \item \emph{Copilot-C99} is unmaintained, and produces ugly code.
+  \item \emph{Copilot-SBV} produces better code, but can be hard to read due to
+  formatting.
+  \item Neither support structs or arrays.
+  \item Both could be more efficient.
+  \item \emph{Copilot-SBV} produces ACSL specifications as well,
+  \emph{Copilot-C99} does not.
+\end{itemize}
+\end{frame}
+
+
+
+\section{Code generator}
+\begin{frame}{Code generator}
+\begin{itemize}
+  \item Outputs code nearly identical to \emph{Copilot-SBV}.
+  \item Every stream has a buffer, current value and current index in the buffer.
+  \item Every stream gets its own generator function.
+  \item Guards and arguments of trigger have their own function as well.
+  \item These functions are called in the \texttt{step()} function.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+module Main where
+
+import Language.Copilot
+import Copilot.Compile.C
+
+import Prelude hiding ((++), drop)
+
+s0 :: Stream Int8
+s0 = [1,2,3] ++ s0
+
+spec = do
+  trigger "fbasic" true [arg s0]
+
+main = do reify spec >>= compile
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+\begin{lstlisting}[basicstyle=\small, language=c]
+static int8_t s0_buff[3] = {1, 2, 3};
+static int8_t s0 = 1;
+static size_t s0_idx = 0;
+static int8_t s0_gen () {
+  int8_t s0_loc;
+  {
+    size_t idx = s0_idx;
+    s0_loc = s0_buff[idx];
+  };
+  return s0_loc;
+}
+static bool fbasic_guard () {
+  return true;
+}
+/* fbasic_arg0 should be here */
+static void step () {
+  if (fbasic_guard()) fbasic(fbasic_arg0());
+  s0 = s0_gen();
+  s0_buff[s0_idx] = s0;
+  ++(s0_idx);
+  s0_idx = s0_idx % 3;
+}
+\end{lstlisting}
+\end{frame}
+
+
+\section{Structs}
+\begin{frame}{Structs}
+  \begin{itemize}
+    \item Bundled values in a single datatype.
+    \item Possibility to read and modify fields.
+    \item We need to be able to write functions on arbitrary structs.
+  \end{itemize}
+
+  Multiple ways to model structs:
+    \begin{enumerate}
+      \item Separate streams for every field.
+      \item List of tuples: \texttt{[(String, Type)]}.
+      \item Using Haskell's record syntax.
+    \end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Proposed solutuion: Separate streams}
+  \begin{itemize}
+    \item Current way to use structs in Copilot.
+    \item Very easy to implement, requiring no changes to Copilot.
+    \item Tedious to use.
+  \end{itemize}
+\begin{lstlisting}[language=c]
+struct vec {
+  float x;
+  float y;
+};
+vec v = {1, 2};
+\end{lstlisting}
+\begin{lstlisting}
+vx, vy :: Float
+vx = extern "v.x" Nothing
+vy = extern "v.y" Nothing
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  However, there is no syntactical connection between fields:
+\begin{lstlisting}
+length :: Float -> Float -> Float
+length x y = sqrt (x*x + y*y)
+\end{lstlisting}
+
+  We could solve this with a tuple:
+\begin{lstlisting}
+type Vec = (Float, Float)
+length :: Vec -> Float
+length (x, y) = sqrt (x*x + y*y)
+\end{lstlisting}
+
+  But we need to pack and unpack the tuple by hand every time...
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Proposd solution: List of tuples}
+  \begin{itemize}
+    \item Easy to implement, fields can be accessed by their names.
+    \item Needs a \texttt{lookup} function to access fields.
+    \item Does create a syntactical connection between fields.
+    \item We need a heterogeneous list to store the values.
+  \end{itemize}
+\begin{lstlisting}
+type VarName = String
+data Type    = Bool | Int8 | Int16 | ...
+
+data Value   = forall a. V Type a
+type Struct  = [(VarName, Value)]
+
+v :: Struct
+v = extern "v" Nothing
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  The definition of \texttt{Value} does allow incorrect values:
+\begin{lstlisting}
+v :: Value
+v = V Int8 True
+\end{lstlisting}
+  Adding a parameter to \texttt{Type} can solve the problem. Copilot already
+  provides such a type:
+\begin{lstlisting}
+data Type :: * -> * where
+  Bool    :: Type Bool
+  Int8    :: Type Int8
+  Int16   :: Type Int16
+  ...
+
+data Value  = forall a. V (Type a) a
+type Struct = [(VarName, Value)]
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Note that the \texttt{Type a} and \texttt{a} are bound by the same
+quantifier, which disallows incorrect values:
+\begin{lstlisting}
+v :: Value
+v = V Int8 True
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\scriptsize,language={}]
+* Couldn't match expected type `Int8' with actual type `Bool'
+* In the second argument of `V', namely `True'
+  In the expression: V Int8 True
+  In an equation for `v': v = V Int8 True
+\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+  We are unable to write incorrect \texttt{Value}'s, but the type of
+  \texttt{Struct} provides us with little to no type-safety:
+
+\begin{lstlisting}
+v1 :: Struct
+v1 = [ ("x", V Float 1.0) ]
+
+v2 :: Struct
+v2 = [ ("foo", V Bool True) ]
+\end{lstlisting}
+Here \texttt{v1} and \texttt{v2} share the same type, but share no semantic
+meaning. Even worse, we can modify the fields of a struct:
+\begin{lstlisting}
+faulty :: Struct -> Struct
+faulty v = ("bar", V Bool False) : v
+
+v3 :: Struct
+v3 = faulty v1 -- v3 is not a vector anymore
+\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Final solution: Haskell datatypes}
+  \begin{itemize}
+    \item Haskell's record syntax emulates C structs.
+    \item Gives us accessor functions for free.
+    \item We can rely on Haskell to force type correctness.
+  \end{itemize}
+\begin{lstlisting}
+data Vec = Vec
+  { x :: Float
+  , y :: Float
+  }
+
+vec :: Vec
+vec = Vec 1 2
+
+x' :: Float
+x' = x vec
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  Obviously, having distinct types disallows writing functions that work on all
+  possible structs $\Rightarrow$ Use a \texttt{Struct} class:
+
+\begin{lstlisting}
+class #Typed a =># Struct a #where
+  typename    :: a -> Typename a
+  toValues    :: a -> Values a
+  fromValues  :: Values a -> a#
+
+#data Typename a = TyTypedef String
+                | TyStruct  String#
+
+#type Values a = [Value]
+data Value    = forall a.
+  (Typed a, Show a) => V (Type a) String a#
+
+instance Struct Vec #where ...
+
+instance Typed Vec where ...#
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Both instances of \texttt{Struct} and \texttt{Typed} need to be defined by the
+user.
+\begin{lstlisting}
+instance Struct Vec where
+  typename _  = TyTypedef "vec"
+  #toValues v  = [ V Int8  "x" (x v)
+                , V Int16 "y" (y v)
+                ]#
+  #fromValues  ( V Int8  "x" x
+              : V Int16 "x" y
+              : []
+              ) = Vec x y#
+\end{lstlisting}
+\pause
+\begin{itemize}
+  \item User must ensure result of \texttt{toValues} is of the correct length.
+  \item We pattern match in \texttt{fromValues}, types are matched runtime.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+instance Typed Vec where
+  -- typeOf :: Type a
+  typeOf = Struct (Vec 0 0)
+\end{lstlisting}
+\begin{itemize}
+  \item \texttt{Vec 0 0} is used to infer a correct type, the values itself are
+  ignored.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Struct example}
+With structs being first-class in Copilot, we can use the regular
+\texttt{extern} function on them:
+\begin{lstlisting}
+exvec :: Stream Vec
+exvec = extern "exvec" Nothing
+
+s :: Stream Vec
+s = [Vec 1 2, Vec 3 4] ++ exvec
+\end{lstlisting}
+\end{frame}
+
+
+
+\section{Arrays}
+\begin{frame}{Arrays}
+A few requirements make arrays harder to implement then structs:
+\begin{itemize}
+  \item Only unsigned integers should be allowed as index, to aid the
+  connection with C.
+  \item We want to disallow nested arrays, but allow multi-dimensional arrays.
+  \item We prefer arrays to be fixed length.
+\end{itemize}
+
+We have to create a custom type:
+\begin{itemize}
+  \item Haskell lists are not suitable $\Rightarrow$ No fixed length;
+  \item \texttt{Data.Array} has fixed lengths, but allows all kinds of indices
+  and type inside the array.
+\end{itemize}
+
+Later on we will see that creating a custom type has more benefits.
+\end{frame}
+
+
+\begin{frame}[fragile]{Proposed solution: Type-dependent arrays}
+\begin{itemize}
+  \item Type-dependency gives us type-safe fixed length arrays.
+  \item Sadly GHC is not usable (yet) for this level of type-dependency.
+\end{itemize}
+\begin{lstlisting}
+data Array (n :: Nat) a where
+  Nil  :: Array 0 a
+  (:>) :: a -> Array n a -> Array (n+1) a
+
+infixr :>
+
+arr :: Array 3 Int
+arr = 1 :> 2 :> 3 :> Nil
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+Some functions can be implemented:
+\begin{lstlisting}[basicstyle=\small]
+foldr :: (a -> b -> b) -> b -> Array n a -> b
+foldr f b Nil       = b
+foldr f b (x :> xs) = f x (foldr f b xs)
+\end{lstlisting}
+For others GHC is not able to unify types:
+\begin{lstlisting}[basicstyle=\small]
+append :: Array n a -> Array m a -> Array (n + m) a
+append Nil       ys = ys
+append (x :> xs) ys = x :> append xs ys
+\end{lstlisting}
+\begin{lstlisting}[basicstyle=\small,language={}]
+* Could not deduce: ((m + n1) + 1) ~ (m + n)
+  from the context: n ~ (n1 + 1)
+\end{lstlisting}
+GHC does not know about basic mathematical rules.
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Proposed solution: Simpler type}
+Mimicking \texttt{Data.Array}:
+\begin{lstlisting}
+data Array i a = Index i => Array i a
+
+array :: [(i, a)] -> Array i a
+\end{lstlisting}
+\begin{itemize}
+  \item Nearly no type safety, except for the dimension of the array and its
+  inner type.
+  \item For example no difference between array of length 2 or 200.
+  \item It turned out to be really convenient to have the length inside the
+  type.
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Final solution: Type literals}
+We still want store the size of the array in the type $\Rightarrow$ type
+literals.
+\begin{lstlisting}[basicstyle=\small]
+data Array i a where
+  Array :: Index i n => i -> [(n, a)] -> Array i a
+
+array :: forall n i a.
+  Index i n => [(n, a)] -> Array i a
+array xs | valid     = Array idx xs
+         | otherwise = error "..."
+  where
+    valid = ...
+    idx   = index
+\end{lstlisting}
+\begin{itemize}
+  \item Smart constructor checks if input is valid.
+  \item \texttt{Index}-class is used to define dimension of array.
+  \item To be used in Copilot, we need to create an instance for \texttt{Typed}.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Indexing}
+\begin{itemize}
+  \item We disallow nested arrays for code generation purposes.
+  \item Natural numbers would not suffice for multidimensional arrays.
+  \item Instead we use \texttt{Index} to support this.
+\end{itemize}
+\begin{lstlisting}[basicstyle=\small]
+class Index i n | i -> n where
+  index     :: i
+  fromIndex :: i -> [n]
+  size      :: i -> Int
+  size i = length $ fromIndex i
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Indexing}
+\begin{lstlisting}[basicstyle=\small]
+#data Len a = Len#
+
+instance KnownNat n => Index (Len n) Int where
+  index     = Len
+  fromIndex = idxRange
+
+#instance (KnownNat m, KnownNat n) =>
+    Index (Len m, Len n) (Int, Int) where
+  index = (Len, Len)
+  fromIndex (m, n) = [ (m', n') | m' <- idxRange m
+                                , n' <- idxRange n ]#
+\end{lstlisting}
+\begin{itemize}
+  \item The instance binds \texttt{Len n} to \texttt{Int}.
+  \item<2-> \texttt{Len} is a phantom type used to promote kinds to types.
+  \item<3-> Correct instances keeps users from writing invalid indices i.e.:\\
+    \texttt{Index (Len n) (Int, Int)}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Array example}
+As with structs, arrays have become first-class members in Copilot. They
+require no specific functions to work with:
+\begin{lstlisting}
+-- Little helper function
+array' as = array (zip [0..] as)
+
+exarr :: Stream (Array (Len 3) Int8)
+exarr = extern "exarr" Nothing
+
+arr :: Stream (Array (Len 3) Int8)
+arr = [ array' [4,5,6],
+        array' [1,2,3] ] ++ arr
+\end{lstlisting}
+Note that the length of the external array is specified in its type.
+\end{frame}
+
+
+\section{ACSL}
+\begin{frame}{ACSL}
+\begin{itemize}
+  \item ANSI C Specification Language.
+  \item A language to specify what C program should do.
+  \item Hoare-triples inside comments to cover a function.
+  \item Tools like Frama-C can be used to check program to specification.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
+  \item Generate ACSL code from our Copilot specification.
+  \item We can check the monitor and specification using Frama-C.
+  \item This gives us insight in possible bugs, especially regarding arrays and
+  indices.
+\end{itemize}
+
+\begin{lstlisting}[language=c, basicstyle=\small]
+static int8_t s0_buff[3] = {1, 2, 3};
+static int8_t s0 = 1;
+static size_t s0_idx = 0;
+
+/*@ requires \valid (s0_buff+(0..2));
+    requires 0 <= s0_idx < 3;
+    assigns  \nothing;
+    ensures  \result == s0_buff[s0_idx]; */
+static int8_t s0_gen () {
+  int8_t s0_loc;
+  { size_t idx = s0_idx;
+    s0_loc = s0_buff[idx];
+  };
+  return s0_loc;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+In some cases, it is a lot easier:
+\begin{lstlisting}[language=c]
+/*@ assigns  \nothing;
+    ensures  \result == true;
+*/
+static bool fbasic_guard () {
+  return true;
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+The \texttt{step()} differs from the other functions:
+\begin{lstlisting}[language=c, basicstyle=\small]
+/*@ requires 0 <= s0_idx < 3;
+    assigns  s0;
+    assigns  s0_buff[s0_idx];
+    assigns  s0_idx;
+    ensures  \forall int i; 0 <= i < 3
+        && i != \old(s0_idx) ==>
+        s0_buff[i] == \old(s0_buff[i]);
+*/
+static void step () {
+  if (fbasic_guard()) fbasic(fbasic_arg0());
+  s0 = s0_gen();
+  s0_buff[s0_idx] = s0;
+  ++(s0_idx);
+  s0_idx = s0_idx % 3;
+}
+\end{lstlisting}
+\end{frame}
+
+
+
+\section{Summary}
+\begin{frame}{Summary}
+\begin{itemize}
+  \item Structs and arrays are now possible in Copilot.
+  \item Type literals saved us from a lot of work, and kept the implementation
+  of Copilot clean.
+  \item Dependent types could improve the implementation of arrays, but GHC is
+  not yet up for the task.
+  \item ACSL can be usefull in both describing our program, as well as
+  verifiying it using Frama-C.
+\end{itemize}
+\end{frame}
+
+\section{Future work}
+\begin{frame}{Future work}
+\begin{itemize}
+  \item Improve efficiency of generated code by implementing implicit sharing.
+  \item Possibly improve array implementation to get rid of the \texttt{Len} in
+  the type.
+  \item Improve arrays to make them more type-safe.
+  \item Implement a few functions to make working with arrays and structs easier.
+\end{itemize}
+\end{frame}
+
+\end{document}
