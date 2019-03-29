@@ -1,0 +1,34 @@
+Dear all,
+
+We would like to announce the release of Copilot version 3.0. Copilot is a
+stream-based DSL for writing and monitoring embedded C programs, with an
+emphasis on correctness and hard realtime requirements.
+
+Copilot is typically used as an runtime verification framework, where programs
+serve as specifications to the system we want to monitor. Additional
+libraries provide utility functions for, temporal logic (LTL, PTLTL and MTL),
+clocks and voting algorithms.
+
+Over the years, Copilot has been in use at the Safety Critical Avionics Systems
+Branch of NASA Langley Research Center for monitoring test flights of drones.
+
+The new release contains a number of new features to make writing programs
+easier:
+
+* The language has been extended with support for monitoring and generating
+  structs and arrays in a type-safe manner.
+
+* A completely rewritten C99 code generator to support the new features.
+
+* Significant improvements on the quality and readability of the output code,
+  which helps in traceability and certifications of the code.
+
+* Internal simplifications for a more future proof codebase.
+
+For more information on Copilot, including installation instructions and links
+to the source code and documentation, please visit the webpage [1].
+
+Kind regards,
+The Copilot developers
+
+[1] https://copilot-language.github.io
