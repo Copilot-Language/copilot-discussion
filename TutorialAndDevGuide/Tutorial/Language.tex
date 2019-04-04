@@ -75,7 +75,7 @@ w = [5,6,7] ++ x
 evaluates to the sequence
 $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
-  s}, returning the remainder of the stream.  
+  s}, returning the remainder of the stream.
 For example we can skip the first two values of {\tt w}:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -214,12 +214,12 @@ latch x = y
 \hline
 x & $F$ & $T$ & $T$ & $F$ & $F$ \\
 \hline
-y & $F$ & $T$ & $F$ & $F$ & $F$ \\ 
+y & $F$ & $T$ & $F$ & $F$ & $F$ \\
 \end{tabular}
 \end{minipage}
 \caption{A latch [Example 3]. The specification function is provided at the left and the
-implementation in copilot is provided in the middle. The right shows an example of 
-the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find 
+implementation in copilot is provided in the middle. The right shows an example of
+the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find
 $y_0$ since there is no $y_{-1}$) is False.}
 \label{fig:jk_latch}
 \end{figure*}
@@ -255,7 +255,7 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
 counter :: Stream Bool -> Stream Bool
         -> Stream Int32
 counter inc reset = cnt
-  where 
+  where
   cnt = if reset then 0
           else if inc then z + 1
                  else z
@@ -306,7 +306,7 @@ Copilot programs.
 We provide a {\tt cast} operator
 %
 \begin{lstlisting}[language = Copilot, frame = single]
-cast :: (Typed a, Typed b) => Stream a -> Stream b  
+cast :: (Typed a, Typed b) => Stream a -> Stream b
 \end{lstlisting}
 %
 that casts from one type to another.  The cast operator is only defined for
@@ -319,7 +319,7 @@ There also exists an {\tt unsafeCast} operator which allows casting from any
 type to any other (except from floating point numbers to integer types):
 
 \begin{lstlisting}[language = Copilot, frame = single]
-unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b  
+unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
 \end{lstlisting}
 
 \subsection{Interacting With the Target Program}
@@ -367,7 +367,7 @@ sense that values must be provided externally at runtime.  To simplify writing
 Copilot specifications that can be interpreted and tested, constructs for
 external symbols take an optional environment for interpretation.
 
-External variables are similar to global variables in other languages. They 
+External variables are similar to global variables in other languages. They
 are defined by using the {\tt extern} construct:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -398,7 +398,7 @@ example, in the stream definition
 \begin{lstlisting}[language = Copilot, frame = single]
 extEven :: Stream Bool
 extEven = e0 `mod` 2 == 0
-  where e0 = externW8 "x" Nothing 
+  where e0 = externW8 "x" Nothing
 \end{lstlisting}
 %
 \noindent
@@ -406,8 +406,9 @@ the type of {\tt extern "x"} is ambiguous, since it cannot be inferred from a
 Boolean stream and we have not given an explicit type signature.  For
 convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
 {\tt externI64} denoting an external unsigned 8-bit word or signed 64-bit word,
-respectively. Please see the grammar in Appendix~\ref{sec:BNF} for the list of
-all sampling functions.
+respectively.
+% Please see the grammar in Appendix~\ref{sec:BNF} for the list of
+% all sampling functions.
 
 In general it is best practice to define external symbols with
 top-level definitions, e.g.,
@@ -424,9 +425,9 @@ Besides variables, external arrays and arbitrary functions can be sampled.  The
 external array construct has the type
 %
 \begin{lstlisting}[language = Copilot, frame = single]
-externArray :: (Typed a, Typed b, Integral a) 
-            => String -> Stream a -> Int 
-            -> Maybe [[a]] -> Stream b  
+externArray :: (Typed a, Typed b, Integral a)
+            => String -> Stream a -> Int
+            -> Maybe [[a]] -> Stream b
 \end{lstlisting}
 %
 The construct takes (1) the name of an array, (2) a stream that generates indexes for
@@ -436,14 +437,14 @@ environment for the external array, representing the sequence of array values.  
 \begin{lstlisting}[language = Copilot, frame = single]
 
 extArr :: Stream Word32
-extArr = externArray "arr1" arrIdx size 
+extArr = externArray "arr1" arrIdx size
            (Just $ repeat (permutations [0,1,2]))
-  where 
+  where
   arrIdx :: Stream Word8
   arrIdx = [0] ++ (arrIdx + 1) `mod` size
 
   size = 3
-\end{lstlisting} 
+\end{lstlisting}
 % $
 {\tt extArr} is a stream of values drawn from an external array containing
 32-bit unsigned words.  The array is indexed by an 8-bit variable.  The index
@@ -459,7 +460,7 @@ provided produces an infinite list of all the permutations of the list {\tt
 %% externFun :: Typed a => String -> [FunArg] -> Stream a
 %% arg :: Typed a => Stream a -> FunArg
 %% \end{code}
-%% % 
+%% %
 %% The constructor \texttt{externArray} takes two arguments: the name of array and
 %% an index into the array.  The index is given by a Copilot stream (of integral
 %% type) that is used as an index into the table.
@@ -478,11 +479,11 @@ We can use the table in a Copilot specification as follows:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 lookupSomeTable :: Stream Word16 -> Stream Double
-lookupSomeTable idx = 
+lookupSomeTable idx =
   externArray "someTable" idx 42 Nothing
 \end{lstlisting}
 %
-Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the output of 
+Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the output of
 \texttt{lookupSomeTable idx} would be $$\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$$
 \end{example}
 
@@ -490,7 +491,7 @@ Finally, the constructor \texttt{externFun} takes (1) a function name, (2) a
 list of arguments, and (3) a possible list of values to provide its environment.
 %
 \begin{lstlisting}[language = Copilot, frame = single]
-externFun :: Typed a => String -> [FunArg] 
+externFun :: Typed a => String -> [FunArg]
           -> Maybe [a] -> Stream a
 \end{lstlisting}
 %
@@ -504,14 +505,14 @@ func = externFun "f" [arg e0, arg nats] Nothing
   e0 = externW8 "x" Nothing
   nats :: Stream Word8
   nats = [0] ++ nats + 1
-\end{lstlisting} 
+\end{lstlisting}
 % $
 samples a function in C that has the prototype
 %
 \begin{code}[frame = single]
 uint16_t f(uint8_t x, uint8_t nats);
 \end{code}
-% 
+%
 
 Both external arrays and functions must, like external variables, be defined
 in the target program that is monitored. Additionally, external functions must be
@@ -578,8 +579,8 @@ define a monitor that surveys the above property:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 propTempRiseShutOff :: Spec
-propTempRiseShutOff = 
-  trigger "over_temp_rise" 
+propTempRiseShutOff =
+  trigger "over_temp_rise"
     (overTempRise && running) []
 
   where
@@ -591,8 +592,8 @@ propTempRiseShutOff =
   temp = extern "temp" Nothing
 
   overTempRise :: Stream Bool
-  overTempRise = drop 2 temps > (2.3 + temps) 
- 
+  overTempRise = drop 2 temps > (2.3 + temps)
+
   running :: Stream Bool
   running = extern "running" Nothing
 \end{lstlisting}
@@ -604,160 +605,3 @@ injector is running.  The external function {\tt over\_temp\_rise} is called
 without any arguments if the temperature rises more than 2.3 degrees within 0.2
 seconds and the engine is not shut off.  Notice there is a latency of one tick between when the property is violated and when the guard becomes true.
 \end{example}
-
-\subsection{Explicit Sharing}
-\label{sec:explicit_sharing}
-
-  One of the basic tasks of a compiler is to perform optimization by
-  eliminating common subexpressions.  Consider the following Haskell
-  code:
-
-\begin{lstlisting}[language = Haskell, frame = none]
-y = sin 30
-myexample   = y * y
-\end{lstlisting}
-
- The expression {\tt y}  appears twice in {\tt myexample} and {\tt y} will be
- computed each time it is called. If the common subexpression is not
- too computationally expensive and does not occur too many times, then
- the multiple invocations probably is not too big a problem. On the
- other hand, it would be far preferable if the compiler would
- recognize the common expression and compute it once saving the value
- and sharing it whenever the value is needed.  Computing an expression
- and  temporarily storing its value  in order to eliminate duplicate
- function calls is called \emph{ sharing}.  In Haskell, the {\tt
-   let} binding operator facilitates sharing so 
-
-\begin{lstlisting}[language = Haskell, frame = none]
-let  y = sin 30 
-in  y *y  
-\end{lstlisting}
-
-results in the compiler computing {\tt sin 30} saving its value and
-reusing this value in both occurrrances of {\tt y}. 
-
-\begin{figure}[!htb]
-\begin{minipage}{0.5\textwidth}
-\begin{lstlisting}[language = Copilot, frame = none]
-s1 = let x = nats + nats
-     in x * x
-\end{lstlisting}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{lstlisting}[language = Copilot, frame = none]
-s2 = local (nats + nats) $
-     \ x -> x * x
-\end{lstlisting} 
-% $
-\end{minipage}
-\caption{Implicit sharing (s1) versus explicit sharing (s2).}
-\label{fig:explicit_sharing}
-\end{figure}
-
-\noindent  EDSLs such as Copilot 
-generally keep an 
-internal representation of the program as an AST and  without sharing
-these syntax trees can grow really large and result a lot of duplicate
-code being created during code generation. 
-Copilot facilitates sharing in expressions by the \emph{local}-construct:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-local
-  :: (Typed a, Typed b)
-  => Stream a
-  -> (Stream a -> Stream b)
-  -> Stream b
-\end{lstlisting}
-%
-The  local construct works similar to {\tt let}-bindings in ordinary
-Haskell that we discussed above.
-From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
-\ref{fig:explicit_sharing} are identical.
-As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
-Copilot programs may force the compiler to build syntax trees that
-blow up exponentially.
-In such cases, using explicit sharing helps to avoid this problem.
-
-Please also note that at this time sharing is not possible if you wish
-to use  the C code verification
-features  built into Copilot that use Frama-C. This is because  let bindings are not implemented in ACSL, hence it is
-impossible to run Frama-C on a Copilot program that uses local bindings.
-
-\subsection{Magic labels}
-\label{sec:magiclabels}
-To ensure that the requirements and safety analyses performed early in
-systems development are reflected throughout the lifecycle, many
-guidelines for safety-critical software, such as DO-178C, require
-documentation of traceability from requirements to object
-code. In the case of Copilot, the C code generation often generates
-dozens of files often obfuscating the code. Consequently, to promote the acceptance of high-assurance RV,
-Copilot gives the programmer the capability to insert labels into
-expressions that are inserted into the generated C code making it easy
-to trace the  C monitor code to an expression in the monitor
-specification.  
-
-The label operation has the following  type signature:
-
-\begin{lstlisting}[language = Copilot, frame = single]
-label
-  :: (Typed a)
-  => String
-  -> Stream a
-  -> Stream a
-\end{lstlisting}
-
-
-The term \emph{magic label} refers to the possibility to add special characters
-in labels, namely ``?'', which would modify the code generation by
-splitting an expression so that it generates two simple rather than
-one complex C function. To invoke the
-splitting character, simply do:
-
-\begin{lstlisting}[language = Copilot, frame = single]
-label "?blabla" expr
-\end{lstlisting}
-
-\noindent where \texttt{expr} is any stream. This fundamentally does not
-change the big-step semantics of the generated program, however it splits a big
-expression into smaller expressions which can then be more easily read or
-verified with Frama-C.
-
-%Up to now, only one has been
-%implemented, which does a beta expansion where it is put.
-%This would result in splitting the AST
-%generated into two smaller ASTs, hence this is equivalent to the transformation
-%$ e \rightarrow_{\beta} (\lambda x . x) e $, where $(\lambda x . x)$ is called
-%as an external function (given that there is no polymorphism in Copilot, one
-%identity function per type has been written, which explains why the expression
-%labeled has to be of the \texttt{Typed} typeclass). 
-
-
-
-
-Here is an example of the splitting process in Figure~\ref{fig:splitting label}
-for the following simple Copilot code:
-\begin{lstlisting}[language=Haskell]
-import qualified Copilot.Compile.SBV as S
-
-alt :: Stream Bool
-alt = (label "?splitting" $ not $ externB "externvar" Nothing)
-
-spec :: Spec
-spec = do
-trigger "trigger" (alt) []
-
-main = do
-reify spec >>= S.proofACSL S.defaultParams
-\end{lstlisting}
-
-\begin{figure}[!htb]
-      \vspace{3em}
-      \includegraphics[width=46mm]{images/label/main.ps}
-      \centering
-      \includegraphics[width=42mm]{images/label/splitted.ps}
-      \includegraphics[width=42mm]{images/label/splitted2.ps}
-      \caption{The splitting process. The AST on the left is split into two
-      smaller ASTs, that then generate two separate functions in two separate
-      files, making it easier to prove the contracts for them.}
-      \label{fig:splitting label}
-\end{figure}
