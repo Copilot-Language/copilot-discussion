@@ -112,7 +112,9 @@ code is now really easy:
 $ runhaskell Heater.hs
 \end{code}
 This runs our Haskell code, with compiling a binary first. It runs that
-\texttt{main}-function and generates the C code of our monitor.
+\texttt{main}-function and generates the C code of our monitor. Note that it
+called the files \texttt{heater.h} and \texttt{heater.c}, as defined by the
+prefix passed to the \texttt{compile}-function.
 
 The next step is as easy as compiling our C code together with the monitor. We
 have opted to use GCC in a C99 mode with a extended set of warnings:
