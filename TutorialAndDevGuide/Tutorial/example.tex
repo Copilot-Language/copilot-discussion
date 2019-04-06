@@ -111,6 +111,14 @@ main = reify spec >>= compile "heater"
 The code should be pretty self explanatory. Note that we opted to use a
 \texttt{main}-function, which reifies and compiles the code for us.
 
+On line 25 we can see the \texttt{ctemp}-stream, which is the temperature
+translated to Celcius. Interestingly, we need to do a manual typecast from
+\texttt{Word8} to \texttt{Float} using \texttt{unsafeCast}. This is a function
+provided by Copilot that can cast a stream to a different type in an unsafe
+manner, i.e. there may not be an exact representation of the value in both
+types. For this code, it might happen that an integer value cannot be
+represented exactly with a floating point.
+
 \subsection{Generating C code}
 Because we defined the \texttt{main}-function in our specification, generating
 code is now really easy:
