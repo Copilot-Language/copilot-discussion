@@ -345,8 +345,10 @@ of C programs. Copilot monitors run either in the same thread or a
 separate thread as the system under observation and the only variables
 that can be observed are those that are made available through shared
 memory. This means local variables cannot be observed. Currently,
-Copilot can only observe basic C data structures and cannot handle C
-structs, dynamic data structures, or two dimensional arrays.
+Copilot supports basic C datatypes, arrays and structs. Combinations of each of
+those work as well: nested arrays, arrays of structs, structs containg arrays
+etc. All of these variables containing actual data; pointers to data are not
+supported by design.
 
 
 Copilot has both an interpreter and a compiler.The compiler must be
