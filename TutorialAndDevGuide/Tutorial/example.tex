@@ -104,3 +104,24 @@ main = reify spec >>= compile "heater"
 \end{lstlisting}
 The code should be pretty self explanatory. Note that we opted to use a
 \texttt{main}-function, which reifies and compiles the code for us.
+
+\subsection{Generating C code}
+Because we defined the \texttt{main}-function in our specification, generating
+code is now really easy:
+\begin{code}
+$ runhaskell Heater.hs
+\end{code}
+This runs our Haskell code, with compiling a binary first. It runs that
+\texttt{main}-function and generates the C code of our monitor.
+
+The next step is as easy as compiling our C code together with the monitor. We
+have opted to use GCC in a C99 mode with a extended set of warnings:
+\begin{code}
+$ gcc -Wall -std=c99 heater.c main.c -o heater
+\end{code}
+
+If the implementations for \texttt{heaton}, \texttt{heatoff} and
+\texttt{readbyte} are provided somewhere, this should give us a nicely compiled
+binary called \texttt{heater}. Running this will provide us with a system that
+turns the heater on, when the temperature drops below $18.0\degree$C and turns
+it off once it becomes higher then $21.0\degree$C.
