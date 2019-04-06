@@ -9,7 +9,7 @@ in Copilot, which from now on will be referred to as a \emph{specification}, has
 a cyclic behavior, where each cycle consists of a fixed series of steps:
 
 \begin{itemize}
-\item Sample external variables, arrays, and functions.
+\item Sample external variables and arrays.
 \item Update internal variables.
 \item Fire external triggers. (In case the specification is violated.)
 \item Update observers (for debugging purpose).
@@ -328,10 +328,10 @@ unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
 All interaction with the outside world is done by sampling \emph{external
   symbols} and by evoking \emph{triggers}.  External symbols are symbols that
 are defined outside Copilot and which reflect the visible state of the target
-program that we are monitoring.  They include variables, arrays, and functions
-(with a non-void return type).  Analogously, triggers are functions that are
-defined outside Copilot and which are evoked when Copilot needs to report that
-the target program has violated a specification constraint.
+program that we are monitoring.  They include variables and arrays.
+Analogously, triggers are functions that are defined outside Copilot and which
+are evoked when Copilot needs to report that the target program has violated a
+specification constraint.
 
 \paragraph{External Variables.}
 
@@ -421,7 +421,7 @@ e0 = extern  "e0" (Just [2,4..])
 \noindent
 so that the symbol name and its environment can be shared between streams.
 
-Besides variables, external arrays and arbitrary functions can be sampled.  The
+Besides variables, external arrays can also be sampled.  The
 external array construct has the type
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -487,41 +487,10 @@ Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the ou
 \texttt{lookupSomeTable idx} would be $$\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$$
 \end{example}
 
-Finally, the constructor \texttt{externFun} takes (1) a function name, (2) a
-list of arguments, and (3) a possible list of values to provide its environment.
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-externFun :: Typed a => String -> [FunArg]
-          -> Maybe [a] -> Stream a
-\end{lstlisting}
-%
-Each argument to an external function is given by a Copilot stream.  For
-example,
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-func :: Stream Word16
-func = externFun "f" [arg e0, arg nats] Nothing
-  where
-  e0 = externW8 "x" Nothing
-  nats :: Stream Word8
-  nats = [0] ++ nats + 1
-\end{lstlisting}
-% $
-samples a function in C that has the prototype
-%
-\begin{code}[frame = single]
-uint16_t f(uint8_t x, uint8_t nats);
-\end{code}
-%
-
-Both external arrays and functions must, like external variables, be defined
-in the target program that is monitored. Additionally, external functions must be
-without side effects, so that the monitor does not cause undesired side-effects when
-sampling functions.  Finally, to ensure Copilot sampling is not
-order-dependent, external functions cannot contain streams containing other
-external functions or external arrays in their arguments, and external arrays
-cannot contain streams containing external functions or external arrays in their
-indexes.  They can both take external variables, however.
+External arrays must, like external variables, be defined
+in the target program that is monitored. External arrays
+cannot contain streams containing external arrays in their
+indexes. They can take external variables, however.
 
 
 
