@@ -100,7 +100,7 @@ ctemp :: Stream Float
 ctemp = (unsafeCast temp) * (150.0 / 255.0) - 50.0
 
 spec = do
-  -- Triggers that fire when the ctemp is too low or too hight,
+  -- Triggers that fire when the ctemp is too low or too high,
   -- pass the current ctemp as an argument.
   trigger "heaton"  (ctemp < 18.0) [arg ctemp]
   trigger "heatoff" (ctemp > 21.0) [arg ctemp]
