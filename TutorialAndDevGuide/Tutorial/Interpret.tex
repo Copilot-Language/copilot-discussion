@@ -74,65 +74,35 @@ while trigger2 only outputs the number. This output reflects the arguments
 
 \subsection{Compiling Copilot} \label{sec:compiling}
 
-Compiling in Copilot is
-straightforward. First, we pick a back-end to compile to. Currently, two
-back-ends are implemented, both of which generate constant-time and
-constant-space C code. One back-end is called \emph{copilot-c99} and targets
-the Atom language,\footnote{\url{http://hackage.haskell.org/package/atom}}
-originally developed by Tom Hawkins at Eaton Corp.\ for developing control
-systems (in the process of depreciation). The second back-end is called \emph{copilot-sbv} and targets the SBV
-language,\footnote{\url{http://hackage.haskell.org/package/sbv}} originally
-developed by Levent Erk\"{o}k. SBV is primarily used as an interface to SMT
-solvers~\cite{smt} and also contains a C-code generator. Both languages are
-open-source.
-
-The two back-ends are installed with Copilot, and they can be imported,
-respectively, as
+Compiling a Copilot specification is straightforward. Currently Copilot
+supports one back-end, \texttt{copilot-c99} that creates constant-space C99
+code. Using the back-end is rather easy, as it just requires one to import it in
+their Copilot specification file:
 
 \begin{lstlisting}[language = Copilot]
 import Copilot.Compile.C99
 \end{lstlisting}
-\noindent
-and
-\begin{lstlisting}[language = Copilot]
-import Copilot.Compile.SBV
-\end{lstlisting}
 
-After importing a back-end, the interface for compiling is as
-follows:
-%
+Importing the back-end provides us with the \texttt{compile}-function, which
+takes a prefix as its first parameter and a \textit{reified} specification as
+its second. When inside \texttt{ghci}, with our file loaded, we can generate
+output code by executing:
 \footnote{Two explanations are in order: (1) {\tt reify} allows sharing in the
 expressions to be compiled~\cite{DSLExtract}, and {\tt >>=} is a higher-order
 operator that takes the result of reification and ``feeds'' it to the compile
 function.}
-%
 \begin{lstlisting}[language = Copilot]
-reify spec >>= compile defaultParams
+reify spec >>= compile "monitor"
 \end{lstlisting}
-%
-\noindent
-(The compile function takes a parameter to rename the generated C files; {\tt
-defaultParams} is the default, in which there is no renaming.)
 
-The compiler then generates several files in a separate-subfolder, some of which are called:
-
+This generates two output files:
 \begin{itemize}
-\item ``driver.c'' ---
-\item ``copilot.h'' ---
+  \item \texttt{<prefix>.c}: C99 file containing the generated code and the
+  \texttt{step()} function. This should be compiled by the C compiler, and
+  included in the final binary.
+  \item \texttt{<prefix>.h}: Header providing the public interface to the
+  monitor. This file should be included from your main project.
 \end{itemize}
 
-The file named ``copilot.h'' contains prototypes for all external variables,
-functions, and arrays, and contains a prototype for the ``step''-function,
-which evaluates a single iteration.
-
-Another example can be found in Copilot/Examples/Examples2.hs. At the top of the 
-file we alias {\tt Copilot.Compile.SBV} as {\tt S} for simplicity. Observe line 75:
-
-\begin{lstlisting}[language = Copilot]
-reify spec  >>=  S.compile (S.Params { S.prefix = Just "secondexamplespec"} )
-\end{lstlisting}
-
-Which, when executed, prefixes ``secondexamplespec" to all of the ``standard" file names and
-the step function.
-
-
+Please refer to the complete example \ref{exm:complete} for more on detail to
+use the monitor in your C program.
