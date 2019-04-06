@@ -4,6 +4,12 @@ This section describes a complete use case example in Copilot. We will be using
 one of the provided examples as our code, and focus more on using Copilot
 within a project.
 
+The code implements a simple heater, which turns on when the temperature drops
+below a certain point, and turns off if the temperature is too high. The
+temperature is read from a sensor returns a byte, with a range of
+$-50.0\degree$C to $100.0\degree$C. For easy of use, the monitor translates the
+byte to a float within this range.
+
 \subsection{C Code}
 Lets start of with the C program our monitor to connect to.
 \begin{lstlisting}[language=c, numbers=left]
