@@ -4,45 +4,36 @@
 The Copilot RV framework comes with both an interpreter and a
 compiler. 
 \subsection{Interpreting Copilot}
-To use Copilot's interpreter, one must first invoke the GHC Interpreter via
-the Cabal sandbox. Invoking the interpreter with the \texttt{cabal
-repl} command starts a session that looks like: 
-
+Assume we are currently in a directory containing a \texttt{.hs} file with our
+specification (\texttt{Spec.hs} in this case), and that Copilot is installed
+globally. If we want to interpret the specification, we need to start the GHC
+Interpreter with the file as an argument:
 %
-\begin{lstlisting}[language = Copilot]
-cabal repl
-Preprocessing library copilot-2.1.2...
-GHCi, version 7.10.1: http://www.haskell.org/ghc/  :? for help
-[1 of 1] Compiling Language.Copilot ( src/Language/Copilot.hs, interpreted )
-Ok, modules loaded: Language.Copilot.
-*Language.Copilot> 
+\begin{lstlisting}
+$ ghci Spec.hs
+GHCi, version 8.4.3: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from /home/user/.ghc/ghci.conf
+[1 of 1] Compiling Spec             ( Spec.hs, interpreted )
+Ok, one module loaded.
+*Spec > 
 \end{lstlisting}
 %
-
-A copilot file \texttt{file} is loaded as follows:
-%
+This launches \texttt{ghci}, the Haskell interpreter, with \texttt{Spec.hs}
+loaded. It provides us with a prompt, recognisable by the \texttt{>} sign. Lets
+assume that our file contains one specification, called \texttt{spec}. We can
+interpret this using the \texttt{interpret}-function:
 \begin{lstlisting}[language = Copilot]
-Language.Copilot> :l file
-\end{lstlisting}
-
-Notice that \texttt{file} has to be located
-in the directory \emph{Copilot}.
-
-The copilot interpreter is invoked as follows:
-%
-\begin{lstlisting}[language = Copilot]
-Language.Copilot> interpret 10 propTempRiseShutOff
+*Spec > interpret 10 spec
 \end{lstlisting}
 %
 The first argument to the function \emph{interpret} is the number of iterations
-that we want to evaluate. The third argument is the specification (of type {\tt
-Spec}) that we wish to interpret.
+that we want to evaluate. The second argument is the specification (of type
+{\tt Spec}) that we wish to interpret.
 
 The interpreter outputs the values of the arguments passed to the trigger, if
-its guard is true, and {\tt --} otherwise. We will discuss triggers in more detail later, 
-but for now, just know that they produce an output only when the guard function
-is true. For example, consider the following
-Copilot program:
+its guard is true, and {\tt --} otherwise. We will discuss triggers in more
+detail later, but for now, just know that they produce an output only when the
+guard function is true. For example, consider the following Copilot program:
 %
 \begin{lstlisting}[language = Copilot]
 spec = do
@@ -51,9 +42,10 @@ spec = do
 \end{lstlisting}
 % $
 where {\tt nats} is the stream of natural numbers, and {\tt even} and {\tt odd}
-are the guard functions that take a stream and return whether the point-wise values are
-even or odd, respectively. The lists at the end of the trigger represent the values the 
-trigger will output when the guard is true. The output of
+are the guard functions that take a stream and return whether the point-wise
+values are even or odd, respectively. The lists at the end of the trigger
+represent the values the trigger will output when the guard is true. The output
+of
 %
 \begin{lstlisting}[language = Copilot]
 interpret 10 spec
@@ -76,33 +68,9 @@ trigger1:   trigger2:
 \end{code}
 %
 
-Note that trigger1 outputs both the number and whether that number is odd, while trigger2 only outputs the
-number. This output reflects the arguments passed to them. 
-
-Sometimes it is convenient to observe the behavior of a stream without defining
-a trigger. We can do so declaring an \emph{observer}. For example:
-%
-\begin{lstlisting}[language = Copilot]
-spec :: Spec
-spec = observer "obs" nats
-\end{lstlisting}
-%
-can be interpreted using
-%
-\begin{lstlisting}[language = Copilot]
-interpret 5 spec
-\end{lstlisting}
-%
-as usual and yields
-%
-\begin{code}
-obs:
-0
-1
-2
-3
-4
-\end{code}
+Note that trigger1 outputs both the number and whether that number is odd,
+while trigger2 only outputs the number. This output reflects the arguments
+	passed to them. 
 
 \subsection{Compiling Copilot} \label{sec:compiling}
 
