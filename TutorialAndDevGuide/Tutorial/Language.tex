@@ -421,77 +421,24 @@ e0 = extern  "e0" (Just [2,4..])
 \noindent
 so that the symbol name and its environment can be shared between streams.
 
-Besides variables, external arrays can also be sampled.  The
-external array construct has the type
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-externArray :: (Typed a, Typed b, Integral a)
-            => String -> Stream a -> Int
-            -> Maybe [[a]] -> Stream b
-\end{lstlisting}
-%
-The construct takes (1) the name of an array, (2) a stream that generates indexes for
-the array (of integral type), (3) the fixed size of the array, and (4) possibly a list of lists that is the
-environment for the external array, representing the sequence of array values.  For example,
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-
-extArr :: Stream Word32
-extArr = externArray "arr1" arrIdx size
-           (Just $ repeat (permutations [0,1,2]))
-  where
-  arrIdx :: Stream Word8
-  arrIdx = [0] ++ (arrIdx + 1) `mod` size
-
-  size = 3
-\end{lstlisting}
-% $
-{\tt extArr} is a stream of values drawn from an external array containing
-32-bit unsigned words.  The array is indexed by an 8-bit variable.  The index
-is ensured to be less than three by using modulo arithmetic.  The environment
-provided produces an infinite list of all the permutations of the list {\tt
-  [0,1,2]}.\footnote{The function {\tt permutations} comes from the Haskell
-    standard library {\tt Data.list}.}
-
-
-%% %
-%% \begin{code}
-%% externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
-%% externFun :: Typed a => String -> [FunArg] -> Stream a
-%% arg :: Typed a => Stream a -> FunArg
-%% \end{code}
-%% %
-%% The constructor \texttt{externArray} takes two arguments: the name of array and
-%% an index into the array.  The index is given by a Copilot stream (of integral
-%% type) that is used as an index into the table.
-
-%
+Just like regular variables, arrays can be sampled as well. Copilot threats
+arrays in the same way as it does for scalars. 
 \begin{example}
-\label{exm:e}
-Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
-within Copilot:
-%
-\begin{code}[frame = single]
-double someTable[42] = { 3.5, 3.7, 4.5, ... };
+\label{exmp:pitot}
+Lets take the example where we
+have the readouts of four pitot tubes, giving us the measured airspeed:
+\begin{code}[frame=single]
+/* Array containing readouts of 4 pitot tubes. */
+double airspeeds[4] = ... ;
 \end{code}
-%
-We can use the table in a Copilot specification as follows:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-lookupSomeTable :: Stream Word16 -> Stream Double
-lookupSomeTable idx =
-  externArray "someTable" idx 42 Nothing
+In our Copilot specification, we need to provide the type of our array, because
+Copilot need to know the length of the array we refer to. Apart from that,
+referring to an external array is like referring to any other variable:
+\begin{lstlisting}[language=Copilot, frame=single]
+airspeeds :: Stream (Array 4 Double)
+airspeeds = extern "airspeeds" Nothing
 \end{lstlisting}
-%
-Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the output of
-\texttt{lookupSomeTable idx} would be $$\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$$
 \end{example}
-
-External arrays must, like external variables, be defined
-in the target program that is monitored. External arrays
-cannot contain streams containing external arrays in their
-indexes. They can take external variables, however.
-
 
 
 \paragraph{Triggers.}
