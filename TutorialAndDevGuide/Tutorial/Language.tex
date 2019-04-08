@@ -223,6 +223,21 @@ but neither should ever be used by the user. Both functions are only used by
 the code generator of Copilot.
 
 
+\subsubsection*{Instance of \texttt{Typed}}
+In Copilot, streams can only of types that are instances of the \texttt{Typed}
+class. To be able to create streams of vectors, \texttt{Vec} needs to be an
+instance of \texttt{Typed} as well. The class only provides a \texttt{typeOf}
+function, returning the type:
+\begin{lstlisting}[language=Copilot]
+instance Typed Vec where
+  typeOf = Struct (Vec (Field 0) (Field 0))
+\end{lstlisting}
+For \texttt{Vec} this means we need to return something of the \texttt{Vec}
+type wrapped in the \texttt{Struct} constructor. In this case it does not
+matter what the values of the fields are, we just need to return something of
+the correct type.
+
+
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
