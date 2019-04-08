@@ -195,6 +195,34 @@ inside Copilot we will typically only use the Haskell level names (i.e. the
 unquoted ones). The C names are only used by Copilot internally.
 
 
+\subsubsection*{Instance of \texttt{Struct}}
+Our next task is to inform Copilot about our new type, therefore we need to
+write and instance of the \texttt{Struct}-class. This class has the purpose of
+defining the datatype as a struct, it provides the code generator of Copilot the
+name of struct in C, and provides a function to translate the struct to a list
+of values:
+\begin{lstlisting}[language=Copilot]
+instance Struct Vec where
+  -- typename :: Vec -> String
+  typename _ = "vec"  -- Name of the type in C
+
+  -- Function to translate Vec to list of Value's, order should match struct.
+  -- tovalues :: Vec -> [Value Vec]
+  toValues v = [ Value Float (x v)
+               , Value Float (y v)
+               ]
+\end{lstlisting}
+Both definitions should be pretty self-explanatory. Note however that
+\texttt{Value a} is a wrapper around the \texttt{Field} datatype to hide the
+actual type of \texttt{Field}. It takes the type of the field, and the field
+itself as its arguments. The elements in the list should be in the same order
+as the fields in the struct.
+
+Both \texttt{typename} and \texttt{toValues} have to be defined by the user,
+but neither should ever be used by the user. Both functions are only used by
+the code generator of Copilot.
+
+
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
