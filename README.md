@@ -7,15 +7,19 @@ embedded C.  Copilot is similar in spirit to languages like Lustre.  Copilot
 contains an interpreter, multiple back-end compilers, and other verification
 tools.
 
-You can find a compiled version of the main copilot tutorial
+Resources
+=========
+
+A main starting point is the [Copilot
+website](https://copilot-language.github.io/).
+
+You can obtain the latest version of the Copilot tutorial
 [here](https://copilot-language.github.io/copilot_tutorial.pdf).
 
-Examples
-=========
 Please see the files under the Examples directory in the
-[Copilot](http://hackage.haskell.org/package/copilot) for a number of examples
-showing the syntax, use of libraries, and use of the interpreter and back-ends.
-The examples is the best way to start.
+[Copilot](https://github.com/Copilot-Language/Copilot/tree/master/Examples) for
+a number of examples showing the syntax, use of libraries, and use of the
+interpreter and back-ends.  The examples is the best way to start.
 
 Copyright, License
 ==================
