@@ -9,7 +9,7 @@ in Copilot, which from now on will be referred to as a \emph{specification}, has
 a cyclic behavior, where each cycle consists of a fixed series of steps:
 
 \begin{itemize}
-\item Sample external variables, arrays, and functions.
+\item Sample external variables and arrays.
 \item Update internal variables.
 \item Fire external triggers. (In case the specification is violated.)
 \item Update observers (for debugging purpose).
@@ -75,7 +75,7 @@ w = [5,6,7] ++ x
 evaluates to the sequence
 $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
-  s}, returning the remainder of the stream.  
+  s}, returning the remainder of the stream.
 For example we can skip the first two values of {\tt w}:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -135,7 +135,176 @@ disallowed.  While an analogous stream is definable in a lazy language, we bar
 it in Copilot, since it requires future values of {\tt f} to be
 generated before producing values for {\tt g}.  This is not possible since
 Copilot programs may take inputs in real-time from the environment (see
-Section~\ref{sec:interacting}).
+Section~\ref{subsec:interacting}).
+
+
+\subsection{Structs}
+Structs require some special attentation in Copilot, as we cannot magically
+import the definition of the struct in Copilot. In this section we discuss the
+steps that need to be taken by following the code of \texttt{Struct.hs} in the
+\texttt{Examples} directory of the Copilot distribution, or the repository
+\footnote{\url{https://github.com/Copilot-Language/Copilot/blob/master/Examples/Struct.hs}}.
+
+Let's assume that we have defined a 2d-vector type in our C code:
+\begin{lstlisting}
+struct vec {
+	float x;
+	float y;
+};
+\end{lstlisting}
+For us to be able to use this vector inside Copilot, we need to follow a number
+of steps:
+\begin{enumerate}
+  \item Enable \texttt{DataKinds} compiler extension.
+  \item Define a datatype to mimic the C definition.
+  \item Write an instance of the \texttt{Struct} class, containing a definition
+  for the struct name and function to translate the fields to a heterogeneous
+    list.
+  \item Write an instance of the \texttt{Typed} class.
+\end{enumerate}
+
+\subsubsection*{Enabling compiler extensions}
+First and foremost, we need to enable the \texttt{DataKinds} extension to GHC,
+by putting:
+\begin{lstlisting}[language=Copilot]
+{-# LANGUAGE DataKinds #-}
+\end{lstlisting}
+at the top of our specification file. This allows us to define \emph{kinds},
+which are the types of types. Our datatype needs to carry the names of the
+fields in C as well. Using the \texttt{DataKinds} extension we are able to
+write the names of the fields as part of our types.
+
+
+\subsubsection*{Defining the datatype}
+A suitable representation of structs in Haskell is provided by the
+\emph{record-syntax}, this allows us to use named fields as part of the
+datatype. For Copilot this is not enough though: we still need to define the
+names of the fields in our C code. Therefore we introduce new \texttt{Field}
+datatype, which takes two arguments: the name of field, and it's type. Now we
+can mimic our vector struct in Copilot as follows:
+\begin{lstlisting}[language=Copilot]
+data Vec = Vec
+  { x :: Field "x" Float
+  , y :: Field "y" Float
+  }
+\end{lstlisting}
+Here we created two fields, $x$ and $y$, each with their corresponding C names
+and types. Note that the name inside Haskell and the C names do not necessarily
+need to match, nor is it always possible to have them match. For type-safety,
+inside Copilot we will typically only use the Haskell level names (i.e. the
+unquoted ones). The C names are only used by Copilot internally.
+
+
+\subsubsection*{Instance of \texttt{Struct}}
+Our next task is to inform Copilot about our new type, therefore we need to
+write and instance of the \texttt{Struct}-class. This class has the purpose of
+defining the datatype as a struct, it provides the code generator of Copilot the
+name of struct in C, and provides a function to translate the struct to a list
+of values:
+\begin{lstlisting}[language=Copilot]
+instance Struct Vec where
+  -- typename :: Vec -> String
+  typename _ = "vec"  -- Name of the type in C
+
+  -- Function to translate Vec to list of Value's, order should match struct.
+  -- tovalues :: Vec -> [Value Vec]
+  toValues v = [ Value Float (x v)
+               , Value Float (y v)
+               ]
+\end{lstlisting}
+Both definitions should be pretty self-explanatory. Note however that
+\texttt{Value a} is a wrapper around the \texttt{Field} datatype to hide the
+actual type of \texttt{Field}. It takes the type of the field, and the field
+itself as its arguments. The elements in the list should be in the same order
+as the fields in the struct.
+
+Both \texttt{typename} and \texttt{toValues} have to be defined by the user,
+but neither should ever be used by the user. Both functions are only used by
+the code generator of Copilot.
+
+
+\subsubsection*{Instance of \texttt{Typed}}
+In Copilot, streams can only of types that are instances of the \texttt{Typed}
+class. To be able to create streams of vectors, \texttt{Vec} needs to be an
+instance of \texttt{Typed} as well. The class only provides a \texttt{typeOf}
+function, returning the type:
+\begin{lstlisting}[language=Copilot]
+instance Typed Vec where
+  typeOf = Struct (Vec (Field 0) (Field 0))
+\end{lstlisting}
+For \texttt{Vec} this means we need to return something of the \texttt{Vec}
+type wrapped in the \texttt{Struct} constructor. In this case it does not
+matter what the values of the fields are, we just need to return something of
+the correct type.
+
+
+\subsubsection*{Simple operations}
+Building streams of structs works like building any other stream, but we need
+to wrap the values of a struct using the \texttt{Field} constructor. The reason
+for this is quite straightforward: the fields of our struct are defined in
+terms of \texttt{Field}:
+\begin{lstlisting}[language=Copilot]
+v :: Stream Vec
+v = [ Vec (Field 0) (Field 1) ] ++ v
+\end{lstlisting}
+
+We can also turn a field of a struct into its own stream using the
+\texttt{(\#)}-operator:
+\begin{lstlisting}[language=Copilot]
+vx :: Stream Float
+vx = v # x
+\end{lstlisting}
+Note the we use the Haskell level accessor \texttt{x} to retrieve the field
+from the stream of vectors.
+
+
+\subsubsection*{Example code}
+\begin{example}
+\label{exm:struct}
+Now that we defined all there is, we can make streams of structs. The following
+code has been taken from the \texttt{Struct.hs} example, and shows the basic
+usage of structs.
+
+\begin{lstlisting}[language=Copilot]
+{-# LANGUAGE DataKinds #-}
+
+module Struct where
+
+import Language.Copilot
+import Copilot.Compile.C99
+
+import Prelude hiding ((>), (<), div, (++))
+
+
+data Vec = Vec
+  { x :: Field "x" Float
+  , y :: Field "y" Float
+  }
+
+instance Struct Vec where
+  typename _ = "vec"  -- Name of the type in C
+
+  -- Function to translate Vec to list of Value's, order should match struct.
+  toValues v = [ Value Float (x v)
+               , Value Float (y v)
+               ]
+
+-- We need to provide an instance to Typed with a bogus Vec
+instance Typed Vec where
+  typeOf = Struct (Vec (Field 0) (Field 0))
+
+
+vecs :: Stream Vec
+vecs = [ Vec (Field 1) (Field 2)
+       , Vec (Field 12) (Field 8)
+       ] ++ vecs
+
+
+spec = do
+  -- Trigger that always executes, splits the vec into seperate args.
+  trigger "split" true [arg $ vecs # x, arg $ vecs # y]
+\end{lstlisting}
+\end{example}
 
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
@@ -214,12 +383,12 @@ latch x = y
 \hline
 x & $F$ & $T$ & $T$ & $F$ & $F$ \\
 \hline
-y & $F$ & $T$ & $F$ & $F$ & $F$ \\ 
+y & $F$ & $T$ & $F$ & $F$ & $F$ \\
 \end{tabular}
 \end{minipage}
 \caption{A latch [Example 3]. The specification function is provided at the left and the
-implementation in copilot is provided in the middle. The right shows an example of 
-the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find 
+implementation in copilot is provided in the middle. The right shows an example of
+the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find
 $y_0$ since there is no $y_{-1}$) is False.}
 \label{fig:jk_latch}
 \end{figure*}
@@ -255,7 +424,7 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
 counter :: Stream Bool -> Stream Bool
         -> Stream Int32
 counter inc reset = cnt
-  where 
+  where
   cnt = if reset then 0
           else if inc then z + 1
                  else z
@@ -306,7 +475,7 @@ Copilot programs.
 We provide a {\tt cast} operator
 %
 \begin{lstlisting}[language = Copilot, frame = single]
-cast :: (Typed a, Typed b) => Stream a -> Stream b  
+cast :: (Typed a, Typed b) => Stream a -> Stream b
 \end{lstlisting}
 %
 that casts from one type to another.  The cast operator is only defined for
@@ -319,7 +488,7 @@ There also exists an {\tt unsafeCast} operator which allows casting from any
 type to any other (except from floating point numbers to integer types):
 
 \begin{lstlisting}[language = Copilot, frame = single]
-unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b  
+unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
 \end{lstlisting}
 
 \subsection{Interacting With the Target Program}
@@ -328,10 +497,10 @@ unsafeCast :: (Typed a, Typed b) => Stream a -> Stream b
 All interaction with the outside world is done by sampling \emph{external
   symbols} and by evoking \emph{triggers}.  External symbols are symbols that
 are defined outside Copilot and which reflect the visible state of the target
-program that we are monitoring.  They include variables, arrays, and functions
-(with a non-void return type).  Analogously, triggers are functions that are
-defined outside Copilot and which are evoked when Copilot needs to report that
-the target program has violated a specification constraint.
+program that we are monitoring.  They include variables and arrays.
+Analogously, triggers are functions that are defined outside Copilot and which
+are evoked when Copilot needs to report that the target program has violated a
+specification constraint.
 
 \paragraph{External Variables.}
 
@@ -345,8 +514,10 @@ of C programs. Copilot monitors run either in the same thread or a
 separate thread as the system under observation and the only variables
 that can be observed are those that are made available through shared
 memory. This means local variables cannot be observed. Currently,
-Copilot can only observe basic C data structures and cannot handle C
-structs, dynamic data structures, or two dimensional arrays.
+Copilot supports basic C datatypes, arrays and structs. Combinations of each of
+those work as well: nested arrays, arrays of structs, structs containg arrays
+etc. All of these variables containing actual data; pointers to data are not
+supported by design.
 
 
 Copilot has both an interpreter and a compiler.The compiler must be
@@ -367,7 +538,7 @@ sense that values must be provided externally at runtime.  To simplify writing
 Copilot specifications that can be interpreted and tested, constructs for
 external symbols take an optional environment for interpretation.
 
-External variables are similar to global variables in other languages. They 
+External variables are similar to global variables in other languages. They
 are defined by using the {\tt extern} construct:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -398,7 +569,7 @@ example, in the stream definition
 \begin{lstlisting}[language = Copilot, frame = single]
 extEven :: Stream Bool
 extEven = e0 `mod` 2 == 0
-  where e0 = externW8 "x" Nothing 
+  where e0 = externW8 "x" Nothing
 \end{lstlisting}
 %
 \noindent
@@ -406,8 +577,9 @@ the type of {\tt extern "x"} is ambiguous, since it cannot be inferred from a
 Boolean stream and we have not given an explicit type signature.  For
 convenience, typed {\tt extern} functions are provided, e.g., {\tt externW8} or
 {\tt externI64} denoting an external unsigned 8-bit word or signed 64-bit word,
-respectively. Please see the grammar in Appendix~\ref{sec:BNF} for the list of
-all sampling functions.
+respectively.
+% Please see the grammar in Appendix~\ref{sec:BNF} for the list of
+% all sampling functions.
 
 In general it is best practice to define external symbols with
 top-level definitions, e.g.,
@@ -420,108 +592,24 @@ e0 = extern  "e0" (Just [2,4..])
 \noindent
 so that the symbol name and its environment can be shared between streams.
 
-Besides variables, external arrays and arbitrary functions can be sampled.  The
-external array construct has the type
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-externArray :: (Typed a, Typed b, Integral a) 
-            => String -> Stream a -> Int 
-            -> Maybe [[a]] -> Stream b  
-\end{lstlisting}
-%
-The construct takes (1) the name of an array, (2) a stream that generates indexes for
-the array (of integral type), (3) the fixed size of the array, and (4) possibly a list of lists that is the
-environment for the external array, representing the sequence of array values.  For example,
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-
-extArr :: Stream Word32
-extArr = externArray "arr1" arrIdx size 
-           (Just $ repeat (permutations [0,1,2]))
-  where 
-  arrIdx :: Stream Word8
-  arrIdx = [0] ++ (arrIdx + 1) `mod` size
-
-  size = 3
-\end{lstlisting} 
-% $
-{\tt extArr} is a stream of values drawn from an external array containing
-32-bit unsigned words.  The array is indexed by an 8-bit variable.  The index
-is ensured to be less than three by using modulo arithmetic.  The environment
-provided produces an infinite list of all the permutations of the list {\tt
-  [0,1,2]}.\footnote{The function {\tt permutations} comes from the Haskell
-    standard library {\tt Data.list}.}
-
-
-%% %
-%% \begin{code}
-%% externArray :: (Typed a, Typed b, Integral a) => String -> Stream a -> Stream b
-%% externFun :: Typed a => String -> [FunArg] -> Stream a
-%% arg :: Typed a => Stream a -> FunArg
-%% \end{code}
-%% % 
-%% The constructor \texttt{externArray} takes two arguments: the name of array and
-%% an index into the array.  The index is given by a Copilot stream (of integral
-%% type) that is used as an index into the table.
-
-%
+Just like regular variables, arrays can be sampled as well. Copilot threats
+arrays in the same way as it does for scalars. 
 \begin{example}
-\label{exm:e}
-Say we have defined a lookup-table (in C99) of a discretized continuous function that we want to use
-within Copilot:
-%
-\begin{code}[frame = single]
-double someTable[42] = { 3.5, 3.7, 4.5, ... };
+\label{exmp:pitot}
+Lets take the example where we
+have the readouts of four pitot tubes, giving us the measured airspeed:
+\begin{code}[frame=single]
+/* Array containing readouts of 4 pitot tubes. */
+double airspeeds[4] = ... ;
 \end{code}
-%
-We can use the table in a Copilot specification as follows:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-lookupSomeTable :: Stream Word16 -> Stream Double
-lookupSomeTable idx = 
-  externArray "someTable" idx 42 Nothing
+In our Copilot specification, we need to provide the type of our array, because
+Copilot need to know the length of the array we refer to. Apart from that,
+referring to an external array is like referring to any other variable:
+\begin{lstlisting}[language=Copilot, frame=single]
+airspeeds :: Stream (Array 4 Double)
+airspeeds = extern "airspeeds" Nothing
 \end{lstlisting}
-%
-Given the following values for \texttt{idx}, $\{1, 0, 2, 2, 1, \dots \}$, the output of 
-\texttt{lookupSomeTable idx} would be $$\{3.7, 3.5, 4.5, 4.5, 3.7, \dots \}$$
 \end{example}
-
-Finally, the constructor \texttt{externFun} takes (1) a function name, (2) a
-list of arguments, and (3) a possible list of values to provide its environment.
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-externFun :: Typed a => String -> [FunArg] 
-          -> Maybe [a] -> Stream a
-\end{lstlisting}
-%
-Each argument to an external function is given by a Copilot stream.  For
-example,
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-func :: Stream Word16
-func = externFun "f" [arg e0, arg nats] Nothing
-  where
-  e0 = externW8 "x" Nothing
-  nats :: Stream Word8
-  nats = [0] ++ nats + 1
-\end{lstlisting} 
-% $
-samples a function in C that has the prototype
-%
-\begin{code}[frame = single]
-uint16_t f(uint8_t x, uint8_t nats);
-\end{code}
-% 
-
-Both external arrays and functions must, like external variables, be defined
-in the target program that is monitored. Additionally, external functions must be
-without side effects, so that the monitor does not cause undesired side-effects when
-sampling functions.  Finally, to ensure Copilot sampling is not
-order-dependent, external functions cannot contain streams containing other
-external functions or external arrays in their arguments, and external arrays
-cannot contain streams containing external functions or external arrays in their
-indexes.  They can both take external variables, however.
-
 
 
 \paragraph{Triggers.}
@@ -578,8 +666,8 @@ define a monitor that surveys the above property:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 propTempRiseShutOff :: Spec
-propTempRiseShutOff = 
-  trigger "over_temp_rise" 
+propTempRiseShutOff =
+  trigger "over_temp_rise"
     (overTempRise && running) []
 
   where
@@ -591,8 +679,8 @@ propTempRiseShutOff =
   temp = extern "temp" Nothing
 
   overTempRise :: Stream Bool
-  overTempRise = drop 2 temps > (2.3 + temps) 
- 
+  overTempRise = drop 2 temps > (2.3 + temps)
+
   running :: Stream Bool
   running = extern "running" Nothing
 \end{lstlisting}
@@ -604,160 +692,3 @@ injector is running.  The external function {\tt over\_temp\_rise} is called
 without any arguments if the temperature rises more than 2.3 degrees within 0.2
 seconds and the engine is not shut off.  Notice there is a latency of one tick between when the property is violated and when the guard becomes true.
 \end{example}
-
-\subsection{Explicit Sharing}
-\label{sec:explicit_sharing}
-
-  One of the basic tasks of a compiler is to perform optimization by
-  eliminating common subexpressions.  Consider the following Haskell
-  code:
-
-\begin{lstlisting}[language = Haskell, frame = none]
-y = sin 30
-myexample   = y * y
-\end{lstlisting}
-
- The expression {\tt y}  appears twice in {\tt myexample} and {\tt y} will be
- computed each time it is called. If the common subexpression is not
- too computationally expensive and does not occur too many times, then
- the multiple invocations probably is not too big a problem. On the
- other hand, it would be far preferable if the compiler would
- recognize the common expression and compute it once saving the value
- and sharing it whenever the value is needed.  Computing an expression
- and  temporarily storing its value  in order to eliminate duplicate
- function calls is called \emph{ sharing}.  In Haskell, the {\tt
-   let} binding operator facilitates sharing so 
-
-\begin{lstlisting}[language = Haskell, frame = none]
-let  y = sin 30 
-in  y *y  
-\end{lstlisting}
-
-results in the compiler computing {\tt sin 30} saving its value and
-reusing this value in both occurrrances of {\tt y}. 
-
-\begin{figure}[!htb]
-\begin{minipage}{0.5\textwidth}
-\begin{lstlisting}[language = Copilot, frame = none]
-s1 = let x = nats + nats
-     in x * x
-\end{lstlisting}
-\end{minipage}
-\begin{minipage}{0.5\textwidth}
-\begin{lstlisting}[language = Copilot, frame = none]
-s2 = local (nats + nats) $
-     \ x -> x * x
-\end{lstlisting} 
-% $
-\end{minipage}
-\caption{Implicit sharing (s1) versus explicit sharing (s2).}
-\label{fig:explicit_sharing}
-\end{figure}
-
-\noindent  EDSLs such as Copilot 
-generally keep an 
-internal representation of the program as an AST and  without sharing
-these syntax trees can grow really large and result a lot of duplicate
-code being created during code generation. 
-Copilot facilitates sharing in expressions by the \emph{local}-construct:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-local
-  :: (Typed a, Typed b)
-  => Stream a
-  -> (Stream a -> Stream b)
-  -> Stream b
-\end{lstlisting}
-%
-The  local construct works similar to {\tt let}-bindings in ordinary
-Haskell that we discussed above.
-From a semantic point of view, the streams {\tt s1} and {\tt s2} from Figure
-\ref{fig:explicit_sharing} are identical.
-As we will see in Section~\ref{subsec:boyer_moore}, however, certain advanced
-Copilot programs may force the compiler to build syntax trees that
-blow up exponentially.
-In such cases, using explicit sharing helps to avoid this problem.
-
-Please also note that at this time sharing is not possible if you wish
-to use  the C code verification
-features  built into Copilot that use Frama-C. This is because  let bindings are not implemented in ACSL, hence it is
-impossible to run Frama-C on a Copilot program that uses local bindings.
-
-\subsection{Magic labels}
-\label{sec:magiclabels}
-To ensure that the requirements and safety analyses performed early in
-systems development are reflected throughout the lifecycle, many
-guidelines for safety-critical software, such as DO-178C, require
-documentation of traceability from requirements to object
-code. In the case of Copilot, the C code generation often generates
-dozens of files often obfuscating the code. Consequently, to promote the acceptance of high-assurance RV,
-Copilot gives the programmer the capability to insert labels into
-expressions that are inserted into the generated C code making it easy
-to trace the  C monitor code to an expression in the monitor
-specification.  
-
-The label operation has the following  type signature:
-
-\begin{lstlisting}[language = Copilot, frame = single]
-label
-  :: (Typed a)
-  => String
-  -> Stream a
-  -> Stream a
-\end{lstlisting}
-
-
-The term \emph{magic label} refers to the possibility to add special characters
-in labels, namely ``?'', which would modify the code generation by
-splitting an expression so that it generates two simple rather than
-one complex C function. To invoke the
-splitting character, simply do:
-
-\begin{lstlisting}[language = Copilot, frame = single]
-label "?blabla" expr
-\end{lstlisting}
-
-\noindent where \texttt{expr} is any stream. This fundamentally does not
-change the big-step semantics of the generated program, however it splits a big
-expression into smaller expressions which can then be more easily read or
-verified with Frama-C.
-
-%Up to now, only one has been
-%implemented, which does a beta expansion where it is put.
-%This would result in splitting the AST
-%generated into two smaller ASTs, hence this is equivalent to the transformation
-%$ e \rightarrow_{\beta} (\lambda x . x) e $, where $(\lambda x . x)$ is called
-%as an external function (given that there is no polymorphism in Copilot, one
-%identity function per type has been written, which explains why the expression
-%labeled has to be of the \texttt{Typed} typeclass). 
-
-
-
-
-Here is an example of the splitting process in Figure~\ref{fig:splitting label}
-for the following simple Copilot code:
-\begin{lstlisting}[language=Haskell]
-import qualified Copilot.Compile.SBV as S
-
-alt :: Stream Bool
-alt = (label "?splitting" $ not $ externB "externvar" Nothing)
-
-spec :: Spec
-spec = do
-trigger "trigger" (alt) []
-
-main = do
-reify spec >>= S.proofACSL S.defaultParams
-\end{lstlisting}
-
-\begin{figure}[!htb]
-      \vspace{3em}
-      \includegraphics[width=46mm]{images/label/main.ps}
-      \centering
-      \includegraphics[width=42mm]{images/label/splitted.ps}
-      \includegraphics[width=42mm]{images/label/splitted2.ps}
-      \caption{The splitting process. The AST on the left is split into two
-      smaller ASTs, that then generate two separate functions in two separate
-      files, making it easier to prove the contracts for them.}
-      \label{fig:splitting label}
-\end{figure}

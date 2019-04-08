@@ -44,9 +44,10 @@
 \usetikzlibrary{arrows,automata}
 \usepackage{tikz-cd}
 \usetikzlibrary{positioning}
+\usepackage{gensymb} % \degree symbol
 % boxes around figs
 \usepackage{float}
-\floatstyle{boxed} 
+\floatstyle{boxed}
 \restylefloat{figure}
 
 
@@ -168,11 +169,44 @@ The National Institute of Aerospace / Galois Inc. / NASA LaRC
 
 {\Huge \bfseries
 An Introduction to Copilot
-}
+}\\
+A tutorial to Copilot 3.0
 \HRule
 
 \vspace{1cm}
 
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+Frank Dedden\\
+\small{
+dev@dedden.net\\
+}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+Alwyn Goodloe\\
+\small{
+a.goodloe@nasa.gov\\
+}
+\end{center}
+\end{minipage}
+
+\vspace{1cm}
+
+\begin{minipage}{0.3\textwidth}
+\large
+\begin{center}
+Ivan Perez\\
+\small{
+ivan.perez@nianet.org\\
+}
+\end{center}
+\end{minipage}
+%
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -182,6 +216,9 @@ mcruff@andrew.cmu.edu\\
 }
 \end{center}
 \end{minipage}
+
+\vspace{1cm}
+
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -191,9 +228,7 @@ niswegmann@gmail.com\\
 }
 \end{center}
 \end{minipage}
-
-\vspace{1cm}
-
+%
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -203,6 +238,9 @@ leepike@galois.com\\
 }
 \end{center}
 \end{minipage}
+
+\vspace{1cm}
+
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -212,9 +250,7 @@ hathhorn@gmail.com\\
 }
 \end{center}
 \end{minipage}
-\vspace{1cm}
-
-
+%
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -224,6 +260,9 @@ sebastian.niller@gmail.com\\
 }
 \end{center}
 \end{minipage}
+
+\vspace{1cm}
+
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -233,9 +272,7 @@ lmpick@zoho.com\\
 }
 \end{center}
 \end{minipage}
-\vspace{1cm}
-
-
+%
 \begin{minipage}{0.3\textwidth}
 \large
 \begin{center}
@@ -262,8 +299,8 @@ Hampton, Virginia, United States, \today
 %\end{tabular}
 
 \let\thefootnote\relax\footnotetext{
-This research is supported by NASA Contract NNL08AD13T from the Aviation Safety
-Program Office.
+This research is supported by NASA Contract NNL08AD13T, 80LARC17C0004 and
+NNL09AA00A.
 }
 
 \end{center}
@@ -294,7 +331,7 @@ expositions and examples.
 The authors are grateful for NASA Contract NNL08AD13T to Galois Inc. and the
 National Institute of Aerospace, which partially supported this work.
 Thanks to Lars Kuhtz, Benedetto Di~Vito,  Robin Morisset, Kaveh
-Darafsheh, Alwyn Goodloe.  
+Darafsheh.
 
 {
 
@@ -302,18 +339,11 @@ Darafsheh, Alwyn Goodloe.
 \input{introduction}
 \input{Interpret}
 \input{Language}
-\input{Examples}
-\input{LogicExample} 
-\input{Advanced}
+\input{example}
 \addcontentsline{toc}{section}{References}
 \bibliographystyle{alpha}
 \bibliography{mybib}
 }
 
-\begin{appendices}
-\input{WellClearCode}
-\input{Grammar/BNF}
-\input{Grammar/Typing}
-\end{appendices}
 \end{document}
 

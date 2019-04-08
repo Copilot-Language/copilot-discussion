@@ -4,45 +4,36 @@
 The Copilot RV framework comes with both an interpreter and a
 compiler. 
 \subsection{Interpreting Copilot}
-To use Copilot's interpreter, one must first invoke the GHC Interpreter via
-the Cabal sandbox. Invoking the interpreter with the \texttt{cabal
-repl} command starts a session that looks like: 
-
+Assume we are currently in a directory containing a \texttt{.hs} file with our
+specification (\texttt{Spec.hs} in this case), and that Copilot is installed
+globally. If we want to interpret the specification, we need to start the GHC
+Interpreter with the file as an argument:
 %
-\begin{lstlisting}[language = Copilot]
-cabal repl
-Preprocessing library copilot-2.1.2...
-GHCi, version 7.10.1: http://www.haskell.org/ghc/  :? for help
-[1 of 1] Compiling Language.Copilot ( src/Language/Copilot.hs, interpreted )
-Ok, modules loaded: Language.Copilot.
-*Language.Copilot> 
+\begin{lstlisting}
+$ ghci Spec.hs
+GHCi, version 8.4.3: http://www.haskell.org/ghc/  :? for help
+Loaded GHCi configuration from /home/user/.ghc/ghci.conf
+[1 of 1] Compiling Spec             ( Spec.hs, interpreted )
+Ok, one module loaded.
+*Spec > 
 \end{lstlisting}
 %
-
-A copilot file \texttt{file} is loaded as follows:
-%
+This launches \texttt{ghci}, the Haskell interpreter, with \texttt{Spec.hs}
+loaded. It provides us with a prompt, recognisable by the \texttt{>} sign. Lets
+assume that our file contains one specification, called \texttt{spec}. We can
+interpret this using the \texttt{interpret}-function:
 \begin{lstlisting}[language = Copilot]
-Language.Copilot> :l file
-\end{lstlisting}
-
-Notice that \texttt{file} has to be located
-in the directory \emph{Copilot}.
-
-The copilot interpreter is invoked as follows:
-%
-\begin{lstlisting}[language = Copilot]
-Language.Copilot> interpret 10 propTempRiseShutOff
+*Spec > interpret 10 spec
 \end{lstlisting}
 %
 The first argument to the function \emph{interpret} is the number of iterations
-that we want to evaluate. The third argument is the specification (of type {\tt
-Spec}) that we wish to interpret.
+that we want to evaluate. The second argument is the specification (of type
+{\tt Spec}) that we wish to interpret.
 
 The interpreter outputs the values of the arguments passed to the trigger, if
-its guard is true, and {\tt --} otherwise. We will discuss triggers in more detail later, 
-but for now, just know that they produce an output only when the guard function
-is true. For example, consider the following
-Copilot program:
+its guard is true, and {\tt --} otherwise. We will discuss triggers in more
+detail later, but for now, just know that they produce an output only when the
+guard function is true. For example, consider the following Copilot program:
 %
 \begin{lstlisting}[language = Copilot]
 spec = do
@@ -51,9 +42,10 @@ spec = do
 \end{lstlisting}
 % $
 where {\tt nats} is the stream of natural numbers, and {\tt even} and {\tt odd}
-are the guard functions that take a stream and return whether the point-wise values are
-even or odd, respectively. The lists at the end of the trigger represent the values the 
-trigger will output when the guard is true. The output of
+are the guard functions that take a stream and return whether the point-wise
+values are even or odd, respectively. The lists at the end of the trigger
+represent the values the trigger will output when the guard is true. The output
+of
 %
 \begin{lstlisting}[language = Copilot]
 interpret 10 spec
@@ -76,95 +68,41 @@ trigger1:   trigger2:
 \end{code}
 %
 
-Note that trigger1 outputs both the number and whether that number is odd, while trigger2 only outputs the
-number. This output reflects the arguments passed to them. 
-
-Sometimes it is convenient to observe the behavior of a stream without defining
-a trigger. We can do so declaring an \emph{observer}. For example:
-%
-\begin{lstlisting}[language = Copilot]
-spec :: Spec
-spec = observer "obs" nats
-\end{lstlisting}
-%
-can be interpreted using
-%
-\begin{lstlisting}[language = Copilot]
-interpret 5 spec
-\end{lstlisting}
-%
-as usual and yields
-%
-\begin{code}
-obs:
-0
-1
-2
-3
-4
-\end{code}
+Note that trigger1 outputs both the number and whether that number is odd,
+while trigger2 only outputs the number. This output reflects the arguments
+	passed to them. 
 
 \subsection{Compiling Copilot} \label{sec:compiling}
 
-Compiling in Copilot is
-straightforward. First, we pick a back-end to compile to. Currently, two
-back-ends are implemented, both of which generate constant-time and
-constant-space C code. One back-end is called \emph{copilot-c99} and targets
-the Atom language,\footnote{\url{http://hackage.haskell.org/package/atom}}
-originally developed by Tom Hawkins at Eaton Corp.\ for developing control
-systems (in the process of depreciation). The second back-end is called \emph{copilot-sbv} and targets the SBV
-language,\footnote{\url{http://hackage.haskell.org/package/sbv}} originally
-developed by Levent Erk\"{o}k. SBV is primarily used as an interface to SMT
-solvers~\cite{smt} and also contains a C-code generator. Both languages are
-open-source.
-
-The two back-ends are installed with Copilot, and they can be imported,
-respectively, as
+Compiling a Copilot specification is straightforward. Currently Copilot
+supports one back-end, \texttt{copilot-c99} that creates constant-space C99
+code. Using the back-end is rather easy, as it just requires one to import it in
+their Copilot specification file:
 
 \begin{lstlisting}[language = Copilot]
 import Copilot.Compile.C99
 \end{lstlisting}
-\noindent
-and
-\begin{lstlisting}[language = Copilot]
-import Copilot.Compile.SBV
-\end{lstlisting}
 
-After importing a back-end, the interface for compiling is as
-follows:
-%
+Importing the back-end provides us with the \texttt{compile}-function, which
+takes a prefix as its first parameter and a \textit{reified} specification as
+its second. When inside \texttt{ghci}, with our file loaded, we can generate
+output code by executing:
 \footnote{Two explanations are in order: (1) {\tt reify} allows sharing in the
 expressions to be compiled~\cite{DSLExtract}, and {\tt >>=} is a higher-order
 operator that takes the result of reification and ``feeds'' it to the compile
 function.}
-%
 \begin{lstlisting}[language = Copilot]
-reify spec >>= compile defaultParams
+reify spec >>= compile "monitor"
 \end{lstlisting}
-%
-\noindent
-(The compile function takes a parameter to rename the generated C files; {\tt
-defaultParams} is the default, in which there is no renaming.)
 
-The compiler then generates several files in a separate-subfolder, some of which are called:
-
+This generates two output files:
 \begin{itemize}
-\item ``driver.c'' ---
-\item ``copilot.h'' ---
+  \item \texttt{<prefix>.c}: C99 file containing the generated code and the
+  \texttt{step()} function. This should be compiled by the C compiler, and
+  included in the final binary.
+  \item \texttt{<prefix>.h}: Header providing the public interface to the
+  monitor. This file should be included from your main project.
 \end{itemize}
 
-The file named ``copilot.h'' contains prototypes for all external variables,
-functions, and arrays, and contains a prototype for the ``step''-function,
-which evaluates a single iteration.
-
-Another example can be found in Copilot/Examples/Examples2.hs. At the top of the 
-file we alias {\tt Copilot.Compile.SBV} as {\tt S} for simplicity. Observe line 75:
-
-\begin{lstlisting}[language = Copilot]
-reify spec  >>=  S.compile (S.Params { S.prefix = Just "secondexamplespec"} )
-\end{lstlisting}
-
-Which, when executed, prefixes ``secondexamplespec" to all of the ``standard" file names and
-the step function.
-
-
+Please refer to the complete example \ref{sec:complete_example} for more on
+detail to use the monitor in your C program.
