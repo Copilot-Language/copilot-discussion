@@ -163,6 +163,18 @@ of steps:
   \item Write an instance of the \texttt{Typed} class.
 \end{enumerate}
 
+\subsubsection*{Enabling compiler extensions}
+First and foremost, we need to enable the \texttt{DataKinds} extension to GHC,
+by putting:
+\begin{lstlisting}[language=Copilot]
+{-# LANGUAGE DataKinds #-}
+\end{lstlisting}
+at the top of our specification file. This allows us to define \emph{kinds},
+which are the types of types. Our datatype needs to carry the names of the
+fields in C as well. Using the \texttt{DataKinds} extension we are able to
+write the names of the fields as part of our types.
+
+
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
