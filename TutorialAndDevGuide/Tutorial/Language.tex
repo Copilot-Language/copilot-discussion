@@ -137,6 +137,32 @@ generated before producing values for {\tt g}.  This is not possible since
 Copilot programs may take inputs in real-time from the environment (see
 Section~\ref{sec:interacting}).
 
+
+\subsection{Structs}
+Structs require some special attentation in Copilot, as we cannot magically
+import the definition of the struct in Copilot. In this section we discuss the
+steps that need to be taken by following the code of \texttt{Struct.hs} in the
+\texttt{Examples} directory of the Copilot distribution, or the repository
+\footnote{\url{https://github.com/Copilot-Language/Copilot/blob/master/Examples/Struct.hs}}.
+
+Let's assume that we have defined a 2d-vector type in our C code:
+\begin{lstlisting}
+struct vec {
+	float x;
+	float y;
+};
+\end{lstlisting}
+For us to be able to use this vector inside Copilot, we need to follow a number
+of steps:
+\begin{enumerate}
+  \item Enable \texttt{DataKinds} compiler extension.
+  \item Define a datatype to mimic the C definition.
+  \item Write an instance of the \texttt{Struct} class, containing a definition
+  for the struct name and function to translate the fields to a heterogeneous
+    list.
+  \item Write an instance of the \texttt{Typed} class.
+\end{enumerate}
+
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
