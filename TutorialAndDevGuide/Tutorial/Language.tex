@@ -175,6 +175,26 @@ fields in C as well. Using the \texttt{DataKinds} extension we are able to
 write the names of the fields as part of our types.
 
 
+\subsubsection*{Defining the datatype}
+A suitable representation of structs in Haskell is provided by the
+\emph{record-syntax}, this allows us to use named fields as part of the
+datatype. For Copilot this is not enough though: we still need to define the
+names of the fields in our C code. Therefore we introduce new \texttt{Field}
+datatype, which takes two arguments: the name of field, and it's type. Now we
+can mimic our vector struct in Copilot as follows:
+\begin{lstlisting}[language=Copilot]
+data Vec = Vec
+  { x :: Field "x" Float
+  , y :: Field "y" Float
+  }
+\end{lstlisting}
+Here we created two fields, $x$ and $y$, each with their corresponding C names
+and types. Note that the name inside Haskell and the C names do not necessarily
+need to match, nor is it always possible to have them match. For type-safety,
+inside Copilot we will typically only use the Haskell level names (i.e. the
+unquoted ones). The C names are only used by Copilot internally.
+
+
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
 Given that constants and operators work pointwise on streams, we can use Haskell
