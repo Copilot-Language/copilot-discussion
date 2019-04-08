@@ -238,6 +238,26 @@ matter what the values of the fields are, we just need to return something of
 the correct type.
 
 
+\subsubsection*{Simple operations}
+Building streams of structs works like building any other stream, but we need
+to wrap the values of a struct using the \texttt{Field} constructor. The reason
+for this is quite straightforward: the fields of our struct are defined in
+terms of \texttt{Field}:
+\begin{lstlisting}[language=Copilot]
+v :: Stream Vec
+v = [ Vec (Field 0) (Field 1) ] ++ v
+\end{lstlisting}
+
+We can also turn a field of a struct into its own stream using the
+\texttt{(\#)}-operator:
+\begin{lstlisting}[language=Copilot]
+vx :: Stream Float
+vx = v # x
+\end{lstlisting}
+Note the we use the Haskell level accessor \texttt{x} to retrieve the field
+from the stream of vectors.
+
+
 \subsubsection*{Example code}
 \begin{example}
 \label{exm:struct}
