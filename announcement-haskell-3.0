@@ -30,7 +30,10 @@ documentation, examples and links to the source code, please visit the webpage
 [2].
 
 Kind regards,
-The Copilot developers
+The Copilot developers:
+- Frank Dedden (maintainer)
+- Alwyn Goodloe
+- Ivan Perez
 
 [1] http://hackage.haskell.org/package/copilot
 [2] https://copilot-language.github.io
