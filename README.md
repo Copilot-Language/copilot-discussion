@@ -1,11 +1,14 @@
 Overview
 ========
-This package discusses issues with Copilot and includes documentation.
+This repo includes papers and technical reports on
+[Copilot](https://github.com/Copilot-Language/Copilot/), a stream (i.e.,
+infinite lists) domain-specific language (DSL) in Haskell that compiles into
+embedded C.  Copilot is similar in spirit to languages like Lustre.  Copilot
+contains an interpreter, multiple back-end compilers, and other verification
+tools.
 
-Copilot is a stream (i.e., infinite lists) domain-specific language (DSL) in
-Haskell that compiles into embedded C.  Copilot is similar in spirit to
-languages like Lustre.  Copilot contains an interpreter, multiple back-end
-compilers, and other verification tools.
+You can find a compiled version of the main copilot tutorial
+[here](https://copilot-language.github.io/copilot_tutorial.pdf).
 
 Examples
 =========
@@ -13,11 +16,6 @@ Please see the files under the Examples directory in the
 [Copilot](http://hackage.haskell.org/package/copilot) for a number of examples
 showing the syntax, use of libraries, and use of the interpreter and back-ends.
 The examples is the best way to start.
-
-Resources
-=========
-
-See the [Copilot repo](https://github.com/Copilot-Language/Copilot/) to get started.
 
 Copyright, License
 ==================
