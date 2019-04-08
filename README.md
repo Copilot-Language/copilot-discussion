@@ -16,11 +16,8 @@ The examples is the best way to start.
 
 Resources
 =========
-[copilot-discussion](https://github.com/niswegmann/copilot-discussion) is
-available on Hackage.
 
-**Sources** for each package are available on Github as well.  Just go to
-[Github](github.com) and search for the package of interest.  Feel free to fork!
+See the [Copilot repo](https://github.com/Copilot-Language/Copilot/) to get started.
 
 Copyright, License
 ==================
