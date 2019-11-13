@@ -70,20 +70,32 @@ which is freely distributed from here:
 installed in the following two ways:
 
 \begin{itemize}
-\item \textbf{Using Cabal: } Copilot can be downloaded and installed by executing the following command:
-
+\item \textbf{Hackage (Prefered Method): } Copilot is available from Hackage,
+and the latest version can be installed easily:
 \begin{code}
-> cabal install copilot
+cabal install copilot
 \end{code}
 
-\noindent This should, if everything goes well, install Copilot on your system.
-
-\item \textbf{Using Git: }
-
+\item \textbf{From source: } Alternatively one can download and install it from
+the repositories as well. Typically one would only go this route to develop
+Copilot. For regular users the hackage method above is highly recommended.
 \begin{code}
-     git clone https://github.com/Copilot-Language/Copilot.git
-     git submodule update --init --remote
-     make
+git clone https://github.com/Copilot-Language/Copilot.git
+cd Copilot
+git submodule update --init --remote
+\end{code}
+Compiling can either be done in a Nix-style build, or a traditional one:
+
+\noindent\emph{Nix-Style build (Cabal $\ge$ 2.x):}
+\begin{code}
+cabal build       # For Cabal 3.x
+cabal v2-build    # For Cabal 2.x
+\end{code}
+
+\noindent\emph{Traditional build (Cabal 1.x):}
+\begin{code}
+cabal install --dependencies-only
+cabal build
 \end{code}
 \end{itemize}
 
