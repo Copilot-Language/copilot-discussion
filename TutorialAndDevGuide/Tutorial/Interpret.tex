@@ -95,12 +95,13 @@ function.}
 reify spec >>= compile "monitor"
 \end{lstlisting}
 
-This generates two output files:
+This generates three output files:
 \begin{itemize}
   \item \texttt{<prefix>.c}: C99 file containing the generated code and the
   \texttt{step()} function. This should be compiled by the C compiler, and
   included in the final binary.
-  \item \texttt{<prefix>.h}: Header providing the public interface to the
+  \item \texttt{<prefix>\_types.h}: Header file containing datatypes defined in the specification and used by Copilot internally. Copilot users can opt to include these definitions in their C code, to avoid having to manually define those datatypes and keep them in sync. However, when the Copilot specification is tied to an existing codebase, including this header from user code is not recommended as the definitions in it may conflict with C types defined elsewhere in the same codebase.
+ \item \texttt{<prefix>.h}: Header providing the public interface to the
   monitor. This file should be included from your main project.
 \end{itemize}
 
