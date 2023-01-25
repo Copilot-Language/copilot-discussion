@@ -1,9 +1,7 @@
 
 \section{Language}~\label{sec:language}
 
-Copilot is embedded into the functional programming language Haskell
-\cite{PeytonJones02}, and a working knowledge of Haskell is necessary to use
-Copilot effectively. Copilot is a pure declarative language; i.e., expressions
+Copilot is a pure declarative language; i.e., expressions
 are free of side-effects and are referentially transparent.  A program written
 in Copilot, which from now on will be referred to as a \emph{specification}, has
 a cyclic behavior, where each cycle consists of a fixed series of steps:
@@ -30,20 +28,13 @@ value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{f
 $s_{fib}(1) = 1$, $s_{fib}(2) = 1$, and so forth.
 
 Constants as well as arithmetic, boolean, and relational operators are
-lifted to work pointwise on streams:
+lifted to work pointwise on streams. Here we give you another example
+\texttt{Streams.hs} found in the examples directory:
 
 \noindent
 %\begin{minipage}{0.3\textwidth}
-\begin{lstlisting}[language = Copilot, frame = single]
-x :: Stream Int32
-x = 5 + 5
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Streams.hs}
 
-y :: Stream Int32
-y = x * x
-
-z :: Stream Bool
-z = x == 10 && y < 200
-\end{lstlisting}
 %\end{minipage}
 
 
@@ -55,6 +46,9 @@ $\mathtt{x} \leadsto \{10, 10, 10, \dots \}$,
 $\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
 $\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
 \end{center}
+
+\noindent Interpret this the same way that you did in section 2 and see 
+the results yourself.
 
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
 looking into the future of streams:
@@ -73,7 +67,9 @@ w = [5,6,7] ++ x
 \end{lstlisting}
 %
 evaluates to the sequence
-$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
+$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$. Add this to the Streams.hs
+specification and add a trigger so you can see the result for yourself.
+
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
   s}, returning the remainder of the stream.
 For example we can skip the first two values of {\tt w}:
@@ -87,8 +83,10 @@ $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 
 \subsection{Streams as Lazy-Lists} \label{sec:stream}
 
-A key design choice in Copilot is that streams should mimic \emph{lazy lists}.
-In Haskell, the lazy-list of natural numbers can be programmed like this:
+This subsection is to show users that are familiar with Haskell that streams
+function like lazy lists. For those that are not as familiar with Haskell this
+subsection can be omitted. However, there is a few useful definitions of data
+streams as examples.
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 nats_ll :: [Int32]
@@ -117,17 +115,12 @@ fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{lstlisting}
 
+\subsection{Causality} 
 Copilot specifications must be \emph{causal}, informally meaning that
 stream values cannot depend on future values.  For example, the following stream
 definition is allowed:
 %
-\begin{lstlisting}[language = Copilot, frame = single]
-f :: Stream Word64
-f = [0,1,2] ++ f
-
-g :: Stream Word64
-g = drop 2 f
-\end{lstlisting}
+\lstinputlisting[language = Copilot, frame = single ]{Examples/Causal.hs}
 %
 
 But if instead {\tt g} is defined as {\tt g = drop 4 f}, then the definition is

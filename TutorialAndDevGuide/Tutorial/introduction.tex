@@ -24,8 +24,8 @@ verified by conventional means.
 
 Copilot is a RV framework for specifying and generating monitors for C programs that is
 embedded into the functional programming language Haskell
-\cite{PeytonJones02}.  A working knowledge of Haskell is necessary to use
-Copilot effectively; a variety of books and free web resources introduce Haskell.
+\cite{PeytonJones02}.  A working knowledge of Haskell is not necessary to use
+Copilot at a basic level. However, knowledge of Haskell will significantly aid you in writing Copilot specifications;  a variety of books and free web resources introduce Haskell.
 Copilot uses Haskell language extensions
 specific to the Glasgow Haskell Compiler (GHC).
 
@@ -57,7 +57,7 @@ a shared global clock.
 
 \subsection{Installation} \label{sec:install}
 
-Before downloading the copilot source code, you must first install an
+Before downloading the copilot framework, you must first install an
 up-to-date version of GHC (the minimal required version is 8.0).
 The easiest way to do this is to download and install the Haskell Platform,
 which is freely distributed from here:
@@ -99,24 +99,6 @@ cabal build
 \end{code}
 \end{itemize}
 
-\noindent To use the language, your Haskell module should contain the following import:
-%
-\begin{code}
-import Language.Copilot
-\end{code}
-%
-To use the C99 back-end, import it:
-%
-\begin{code}
-import Copilot.Compile.C99
-\end{code}
-%
-If you need to use functions defined in the Prelude that are redefined by
-Copilot (e.g., arithmetic operators), import the Prelude qualified:
-%
-\begin{code}
-import qualified Prelude as P
-\end{code}
 
 \subsection{Structure} \label{structure}
 
