@@ -46,7 +46,7 @@ $\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
 $\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
 \end{center}
 
-\noindent Interpret this the same way that you did in section 2 and see 
+\noindent Interpret this the same way that you did in Section 2 and see 
 the results yourself.
 
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
@@ -117,7 +117,7 @@ fib = [1, 1] ++ (fib + drop 1 fib)
 \subsection{Causality} 
 Copilot specifications must be \emph{causal}, informally meaning that
 stream values cannot depend on future values.  Our example \texttt{Causal.hs}
-in the examples directory shows the use of {\tt drop} and {\tt ++} by defining
+in the ./Examples directory shows the use of {\tt drop} and {\tt ++} by defining
 a fibonachi series and then creates a leading and lagging stream:
 %
 \lstinputlisting[language = Copilot, frame = single ]{Examples/Causal.hs}
@@ -129,7 +129,11 @@ But if instead {\tt fastForwardFib} is defined as {\tt fastforwardFib = drop 4 f
  to be generated before producing values for {\tt fastForwardFib}.  This is not possible since
 Copilot programs may take inputs in real-time from the environment (see
 Section~\ref{subsec:interacting}).
-
+Being able to look ahead and behind in streams is really useful for thing like rate of change
+for example if you were intrested in monitoring how fast your car was accelerating or the rate
+of drain on a battery. If you would like more practice with the Copilot language try adding in 
+an observer that shows how much change there was between the leading and the lagging stream for 
+our fibonachi example.
 
 \subsection{Structs}
 Structs require some special attentation in Copilot, as we cannot magically
