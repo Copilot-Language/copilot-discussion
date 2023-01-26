@@ -136,6 +136,7 @@ an observer that shows how much change there was between the leading and the lag
 our fibonachi example.
 
 \subsection{Structs}
+When monitoring embedded systems the data that needs to be observed is often in a struct.
 Structs require some special attentation in Copilot, as we cannot magically
 import the definition of the struct in Copilot. In this section we discuss the
 steps that need to be taken by following the code of \texttt{Struct.hs} in the
@@ -159,6 +160,9 @@ of steps:
     list.
   \item Write an instance of the \texttt{Typed} class.
 \end{enumerate}
+
+If you would like to follow along with our example you can open up the Structs.hs file
+in the ./Examples directory. We do show the entire thing at the end. 
 
 \subsubsection*{Enabling compiler extensions}
 First and foremost, we need to enable the \texttt{DataKinds} extension to GHC,
