@@ -117,16 +117,17 @@ fib = [1, 1] ++ (fib + drop 1 fib)
 
 \subsection{Causality} 
 Copilot specifications must be \emph{causal}, informally meaning that
-stream values cannot depend on future values.  For example, the following stream
-definition is allowed:
+stream values cannot depend on future values.  Our example \texttt{Causal.hs}
+in the examples directory shows the use of {\tt drop} and {\tt ++} by defining
+a fibonachi series and then creates a leading and lagging stream:
 %
 \lstinputlisting[language = Copilot, frame = single ]{Examples/Causal.hs}
 %
 
-But if instead {\tt g} is defined as {\tt g = drop 4 f}, then the definition is
-disallowed.  While an analogous stream is definable in a lazy language, we bar
-it in Copilot, since it requires future values of {\tt f} to be
-generated before producing values for {\tt g}.  This is not possible since
+But if instead {\tt fastForwardFib} is defined as {\tt fastforwardFib = drop 4 fib}
+, then the definition is disallowed.  While an analogous stream is definable in a
+ lazy language, we bar it in Copilot, since it requires future values of {\tt fib}
+ to be generated before producing values for {\tt fastForwardFib}.  This is not possible since
 Copilot programs may take inputs in real-time from the environment (see
 Section~\ref{subsec:interacting}).
 
