@@ -26,60 +26,6 @@ $s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
 value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{fib}(0) = 0$,
 $s_{fib}(1) = 1$, $s_{fib}(2) = 1$, and so forth.
 
-Constants as well as arithmetic, boolean, and relational operators are
-lifted to work pointwise on streams. Here we give you another example
-\texttt{Streams.hs} found in the examples directory:
-
-\noindent
-%\begin{minipage}{0.3\textwidth}
-\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Streams.hs}
-
-%\end{minipage}
-
-
-\noindent Here the streams {\tt x}, {\tt y}, and {\tt z} are simply
-\emph{constant streams}:
-
-\begin{center}
-$\mathtt{x} \leadsto \{10, 10, 10, \dots \}$,
-$\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
-$\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
-\end{center}
-
-\noindent Interpret this the same way that you did in Section 2 and see 
-the results yourself.
-
-Two types of \emph{temporal} operators are provided, one for delaying streams and one for
-looking into the future of streams:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-(++) :: [a] -> Stream a -> Stream a
-drop :: Int -> Stream a -> Stream a
-\end{lstlisting}
-%
-Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
-For example the stream {\tt w} defined as follows, given our previous definition
-of {\tt x}:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-w = [5,6,7] ++ x
-\end{lstlisting}
-%
-evaluates to the sequence
-$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$. Add this to the Streams.hs
-specification and add a trigger so you can see the result for yourself.
-
-The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
-  s}, returning the remainder of the stream.
-For example we can skip the first two values of {\tt w}:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-u = drop 2 w
-\end{lstlisting}
-%
-which yields the sequence
-$\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
-
 \subsection{Streams as Lazy-Lists} \label{sec:stream}
 
 This subsection is to show users that are familiar with Haskell that streams
@@ -114,7 +60,99 @@ fib :: Stream Int32
 fib = [1, 1] ++ (fib + drop 1 fib)
 \end{lstlisting}
 
+\subsection{Functions on Streams} \label{sec:FnOnStreams}
+
+Given that constants and operators work pointwise on streams, we can use Haskell
+as a macro-language for defining functions on streams.  The idea of using
+Haskell as a macro language is powerful since Haskell is a
+general-purpose higher-order functional language.
+
+\begin{example}
+We define the function {\tt even}, which given a stream of
+integers returns a boolean stream which is true whenever the input stream
+contains an even number, as follows:
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+even :: Stream Int32 -> Stream Bool
+even x = x `mod` 2 == 0
+\end{lstlisting}
+%
+Applying {\tt even} on {\tt nats} (defined above) yields the sequence
+$\{T, F, T, F, T, F, \dots\}$.
+\end{example}
+
+If a function is required to return multiple results, we simply use plain
+Haskell tuples:
+
+\begin{example}
+We define complex multiplication as follows:
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+mul_comp
+  :: (Stream Double, Stream Double)
+  -> (Stream Double, Stream Double)
+  -> (Stream Double, Stream Double)
+(a, b) `mul_comp` (c, d) = (a * c - b * d, a * d + b * c)
+\end{lstlisting}
+%
+Here {\tt a} and {\tt b} represent the real and imaginary part of the left
+operand, and {\tt c} and {\tt d} represent the real and imaginary part
+of the right operand.
+\end{example}
+
+Here we give you another example \texttt{Streams.hs} found in the ./Examples directory:
+
+\noindent
+%\begin{minipage}{0.3\textwidth}
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Streams.hs}
+
+%\end{minipage}
+
+
+\noindent Here the streams {\tt x}, {\tt y}, and {\tt z} are simply
+\emph{constant streams}:
+
+\begin{center}
+$\mathtt{x} \leadsto \{10, 10, 10, \dots \}$,
+$\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
+$\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
+\end{center}
+
+\noindent Interpret this the same way that you did in Section 2 and see 
+the results yourself.
+
 \subsection{Causality} 
+Two types of \emph{temporal} operators are provided, one for delaying streams and one for
+looking into the future of streams:
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+(++) :: [a] -> Stream a -> Stream a
+drop :: Int -> Stream a -> Stream a
+\end{lstlisting}
+%
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
+For example the stream {\tt w} defined as follows, given our previous definition
+of {\tt x}:
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+w = [5,6,7] ++ x
+\end{lstlisting}
+%
+evaluates to the sequence
+$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$. Add this to the Streams.hs
+specification and add a trigger so you can see the result for yourself.
+
+The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
+  s}, returning the remainder of the stream.
+For example we can skip the first two values of {\tt w}:
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+u = drop 2 w
+\end{lstlisting}
+%
+which yields the sequence
+$\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
+
 Copilot specifications must be \emph{causal}, informally meaning that
 stream values cannot depend on future values.  Our example \texttt{Causal.hs}
 in the ./Examples directory shows the use of {\tt drop} and {\tt ++} by defining
@@ -129,6 +167,7 @@ But if instead {\tt fastForwardFib} is defined as {\tt fastforwardFib = drop 4 f
  to be generated before producing values for {\tt fastForwardFib}.  This is not possible since
 Copilot programs may take inputs in real-time from the environment (see
 Section~\ref{subsec:interacting}).
+
 Being able to look ahead and behind in streams is really useful for thing like rate of change
 for example if you were intrested in monitoring how fast your car was accelerating or the rate
 of drain on a battery. If you would like more practice with the Copilot language try adding in 
@@ -208,7 +247,7 @@ instance Struct Vec where
   typename _ = "vec"  -- Name of the type in C
 
   -- Function to translate Vec to list of Value's, order should match struct.
-  -- tovalues :: Vec -> [Value Vec]
+  tovalues :: Vec -> [Value Vec]
   toValues v = [ Value Float (x v)
                , Value Float (y v)
                ]
@@ -260,92 +299,13 @@ from the stream of vectors.
 
 
 \subsubsection*{Example code}
-\begin{example}
 \label{exm:struct}
 Now that we defined all there is, we can make streams of structs. The following
 code has been taken from the \texttt{Struct.hs} example, and shows the basic
 usage of structs.
-
-\begin{lstlisting}[language=Copilot]
-{-# LANGUAGE DataKinds #-}
-
-module Struct where
-
-import Language.Copilot
-import Copilot.Compile.C99
-
-import Prelude hiding ((>), (<), div, (++))
-
-
-data Vec = Vec
-  { x :: Field "x" Float
-  , y :: Field "y" Float
-  }
-
-instance Struct Vec where
-  typename _ = "vec"  -- Name of the type in C
-
-  -- Function to translate Vec to list of Value's, order should match struct.
-  toValues v = [ Value Float (x v)
-               , Value Float (y v)
-               ]
-
--- We need to provide an instance to Typed with a bogus Vec
-instance Typed Vec where
-  typeOf = Struct (Vec (Field 0) (Field 0))
-
-
-vecs :: Stream Vec
-vecs = [ Vec (Field 1) (Field 2)
-       , Vec (Field 12) (Field 8)
-       ] ++ vecs
-
-
-spec = do
-  -- Trigger that always executes, splits the vec into seperate args.
-  trigger "split" true [arg $ vecs # x, arg $ vecs # y]
-\end{lstlisting}
-\end{example}
-
-\subsection{Functions on Streams} \label{sec:FnOnStreams}
-
-Given that constants and operators work pointwise on streams, we can use Haskell
-as a macro-language for defining functions on streams.  The idea of using
-Haskell as a macro language is powerful since Haskell is a
-general-purpose higher-order functional language.
-
-\begin{example}
-We define the function {\tt even}, which given a stream of
-integers returns a boolean stream which is true whenever the input stream
-contains an even number, as follows:
 %
-\begin{lstlisting}[language = Copilot, frame = single]
-even :: Stream Int32 -> Stream Bool
-even x = x `mod` 2 == 0
-\end{lstlisting}
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Structs.hs}
 %
-Applying {\tt even} on {\tt nats} (defined above) yields the sequence
-$\{T, F, T, F, T, F, \dots\}$.
-\end{example}
-
-If a function is required to return multiple results, we simply use plain
-Haskell tuples:
-
-\begin{example}
-We define complex multiplication as follows:
-%
-\begin{lstlisting}[language = Copilot, frame = single]
-mul_comp
-  :: (Stream Double, Stream Double)
-  -> (Stream Double, Stream Double)
-  -> (Stream Double, Stream Double)
-(a, b) `mul_comp` (c, d) = (a * c - b * d, a * d + b * c)
-\end{lstlisting}
-%
-Here {\tt a} and {\tt b} represent the real and imaginary part of the left
-operand, and {\tt c} and {\tt d} represent the real and imaginary part
-of the right operand.
-\end{example}
 
 \subsection{Stateful Functions} \label{sec:stateful}
 
@@ -354,45 +314,11 @@ Copilot also facilitates \emph{stateful} functions. A \emph{stateful} function
 is a function which has an internal state, e.g. as a latch (as in electronic
 circuits) or a low/high-pass filter (as in a DSP).
 
-\begin{figure*}
-\begin{minipage}{0.25\linewidth}
-\begin{tabular}{c|c||c}
-$\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
-\hline
-$F$ & $F$ & $F$ \\
-\hline
-$F$ & $T$ & $T$ \\
-\hline
-$T$ & $F$ & $T$ \\
-\hline
-$T$ & $T$ & $F$
-\end{tabular}
-\end{minipage}
-\begin{minipage}{0.35\linewidth}
-\begin{lstlisting}[frame=none]
-latch :: Stream Bool -> Stream Bool
-latch x = y
-  where
-  y = if x then not z else z
-  z = [False] ++ y
-\end{lstlisting}
-\end{minipage}
-\hspace{1cm}
-\begin{minipage}{0.3\linewidth}
-\begin{tabular}{c|c|c|c|c|c}
-   & 0 & 1 & 2 & 3 & 4\\
-\hline
-x & $F$ & $T$ & $T$ & $F$ & $F$ \\
-\hline
-y & $F$ & $T$ & $F$ & $F$ & $F$ \\
-\end{tabular}
-\end{minipage}
-\caption{A latch [Example 3]. The specification function is provided at the left and the
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Latch.hs}
+
+A latch [Example 3]. The specification function is provided at the left and the
 implementation in copilot is provided in the middle. The right shows an example of
-the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find
-$y_0$ since there is no $y_{-1}$) is False.}
-\label{fig:jk_latch}
-\end{figure*}
+the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find $y_0$ since there is no $y_{-1}$) is False.
 
 \begin{example}
 We consider a simple latch, as described in \cite{Farhat2004}, with a single
