@@ -1,12 +1,13 @@
 
-\section{Language}~\label{sec:language}
-Copilot is a pure declarative language; i.e., expressions
-are free of side-effects and are referentially transparent.  A program written
-in Copilot, which from now on will be referred to as a \emph{specification}, has
-a cyclic behavior, where each cycle consists of a fixed series of steps:
+\section{Language}~\label{sec:language} Copilot is a pure declarative language;
+i.e., expressions are free of side-effects and are referentially transparent.
+%
+A program written in Copilot, which from now on will be referred to as a
+\emph{specification}, has a cyclic behavior, where each cycle consists of a
+fixed series of steps:
 
 \begin{itemize}
-\item Sample external variables and arrays.
+\item Sample external variables, structs, and arrays.
 \item Update internal variables.
 \item Fire external triggers. (In case the specification is violated.)
 \item Update observers (for debugging purpose).
@@ -15,7 +16,9 @@ a cyclic behavior, where each cycle consists of a fixed series of steps:
 \noindent We refer to a single cycle as an \emph{iteration} or a \emph{step}.
 
 All transformation of data in Copilot is propagated through streams.
+%
 A stream is an infinite, ordered sequence of values which must conform to the same type.
+%
 E.g., we have the stream of Fibonacci numbers:
 
 \begin{center}
@@ -23,14 +26,20 @@ $s_{fib} = \{0, 1, 1, 2, 3, 5, 8, 13, 21, \dots \}$
 \end{center}
 
 \noindent We denote the $n$th value of the stream $s$ as $s(n)$, and the first
-value in a sequence $s$ as $s(0)$. For example, for $s_{fib}$ we have that $s_{fib}(0) = 0$,
+value in a sequence $s$ as $s(0)$.
+%
+For example, for $s_{fib}$ we have that $s_{fib}(0) = 0$,
 $s_{fib}(1) = 1$, $s_{fib}(2) = 1$, and so forth.
 
 \subsection{Streams as Lazy-Lists} \label{sec:stream}
 
 This subsection is to show users that are familiar with Haskell that streams
-function like lazy lists. For those that are not as familiar with Haskell this
-subsection can be omitted. However, there is a few useful definitions of data
+function like lazy lists.
+%
+For those that are not as familiar with Haskell this
+subsection can be omitted.
+%
+However, there is a few useful definitions of data
 streams as examples.
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -62,15 +71,16 @@ fib = [1, 1] ++ (fib + drop 1 fib)
 
 \subsection{Functions on Streams} \label{sec:FnOnStreams}
 
-Given that constants and operators work pointwise on streams, we can use Haskell
-as a macro-language for defining functions on streams.  The idea of using
-Haskell as a macro language is powerful since Haskell is a
+Given that constants and operators work pointwise on streams, we can use
+Haskell as a macro-language for defining functions on streams.
+%
+The idea of using Haskell as a macro language is powerful since Haskell is a
 general-purpose higher-order functional language.
 
 \begin{example}
-We define the function {\tt even}, which given a stream of
-integers returns a boolean stream which is true whenever the input stream
-contains an even number, as follows:
+We define the function {\tt even}, which given a stream of integers returns a
+boolean stream which is true whenever the input stream contains an even number,
+as follows:
 %
 \begin{lstlisting}[language = Copilot, frame = single]
 even :: Stream Int32 -> Stream Bool
@@ -79,6 +89,9 @@ even x = x `mod` 2 == 0
 %
 Applying {\tt even} on {\tt nats} (defined above) yields the sequence
 $\{T, F, T, F, T, F, \dots\}$.
+%
+This function sould be familiar to the one that
+we had shown in {\tt Spec.hs} from \hyperref[interpcompile]{Section 2.1}.
 \end{example}
 
 If a function is required to return multiple results, we simply use plain
@@ -100,7 +113,8 @@ operand, and {\tt c} and {\tt d} represent the real and imaginary part
 of the right operand.
 \end{example}
 
-Here we give you another example \texttt{Streams.hs} found in the ./Examples directory:
+Here we give you another specification \texttt{Streams.hs} found in the ./Examples directory
+that you are able to run in the interpreter to see how the operators work on the streams:
 
 \noindent
 %\begin{minipage}{0.3\textwidth}
@@ -112,14 +126,31 @@ Here we give you another example \texttt{Streams.hs} found in the ./Examples dir
 \noindent Here the streams {\tt x}, {\tt y}, and {\tt z} are simply
 \emph{constant streams}:
 
-\begin{center}
-$\mathtt{x} \leadsto \{10, 10, 10, \dots \}$,
-$\mathtt{y} \leadsto \{100, 100, 100,  \dots \}$,
-$\mathtt{z} \leadsto \{\mbox{T},\; \mbox{T},\; \mbox{T},\; \dots \}$
-\end{center}
+\begin{center} $\mathtt{x} \leadsto \{10, 10, 10, \dots \}$, $\mathtt{y}
+\leadsto \{100, 100, 100,  \dots \}$, $\mathtt{z} \leadsto \{\mbox{T},\;
+\mbox{T},\; \mbox{T},\; \dots \}$ \end{center}
 
-\noindent Interpret this the same way that you did in Section 2 and see 
-the results yourself.
+\noindent For more practice creating and operating on streams you can solve the
+following problem. 
+
+
+{\tt Problem:} We have given you a specification with two streams in the
+./Examples.
+%
+One stream is a stream of natural numbers and the other is a stream of purely
+even numbers.
+%
+Create a function that will check if a stream of numbers is even or not, we
+have given you the type specification.
+%
+Once you have created the function, you should be able to compile interpret the
+specification.
+%
+
+\emph{We have also provided you with the answer if you get stuck.}
+%
+
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/EvenStream_Problem.hs}
 
 \subsection{Causality} 
 Two types of \emph{temporal} operators are provided, one for delaying streams and one for
@@ -130,49 +161,151 @@ looking into the future of streams:
 drop :: Int -> Stream a -> Stream a
 \end{lstlisting}
 %
-Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt s}.
-For example the stream {\tt w} defined as follows, given our previous definition
-of {\tt x}:
+Here {\tt xs ++ s} prepends the list {\tt xs} at the front of the stream {\tt
+s}.
 %
-\begin{lstlisting}[language = Copilot, frame = single]
-w = [5,6,7] ++ x
+For example the stream {\tt w} defined as follows, given our previous
+definition of {\tt x}:
+%
+\begin{lstlisting}[language = Copilot, frame = single] w = [5,6,7] ++ x
 \end{lstlisting}
 %
-evaluates to the sequence
-$\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$. Add this to the Streams.hs
-specification and add a trigger so you can see the result for yourself.
+evaluates to the sequence $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
+%
+Add this to the Streams.hs specification and add a trigger so you can see the
+result for yourself.
 
 The expression {\tt drop k s} skips the first {\tt k} values of the stream {\tt
-  s}, returning the remainder of the stream.
+s}, returning the remainder of the stream.
+%
 For example we can skip the first two values of {\tt w}:
 %
-\begin{lstlisting}[language = Copilot, frame = single]
-u = drop 2 w
+\begin{lstlisting}[language = Copilot, frame = single] u = drop 2 w
 \end{lstlisting}
 %
-which yields the sequence
-$\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
+which yields the sequence $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
 
-Copilot specifications must be \emph{causal}, informally meaning that
-stream values cannot depend on future values.  Our example \texttt{Causal.hs}
-in the ./Examples directory shows the use of {\tt drop} and {\tt ++} by defining
-a fibonachi series and then creates a leading and lagging stream:
+Copilot specifications must be \emph{causal}, informally meaning that stream
+values cannot depend on future values.
+%
+Our example \texttt{Causal.hs} in the ./Examples directory shows the use of
+{\tt drop} and {\tt ++} by defining a fibonachi series and then creates a
+leading and lagging stream:
 %
 \lstinputlisting[language = Copilot, frame = single ]{Examples/Causal.hs}
 %
 
-But if instead {\tt fastForwardFib} is defined as {\tt fastforwardFib = drop 4 fib}
-, then the definition is disallowed.  While an analogous stream is definable in a
- lazy language, we bar it in Copilot, since it requires future values of {\tt fib}
- to be generated before producing values for {\tt fastForwardFib}.  This is not possible since
-Copilot programs may take inputs in real-time from the environment (see
-Section~\ref{subsec:interacting}).
+But if instead {\tt fastForwardFib} is defined as {\tt fastforwardFib = drop 4
+fib} , then the definition is disallowed.
+%
+While an analogous stream is definable in a lazy language, we bar it in
+Copilot, since it requires future values of {\tt fib} to be generated before
+producing values for {\tt fastForwardFib}.
+%
+This is not possible since Copilot programs may take inputs in real-time from
+the environment (see Section~\ref{subsec:interacting}).
 
-Being able to look ahead and behind in streams is really useful for thing like rate of change
-for example if you were intrested in monitoring how fast your car was accelerating or the rate
-of drain on a battery. If you would like more practice with the Copilot language try adding in 
-an observer that shows how much change there was between the leading and the lagging stream for 
-our fibonachi example.
+Being able to look ahead and behind in streams is really useful for thing like
+rate of change.
+%
+For example if you were intrested in monitoring how fast your car was
+accelerating or the rate of drain on a battery.
+%
+If you would like more practice with the Copilot language, try adding in an
+observer that shows how much change there was between the leading and the
+lagging stream for our fibonachi example.
+
+\subsection{Stateful Functions} \label{sec:stateful}
+
+In addition to pure functions, such as {\tt even} and {\tt mul\_comp}, Copilot
+also facilitates \emph{stateful} functions.
+%
+A \emph{stateful} function is a function which has an internal state, e.g. as a
+latch (as in electronic circuits) or a low/high-pass filter (as in a DSP).
+
+\begin{example} We consider a simple latch, as described in \cite{Farhat2004},
+with a single input and a boolean state.
+%
+A latch is a way of simulating memory in circuits by feeding back output gates
+as inputs.
+%
+Whenever the input is true the internal state is reversed.
+%
+The operational behavior and the implementation of the latch is shown in the
+./Examples directory with Specification {\tt Latch.hs}.
+
+\begin{center}
+\begin{minipage}{0.25\linewidth}
+\begin{tabular}{c|c||c}
+$\mathtt{x}_i$: & $\mathtt{y}_{i-1}$: & $\mathtt{y}_i$:\\
+\hline
+$F$ & $F$ & $F$ \\
+\hline
+$F$ & $T$ & $T$ \\
+\hline
+$T$ & $F$ & $T$ \\
+\hline
+$T$ & $T$ & $F$
+\end{tabular}
+\end{minipage}
+\end{center}
+\end{example}
+
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Latch.hs}
+
+\begin{description}
+  \item[Line 1-4] Standard inclueds to include the Copilot language and remove 
+  items defined in the Copilot library from the prelude.
+  \item[Line 5-9] This is a set of arbitrary functions to create a stream of
+  trues and falses to demonstrate the latch.
+  \item[Lines 11-15] demonstrate the implementation of an if-then-else statement in copilot. In order to do if-then-else statements we have defined {\tt mux}.
+\end{description}
+
+%
+\begin{lstlisting}[language = Copilot, frame = single]
+mux :: Typed a => Stream Bool -> Stream a -> Stream a -> Stream a
+\end{lstlisting}
+%
+
+The expression {\tt mux x y z} says that if {\tt x} is true then return {\tt
+y}, but if {\tt x} is false then return {\tt z}.
+
+\begin{example} We consider a resettable counter with two inputs, {\tt inc} and
+{\tt reset}.
+%
+The input {\tt inc} increments the counter and the input {\tt reset} resets the
+counter.
+%
+The internal state of the counter, {\tt cnt}, represents the value of the
+counter and is initially set to zero. 
+%
+At each cycle, $i$, the value of $\mathtt{cnt}_i$ is determined as shown in the
+table below.
+
+\begin{center}
+\begin{minipage}{0.25\linewidth}
+\begin{tabular}{c|c||c}
+$\mathtt{inc}_i$: & $\mathtt{reset}_i$: & $\mathtt{cnt}_i$:\\
+\hline
+$F$ & $F$ & $\mathtt{cnt}_{i-1}$ \\
+\hline
+$*$ & $T$ & $0$ \\
+\hline
+$T$ & $F$ & $\mathtt{cnt}_{i-1}$\\
+\hline
+\end{tabular}
+\end{minipage}
+\end{center}
+\end{example}
+
+{\tt Problem:} Now that you have an understanding of how to implement if then operations on streams.
+%
+Attempt to write a specification for the example above.
+%
+We have started the specification for you in the ./Examples directory.
+
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Counter_Problem.hs}
+
 
 \subsection{Structs}
 When monitoring embedded systems the data that needs to be observed is often in a struct.
@@ -306,87 +439,6 @@ usage of structs.
 %
 \lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Structs.hs}
 %
-
-\subsection{Stateful Functions} \label{sec:stateful}
-
-In addition to pure functions, such as {\tt even} and {\tt mul\_comp},
-Copilot also facilitates \emph{stateful} functions. A \emph{stateful} function
-is a function which has an internal state, e.g. as a latch (as in electronic
-circuits) or a low/high-pass filter (as in a DSP).
-
-\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Latch.hs}
-
-A latch [Example 3]. The specification function is provided at the left and the
-implementation in copilot is provided in the middle. The right shows an example of
-the latch, where x is $\{F, T, T, F, F, \dots \}$ and the initial value of y (used with $x_0$ to find $y_0$ since there is no $y_{-1}$) is False.
-
-\begin{example}
-We consider a simple latch, as described in \cite{Farhat2004}, with a single
-input and a boolean state. A latch is a way of simulating memory in circuits by feeding
-back output gates as inputs.  Whenever the input is true the internal state is reversed.
-The operational behavior and the implementation of the latch is shown in Figure
-\ref{fig:jk_latch}.\footnote
-{In order
-to use conditionals (i.e., if-then-else) in Copilot specifications,
-as in Figures~\ref{fig:jk_latch} and~\ref{fig:counter}, the GHC
-language extension {\tt RebindableSyntax} must be set on.}
-\end{example}
-
-\begin{figure*}
-\begin{minipage}{0.4\linewidth}
-\begin{tabular}{c|c||c}
-$\mathtt{inc}_i$: & $\mathtt{reset}_i$: & $\mathtt{cnt}_i$: \\
-\hline
-$F$ & $F$ & $\mathtt{cnt}_{i-1}$ \\
-\hline
-* & $T$ & $0$ \\
-\hline
-$T$ & $F$ & $\mathtt{cnt}_{i-1} + 1$ \\
-\hline
-\end{tabular}
-\end{minipage}
-\hspace{1cm}
-\begin{minipage}{0.6\linewidth}
-\begin{lstlisting}[language = Copilot, frame = none]
-counter :: Stream Bool -> Stream Bool
-        -> Stream Int32
-counter inc reset = cnt
-  where
-  cnt = if reset then 0
-          else if inc then z + 1
-                 else z
-  z = [0] ++ cnt
-\end{lstlisting}
-\end{minipage}
-\caption{A resettable counter. The specification is provided at the left and the
-implementation is provided at the right.
-}
-\label{fig:counter}
-\end{figure*}
-
-\begin{example}
-We consider a resettable counter with two inputs, {\tt inc} and {\tt reset}.
-The input {\tt inc} increments the counter and the input {\tt reset} resets the
-counter. The internal state of the counter, {\tt cnt}, represents the value of the
-counter and is initially set to zero. At each cycle, $i$, the value of
-$\mathtt{cnt}_i$ is determined as shown in the left table in Figure
-\ref{fig:counter}.
-\end{example}
-
-%\begin{figure}
-%\begin{code}
-%fir2pole :: Double -> Double -> Double -> Double
-%  -> Double -> Sig Double -> Sig Double
-%fir2pole a1 a2 b0 b1 b2 x0 = y0
-%  where
-%    y0 = - (constant a1)*y1 - (constant a2)*y2
-%         + (constant b0)*x0 + (constant b1)*x1 + (constant b2)*x2
-%    x2 = [0, 0] ++ x0 ; x1 = drop 1 x2
-%    y2 = [0, 0] ++ y0 ; y1 = drop 1 y2
-%\end{code}
-%\caption{A $2$-pole IIR filter.}
-%\label{fig:2_pole_iir_filter}
-%\end{figure}
 
 \subsection{Types} \label{sec:types}
 
