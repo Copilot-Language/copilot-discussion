@@ -47,8 +47,8 @@ monitors} for \emph{hard real-time}, \emph{distributed}, \emph{reactive
 systems}.
 %
 Briefly, a runtime monitor is program that runs concurrently with a target
-program with the sole purpose of assuring that the target program behaves in
-accordance with a pre-established specification.
+program of the SUO with the sole purpose of assuring that the target program
+behaves in accordance with a pre-established specification.
 %
  Copilot is a language for writing such specifications.
 %
@@ -59,8 +59,7 @@ All data to and from a reactive system are communicated progressively during
 execution.
 %
  Reactive systems differ from transformational systems which transform data in
-a single pass and then terminate, as for example compilers and numerical
-computation software.
+a single pass and then terminate.
 %
 
 A hard real-time system is a system that has a statically bounded execution
@@ -80,40 +79,20 @@ agree on a shared global clock.
 \subsection{Installation} \label{sec:install}
 
 Before downloading the copilot framework, you must first install an
-up-to-date version of GHC (the minimal required version is 8.0).
+up-to-date version of GHC (the minimal required version is 8.6.4).
 %
 
 \noindent Copilot compiles to C code, you must install a C compiler such as GCC (\url{https://gcc.gnu.org/install/}). After having installed the Haskell Platform and C compiler, Copilot can be downloaded and
 installed in the following two ways:
 
 \begin{itemize}
-\item \textbf{Hackage (Prefered Method): } Copilot is available from Hackage,
+\item \textbf{Hackage (Prefered Method): } Copilot is available from
+\href{https://hackage.haskell.org/package/copilot-3.16#table-of-contents}{Hackage},
 and the latest version can be installed easily:
 \begin{code}
-cabal install copilot
+cabal v2-install --lib copilot
 \end{code}
 
-\item \textbf{From source: } Alternatively one can download and install it from
-the repositories as well. Typically one would only go this route to develop
-Copilot. For regular users the hackage method above is highly recommended.
-\begin{code}
-git clone https://github.com/Copilot-Language/copilot.git
-cd copilot
-git submodule update --init --remote
-\end{code}
-Compiling can either be done in a Nix-style build, or a traditional one:
-
-\noindent\emph{Nix-Style build (Cabal $\ge$ 2.x):}
-\begin{code}
-cabal build       # For Cabal 3.x
-cabal v2-build    # For Cabal 2.x
-\end{code}
-
-\noindent\emph{Traditional build (Cabal 1.x):}
-\begin{code}
-cabal install --dependencies-only
-cabal build
-\end{code}
 \end{itemize}
 
 
@@ -185,6 +164,17 @@ program is in error, the monitor is in error, or they are not synchronized, all
 of which are faults to be reported.
 %
 
+When deciding whether to use Copilot to monitor systems that are not hard
+real-time, the user must determine if sampling is suitable to capture the
+errors and faults of interest in the  SUO. In many cyber-physical systems, the
+trace being monitored is coming from sensors measuring physical data such as
+GPS coordinates, air speed, and actuation signals.
+%
+ These continuous signals do not change abruptly so as long as it is sampled at
+a suitable rate, that usually must be determined experimentally, sampling is
+sufficient.
+%
+
 Most of the popular runtime monitoring frameworks inline monitors in the
 observed program to avoid the aforementioned problems with sampling.
 %
@@ -205,15 +195,6 @@ and space partitioning from the observed programs.
  Such an architecture may even be necessary if the monitored program is
 physically distributed.
 
-When deciding whether to use Copilot to monitor systems that are not hard
-real-time, the user must determine if sampling is suitable to capture the
-errors and faults of interest in the  SUO. In many cyber-physical systems, the
-trace being monitored is coming from sensors measuring physical data such as
-GPS coordinates, air speed, and actuation signals.
-%
- These continuous signals do not change abruptly so as long as it is sampled at
-a suitable rate, that usually must be determined experimentally, sampling is
-sufficient.
 
 
 

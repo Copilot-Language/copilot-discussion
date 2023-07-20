@@ -167,7 +167,8 @@ s}.
 For example the stream {\tt w} defined as follows, given our previous
 definition of {\tt x}:
 %
-\begin{lstlisting}[language = Copilot, frame = single] w = [5,6,7] ++ x
+\begin{lstlisting}[language = Copilot, frame = single]
+w = [5,6,7] ++ x
 \end{lstlisting}
 %
 evaluates to the sequence $\mathtt{w} \leadsto \{5, 6, 7, 10, 10, 10, \dots\}$.
@@ -180,7 +181,8 @@ s}, returning the remainder of the stream.
 %
 For example we can skip the first two values of {\tt w}:
 %
-\begin{lstlisting}[language = Copilot, frame = single] u = drop 2 w
+\begin{lstlisting}[language = Copilot, frame = single]
+u = drop 2 w
 \end{lstlisting}
 %
 which yields the sequence $\mathtt{u} \leadsto \{7, 10, 10, 10, \dots\}$.
@@ -196,7 +198,7 @@ leading and lagging stream:
 %
 
 But if instead {\tt fastForwardFib} is defined as {\tt fastforwardFib = drop 4
-fib} , then the definition is disallowed.
+fib}, then the definition is disallowed.
 %
 While an analogous stream is definable in a lazy language, we bar it in
 Copilot, since it requires future values of {\tt fib} to be generated before
@@ -397,7 +399,7 @@ the code generator of Copilot.
 
 
 \subsubsection*{Instance of \texttt{Typed}}
-In Copilot, streams can only of types that are instances of the \texttt{Typed}
+In Copilot, streams can only be of types that are instances of the \texttt{Typed}
 class. To be able to create streams of vectors, \texttt{Vec} needs to be an
 instance of \texttt{Typed} as well. The class only provides a \texttt{typeOf}
 function, returning the type:
@@ -582,7 +584,7 @@ have the readouts of four pitot tubes, giving us the measured airspeed:
 double airspeeds[4] = ... ;
 \end{code}
 In our Copilot specification, we need to provide the type of our array, because
-Copilot need to know the length of the array we refer to. Apart from that,
+Copilot needs to know the length of the array we refer to. Apart from that,
 referring to an external array is like referring to any other variable:
 \begin{lstlisting}[language=Copilot, frame=single]
 airspeeds :: Stream (Array 4 Double)
