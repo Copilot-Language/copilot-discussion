@@ -49,8 +49,14 @@
 \usepackage{float}
 \floatstyle{boxed}
 \restylefloat{figure}
-
-
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    menubordercolor=0 0 0,
+}
 \DefineVerbatimEnvironment{code}{Verbatim}{fontsize=\footnotesize}
 
 % Copilot + formatting for listings
@@ -308,7 +314,7 @@ We do not attempt to give a complete, formal description of Copilot
 demonstrating the fundamental concepts of the language by using idiomatic
 expositions and examples.
 }
-
+\newpage
 {
 \small
 \setcounter{tocdepth}{2}
@@ -331,6 +337,7 @@ Darafsheh.
 \input{Interpret}
 \input{Language}
 \input{example}
+\input{Conclusion}
 \addcontentsline{toc}{section}{References}
 \bibliographystyle{alpha}
 \bibliography{mybib}

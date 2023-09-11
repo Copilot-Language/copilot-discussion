@@ -1,29 +1,59 @@
 \newpage 
-\section{Interpreting and Compiling}
+\section{Interpreting}
 \label{interpcompile}
 The Copilot RV framework comes with both an interpreter and a
-compiler. 
+compiler. We will address compiling in \hyperref[sec:complete_example]{Section 4}
+ with a complete example. 
+\noindent To use the language, your Haskell module should contain the following import:
+%
+\begin{code}
+import Language.Copilot
+\end{code}
+%
+If you need to use functions defined in the Prelude that are redefined by
+Copilot (e.g., arithmetic operators), import the Prelude qualified:
+%
+\begin{code}
+import qualified Prelude as P
+\end{code}
+
 \subsection{Interpreting Copilot}
-Assume we are currently in a directory containing a \texttt{.hs} file with our
-specification (\texttt{Spec.hs} in this case), and that Copilot is installed
-globally. If we want to interpret the specification, we need to start the GHC
-Interpreter with the file as an argument:
+In the ./Examples directory we have provided you with an example
+for you to follow along. \texttt{Spec.hs} is the following Copilot program:
+%
+\lstinputlisting[language = Copilot, numbers = left]{Examples/Spec.hs}
+
+\begin{description}
+  \item[Line 1] Here we include the Copilot Language so that we gain access to the
+  front end language.
+  \item[Line 3] Here we include the Prelude. Notice that we hide base Haskell
+  syntax for functions that we define for use on streams. If this is not
+  included you will get an \texttt{Ambiguous Occurrence} error. 
+  \item[Line 5-12] Here we define data streams as input and output data streams. We
+  go over defining functions as streams in Section 3 of this tutorial. 
+  \item[Line 14-16] Here {\tt nats} is the stream of natural numbers, and {\tt
+  evenNumber} and {\tt oddNumber} are the guard functions that take a stream and
+  return whether the point-wise values are even or odd, respectively. The lists
+  at the end of the trigger represent the values the trigger will output when the
+  guard is true.
+
+\end{description}
+
+If we want to interpret the specification, we need to start the GHC Interpreter with the file as an argument:
 %
 \begin{lstlisting}
 $ ghci Spec.hs
-GHCi, version 8.4.3: http://www.haskell.org/ghc/  :? for help
-Loaded GHCi configuration from /home/user/.ghc/ghci.conf
 [1 of 1] Compiling Spec             ( Spec.hs, interpreted )
 Ok, one module loaded.
-*Spec > 
+ghci > 
 \end{lstlisting}
 %
 This launches \texttt{ghci}, the Haskell interpreter, with \texttt{Spec.hs}
-loaded. It provides us with a prompt, recognisable by the \texttt{>} sign. Lets
+loaded. It provides us with a prompt, recognizable by the \texttt{>} sign. Lets
 assume that our file contains one specification, called \texttt{spec}. We can
 interpret this using the \texttt{interpret}-function:
 \begin{lstlisting}[language = Copilot]
-*Spec > interpret 10 spec
+ghci > interpret 10 spec
 \end{lstlisting}
 %
 The first argument to the function \emph{interpret} is the number of iterations
@@ -33,25 +63,7 @@ that we want to evaluate. The second argument is the specification (of type
 The interpreter outputs the values of the arguments passed to the trigger, if
 its guard is true, and {\tt --} otherwise. We will discuss triggers in more
 detail later, but for now, just know that they produce an output only when the
-guard function is true. For example, consider the following Copilot program:
-%
-\begin{lstlisting}[language = Copilot]
-spec = do
-  trigger "trigger1" (even nats) [arg nats, arg $ odd nats]
-  trigger "trigger2" (odd nats) [arg nats]
-\end{lstlisting}
-% $
-where {\tt nats} is the stream of natural numbers, and {\tt even} and {\tt odd}
-are the guard functions that take a stream and return whether the point-wise
-values are even or odd, respectively. The lists at the end of the trigger
-represent the values the trigger will output when the guard is true. The output
-of
-%
-\begin{lstlisting}[language = Copilot]
-interpret 10 spec
-\end{lstlisting}
-% $
-is as follows:
+guard function is true. The output is as follows:
 %
 \begin{code}
 trigger1:   trigger2:
@@ -72,38 +84,4 @@ Note that trigger1 outputs both the number and whether that number is odd,
 while trigger2 only outputs the number. This output reflects the arguments
 	passed to them. 
 
-\subsection{Compiling Copilot} \label{sec:compiling}
 
-Compiling a Copilot specification is straightforward. Currently Copilot
-supports one back-end, \texttt{copilot-c99} that creates constant-space C99
-code. Using the back-end is rather easy, as it just requires one to import it in
-their Copilot specification file:
-
-\begin{lstlisting}[language = Copilot]
-import Copilot.Compile.C99
-\end{lstlisting}
-
-Importing the back-end provides us with the \texttt{compile}-function, which
-takes a prefix as its first parameter and a \textit{reified} specification as
-its second. When inside \texttt{ghci}, with our file loaded, we can generate
-output code by executing:
-\footnote{Two explanations are in order: (1) {\tt reify} allows sharing in the
-expressions to be compiled~\cite{DSLExtract}, and {\tt >>=} is a higher-order
-operator that takes the result of reification and ``feeds'' it to the compile
-function.}
-\begin{lstlisting}[language = Copilot]
-reify spec >>= compile "monitor"
-\end{lstlisting}
-
-This generates three output files:
-\begin{itemize}
-  \item \texttt{<prefix>.c}: C99 file containing the generated code and the
-  \texttt{step()} function. This should be compiled by the C compiler, and
-  included in the final binary.
-  \item \texttt{<prefix>\_types.h}: Header file containing datatypes defined in the specification and used by Copilot internally. Copilot users can opt to include these definitions in their C code, to avoid having to manually define those datatypes and keep them in sync. However, when the Copilot specification is tied to an existing codebase, including this header from user code is not recommended as the definitions in it may conflict with C types defined elsewhere in the same codebase.
- \item \texttt{<prefix>.h}: Header providing the public interface to the
-  monitor. This file should be included from your main project.
-\end{itemize}
-
-Please refer to the complete example \ref{sec:complete_example} for more on
-detail to use the monitor in your C program.

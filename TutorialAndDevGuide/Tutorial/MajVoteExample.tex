@@ -33,44 +33,13 @@ which is initially set to zero. The algorithm is as follows:
 This algorithm will produce an output even if there is no majority, which is why 
 the second pass is needed to verify that the output of the first pass is valid. 
 
-\begin{figure*}[!htb]
-\begin{lstlisting}[language = Copilot, frame = none]
-majorityPure :: Eq a => [a] -> a
-majorityPure []     = error "majorityPure: empty list!"
-majorityPure (x:xs) = majorityPure' xs x 1
 
-majorityPure' []     can _   = can
-majorityPure' (x:xs) can cnt =
-  let
-    can' = if cnt == 0 then x else can
-    cnt' = if cnt == 0 || x == can then succ cnt else pred cnt
-  in
-    majorityPure' xs can' cnt'
-\end{lstlisting}
-\caption{The first pass of the majority vote algorithm in Haskell.}
-\label{fig:majority_pure}
-\end{figure*}
-
-\begin{figure*}[!htb]
-\begin{lstlisting}[language = Copilot, frame = none]
-aMajorityPure :: Eq a => [a] -> a -> Bool
-aMajorityPure xs can = aMajorityPure' 0 xs can > length xs `div` 2
-
-aMajorityPure' cnt []     _   = cnt
-aMajorityPure' cnt (x:xs) can =
-  let
-    cnt' = if x == can then cnt+1 else cnt
-  in
-    aMajorityPure' cnt' xs can
-\end{lstlisting}
-\caption{The second pass of the majority vote algorithm in Haskell.}
-\label{fig:amajority_pure}
-\end{figure*}
+\lstinputlisting[language = Copilot, numbers = left]{Examples/MajVoteExample.hs}
 
 The first pass can be implemented
-in Haskell as shown in Figure \ref{fig:majority_pure}. The second pass, which
+in Haskell as shown in lines 2-13. The second pass, which
 simply checks that a candidate has more than half of the votes, is
-straightforward to implement and is shown in Figure \ref{fig:amajority_pure}.
+straightforward to implement and is shown in lines 15-23.
 E.g. applying {\tt majorityPure} on the string {\tt AAACCBBCCCBCC} yields {\tt
   C}, which {\tt aMajorityPure} can confirm is in fact a majority.
 
