@@ -19,22 +19,23 @@ import qualified Prelude as P
 
 \subsection{Interpreting Copilot}
 In the ./Examples directory we have provided you with an example
-for you to follow allong. \texttt{Spec.hs} is the following Copilot program:
+for you to follow along. \texttt{Spec.hs} is the following Copilot program:
 %
 \lstinputlisting[language = Copilot, numbers = left]{Examples/Spec.hs}
 
 \begin{description}
-  \item[Line 1] Here we inclued the Copilot Language so that we gain access to the
+  \item[Line 1] Here we include the Copilot Language so that we gain access to the
   front end language.
   \item[Line 3] Here we include the Prelude. Notice that we hide base Haskell
   syntax for functions that we define for use on streams. If this is not
-  included you will get an \texttt{Ambiguious Occurance} error. 
+  included you will get an \texttt{Ambiguous Occurrence} error. 
   \item[Line 5-12] Here we define data streams as input and output data streams. We
   go over defining functions as streams in Section 3 of this tutorial. 
-  \item[Line 14-16] Here {\tt nats} is the stream of natural numbers, and {\tt even} and {\tt odd}
-  are the guard functions that take a stream and return whether the point-wise
-  values are even or odd, respectively. The lists at the end of the trigger
-  represent the values the trigger will output when the guard is true.
+  \item[Line 14-16] Here {\tt nats} is the stream of natural numbers, and {\tt
+  evenNumber} and {\tt oddNumber} are the guard functions that take a stream and
+  return whether the point-wise values are even or odd, respectively. The lists
+  at the end of the trigger represent the values the trigger will output when the
+  guard is true.
 
 \end{description}
 
@@ -48,7 +49,7 @@ ghci >
 \end{lstlisting}
 %
 This launches \texttt{ghci}, the Haskell interpreter, with \texttt{Spec.hs}
-loaded. It provides us with a prompt, recognisable by the \texttt{>} sign. Lets
+loaded. It provides us with a prompt, recognizable by the \texttt{>} sign. Lets
 assume that our file contains one specification, called \texttt{spec}. We can
 interpret this using the \texttt{interpret}-function:
 \begin{lstlisting}[language = Copilot]

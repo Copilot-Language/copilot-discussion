@@ -46,7 +46,7 @@ Copilot is a domain-specific language tailored to programming \emph{runtime
 monitors} for \emph{hard real-time}, \emph{distributed}, \emph{reactive
 systems}.
 %
-Briefly, a runtime monitor is program that runs concurrently with a target
+Briefly, a runtime monitor is a program that runs concurrently with a target
 program of the SUO with the sole purpose of assuring that the target program
 behaves in accordance with a pre-established specification.
 %
@@ -58,8 +58,9 @@ A reactive system is a system that responds continuously to its environment.
 All data to and from a reactive system are communicated progressively during
 execution.
 %
- Reactive systems differ from transformational systems which transform data in
-a single pass and then terminate.
+Transformational systems, in contrast to reactive systems like Copilot,
+transform data in a single pass and then terminate (examples are compilers and
+numerical computation software).
 %
 
 A hard real-time system is a system that has a statically bounded execution
@@ -69,7 +70,7 @@ time and memory usage.
 as avionics, medical equipment, and nuclear power plants; hence, occasional
 dropouts in the response time or crashes are not tolerated.
 
-A distributed system is a system which is layered out on multiple pieces of
+A distributed system is a system that is layered out on multiple pieces of
 hardware.
 %
 The distributed systems we consider are all synchronized, i.e., all components
@@ -78,15 +79,15 @@ agree on a shared global clock.
 
 \subsection{Installation} \label{sec:install}
 
-Before downloading the copilot framework, you must first install an
+Before downloading the Copilot framework, you must first install an
 up-to-date version of GHC (the minimal required version is 8.6.4).
 %
 
-\noindent Copilot compiles to C code, you must install a C compiler such as GCC (\url{https://gcc.gnu.org/install/}). After having installed the Haskell Platform and C compiler, Copilot can be downloaded and
+\noindent Copilot compiles to C code, therefor you must install a C compiler such as GCC (\url{https://gcc.gnu.org/install/}). After having installed the Haskell Platform and C compiler, Copilot can be downloaded and
 installed in the following two ways:
 
 \begin{itemize}
-\item \textbf{Hackage (Prefered Method): } Copilot is available from
+\item \textbf{Hackage (Preferred Method): } Copilot is available from
 \href{https://hackage.haskell.org/package/copilot-3.16#table-of-contents}{Hackage},
 and the latest version can be installed easily:
 \begin{code}
@@ -122,7 +123,7 @@ established in data science and engineering.
 at a high enough rate to obtain enough discrete points to represent the
 physical sound wave.
 %
- The fidelity of the recording is dependant on the sampling rate.
+ The fidelity of the recording is dependent on the sampling rate.
 %
  Sampling a state variable of an executing program is similar, but variables
 are rarely continuous signals so they lack the nice properties of continuity.
@@ -135,7 +136,7 @@ may lead to false positives and false negatives~\cite{DwyerDE08}.
  For example, consider the property $(0;1;1)^*$, written as a regular
 expression, denoting the sequence of values a monitored variable may take.
 %
- If the monitor samples the variable at the inappropriate time, then both false
+ If the monitor samples the variable at an inappropriate time, then both false
 negatives (the monitor erroneously rejects the sequence of values) and false
 positives (the monitor erroneously accepts the sequence) are possible. 
 %
@@ -149,11 +150,11 @@ positive by sampling a value twice.
 However, in a hard real-time context, sampling is a suitable strategy.
 %
  Often, the purpose of real-time programs is to deliver output signals at a
-predicable rate and properties of interest are generally data-flow oriented.
+predictable rate and properties of interest are generally data-flow oriented.
 %
  In this context, and under the assumption that the monitor and the observed
 program share a global clock and a static periodic schedule, while false
-positives are possible, false negatives are not.
+positives are possible, and false negatives are not.
 %
  A false positive is possible, for example, if the program does not execute
 according to its schedule but just happens to have the expected values when
@@ -175,11 +176,11 @@ a suitable rate, that usually must be determined experimentally, sampling is
 sufficient.
 %
 
-Most of the popular runtime monitoring frameworks inline monitors in the
+Most of the popular runtime monitoring frameworks utilize inline monitors in the
 observed program to avoid the aforementioned problems with sampling.
 %
  However, inlining monitors changes the real-time behavior of the observed
-program, perhaps in unpredicable ways.
+program, perhaps in unpredictable  ways.
 %
 Solutions that introduce such unpredictability are not a viable solution for
 ultra-critical hard real-time systems.

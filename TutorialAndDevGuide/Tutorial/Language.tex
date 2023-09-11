@@ -10,7 +10,7 @@ fixed series of steps:
 \item Sample external variables, structs, and arrays.
 \item Update internal variables.
 \item Fire external triggers. (In case the specification is violated.)
-\item Update observers (for debugging purpose).
+\item Update observers (for debugging purposes).
 \end{itemize}
 
 \noindent We refer to a single cycle as an \emph{iteration} or a \emph{step}.
@@ -39,7 +39,7 @@ function like lazy lists.
 For those that are not as familiar with Haskell this
 subsection can be omitted.
 %
-However, there is a few useful definitions of data
+However, there are a few useful definitions of data
 streams as examples.
 %
 \begin{lstlisting}[language = Copilot, frame = single]
@@ -90,8 +90,8 @@ even x = x `mod` 2 == 0
 Applying {\tt even} on {\tt nats} (defined above) yields the sequence
 $\{T, F, T, F, T, F, \dots\}$.
 %
-This function sould be familiar to the one that
-we had shown in {\tt Spec.hs} from \hyperref[interpcompile]{Section 2.1}.
+This function should be familiar to the function shown in {\tt Spec.hs} from
+\hyperref[interpcompile]{Section 2.1}.
 \end{example}
 
 If a function is required to return multiple results, we simply use plain
@@ -143,7 +143,7 @@ even numbers.
 Create a function that will check if a stream of numbers is even or not, we
 have given you the type specification.
 %
-Once you have created the function, you should be able to compile interpret the
+Once you have created the function, you should be able to compile and interpret the
 specification.
 %
 
@@ -191,7 +191,7 @@ Copilot specifications must be \emph{causal}, informally meaning that stream
 values cannot depend on future values.
 %
 Our example \texttt{Causal.hs} in the ./Examples directory shows the use of
-{\tt drop} and {\tt ++} by defining a fibonachi series and then creates a
+{\tt drop} and {\tt ++} by defining a Fibonachi series and then creates a
 leading and lagging stream:
 %
 \lstinputlisting[language = Copilot, frame = single ]{Examples/Causal.hs}
@@ -207,15 +207,36 @@ producing values for {\tt fastForwardFib}.
 This is not possible since Copilot programs may take inputs in real-time from
 the environment (see Section~\ref{subsec:interacting}).
 
-Being able to look ahead and behind in streams is really useful for thing like
-rate of change.
-%
-For example if you were intrested in monitoring how fast your car was
+Being able to look ahead and behind in streams is really useful for applications like
+rate of change, for example if you were interested in monitoring how fast your car was
 accelerating or the rate of drain on a battery.
 %
 If you would like more practice with the Copilot language, try adding in an
 observer that shows how much change there was between the leading and the
-lagging stream for our fibonachi example.
+lagging stream for our Fibonachi example.
+%
+\subsection{Filtering} \label{sec:filter}
+
+Filtering is useful when utilizing stream data becasue occationally the data
+brought in by the sensors will have errors. We have made some example filters
+from Introduction To Digital Filters \cite{Tyson2013} to demonstrate how to create the filters in the Copilot
+language.
+%
+\lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Filters.hs}
+%
+
+\begin{description}
+  \item[Line 1-3] Copilot language standard include and remove 
+  items defined in the Copilot library from the prelude.
+  \item[Line 5-6] Create a Fibonachi stream that we demonstrated in the last section.
+  \item[Line 8-9] Delaying the Fibonachi stream by one value.
+  \item[Lines 11-12] Difference filter shows the change from the previous signal. 
+  \item[Lines 14-15] Gain filter: x > 1 makes the filter an amplifier, while 0 < x < 1 makes it an attenuator x < 0 corresponds to an inverting amplifier. 
+  \item[Lines 17-18] Two term average filter is a simple type of low pass filter as it tends to smooth out high-frequency variations in a signal 
+  \item[Lines 20-21] Central difference filter is half the change of the previous two signals. 
+  \item[Lines 23-42] Observers to show how the filters functionality and how they operate on the stream. 
+
+\end{description}
 
 \subsection{Stateful Functions} \label{sec:stateful}
 
@@ -256,10 +277,10 @@ $T$ & $T$ & $F$
 \lstinputlisting[language = Copilot, frame = single, numbers = left]{Examples/Latch.hs}
 
 \begin{description}
-  \item[Line 1-4] Standard inclueds to include the Copilot language and remove 
+  \item[Line 1-4] Copilot language standard include and remove 
   items defined in the Copilot library from the prelude.
-  \item[Line 5-9] This is a set of arbitrary functions to create a stream of
-  trues and falses to demonstrate the latch.
+  \item[Line 5-9] This is a set of arbitrary functions to create streams of
+  True/False outputs to demonstrate the latch.
   \item[Lines 11-15] demonstrate the implementation of an if-then-else statement in copilot. In order to do if-then-else statements we have defined {\tt mux}.
 \end{description}
 
@@ -300,9 +321,8 @@ $T$ & $F$ & $\mathtt{cnt}_{i-1}$\\
 \end{center}
 \end{example}
 
-{\tt Problem:} Now that you have an understanding of how to implement if then operations on streams.
-%
-Attempt to write a specification for the example above.
+{\tt Problem:} Now that you have an understanding of how to implement if then
+operations on streams, attempt to write a specification for the example above.
 %
 We have started the specification for you in the ./Examples directory.
 
@@ -311,7 +331,7 @@ We have started the specification for you in the ./Examples directory.
 
 \subsection{Structs}
 When monitoring embedded systems the data that needs to be observed is often in a struct.
-Structs require some special attentation in Copilot, as we cannot magically
+Structs require some special attention in Copilot, as we cannot magically
 import the definition of the struct in Copilot. In this section we discuss the
 steps that need to be taken by following the code of \texttt{Struct.hs} in the
 \texttt{Examples} directory of the Copilot distribution, or the repository
@@ -336,7 +356,7 @@ of steps:
 \end{enumerate}
 
 If you would like to follow along with our example you can open up the Structs.hs file
-in the ./Examples directory. We do show the entire thing at the end. 
+in the ./Examples directory. We do show the entire example at the end. 
 
 \subsubsection*{Enabling compiler extensions}
 First and foremost, we need to enable the \texttt{DataKinds} extension to GHC,
@@ -354,7 +374,7 @@ write the names of the fields as part of our types.
 A suitable representation of structs in Haskell is provided by the
 \emph{record-syntax}, this allows us to use named fields as part of the
 datatype. For Copilot this is not enough though: we still need to define the
-names of the fields in our C code. Therefore we introduce new \texttt{Field}
+names of the fields in our C code. Therefore we introduce the  \texttt{Field}
 datatype, which takes two arguments: the name of field, and it's type. Now we
 can mimic our vector struct in Copilot as follows:
 \begin{lstlisting}[language=Copilot]
@@ -372,7 +392,7 @@ unquoted ones). The C names are only used by Copilot internally.
 
 \subsubsection*{Instance of \texttt{Struct}}
 Our next task is to inform Copilot about our new type, therefore we need to
-write and instance of the \texttt{Struct}-class. This class has the purpose of
+write an instance of the \texttt{Struct}-class. This class has the purpose of
 defining the datatype as a struct, it provides the code generator of Copilot the
 name of struct in C, and provides a function to translate the struct to a list
 of values:
@@ -387,7 +407,7 @@ instance Struct Vec where
                , Value Float (y v)
                ]
 \end{lstlisting}
-Both definitions should be pretty self-explanatory. Note however that
+Both definitions should be self-explanatory. Note however that
 \texttt{Value a} is a wrapper around the \texttt{Field} datatype to hide the
 actual type of \texttt{Field}. It takes the type of the field, and the field
 itself as its arguments. The elements in the list should be in the same order
@@ -429,13 +449,13 @@ We can also turn a field of a struct into its own stream using the
 vx :: Stream Float
 vx = v # x
 \end{lstlisting}
-Note the we use the Haskell level accessor \texttt{x} to retrieve the field
+Note that we use the Haskell level accessor \texttt{x} to retrieve the field
 from the stream of vectors.
 
 
 \subsubsection*{Example code}
 \label{exm:struct}
-Now that we defined all there is, we can make streams of structs. The following
+Once everything has been defined all there is, we can make streams of structs. The following
 code has been taken from the \texttt{Struct.hs} example, and shows the basic
 usage of structs.
 %
@@ -496,12 +516,12 @@ separate thread as the system under observation and the only variables
 that can be observed are those that are made available through shared
 memory. This means local variables cannot be observed. Currently,
 Copilot supports basic C datatypes, arrays and structs. Combinations of each of
-those work as well: nested arrays, arrays of structs, structs containg arrays
-etc. All of these variables containing actual data; pointers to data are not
-supported by design.
+those work as well: nested arrays, arrays of structs, structs containing arrays
+etc. All of these variables are passed by value, as references, or pointers,
+are not supported by Copilot.
 
 
-Copilot has both an interpreter and a compiler.The compiler must be
+Copilot has both an interpreter and a compiler. The compiler must be
 used to monitor an executing program. The Copilot reification process
 generates a C monitor from a Copilot specification. The variables that
 are observed in the C code must be declared as \emph{external}
@@ -573,8 +593,8 @@ e0 = extern  "e0" (Just [2,4..])
 \noindent
 so that the symbol name and its environment can be shared between streams.
 
-Just like regular variables, arrays can be sampled as well. Copilot threats
-arrays in the same way as it does for scalars. 
+Just like regular variables, arrays can be sampled as well. Copilot treats
+arrays the same way it treats scalars. 
 \begin{example}
 \label{exmp:pitot}
 Lets take the example where we
